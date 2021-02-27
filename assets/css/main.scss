@@ -1,5 +1,8 @@
----
-# Only the main Sass file needs front matter (the dashes are enough)
----
-@charset "utf-8";
-@import "main";
+
+@import "bourbon";
+
+@import "variables";
+@import "base/base";
+
+@import "layout";
+@import "syntax-highlighting";
