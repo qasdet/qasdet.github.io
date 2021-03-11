@@ -1,0 +1,14 @@
+title: Blog Testirovshika
+email: qa-spb@yandex.ru
+description: >-
+  Write an awesome description for your new site here.
+baseurl: ''
+url: ''
+twitter_username: null
+github_username: null
+theme: minima
+plugins:
+  - jekyll-feed
+jekyll_admin:
+  hidden_links: null
+  homepage: pages
