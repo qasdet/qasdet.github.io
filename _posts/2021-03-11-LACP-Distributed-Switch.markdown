@@ -6,6 +6,8 @@ categories:
 - VMWare
 - Switch
 - LACP
+tags:
+- Virtualization
 ---
 
 Настройка LACP на Distributed Switch в VMware vSphere
