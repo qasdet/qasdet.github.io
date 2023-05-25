@@ -2,7 +2,7 @@ title: Заметки тестировщика
 email: qa-spb@yandex.ru
 description: >- 
   Write an awesome description for your new site here :-)
-baseurl: "/blog"
+baseurl: "/"
 domain: qasdet.github.io 
 url: https://qasdet.github.io
 
