@@ -1,0 +1,16 @@
+title: Заметки тестировщика
+email: qa-spb@yandex.ru
+description: >- 
+  Write an awesome description for your new site here :-)
+baseurl: "/blog"
+domain: qasdet.github.io 
+url: https://qasdet.github.io
+
+theme: no-style-please
+plugins:
+  - jekyll-feed
+
+jekyll_admin:
+  hidden_links:
+    - datafiles
+  homepage: "pages"
