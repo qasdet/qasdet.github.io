@@ -1,7 +1,7 @@
 ---
 title: Обработка исключений в Python (try except)
 layout: page
-date: '2022-09-09 23:41:36'
+date: '2023-09-09 23:41:36'
 categories:
 - Python
 ---
