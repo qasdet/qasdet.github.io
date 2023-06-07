@@ -1,1 +1,0 @@
-# qasdet.github.io
