@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Оператор выбора в Python (if else)</title><!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Оператор выбора в Python (if else)" />
+<meta name="author" content="Riccardo Graziosi" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here :-)" />
+<meta property="og:description" content="Write an awesome description for your new site here :-)" />
+<link rel="canonical" href="http://localhost:4000/blog/python/2021/11/07/if-else-python.html" />
+<meta property="og:url" content="http://localhost:4000/blog/python/2021/11/07/if-else-python.html" />
+<meta property="og:site_name" content="Blog QA-Engineer" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-11-07T21:33:18+03:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Оператор выбора в Python (if else)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Riccardo Graziosi"},"dateModified":"2021-11-07T21:33:18+03:00","datePublished":"2021-11-07T21:33:18+03:00","description":"Write an awesome description for your new site here :-)","headline":"Оператор выбора в Python (if else)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/python/2021/11/07/if-else-python.html"},"url":"http://localhost:4000/blog/python/2021/11/07/if-else-python.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/blog/feed.xml" title="Blog QA-Engineer" /><link rel="shortcut icon" type="image/x-icon" href="/blog/logo.png" />
+  <link rel="stylesheet" href="/blog/assets/css/main.css" />
+</head><body a="auto">
+    <main class="page-content" aria-label="Content">
+      <div class="w">
+        <a href="/blog/">..</a><article>
+  <p class="post-meta">
+    <time datetime="2021-11-07 21:33:18 +0300">2021-11-07</time>
+  </p>
+  
+  <h1>Оператор выбора в Python (if else)</h1>
+
+  <p><img src="https://pythonchik.ru/pic/lb1/cover_04600fd5-2ec8-4a15-9a33-ace71e5e89b5_big.jpeg" alt="" /></p>
+
+<p><strong>Зачем нужны условные инструкции</strong></p>
+
+<p>Фундаментальная важность условий для любого из языков программирования заключается в их возможности описывать большую часть логики работы программы.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Говоря простыми словами, конструкция if else в Python указывает интерпретатору, следует ли выполнять определенный участок кода или нет</code>.</p>
+</blockquote>
+
+<p>Как и все прочие составные инструкции языка, оператор выбора также поддерживает свойство вложенности. Это означает, что использование <code class="language-plaintext highlighter-rouge">if else</code> позволяет создавать внутри программного модуля так называемое логическое ветвление.</p>
+
+<p><strong>Как работает if else</strong></p>
+
+<p>Синтаксис</p>
+
+<p>Оператор <code class="language-plaintext highlighter-rouge">if else</code> в языке Python — это типичная условная конструкция, которую можно встретить и в большинстве других языков программирования.</p>
+
+<p>самый простой пример, где есть всего одно условие</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">It is true</span><span class="sh">"</span><span class="p">)</span>
+ 
+<span class="c1">#=&gt; It is true</span></code></pre></figure>
+
+<p>Синтаксически конструкция выглядит следующим образом:</p>
+
+<ol>
+  <li>сначала записывается часть <code class="language-plaintext highlighter-rouge">if</code> с условным выражением, которое возвращает истину или ложь;</li>
+  <li>затем может следовать одна или несколько необязательных частей <code class="language-plaintext highlighter-rouge">elif </code>(в других языках вы могли встречать <code class="language-plaintext highlighter-rouge">else if</code>);</li>
+  <li>Завершается же запись этого составного оператора также необязательной частью else.</li>
+</ol>
+
+<p><img src="https://pythonchik.ru/pic/lb1/intext_45b0e9fc-ff4e-4c43-981e-b0fd60273af0_original.svg" alt="" /></p>
+
+<p><strong>Принцип работы оператора выбора в Python</strong></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">count</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1">#условное выражение может быть 
+#сколь угодно сложным, 
+#и может быть сколь угодно elif-частей
+</span><span class="k">if</span> <span class="bp">True</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">if</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">count</span> <span class="o">==</span> <span class="sh">'</span><span class="s">count</span><span class="sh">'</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">First elif</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">count</span> <span class="o">==</span> <span class="mf">14.2</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Second elif</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Nth elif</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Else</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="o">&gt;</span> <span class="n">Nth</span> <span class="k">elif</span></code></pre></figure>
+
+<p>Для каждой из частей существует ассоциированный 
+с ней блок инструкций, которые выполняются в случае 
+истинности соответствующего им условного выражения.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">b</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+    <span class="c1">#любое количество инструкций
+</span>    <span class="nf">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="mi">15</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">43</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">20</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">You will not see me</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">And me</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="o">&gt;</span> <span class="mi">10</span>
+<span class="o">&gt;</span> <span class="mf">10.344080432788601</span></code></pre></figure>
+
+<p>То есть интерпретатор начинает последовательное выполнение программы, доходит до<code class="language-plaintext highlighter-rouge">if</code> и вычисляет значение сопутствующего условного выражения. Если условие истинно, то выполняется связанный с if набор инструкций. После этого управление передается следующему участку кода, а все последующие части elif и часть <code class="language-plaintext highlighter-rouge">else</code> (если они присутствуют) опускаются.
+Отступы</p>
+
+<p>Отступы — важная и показательная часть языка Python. Их смысл интуитивно понятен, а определить их можно, как размер или ширину пустого пространства слева от начала программного кода.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c1">#начало кода
+#код
+#код
+#код
+</span>    <span class="c1"># начало первого отступа
+</span>    <span class="c1"># первый отступ
+</span>    <span class="c1"># первый отступ
+</span>        <span class="c1"># начало второго отступа
+</span>        <span class="c1"># второй отступ
+</span>        <span class="c1"># второй отступ
+</span>        <span class="c1"># конец второго отступа
+</span>   <span class="c1">#конец первого отступа
+</span>	</code></pre></figure>
+
+<p>Благодаря отступам, python-интерпретатор определяет границы блоков. Все последовательно записанные инструкции, чье смещение вправо одинаково, принадлежат к одному и тому же блоку кода. Конец блока совпадает либо с концом всего файла, либо соответствует такой инструкции, которая предшествует следующей строке кода с меньшим отступом.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">var_a</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">var_b</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">var_c</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="k">if</span> <span class="n">var_c</span><span class="o">**</span><span class="mi">2</span> <span class="o">&gt;</span> <span class="n">var_a</span> <span class="o">*</span> <span class="n">var_b</span><span class="p">:</span>
+    <span class="c1"># блок №1
+</span>    <span class="k">if</span> <span class="n">var_c</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="c1"># блок №2
+</span>        <span class="k">if</span> <span class="n">var_c</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="c1"># блок №3
+</span>            <span class="n">var_a</span> <span class="o">=</span> <span class="n">var_a</span> <span class="o">*</span> <span class="n">var_b</span> <span class="o">*</span> <span class="n">var_c</span>
+        <span class="c1"># блок №2
+</span>        <span class="n">var_b</span> <span class="o">=</span> <span class="n">var_a</span> <span class="o">+</span> <span class="n">var_c</span>
+    <span class="c1"># блок №1
+</span>    <span class="n">var_c</span> <span class="o">=</span> <span class="n">var_a</span> <span class="o">-</span> <span class="n">var_b</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">var_a</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">var_b</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">var_c</span><span class="p">)</span>
+
+<span class="o">&gt;</span> <span class="mi">1000</span>
+<span class="o">&gt;</span> <span class="mi">1020</span>
+<span class="o">&gt;</span> <span class="o">-</span><span class="mi">20</span></code></pre></figure>
+
+<p>Таким образом, с помощью отступов появляется возможность создавать блоки на различной глубине вложенности, следуя простому принципу: чем глубже блок, тем шире отступ.</p>
+
+</article>
+      </div>
+    </main>
+  </body>
+</html>
