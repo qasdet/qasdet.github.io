@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/blog/" rel="alternate" type="text/html" /><updated>2023-06-15T02:52:52+03:00</updated><id>http://localhost:4000/blog/feed.xml</id><title type="html">Заметки тестировщика</title><subtitle>Write an awesome description for your new site here :-)</subtitle><author><name>Riccardo Graziosi</name></author><entry><title type="html">Обработка исключений в Python (try except)</title><link href="http://localhost:4000/blog/python/2023/09/09/try-except.html" rel="alternate" type="text/html" title="Обработка исключений в Python (try except)" /><published>2023-09-09T23:41:36+03:00</published><updated>2023-09-09T23:41:36+03:00</updated><id>http://localhost:4000/blog/python/2023/09/09/try-except</id><content type="html" xml:base="http://localhost:4000/blog/python/2023/09/09/try-except.html"><![CDATA[<p><img src="https://pythonchik.ru/pic/lb1/cover_86ad1072-8da9-4864-b264-c21b194f5885_big.webp" alt="" /></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/blog/" rel="alternate" type="text/html" /><updated>2023-06-15T02:55:00+03:00</updated><id>http://localhost:4000/blog/feed.xml</id><title type="html">Заметки тестировщика</title><subtitle>Write an awesome description for your new site here :-)</subtitle><author><name>Riccardo Graziosi</name></author><entry><title type="html">Обработка исключений в Python (try except)</title><link href="http://localhost:4000/blog/python/2023/09/09/try-except.html" rel="alternate" type="text/html" title="Обработка исключений в Python (try except)" /><published>2023-09-09T23:41:36+03:00</published><updated>2023-09-09T23:41:36+03:00</updated><id>http://localhost:4000/blog/python/2023/09/09/try-except</id><content type="html" xml:base="http://localhost:4000/blog/python/2023/09/09/try-except.html"><![CDATA[<p><img src="https://pythonchik.ru/pic/lb1/cover_86ad1072-8da9-4864-b264-c21b194f5885_big.webp" alt="" /></p>
 
 <p>рограмма, написанная на языке Python, останавливается сразу как обнаружит ошибку. Ошибки могут быть (как минимум) двух типов:</p>
 
@@ -431,27 +431,7 @@ else:
     #  если в этом блоке сделать return, он не будет вызван, пока не выполнился блок finally
 finally:
     #  этот блок выполняется всегда, даже если нет исключений else будет проигнорирован
-    #  если в этом блоке сделать return, то return в блоке</p>]]></content><author><name>Riccardo Graziosi</name></author><category term="Python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Как защитить ваш API С помощью Аутентификации JWT в Django И Django Rest Framework</title><link href="http://localhost:4000/blog/2023/06/15/django-rest-api.html" rel="alternate" type="text/html" title="Как защитить ваш API С помощью Аутентификации JWT в Django И Django Rest Framework" /><published>2023-06-15T00:00:00+03:00</published><updated>2023-06-15T00:00:00+03:00</updated><id>http://localhost:4000/blog/2023/06/15/django-rest-api</id><content type="html" xml:base="http://localhost:4000/blog/2023/06/15/django-rest-api.html"><![CDATA[<p><img src="https://images.unsplash.com/photo-1531771686035-25f47595c87a?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzB8fGNvbXB1dGVyfGVufDB8fDB8fA%3D%3D&amp;auto=format&amp;fit=crop&amp;w=1600&amp;q=60" alt="2023-06-15-your-title.md
-" /></p>
-
-<p>JWT (Json Web Token) - одна из самых популярных систем аутентификации на основе токенов. Сторонним пакетом для аутентификации JWT является djangorestframework-simple jwt, который используется для реализации jwt auth в проекте django.</p>
-
-<p>Установка</p>
-
-<p>Сначала нам нужно установить простой пакет jwt в нашу систему, просто выполнив эту команду в терминале.</p>
-
-<p><code class="language-plaintext highlighter-rouge">pip install djangorestframework-simplejwt</code></p>
-
-<p>Настройка простого пакета JWT</p>
-
-<p>Открытый settings.py файл и добавить просто добавьте rest_framework_simplejwt в INSTALLED_APPS.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INSTALLED_APPS = [
-     ...
-     'rest_framework_simplejwt',
-     ...
-]
-</code></pre></div></div>]]></content><author><name>Riccardo Graziosi</name></author><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Список типов данных в Python</title><link href="http://localhost:4000/blog/2022/04/03/tipy-dannyh.html" rel="alternate" type="text/html" title="Список типов данных в Python" /><published>2022-04-03T00:00:00+03:00</published><updated>2022-04-03T00:00:00+03:00</updated><id>http://localhost:4000/blog/2022/04/03/tipy-dannyh</id><content type="html" xml:base="http://localhost:4000/blog/2022/04/03/tipy-dannyh.html"><![CDATA[<p><img src="https://pythonchik.ru/pic/lb1/cover_0a082760-9b3d-4cc6-a6e7-add03e087007_big.webp" alt="" /></p>
+    #  если в этом блоке сделать return, то return в блоке</p>]]></content><author><name>Riccardo Graziosi</name></author><category term="Python" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Список типов данных в Python</title><link href="http://localhost:4000/blog/2022/04/03/tipy-dannyh.html" rel="alternate" type="text/html" title="Список типов данных в Python" /><published>2022-04-03T00:00:00+03:00</published><updated>2022-04-03T00:00:00+03:00</updated><id>http://localhost:4000/blog/2022/04/03/tipy-dannyh</id><content type="html" xml:base="http://localhost:4000/blog/2022/04/03/tipy-dannyh.html"><![CDATA[<p><img src="https://pythonchik.ru/pic/lb1/cover_0a082760-9b3d-4cc6-a6e7-add03e087007_big.webp" alt="" /></p>
 
 <p>Начнём с того, что все данные в Python являются объектами. Они могут создаваться нами вручную, либо быть изначально встроенными на уровне языка. Объект можно охарактеризовать, как особую область памяти, где хранятся некоторые значения и определённые для этих значений операции.</p>
 
