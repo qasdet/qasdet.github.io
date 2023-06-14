@@ -11,17 +11,17 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Python — интерпретируемый язык программирования. Он не конвертирует свой код в машинный, который понимает железо (в отличие от С и С++). Вместо этого, Python-интерпретатор переводит код программы в байт-код, который запускается на виртуальной машине Python (PVM). Давайте рассмотрим подробнее, как это работает на примере самой популярной реализации интерпретатора — CPython." />
 <meta property="og:description" content="Python — интерпретируемый язык программирования. Он не конвертирует свой код в машинный, который понимает железо (в отличие от С и С++). Вместо этого, Python-интерпретатор переводит код программы в байт-код, который запускается на виртуальной машине Python (PVM). Давайте рассмотрим подробнее, как это работает на примере самой популярной реализации интерпретатора — CPython." />
-<link rel="canonical" href="https://qasdet.github.io/blog//blog/python/pvm/2021/11/07/Python-PVM.html" />
-<meta property="og:url" content="https://qasdet.github.io/blog//blog/python/pvm/2021/11/07/Python-PVM.html" />
+<link rel="canonical" href="http://localhost:4000/blog/python/pvm/2021/11/07/Python-PVM.html" />
+<meta property="og:url" content="http://localhost:4000/blog/python/pvm/2021/11/07/Python-PVM.html" />
 <meta property="og:site_name" content="Заметки тестировщика" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-11-07T21:26:23+03:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Как работает Python: интерпретатор, байт-код, PVM!" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Riccardo Graziosi"},"dateModified":"2021-11-07T21:26:23+03:00","datePublished":"2021-11-07T21:26:23+03:00","description":"Python — интерпретируемый язык программирования. Он не конвертирует свой код в машинный, который понимает железо (в отличие от С и С++). Вместо этого, Python-интерпретатор переводит код программы в байт-код, который запускается на виртуальной машине Python (PVM). Давайте рассмотрим подробнее, как это работает на примере самой популярной реализации интерпретатора — CPython.","headline":"Как работает Python: интерпретатор, байт-код, PVM!","mainEntityOfPage":{"@type":"WebPage","@id":"https://qasdet.github.io/blog//blog/python/pvm/2021/11/07/Python-PVM.html"},"url":"https://qasdet.github.io/blog//blog/python/pvm/2021/11/07/Python-PVM.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Riccardo Graziosi"},"dateModified":"2021-11-07T21:26:23+03:00","datePublished":"2021-11-07T21:26:23+03:00","description":"Python — интерпретируемый язык программирования. Он не конвертирует свой код в машинный, который понимает железо (в отличие от С и С++). Вместо этого, Python-интерпретатор переводит код программы в байт-код, который запускается на виртуальной машине Python (PVM). Давайте рассмотрим подробнее, как это работает на примере самой популярной реализации интерпретатора — CPython.","headline":"Как работает Python: интерпретатор, байт-код, PVM!","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/python/pvm/2021/11/07/Python-PVM.html"},"url":"http://localhost:4000/blog/python/pvm/2021/11/07/Python-PVM.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link type="application/atom+xml" rel="alternate" href="https://qasdet.github.io/blog//blog/feed.xml" title="Заметки тестировщика" /><link rel="shortcut icon" type="image/x-icon" href="/blog/logo.png" />
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/blog/feed.xml" title="Заметки тестировщика" /><link rel="shortcut icon" type="image/x-icon" href="/blog/logo.png" />
   <link rel="stylesheet" href="/blog/assets/css/main.css" />
 </head><body a="auto">
     <main class="page-content" aria-label="Content">
