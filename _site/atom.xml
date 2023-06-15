@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
- <title>Ephesus - Minimalist Jekyll Theme</title>
- <link href="http://localhost:4000/atom.xml" rel="self"/>
- <link href="http://localhost:4000/"/>
- <updated>2023-06-15T03:45:39+03:00</updated>
- <id>http://localhost:4000</id>
+ <title>Заметки тестировщика</title>
+ <link href="http://127.0.0.1:4000/atom.xml" rel="self"/>
+ <link href="http://127.0.0.1:4000/"/>
+ <updated>2023-06-15T03:47:49+03:00</updated>
+ <id>http://127.0.0.1:4000</id>
  <author>
-   <name>Hakan Torun</name>
-   <email>your-email@email.com</email>
+   <name>qa engineer</name>
+   <email>qa-admin@sknt.ru</email>
  </author>
 
  
  <entry>
    <title>Justo imperdiet condimentum ad cum aca</title>
-   <link href="http://localhost:4000/justo-imperdiet-condimentum-ad-cum-acanone/"/>
+   <link href="http://127.0.0.1:4000/justo-imperdiet-condimentum-ad-cum-acanone/"/>
    <updated>2021-02-09T03:00:00+03:00</updated>
-   <id>http://localhost:4000/sample-3</id>
+   <id>http://127.0.0.1:4000/sample-3</id>
    <content type="html">&lt;p&gt;Lorem markdownum feriam: vir, vulnere cum postquam ocius, ecce. Exsangui totiens
 generis &lt;a href=&quot;http://www.fertur.io/aeacidis&quot;&gt;Iuppiter&lt;/a&gt; dederunt cerva refoventque,
 mea nulla secessit modo et. Hospes &lt;strong&gt;felices stetimusque&lt;/strong&gt; erat: &lt;strong&gt;Niobe
@@ -95,9 +95,9 @@ carchesia Bacchi heros crocique ignibus redeamus quae frustra vidit?&lt;/p&gt;
  
  <entry>
    <title>Aenean lectus consectetur</title>
-   <link href="http://localhost:4000/aenean-lectus-consectetur/"/>
+   <link href="http://127.0.0.1:4000/aenean-lectus-consectetur/"/>
    <updated>2021-01-29T03:00:00+03:00</updated>
-   <id>http://localhost:4000/sample-1</id>
+   <id>http://127.0.0.1:4000/sample-1</id>
    <content type="html">&lt;p&gt;Lorem markdownum feriam: vir, vulnere cum postquam ocius, ecce. Exsangui totiens
 generis &lt;a href=&quot;http://www.fertur.io/aeacidis&quot;&gt;Iuppiter&lt;/a&gt; dederunt cerva refoventque,
 mea nulla secessit modo et. Hospes &lt;strong&gt;felices stetimusque&lt;/strong&gt; erat: &lt;strong&gt;Niobe
