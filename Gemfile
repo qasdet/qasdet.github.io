@@ -1,17 +1,12 @@
 source "https://rubygems.org"
 gem 'jekyll'
-gem "minima"
-group :jekyll_plugins do
-  gem "jekyll-feed", "~> 0.12"
-end
-
-platforms :mingw, :x64_mingw, :mswin, :jruby do
-  gem "tzinfo", "~> 1.2"
-  gem "tzinfo-data"
-end
-
-gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
-
+gem 'jekyll-paginate'
+gem 'jekyll-sitemap'
+gem 'jekyll-relative-links'
+gem "tzinfo-data", "~> 1.2021"
 gem 'jekyll-admin', group: :jekyll_plugins
-gem "webrick", "~> 1.7"
-gem "no-style-please"
+# windows specific
+gem 'wdm', '>= 0.1.0'
+
+# update ruby version
+gem 'webrick'
