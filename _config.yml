@@ -1,16 +1,67 @@
+site: QA
 title: Заметки тестировщика
-email: qa-spb@yandex.ru
-description: >- 
-  Write an awesome description for your new site here :-)
-baseurl: "/blog"
-domain: qasdet.github.io 
-url: https://qasdet.github.io/blog/
-
-theme: no-style-please
+keywords: blog
+description: Заметки тестировщика
+lang: en-US
+timezone: Europe/Moscow
+repo: null
+google_verify: XXX
+google_analytics: UA-XXXXXXXX-00
+discus-identifier: XXX
+author:
+  name: qa engineer
+  bio: 'qa, linux, python, django, drf'
+  picture: assets/images/profile.jpg
+  github: null
+  twitter: null
+  facebook: null
+  instagram: null
+  youtube: null
+  linkedin: null
+  email: qa-admin@sknt.ru
+url: 'http://127.0.0.1:4000'
+permalink: pretty
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+exclude:
+  - .jekyll-cache
+  - .obsidian
+  - Gemfile
+  - Gemfile.lock
+  - README.md
 plugins:
-  - jekyll-feed
-
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-relative-links
+paginate: 20
+paginate_path: '/page/:num'
+collections:
+  pages:
+    output: true
+    permalink: '/:name'
+  posts:
+    output: true
+    permalink: '/:slug'
+defaults:
+  - scope:
+      path: ''
+    values:
+      layout: default
+  - scope:
+      path: ''
+      type: pages
+    values:
+      layout: page
+  - scope:
+      path: ''
+      type: posts
+    values:
+      layout: post
 jekyll_admin:
-  hidden_links:
-    - datafiles
-  homepage: "pages"
+  hidden_links: null
+  homepage: pages
+relative_links:
+  enabled: true
+  collections: false
