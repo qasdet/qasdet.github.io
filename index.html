@@ -111,20 +111,6 @@
             font-size: 0.9rem;
         }
         
-        .cursor {
-            display: inline-block;
-            width: 3px;
-            height: 1.2em;
-            background-color: #000;
-            margin-left: 2px;
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        
         .menu {
             display: flex;
             justify-content: center;
@@ -479,97 +465,21 @@
             }
         ];
         
-        // Quote rotation functionality with typing effect
+        // Simple quote rotation functionality
         let currentQuoteIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-        let currentText = '';
-        let fullText = '';
-        let authorText = '';
         
-        function typeQuote() {
-            // Get current quote
-            const currentQuote = quotes[currentQuoteIndex];
-            
-            // Set full text based on whether we're deleting or typing
-            if (!isDeleting) {
-                fullText = currentQuote.text;
-                authorText = "— " + currentQuote.author;
-            }
-            
-            // Typing speed
-            const typeSpeed = 100; // milliseconds per character
-            const deleteSpeed = 20; // milliseconds per character when deleting
-            const pauseBetweenQuotes = 20000; // 2 seconds pause between quotes
-            
-            // Handle typing or deleting
-            if (!isDeleting) {
-                // Typing text
-                if (charIndex < fullText.length) {
-                    currentText = fullText.substring(0, charIndex + 1);
-                    document.getElementById('quote-text').innerHTML = currentText + '<span class="cursor"></span>';
-                    charIndex++;
-                    setTimeout(typeQuote, typeSpeed);
-                } 
-                // Finished typing text, now type author
-                else if (charIndex >= fullText.length && charIndex < fullText.length + authorText.length + 10) {
-                    // Show author after a brief pause
-                    if (charIndex === fullText.length) {
-                        setTimeout(() => {
-                            document.getElementById('quote-author').textContent = "";
-                        }, 500);
-                    }
-                    document.getElementById('quote-author').innerHTML = authorText.substring(0, charIndex - fullText.length) + '<span class="cursor"></span>';
-                    charIndex++;
-                    setTimeout(typeQuote, typeSpeed);
-                }
-                // Finished typing everything, pause then delete
-                else {
-                    // Remove cursor when finished typing
-                    document.getElementById('quote-text').innerHTML = currentText;
-                    document.getElementById('quote-author').innerHTML = authorText;
-                    
-                    setTimeout(() => {
-                        isDeleting = true;
-                        charIndex = fullText.length + authorText.length;
-                        typeQuote();
-                    }, pauseBetweenQuotes);
-                }
-            } else {
-                // Deleting text
-                if (charIndex > 0) {
-                    if (charIndex > fullText.length) {
-                        // Delete author text first
-                        const authorLength = charIndex - fullText.length;
-                        if (authorLength > 0) {
-                            document.getElementById('quote-author').innerHTML = authorText.substring(0, authorLength) + '<span class="cursor"></span>';
-                        } else {
-                            document.getElementById('quote-author').textContent = "";
-                        }
-                    } else {
-                        // Then delete quote text
-                        currentText = fullText.substring(0, charIndex);
-                        document.getElementById('quote-text').innerHTML = currentText + '<span class="cursor"></span>';
-                        document.getElementById('quote-author').textContent = "";
-                    }
-                    charIndex--;
-                    setTimeout(typeQuote, deleteSpeed);
-                } 
-                // Finished deleting, move to next quote
-                else {
-                    // Remove cursor when finished deleting
-                    document.getElementById('quote-text').innerHTML = "";
-                    document.getElementById('quote-author').innerHTML = "";
-                    
-                    isDeleting = false;
-                    currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
-                    setTimeout(typeQuote, 500); // Brief pause before starting next quote
-                }
-            }
+        function rotateQuote() {
+            currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            document.getElementById('quote-text').textContent = quotes[currentQuoteIndex].text;
+            document.getElementById('quote-author').textContent = "— " + quotes[currentQuoteIndex].author;
         }
         
-        // Start typing effect
-        setTimeout(typeQuote, 1000);
+        // Start rotating quotes every 30 seconds
+        setInterval(rotateQuote, 30000);
+        
+        // Initial quote display
+        document.getElementById('quote-text').textContent = quotes[0].text;
+        document.getElementById('quote-author').textContent = "— " + quotes[0].author;
 
         // Blog posts data - Work section
         const workPosts = [
