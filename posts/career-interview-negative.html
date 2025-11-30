@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Как говорить о негативном опыте на собеседовании</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Slab:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto Slab', serif;
+            line-height: 1.5;
+            color: #000;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4d4d4' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .newspaper {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc;
+            position: relative;
+        }
+        
+        .newspaper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .newspaper::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .masthead {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .newspaper-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            color: #000;
+        }
+        
+        .newspaper-date {
+            font-size: 1rem;
+            margin: 0;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        .newspaper-tagline {
+            font-size: 1.2rem;
+            margin: 5px 0 15px;
+            font-style: italic;
+            color: #333;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #000;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px dotted #000;
+        }
+        
+        .back-link:hover {
+            border-bottom: 1px solid #000;
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            line-height: 1.2;
+            color: #000;
+        }
+        
+        .article-meta {
+            color: #666;
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 300;
+        }
+        
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: justify;
+        }
+        
+        .article-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 30px 0 20px 0;
+            line-height: 1.2;
+            color: #000;
+            border-left: 3px solid #000;
+            padding-left: 15px;
+        }
+        
+        .article-content p {
+            margin: 0 0 20px 0;
+        }
+        
+        .article-content ul {
+            margin: 0 0 20px 0;
+            padding-left: 20px;
+        }
+        
+        .article-content li {
+            margin-bottom: 10px;
+        }
+        
+        .article-content strong {
+            font-weight: 700;
+        }
+        
+        .decoration {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .newspaper-name {
+                font-size: 2.5rem;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-content {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper">
+        <header class="masthead">
+            <h1 class="newspaper-name">ПСИХОЛОГИЯ РАБОТЫ</h1>
+            <p class="newspaper-tagline">Анализ рабочих ситуаций с психологической точки зрения</p>
+            <p class="newspaper-date">5 января 2024</p>
+        </header>
+        
+        <main>
+            <a href="/" class="back-link">&larr; Назад к списку статей</a>
+            
+            <article>
+                <header class="article-header">
+                    <h1 class="article-title">Как говорить о негативном опыте на собеседовании</h1>
+                    <p class="article-meta">Опубликовано 5 января 2024</p>
+                </header>
+                
+                <div class="article-content">
+                    <p>Почти на каждом собеседовании вас спросят о слабых сторонах или о негативном опыте. Это нормально — у каждого были трудные периоды. Главное — уметь рассказать о них так, чтобы показать свой рост, а не жаловаться.</p>
+
+                    <h2>Почему спрашивают о слабостях</h2>
+                    <p>Работодатели не хотят найти идеального человека. Они хотят понять:</p>
+                    <ul>
+                        <li>Умеете ли вы честно оценивать себя</li>
+                        <li>Способны ли вы учиться на ошибках</li>
+                        <li>Как вы справляетесь с трудностями</li>
+                        <li>Насколько вы зрелы как специалист</li>
+                    </ul>
+                    <p>Правильный ответ на такие вопросы показывает вашу способность к развитию.</p>
+
+                    <h2>Как говорить о слабостях</h2>
+                    <p>1. <strong>Выберите настоящую слабость, но не критичную для работы.</strong> Например, если вы претендуете на позицию аналитика, не говорите "у меня плохо с аналитическим мышлением". А вот "мне сложно отказывать людям" — вполне подходящий вариант.</p>
+                    
+                    <p>2. <strong>Покажите, что вы работаете над этим.</strong> После упоминания слабости сразу скажите, что вы делаете для её улучшения. Например: "Раньше мне было сложно говорить "нет", но теперь я учусь расставлять приоритеты и объяснять причины отказа."</p>
+                    
+                    <p>3. <strong>Приведите примеры.</strong> Расскажите, как вы применили новые подходы на практике и какой результат получили.</p>
+
+                    <h2>Как рассказывать о конфликтах с руководством</h2>
+                    <p>Если вас спросят о сложных отношениях с бывшим руководителем:</p>
+                    <p><strong>Не жалуйтесь.</strong> Ни в коем случае не говорите "меня не ценили" или "руководитель ничего не понимал". Это создаёт образ жертвы и показывает, что вы не умеете решать конфликты.</p>
+                    <p><strong>Будьте нейтральны.</strong> Сосредоточьтесь на фактах, а не на эмоциях. Например: "У нас были разные взгляды на приоритеты проектов. Это помогло мне научиться лучше аргументировать свою точку зрения."</p>
+                    <p><strong>Покажите профессионализм.</strong> Расскажите, как вы сохранили рабочие отношения и выполнили свои обязанности несмотря на разногласия.</p>
+
+                    <h2>Как говорить об увольнении</h2>
+                    <p>Если вас уволили или вы ушли по неприятным причинам:</p>
+                    <p><strong>Будьте честны, но кратки.</strong> Не вдавайтесь в подробности, особенно если причина была в ваших ошибках. Скажите: "Мы не сошлись во взглядах на развитие проекта".</p>
+                    <p><strong>Сфокусируйтесь на уроках.</strong> Что вы поняли, что изменили, что будете делать иначе. Например: "Эта ситуация помогла мне понять важность чёткой коммуникации с командой."</p>
+                    <p><strong>Покажите рост.</strong> Расскажите, как вы стали лучше как специалист после этого опыта.</p>
+
+                    <h2>Как отвечать на вопрос "Почему вы ушли?"</h2>
+                    <p>Хорошие формулировки:</p>
+                    <ul>
+                        <li>"Я искал возможность применить свои навыки в более крупных проектах"</li>
+                        <li>"Мне хотелось развиваться в направлении X, а в этой компании таких возможностей не было"</li>
+                        <li>"Я понял, что хочу работать в сфере, более связанной с моими интересами"</li>
+                    </ul>
+                    <p>Избегайте:</p>
+                    <ul>
+                        <li>"Меня уволили" (если не спрашивают напрямую)</li>
+                        <li>"Коллектив был плохой"</li>
+                        <li>"Деньги были маленькие"</li>
+                    </ul>
+
+                    <h2>Помните главное</h2>
+                    <p>Люди ценят искренность и способность учиться. Никто не ожидает, что вы будете идеальны. Но важно показать, что вы не боитесь трудностей и умеете из них извлекать пользу. Именно это делает специалиста ценным для компании.</p>
+                </div>
+            </article>
+        </main>
+        
+        <div class="decoration">❧ ❧ ❧</div>
+        
+        <footer>
+            <p>&copy; 2025 Психология Работы</p>
+        </footer>
+    </div>
+</body>
+</html>

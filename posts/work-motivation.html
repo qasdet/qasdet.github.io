@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Как сохранить мотивацию на работе</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Slab:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto Slab', serif;
+            line-height: 1.5;
+            color: #000;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4d4d4' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .newspaper {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc;
+            position: relative;
+        }
+        
+        .newspaper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .newspaper::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .masthead {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .newspaper-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            color: #000;
+        }
+        
+        .newspaper-date {
+            font-size: 1rem;
+            margin: 0;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        .newspaper-tagline {
+            font-size: 1.2rem;
+            margin: 5px 0 15px;
+            font-style: italic;
+            color: #333;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #000;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px dotted #000;
+        }
+        
+        .back-link:hover {
+            border-bottom: 1px solid #000;
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            line-height: 1.2;
+            color: #000;
+        }
+        
+        .article-meta {
+            color: #666;
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 300;
+        }
+        
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: justify;
+        }
+        
+        .article-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 30px 0 20px 0;
+            line-height: 1.2;
+            color: #000;
+            border-left: 3px solid #000;
+            padding-left: 15px;
+        }
+        
+        .article-content p {
+            margin: 0 0 20px 0;
+        }
+        
+        .article-content ul {
+            margin: 0 0 20px 0;
+            padding-left: 20px;
+        }
+        
+        .article-content li {
+            margin-bottom: 10px;
+        }
+        
+        .article-content strong {
+            font-weight: 700;
+        }
+        
+        .decoration {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .newspaper-name {
+                font-size: 2.5rem;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-content {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper">
+        <header class="masthead">
+            <h1 class="newspaper-name">ПСИХОЛОГИЯ РАБОТЫ</h1>
+            <p class="newspaper-tagline">Анализ рабочих ситуаций с психологической точки зрения</p>
+            <p class="newspaper-date">20 декабря 2025</p>
+        </header>
+        
+        <main>
+            <a href="/" class="back-link">&larr; Назад к списку статей</a>
+            
+            <article>
+                <header class="article-header">
+                    <h1 class="article-title">Как сохранить мотивацию на работе</h1>
+                    <p class="article-meta">Опубликовано 20 декабря 2025</p>
+                </header>
+                
+                <div class="article-content">
+                    <p>Мотивация — это то, что заставляет нас вставать по утрам и идти на работу. Но со временем этот огонёк может угасать. Почему это происходит и как его снова зажечь?</p>
+
+                    <h2>Почему исчезает мотивация</h2>
+                    <p>Существует несколько причин, по которым мы теряем интерес к работе:</p>
+                    <ul>
+                        <li><strong>Отсутствие прогресса.</strong> Когда кажется, что делаешь одно и то же день за днем без развития.</li>
+                        <li><strong>Несоответствие ценностей.</strong> Когда работа противоречит нашим внутренним убеждениям.</li>
+                        <li><strong>Отсутствие признания.</strong> Когда усилия остаются незамеченными.</li>
+                        <li><strong>Перегрузка.</strong> Когда работы так много, что нет сил на что-то ещё.</li>
+                        <li><strong>Отсутствие смысла.</strong> Когда не видно, как ваша работа влияет на общий результат.</li>
+                    </ul>
+
+                    <h2>Как снова почувствовать интерес к работе</h2>
+                    <p>1. <strong>Найдите смысл в своей работе.</strong> Даже если задачи кажутся простыми, подумайте, как они помогают коллегам, клиентам или компании в целом. Каждая роль важна.</p>
+                    
+                    <p>2. <strong>Ставьте себе маленькие цели.</strong> Вместо "стать лучшим специалистом" поставьте цель "научиться новой функции программы до конца недели". Маленькие победы поддерживают мотивацию.</p>
+                    
+                    <p>3. <strong>Ищите возможности для роста.</strong> Поговорите с руководителем о новых задачах, курсах или проектах. Даже небольшие изменения в рутине могут освежить интерес.</p>
+                    
+                    <p>4. <strong>Отмечайте свои достижения.</strong> Ведите дневник успехов — записывайте, чего вы достигли за день, неделю, месяц. Это помогает видеть прогресс.</p>
+                    
+                    <p>5. <strong>Создайте комфортную рабочую среду.</strong> Украсьте рабочее место, найдите удобный стул, организуйте пространство так, чтобы вам было приятно находиться там.</p>
+
+                    <h2>Как мотивировать себя каждый день</h2>
+                    <p>Вот простые практики, которые помогут начать день с правильным настроем:</p>
+                    <p><strong>Начните с благодарности.</strong> Перед началом работы подумайте о трёх вещах, за которые вы благодарны в своей работе. Это может быть коллега, интересная задача или просто стабильный доход.</p>
+                    <p><strong>Планируйте день.</strong> Напишите 3 самых важных дела, которые вы хотите выполнить. Сосредоточьтесь на них в первую очередь.</p>
+                    <p><strong>Делайте перерывы.</strong> Регулярные паузы помогают мозгу отдыхать и возвращаться к работе с новыми силами.</p>
+                    <p><strong>Хвалите себя.</strong> За каждое выполненное дело, даже самое маленькое, говорите себе "хорошо сделано".</p>
+
+                    <h2>Когда менять работу</h2>
+                    <p>Иногда мотивация исчезает потому, что мы оказались не в том месте. Задайте себе вопросы:</p>
+                    <ul>
+                        <li>Соответствует ли моя работа моим интересам и талантам?</li>
+                        <li>Есть ли здесь возможности для развития?</li>
+                        <li>Ценит ли компания мои усилия?</li>
+                        <li>Хочу ли я продолжать работать здесь через год?</li>
+                    </ul>
+                    <p>Если на большинство вопросов ответ "нет", возможно, пришло время искать что-то новое.</p>
+
+                    <h2>Помните главное</h2>
+                    <p>Мотивация — как костёр. Её нужно регулярно подкладывать дрова: новые цели, интересные задачи, признание успехов. Если этого не делать, огонь потухнет. Но при должном внимании он может гореть долго и ярко.</p>
+                </div>
+            </article>
+        </main>
+        
+        <div class="decoration">❧ ❧ ❧</div>
+        
+        <footer>
+            <p>&copy; 2025 Психология Работы</p>
+        </footer>
+    </div>
+</body>
+</html>

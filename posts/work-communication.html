@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Как эффективно общаться на работе</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Slab:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto Slab', serif;
+            line-height: 1.5;
+            color: #000;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4d4d4' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .newspaper {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc;
+            position: relative;
+        }
+        
+        .newspaper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .newspaper::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .masthead {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .newspaper-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            color: #000;
+        }
+        
+        .newspaper-date {
+            font-size: 1rem;
+            margin: 0;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        .newspaper-tagline {
+            font-size: 1.2rem;
+            margin: 5px 0 15px;
+            font-style: italic;
+            color: #333;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #000;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px dotted #000;
+        }
+        
+        .back-link:hover {
+            border-bottom: 1px solid #000;
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            line-height: 1.2;
+            color: #000;
+        }
+        
+        .article-meta {
+            color: #666;
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 300;
+        }
+        
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: justify;
+        }
+        
+        .article-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 30px 0 20px 0;
+            line-height: 1.2;
+            color: #000;
+            border-left: 3px solid #000;
+            padding-left: 15px;
+        }
+        
+        .article-content p {
+            margin: 0 0 20px 0;
+        }
+        
+        .article-content ul {
+            margin: 0 0 20px 0;
+            padding-left: 20px;
+        }
+        
+        .article-content li {
+            margin-bottom: 10px;
+        }
+        
+        .article-content strong {
+            font-weight: 700;
+        }
+        
+        .decoration {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .newspaper-name {
+                font-size: 2.5rem;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-content {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper">
+        <header class="masthead">
+            <h1 class="newspaper-name">ПСИХОЛОГИЯ РАБОТЫ</h1>
+            <p class="newspaper-tagline">Анализ рабочих ситуаций с психологической точки зрения</p>
+            <p class="newspaper-date">15 декабря 2025</p>
+        </header>
+        
+        <main>
+            <a href="/" class="back-link">&larr; Назад к списку статей</a>
+            
+            <article>
+                <header class="article-header">
+                    <h1 class="article-title">Как эффективно общаться на работе</h1>
+                    <p class="article-meta">Опубликовано 15 декабря 2025</p>
+                </header>
+                
+                <div class="article-content">
+                    <p>Эффективное общение на работе — ключ к успеху в любой профессии. Оно влияет на качество выполнения задач, уровень удовлетворенности работой и даже на карьерный рост. Но почему-то этому важному навыку почти никогда не учат в школе или университете.</p>
+
+                    <h2>Основы эффективного общения</h2>
+                    <p>Хорошее общение — это не только правильно подобранные слова. Это целый комплекс навыков:</p>
+                    <ul>
+                        <li><strong>Умение слушать.</strong> Настоящее внимание к собеседнику, а не только ожидание своей очереди говорить.</li>
+                        <li><strong>Четкость.</strong> Ясное выражение мыслей без лишних слов и воды.</li>
+                        <li><strong>Эмпатия.</strong> Понимание чувств и точек зрения других людей.</li>
+                        <li><strong>Сдержанность.</strong> Умение контролировать эмоции в сложных ситуациях.</li>
+                    </ul>
+
+                    <h2>Как говорить с руководителем</h2>
+                    <p>Общение с начальством часто вызывает тревогу. Вот несколько правил, которые помогут:</p>
+                    <p><strong>Подготовьтесь заранее.</strong> Продумайте, что именно вы хотите сказать, какие вопросы задать. Запишите основные моменты.</p>
+                    <p><strong>Выберите подходящее время.</strong> Не начинайте важные разговоры в конце дня или перед важными встречами руководителя.</p>
+                    <p><strong>Будьте конкретны.</strong> Вместо "у меня проблема с проектом" скажите "мне нужна помощь с задачей X, потому что столкнулся с трудностями Y".</p>
+                    <p><strong>Предлагайте решения.</strong> Не только рассказывайте о проблемах, но и предлагайте варианты их решения.</p>
+
+                    <h2>Как общаться с коллегами</h2>
+                    <p>С коллегами мы проводим большую часть рабочего времени. Хорошие отношения с ними делают работу приятнее и продуктивнее:</p>
+                    <p><strong>Будьте доброжелательны.</strong> Простое "доброе утро" или "как дела?" создает позитивную атмосферу.</p>
+                    <p><strong>Уважайте личные границы.</strong> Не все любят болтать на каждом перерыве. Учитывайте индивидуальные особенности.</p>
+                    <p><strong>Давайте четкие инструкции.</strong> При передаче задач объясняйте цели, сроки и ожидаемый результат.</p>
+                    <p><strong>Будьте открыты к обратной связи.</strong> Принимайте критику конструктивно, не воспринимайте её как личное нападение.</p>
+
+                    <h2>Как вести сложные разговоры</h2>
+                    <p>Иногда приходится обсуждать неприятные темы: критика, конфликты, ошибки. Вот как сделать это правильно:</p>
+                    <p><strong>Используйте формулу "Я" вместо "Ты".</strong> Вместо "ты всегда опаздываешь" скажите "мне важно, чтобы мы начинали встречи вовремя".</p>
+                    <p><strong>Сосредоточьтесь на фактах, а не на личности.</strong> Обсуждайте действия, а не характер человека.</p>
+                    <p><strong>Выбирайте подходящее место.</strong> Сложные разговоры лучше проводить наедине, а не при всех коллегах.</p>
+                    <p><strong>Слушайте ответ.</strong> Дайте человеку возможность объясниться и предложить своё решение.</p>
+
+                    <h2>Помните главное</h2>
+                    <p>Эффективное общение — это навык, который развивается с практикой. Не ожидайте мгновенных результатов. Наблюдайте за реакцией коллег, учитесь на ошибках и постепенно выработаете свой стиль общения, который будет работать именно в вашей рабочей среде.</p>
+                </div>
+            </article>
+        </main>
+        
+        <div class="decoration">❧ ❧ ❧</div>
+        
+        <footer>
+            <p>&copy; 2025 Психология Работы</p>
+        </footer>
+    </div>
+</body>
+</html>
