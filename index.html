@@ -74,18 +74,41 @@
             color: #000;
         }
         
-        .newspaper-date {
-            font-size: 1rem;
-            margin: 0;
-            color: #666;
-            font-weight: 300;
-        }
-        
         .newspaper-tagline {
             font-size: 1.2rem;
             margin: 5px 0 15px;
             font-style: italic;
             color: #333;
+        }
+        
+        .psychologist-quote {
+            margin: 20px auto;
+            padding: 15px 20px;
+            border-left: 3px solid #000;
+            background-color: #f9f9f9;
+            max-width: 80%;
+            font-style: italic;
+        }
+        
+        .psychologist-quote p {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        
+        .psychologist-quote cite {
+            display: block;
+            text-align: right;
+            font-weight: bold;
+            font-style: normal;
+            font-size: 0.9rem;
+        }
+        
+        .newspaper-date {
+            font-size: 1rem;
+            margin: 0;
+            color: #666;
+            font-weight: 300;
         }
         
         .articles-container {
@@ -183,6 +206,10 @@
         <header class="masthead">
             <h1 class="newspaper-name">ПСИХОЛОГИЯ РАБОТЫ</h1>
             <p class="newspaper-tagline">Анализ рабочих ситуаций с психологической точки зрения</p>
+            <blockquote class="psychologist-quote">
+                <p>"Токсичное лидерство — это форма психологического насилия, при которой руководитель, вместо того чтобы вести за собой, тянет коллектив в пропасть собственных комплексов и страхов."</p>
+                <cite>— Др. Игорь Манн, психолог и эксперт по управлению</cite>
+            </blockquote>
             <p class="newspaper-date" id="current-date"></p>
         </header>
         
