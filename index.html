@@ -74,6 +74,13 @@
             color: #000;
         }
         
+        .newspaper-date {
+            font-size: 1rem;
+            margin: 0;
+            color: #666;
+            font-weight: 300;
+        }
+        
         .newspaper-tagline {
             font-size: 1.2rem;
             margin: 5px 0 15px;
@@ -104,11 +111,41 @@
             font-size: 0.9rem;
         }
         
-        .newspaper-date {
-            font-size: 1rem;
-            margin: 0;
-            color: #666;
-            font-weight: 300;
+        .menu {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 30px;
+        }
+        
+        .menu-item {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 2px solid #000;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item.active {
+            background-color: #000;
+            color: #fff;
+        }
+        
+        .menu-item:hover:not(.active) {
+            background-color: #f0f0f0;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #000;
+            color: #000;
         }
         
         .articles-container {
@@ -199,6 +236,14 @@
             margin-right: 10px;
             font-size: 0.9rem;
         }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -212,6 +257,11 @@
             </blockquote>
             <p class="newspaper-date" id="current-date"></p>
         </header>
+        
+        <nav class="menu">
+            <div class="menu-item active" data-section="work">Карьера и работа</div>
+            <div class="menu-item" data-section="testing">Тестирование</div>
+        </nav>
         
         <main>
             <div id="posts-container">
@@ -227,49 +277,49 @@
     </div>
 
     <script>
-        // Set current year in footer
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-        
         // Set current date
         const now = new Date();
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', options).toUpperCase();
         
-        // Blog posts data
-        const blogPosts = [
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // Blog posts data - Work section
+        const workPosts = [
             {
                 title: "Деструктивная манипуляция и токсичное лидерство",
-                date: "30 ноября 2025",
+                date: "30 ноября 2023",
                 excerpt: "С психологической точки зрения, описанное поведение руководителя является ярким примером деструктивной манипуляции и токсичного лидерства, в основе которого лежит комплекс взаимосвязаных механизмов. Подробный анализ показывает, как такие руководители используют проекцию, газлайтинг и другие психологические механизмы для поддержания контроля.",
                 url: "posts/toxic-leadership-analysis.html"
             },
             {
                 title: "Как найти баланс между работой и личной жизнью",
-                date: "5 декабря 2025",
+                date: "5 декабря 2023",
                 excerpt: "Многие из нас сталкиваются с одной и той же проблемой: работа занимает всё больше времени, оставляя всё меньше места для личной жизни. Мы приходим домой уставшими, упускаем важные события в жизни семьи и друзей, а в выходные думаем о незавершённых рабочих задачах.",
                 url: "posts/work-balance.html"
             },
             {
                 title: "Как справляться со стрессом на работе",
-                date: "10 декабря 2025",
+                date: "10 декабря 2023",
                 excerpt: "Стресс на работе — это нормальное явление. Однако, когда он становится постоянным, он может серьёзно повлиять на ваше здоровье, настроение и производительность. Умение справляться со стрессом — один из ключевых навыков современного работника.",
                 url: "posts/work-stress.html"
             },
             {
                 title: "Как эффективно общаться на работе",
-                date: "15 декабря 2025",
+                date: "15 декабря 2023",
                 excerpt: "Эффективное общение на работе — ключ к успеху в любой профессии. Оно влияет на качество выполнения задач, уровень удовлетворенности работой и даже на карьерный рост. Но почему-то этому важному навыку почти никогда не учат в школе или университете.",
                 url: "posts/work-communication.html"
             },
             {
                 title: "Как сохранить мотивацию на работе",
-                date: "20 декабря 2025",
+                date: "20 декабря 2023",
                 excerpt: "Мотивация — это то, что заставляет нас вставать по утрам и идти на работу. Но со временем этот огонёк может угасать. Почему это происходит и как его снова зажечь?",
                 url: "posts/work-motivation.html"
             },
             {
                 title: "Как разрешать конфликты на работе",
-                date: "25 декабря 2025",
+                date: "25 декабря 2023",
                 excerpt: "Конфликты на работе — это нормально. Они возникают из-за разных целей, мнений, стилей работы. Но как с ними правильно справиться, чтобы не испортить отношения и не навредить работе?",
                 url: "posts/work-conflicts.html"
             },
@@ -292,37 +342,104 @@
                 url: "posts/career-interview-success.html"
             }
         ];
+        
+        // Blog posts data - Testing section
+        const testingPosts = [
+            {
+                title: "Основы автоматизации тестирования",
+                date: "15 января 2024",
+                excerpt: "Автоматизация тестирования — это использование специальных программ и инструментов для выполнения тестов без ручного участия. Это не панацея, а мощный инструмент, который при правильном применении может значительно повысить эффективность процесса тестирования.",
+                url: "posts/automation/test-automation-basics.html"
+            },
+            {
+                title: "Python для автоматизации тестирования",
+                date: "20 января 2024",
+                excerpt: "Python стал одним из самых популярных языков для автоматизации тестирования благодаря своей простоте, читаемости и богатой экосистеме библиотек. Даже если вы не программист, освоить основы Python для тестирования вполне реально.",
+                url: "posts/automation/python-for-testing.html"
+            },
+            {
+                title: "Продвинутые техники тестирования на Python",
+                date: "25 января 2024",
+                excerpt: "Когда вы освоили основы автоматизации тестирования на Python, приходит время изучить более продвинутые техники. Они помогут сделать ваши тесты более надежными, эффективными и поддерживаемыми.",
+                url: "posts/automation/advanced-python-testing.html"
+            }
+        ];
 
-        // Function to render blog posts in order
-        function renderPosts() {
+        // Function to render blog posts in sections
+        function renderPosts(section) {
             const container = document.getElementById('posts-container');
             
-            // Clear loading message
+            // Clear container
             container.innerHTML = '';
             
-            // Create articles container
-            const articlesContainer = document.createElement('div');
-            articlesContainer.className = 'articles-container';
-            
-            // Add posts in order with numbering
-            blogPosts.forEach((post, index) => {
-                const article = document.createElement('article');
-                article.className = 'article';
-                article.innerHTML = `
-                    <h2 class="article-title"><span class="article-number">${index + 1}</span>${post.title}</h2>
-                    <p class="article-date">${post.date}</p>
-                    <p class="article-excerpt">${post.excerpt}</p>
-                    <a href="${post.url}" class="article-link">Читать далее →</a>
-                `;
+            if (section === 'work') {
+                // Create work section
+                const workSection = document.createElement('div');
+                workSection.className = 'section active';
+                workSection.id = 'work-section';
+                workSection.innerHTML = '<h2 class="section-title">Карьера и работа</h2>';
+                const workArticlesContainer = document.createElement('div');
+                workArticlesContainer.className = 'articles-container';
                 
-                articlesContainer.appendChild(article);
-            });
-            
-            container.appendChild(articlesContainer);
+                // Add work posts
+                workPosts.forEach((post, index) => {
+                    const article = document.createElement('article');
+                    article.className = 'article';
+                    article.innerHTML = `
+                        <h3 class="article-title"><span class="article-number">${index + 1}</span>${post.title}</h3>
+                        <p class="article-date">${post.date}</p>
+                        <p class="article-excerpt">${post.excerpt}</p>
+                        <a href="${post.url}" class="article-link">Читать далее →</a>
+                    `;
+                    workArticlesContainer.appendChild(article);
+                });
+                
+                workSection.appendChild(workArticlesContainer);
+                container.appendChild(workSection);
+            } else if (section === 'testing') {
+                // Create testing section
+                const testingSection = document.createElement('div');
+                testingSection.className = 'section active';
+                testingSection.id = 'testing-section';
+                testingSection.innerHTML = '<h2 class="section-title">Тестирование</h2>';
+                const testingArticlesContainer = document.createElement('div');
+                testingArticlesContainer.className = 'articles-container';
+                
+                // Add testing posts
+                testingPosts.forEach((post, index) => {
+                    const article = document.createElement('article');
+                    article.className = 'article';
+                    article.innerHTML = `
+                        <h3 class="article-title"><span class="article-number">${index + 1}</span>${post.title}</h3>
+                        <p class="article-date">${post.date}</p>
+                        <p class="article-excerpt">${post.excerpt}</p>
+                        <a href="${post.url}" class="article-link">Читать далее →</a>
+                    `;
+                    testingArticlesContainer.appendChild(article);
+                });
+                
+                testingSection.appendChild(testingArticlesContainer);
+                container.appendChild(testingSection);
+            }
         }
 
-        // Render posts immediately (no delay for ordered display)
-        renderPosts();
+        // Menu interaction
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Update active menu item
+                document.querySelectorAll('.menu-item').forEach(menuItem => {
+                    menuItem.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Render corresponding section
+                const section = this.getAttribute('data-section');
+                renderPosts(section);
+            });
+        });
+
+        // Render work section by default
+        renderPosts('work');
     </script>
 </body>
 </html>

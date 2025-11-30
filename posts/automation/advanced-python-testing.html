@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продвинутые техники тестирования на Python</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Slab:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto Slab', serif;
+            line-height: 1.5;
+            color: #000;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4d4d4' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .newspaper {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc;
+            position: relative;
+        }
+        
+        .newspaper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .newspaper::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .masthead {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .newspaper-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            color: #000;
+        }
+        
+        .newspaper-date {
+            font-size: 1rem;
+            margin: 0;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        .newspaper-tagline {
+            font-size: 1.2rem;
+            margin: 5px 0 15px;
+            font-style: italic;
+            color: #333;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #000;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px dotted #000;
+        }
+        
+        .back-link:hover {
+            border-bottom: 1px solid #000;
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            line-height: 1.2;
+            color: #000;
+        }
+        
+        .article-meta {
+            color: #666;
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 300;
+        }
+        
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: justify;
+        }
+        
+        .article-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 30px 0 20px 0;
+            line-height: 1.2;
+            color: #000;
+            border-left: 3px solid #000;
+            padding-left: 15px;
+        }
+        
+        .article-content p {
+            margin: 0 0 20px 0;
+        }
+        
+        .article-content ul {
+            margin: 0 0 20px 0;
+            padding-left: 20px;
+        }
+        
+        .article-content li {
+            margin-bottom: 10px;
+        }
+        
+        .article-content strong {
+            font-weight: 700;
+        }
+        
+        .article-content pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+        
+        .decoration {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .newspaper-name {
+                font-size: 2.5rem;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-content {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper">
+        <header class="masthead">
+            <h1 class="newspaper-name">ПСИХОЛОГИЯ РАБОТЫ</h1>
+            <p class="newspaper-tagline">Анализ рабочих ситуаций с психологической точки зрения</p>
+            <p class="newspaper-date">25 января 2024</p>
+        </header>
+        
+        <main>
+            <a href="/" class="back-link">&larr; Назад к списку статей</a>
+            
+            <article>
+                <header class="article-header">
+                    <h1 class="article-title">Продвинутые техники тестирования на Python</h1>
+                    <p class="article-meta">Опубликовано 25 января 2024</p>
+                </header>
+                
+                <div class="article-content">
+                    <p>Когда вы освоили основы автоматизации тестирования на Python, приходит время изучить более продвинутые техники. Они помогут сделать ваши тесты более надежными, эффективными и поддерживаемыми.</p>
+
+                    <h2>Фикстуры в pytest</h2>
+                    <p>Фикстуры — это мощный механизм pytest для подготовки тестового окружения. Они позволяют избежать дублирования кода и управлять ресурсами тестов.</p>
+                    <pre>
+import pytest
+
+@pytest.fixture
+def user_data():
+    return {
+        "name": "Иван Иванов",
+        "email": "ivan@example.com",
+        "age": 30
+    }
+
+def test_user_name(user_data):
+    assert user_data["name"] == "Иван Иванов"
+
+def test_user_email(user_data):
+    assert "@" in user_data["email"]
+                    </pre>
+                    <p>Фикстуры могут иметь разную область видимости (function, class, module, session) и могут выполнять код до и после тестов.</p>
+
+                    <h2>Параметризованные тесты</h2>
+                    <p>Вместо написания множества похожих тестов, можно использовать параметризацию:</p>
+                    <pre>
+import pytest
+
+@pytest.mark.parametrize("a, b, expected", [
+    (2, 3, 5),
+    (1, 1, 2),
+    (0, 5, 5),
+    (-1, 1, 0),
+])
+def test_addition(a, b, expected):
+    assert a + b == expected
+                    </pre>
+                    <p>Это позволяет запускать один и тот же тест с разными наборами данных, что особенно полезно для проверки граничных условий.</p>
+
+                    <h2>Моки и стабы</h2>
+                    <p>Моки позволяют имитировать поведение внешних зависимостей, таких как API или базы данных:</p>
+                    <pre>
+from unittest.mock import Mock, patch
+import requests
+
+def get_user_data(user_id):
+    response = requests.get(f"https://api.example.com/users/{user_id}")
+    return response.json()
+
+@patch('requests.get')
+def test_get_user_data(mock_get):
+    # Настраиваем мок
+    mock_get.return_value.json.return_value = {
+        "id": 1,
+        "name": "Иван"
+    }
+    
+    # Выполняем тест
+    result = get_user_data(1)
+    
+    # Проверяем результат
+    assert result["name"] == "Иван"
+    mock_get.assert_called_once_with("https://api.example.com/users/1")
+                    </pre>
+
+                    <h2>Тестирование веб-приложений с Selenium</h2>
+                    <p>Для более сложных сценариев тестирования веб-приложений используйте Page Object Model:</p>
+                    <pre>
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+class LoginPage:
+    def __init__(self, driver):
+        self.driver = driver
+        
+    def enter_username(self, username):
+        self.driver.find_element(By.ID, "username").send_keys(username)
+        
+    def enter_password(self, password):
+        self.driver.find_element(By.ID, "password").send_keys(password)
+        
+    def click_login(self):
+        self.driver.find_element(By.ID, "login-button").click()
+        
+    def login(self, username, password):
+        self.enter_username(username)
+        self.enter_password(password)
+        self.click_login()
+
+# Использование в тесте
+def test_successful_login():
+    driver = webdriver.Chrome()
+    login_page = LoginPage(driver)
+    login_page.login("user", "password")
+    # Проверяем успешный вход
+    assert "dashboard" in driver.current_url
+    driver.quit()
+                    </pre>
+
+                    <h2>Работа с API</h2>
+                    <p>Для тестирования REST API используйте библиотеку requests вместе с pytest:</p>
+                    <pre>
+import requests
+import pytest
+
+BASE_URL = "https://api.example.com"
+
+def test_create_user():
+    user_data = {
+        "name": "Новый пользователь",
+        "email": "newuser@example.com"
+    }
+    
+    response = requests.post(f"{BASE_URL}/users", json=user_data)
+    
+    assert response.status_code == 201
+    created_user = response.json()
+    assert created_user["name"] == user_data["name"]
+    assert created_user["email"] == user_data["email"]
+
+def test_get_user():
+    response = requests.get(f"{BASE_URL}/users/1")
+    
+    assert response.status_code == 200
+    user = response.json()
+    assert "name" in user
+    assert "email" in user
+                    </pre>
+
+                    <h2>Отчеты и интеграция</h2>
+                    <p>Для генерации красивых отчетов используйте плагины pytest:</p>
+                    <pre>
+# Установка плагинов
+# pip install pytest-html pytest-xdist
+
+# Генерация HTML отчета
+# pytest --html=report.html
+
+# Параллельный запуск тестов
+# pytest -n 4
+                    </pre>
+                    <p>Это позволяет запускать тесты параллельно и получать подробные отчеты о результатах.</p>
+
+                    <h2>Лучшие практики</h2>
+                    <p>1. <strong>Используйте осмысленные имена для тестов.</strong> Название теста должно ясно указывать, что именно проверяется.</p>
+                    <p>2. <strong>Следуйте принципу AAA.</strong> Arrange (подготовка), Act (действие), Assert (проверка).</p>
+                    <p>3. <strong>Делайте тесты независимыми.</strong> Каждый тест должен работать независимо от других.</p>
+                    <p>4. <strong>Используйте фикстуры для подготовки данных.</strong> Это упрощает поддержку тестов.</p>
+                    <p>5. <strong>Покрывайте граничные условия.</strong> Тесты на 0, отрицательные числа, пустые строки и т.д.</p>
+
+                    <h2>Помните главное</h2>
+                    <p>Продвинутые техники тестирования — это не про сложность ради сложности, а про эффективность и надежность. Используйте эти подходы для создания тестов, которые легко читаются, поддерживаются и действительно помогают находить ошибки. Помните, что цель автоматизации — не заменить ручное тестирование, а дополнить его и освободить время для более творческой работы.</p>
+                </div>
+            </article>
+        </main>
+        
+        <div class="decoration">❧ ❧ ❧</div>
+        
+        <footer>
+            <p>&copy; <span id="current-year"></span> Психология Работы</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

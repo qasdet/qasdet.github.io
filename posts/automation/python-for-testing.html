@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python для автоматизации тестирования</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Slab:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto Slab', serif;
+            line-height: 1.5;
+            color: #000;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4d4d4' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .newspaper {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc;
+            position: relative;
+        }
+        
+        .newspaper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .newspaper::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .masthead {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .newspaper-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            color: #000;
+        }
+        
+        .newspaper-date {
+            font-size: 1rem;
+            margin: 0;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        .newspaper-tagline {
+            font-size: 1.2rem;
+            margin: 5px 0 15px;
+            font-style: italic;
+            color: #333;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #000;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px dotted #000;
+        }
+        
+        .back-link:hover {
+            border-bottom: 1px solid #000;
+        }
+        
+        .article-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            line-height: 1.2;
+            color: #000;
+        }
+        
+        .article-meta {
+            color: #666;
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 300;
+        }
+        
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            text-align: justify;
+        }
+        
+        .article-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 30px 0 20px 0;
+            line-height: 1.2;
+            color: #000;
+            border-left: 3px solid #000;
+            padding-left: 15px;
+        }
+        
+        .article-content p {
+            margin: 0 0 20px 0;
+        }
+        
+        .article-content ul {
+            margin: 0 0 20px 0;
+            padding-left: 20px;
+        }
+        
+        .article-content li {
+            margin-bottom: 10px;
+        }
+        
+        .article-content strong {
+            font-weight: 700;
+        }
+        
+        .decoration {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .newspaper-name {
+                font-size: 2.5rem;
+            }
+            
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-content {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper">
+        <header class="masthead">
+            <h1 class="newspaper-name">ПСИХОЛОГИЯ РАБОТЫ</h1>
+            <p class="newspaper-tagline">Анализ рабочих ситуаций с психологической точки зрения</p>
+            <p class="newspaper-date">20 января 2024</p>
+        </header>
+        
+        <main>
+            <a href="/" class="back-link">&larr; Назад к списку статей</a>
+            
+            <article>
+                <header class="article-header">
+                    <h1 class="article-title">Python для автоматизации тестирования</h1>
+                    <p class="article-meta">Опубликовано 20 января 2024</p>
+                </header>
+                
+                <div class="article-content">
+                    <p>Python стал одним из самых популярных языков для автоматизации тестирования благодаря своей простоте, читаемости и богатой экосистеме библиотек. Даже если вы не программист, освоить основы Python для тестирования вполне реально.</p>
+
+                    <h2>Почему Python для тестирования</h2>
+                    <p>Преимущества Python в контексте тестирования:</p>
+                    <ul>
+                        <li><strong>Простота изучения.</strong> Синтаксис Python близок к естественному языку, что делает его доступным для новичков.</li>
+                        <li><strong>Богатая экосистема.</strong> Множество библиотек специально для тестирования: pytest, unittest, selenium, requests и др.</li>
+                        <li><strong>Читаемость кода.</strong> Тесты на Python легко читаются и поддерживаются.</li>
+                        <li><strong>Кроссплатформенность.</strong> Python работает на всех основных операционных системах.</li>
+                        <li><strong>Активное сообщество.</strong> Много обучающих материалов, форумов и готовых решений.</li>
+                    </ul>
+
+                    <h2>Основы Python для тестировщиков</h2>
+                    <p>Вам не нужно становиться экспертом в программировании, но базовые знания необходимы:</p>
+                    <p><strong>Переменные и типы данных:</strong></p>
+                    <ul>
+                        <li>Строки (string) — для работы с текстом</li>
+                        <li>Числа (int, float) — для математических вычислений</li>
+                        <li>Списки (list) — для хранения наборов данных</li>
+                        <li>Словари (dict) — для хранения пар ключ-значение</li>
+                    </ul>
+                    <p><strong>Управляющие конструкции:</strong></p>
+                    <ul>
+                        <li>Условия (if/else) — для принятия решений в тестах</li>
+                        <li>Циклы (for, while) — для повторяющихся действий</li>
+                    </ul>
+                    <p><strong>Функции:</strong> Позволяют повторно использовать код тестов</p>
+
+                    <h2>Популярные библиотеки для тестирования</h2>
+                    <p><strong>pytest</strong> — современный фреймворк для написания тестов. Прост в использовании и имеет множество плагинов:</p>
+                    <pre>
+def test_addition():
+    assert 2 + 2 == 4
+
+def test_string_length():
+    text = "Hello, World!"
+    assert len(text) == 13
+                    </pre>
+                    
+                    <p><strong>Selenium WebDriver</strong> — для автоматизации браузерных тестов:</p>
+                    <pre>
+from selenium import webdriver
+
+driver = webdriver.Chrome()
+driver.get("https://example.com")
+assert "Example" in driver.title
+driver.quit()
+                    </pre>
+                    
+                    <p><strong>requests</strong> — для тестирования API:</p>
+                    <pre>
+import requests
+
+response = requests.get("https://api.example.com/users")
+assert response.status_code == 200
+                    </pre>
+
+                    <h2>Как начать учить Python для тестирования</h2>
+                    <p>1. <strong>Установите Python.</strong> Скачайте с python.org и установите последнюю стабильную версию.</p>
+                    
+                    <p>2. <strong>Выберите редактор кода.</strong> Начните с простого редактора вроде VS Code или PyCharm Community Edition.</p>
+                    
+                    <p>3. <strong>Изучите основы.</strong> Пройдите бесплатный курс или книгу для новичков. Сосредоточьтесь на переменных, условиях, циклах и функциях.</p>
+                    
+                    <p>4. <strong>Практикуйтесь на реальных задачах.</strong> Начните с простых тестов для сайтов, которые вы используете ежедневно.</p>
+                    
+                    <p>5. <strong>Изучите тестовые фреймворки.</strong> Начните с pytest — он интуитивно понятен даже для новичков.</p>
+
+                    <h2>Пример простого теста</h2>
+                    <p>Вот пример теста, который проверяет работу калькулятора:</p>
+                    <pre>
+# calculator.py
+def add(a, b):
+    return a + b
+
+def divide(a, b):
+    if b == 0:
+        raise ValueError("Cannot divide by zero")
+    return a / b
+
+# test_calculator.py
+import pytest
+from calculator import add, divide
+
+def test_add():
+    assert add(2, 3) == 5
+    assert add(-1, 1) == 0
+
+def test_divide():
+    assert divide(10, 2) == 5
+    assert divide(9, 3) == 3
+
+def test_divide_by_zero():
+    with pytest.raises(ValueError):
+        divide(10, 0)
+                    </pre>
+
+                    <h2>Ресурсы для изучения</h2>
+                    <p>Бесплатные ресурсы:</p>
+                    <ul>
+                        <li>Официальный сайт Python (docs.python.org) — документация и туториалы</li>
+                        <li>Real Python (realpython.com) — практические статьи и курсы</li>
+                        <li>Automate the Boring Stuff (automatetheboringstuff.com) — книга с практическими примерами</li>
+                    </ul>
+                    <p>Платные ресурсы:</p>
+                    <ul>
+                        <li>Coursera, Udemy — курсы по Python для тестировщиков</li>
+                        <li>Test Automation University (testautomationu.applitools.com) — специализированные курсы</li>
+                    </ul>
+
+                    <h2>Помните главное</h2>
+                    <p>Цель изучения Python для тестировщика — не стать программистом, а научиться автоматизировать рутинные задачи. Начинайте с малого, практикуйтесь регулярно и не бойтесь ошибаться. Каждый опытный автоматизатор когда-то был новичком. Главное — постоянная практика и постепенное углубление знаний.</p>
+                </div>
+            </article>
+        </main>
+        
+        <div class="decoration">❧ ❧ ❧</div>
+        
+        <footer>
+            <p>&copy; <span id="current-year"></span> Психология Работы</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
