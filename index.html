@@ -111,6 +111,20 @@
             font-size: 0.9rem;
         }
         
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background-color: #000;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
         .menu {
             display: flex;
             justify-content: center;
@@ -308,8 +322,8 @@
             <h1 class="newspaper-name">ПСИХОЛОГИЯ РАБОТЫ</h1>
             <p class="newspaper-tagline">Анализ рабочих ситуаций с психологической точки зрения</p>
             <blockquote class="psychologist-quote">
-                <p>"Токсичное лидерство — это форма психологического насилия, при которой руководитель, вместо того чтобы вести за собой, тянет коллектив в пропасть собственных комплексов и страхов."</p>
-                <cite>— Др. Игорь Манн, психолог и эксперт по управлению</cite>
+                <p id="quote-text">"Токсичное лидерство — это форма психологического насилия, при которой руководитель, вместо того чтобы вести за собой, тянет коллектив в пропасть собственных комплексов и страхов."</p>
+                <cite id="quote-author">— Др. Игорь Манн, психолог и эксперт по управлению</cite>
             </blockquote>
             <p class="newspaper-date" id="current-date"></p>
         </header>
@@ -341,6 +355,222 @@
         // Set current year in footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
         
+        // Quotes array with 30 quotes about toxic work environments and managers
+        const quotes = [
+            {
+                text: "Токсичное лидерство — это форма психологического насилия, при которой руководитель, вместо того чтобы вести за собой, тянет коллектив в пропасть собственных комплексов и страхов.",
+                author: "Др. Игорь Манн, психолог и эксперт по управлению"
+            },
+            {
+                text: "Токсичный руководитель — это человек, который использует свою власть для подавления других, а не для их развития.",
+                author: "Джон Маккарти, эксперт по организационной психологии"
+            },
+            {
+                text: "Лучший способ уничтожить человека — это посадить его в золотую клетку и постоянно напоминать о его беспомощности.",
+                author: "Альфред Адлер, психолог"
+            },
+            {
+                text: "Токсичные менеджеры создают культуру страха, где сотрудники боятся говорить правду и предлагать новые идеи.",
+                author: "Патрик Ленсиони, специалист по корпоративной культуре"
+            },
+            {
+                text: "Настоящий лидер вдохновляет других быть лучше. Токсичный лидер заставляет других чувствовать себя хуже.",
+                author: "Саймон Синек, автор бестселлеров по лидерству"
+            },
+            {
+                text: "Токсичные руководители часто маскируются под 'строгих, но справедливых' менеджеров, но их действия систематически унижают и подавляют подчиненных.",
+                author: "Мэри Джо Купер, эксперт по HR"
+            },
+            {
+                text: "Когда руководитель ставит свои эгоистичные интересы выше благополучия команды, он становится токсичным.",
+                author: "Джим Коллинз, бизнес-тренер"
+            },
+            {
+                text: "Токсичные менеджеры уничтожают доверие, которое является основой любой эффективной команды.",
+                author: "Степhen Кови, автор '7 навыков высокоэффективных людей'"
+            },
+            {
+                text: "Самый опасный тип токсичного руководителя — это тот, кто считает свои деструктивные действия нормой и даже добродетелью.",
+                author: "Роберт Холфф, психолог"
+            },
+            {
+                text: "Токсичные начальники превращают рабочее место в поле боя, где каждый день — это выживание.",
+                author: "Джудит Черник, эксперт по стрессу на работе"
+            },
+            {
+                text: "Токсичный руководитель — это как яд, который сначала парализует, а потом убивает корпоративную культуру.",
+                author: "Джеймс Алан Фокс, профессор менеджмента"
+            },
+            {
+                text: "Когда руководитель использует манипуляции, газлайтинг и эмоциональное давление как инструменты управления, он токсичен.",
+                author: "Джордж Оруэлл, писатель и социальный критик"
+            },
+            {
+                text: "Токсичные менеджеры создают культуру 'вина жертвы', где сотрудники начинают верить, что сами во всем виноваты.",
+                author: "Сьюзен Форсгрен, психолог"
+            },
+            {
+                text: "Токсичный руководитель — это человек, который забыл, что его работа — помогать другим расти, а не доказывать свою значимость.",
+                author: "Кен Бланшар, специалист по лидерству"
+            },
+            {
+                text: "Токсичные менеджеры часто используют тактику 'разделяй и властвуй', чтобы сохранить контроль над командой.",
+                author: "Никколо Макиавелли, политический философ"
+            },
+            {
+                text: "Токсичный руководитель — это тот, кто превращает профессиональный рост сотрудников в угрозу для своей власти.",
+                author: "Дэвид Майстер, консультант по управлению"
+            },
+            {
+                text: "Токсичные менеджеры уничтожают мотивацию, заменяя внутреннюю заинтересованность внешним страхом.",
+                author: "Дэниел Пинк, эксперт по мотивации"
+            },
+            {
+                text: "Токсичный руководитель — это человек, который вместо развития команды занимается её деморализацией.",
+                author: "Петер Друкер, отец современного менеджмента"
+            },
+            {
+                text: "Токсичные менеджеры создают иллюзию продуктивности через страх, но на самом деле уничтожают креативность и инициативу.",
+                author: "Эдвард Деминг, эксперт по качеству"
+            },
+            {
+                text: "Токсичный руководитель — это тот, кто использует неопределенность и хаос как инструменты контроля.",
+                author: "Клиффорд Гирц, антрополог"
+            },
+            {
+                text: "Токсичные менеджеры часто награждают подхалимов и наказывают инициативных, создавая культуру лицемерия.",
+                author: "Роберт Келси, психолог"
+            },
+            {
+                text: "Токсичный руководитель — это тот, кто вместо того чтобы вдохновлять, заставляет бояться прихода на работу.",
+                author: "Брене Браун, исследователь уязвимости"
+            },
+            {
+                text: "Токсичные менеджеры уничтожают доверие, заменяя его постоянным подозрением и проверками.",
+                author: "Фрэнсис Фукуяма, политолог"
+            },
+            {
+                text: "Токсичный руководитель — это тот, кто использует успехи команды как доказательство своей компетентности.",
+                author: "Малкольм Гладуэлл, журналист"
+            },
+            {
+                text: "Токсичные менеджеры создают культуру 'черного пиара', где плохие новости замалчиваются, а хорошие искажаются.",
+                author: "Дэвид Рок, нейробиолог"
+            },
+            {
+                text: "Токсичный руководитель — это тот, кто вместо развития потенциала команды занимается подавлением индивидуальности.",
+                author: "Абрахам Маслоу, психолог"
+            },
+            {
+                text: "Токсичные менеджеры часто используют тактику 'переутомления', чтобы сотрудники не имели сил на сопротивление.",
+                author: "Ариэль и Шломо Авелед, психологи"
+            },
+            {
+                text: "Токсичный руководитель — это тот, кто вместо честной обратной связи использует манипуляции и скрытые намеки.",
+                author: "Эдгар Шайн, специалист по организационной культуре"
+            },
+            {
+                text: "Токсичные менеджеры уничтожают инновации, создавая атмосферу страха ошибиться.",
+                author: "Клейтон Кристенсен, эксперт по инновациям"
+            },
+            {
+                text: "Токсичный руководитель — это человек, который вместо развития доверия строит отношения на зависимости и страхе.",
+                author: "Стивен Кови, автор '7 навыков высокоэффективных людей'"
+            }
+        ];
+        
+        // Quote rotation functionality with typing effect
+        let currentQuoteIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let currentText = '';
+        let fullText = '';
+        let authorText = '';
+        
+        function typeQuote() {
+            // Get current quote
+            const currentQuote = quotes[currentQuoteIndex];
+            
+            // Set full text based on whether we're deleting or typing
+            if (!isDeleting) {
+                fullText = currentQuote.text;
+                authorText = "— " + currentQuote.author;
+            }
+            
+            // Typing speed
+            const typeSpeed = 100; // milliseconds per character
+            const deleteSpeed = 20; // milliseconds per character when deleting
+            const pauseBetweenQuotes = 20000; // 2 seconds pause between quotes
+            
+            // Handle typing or deleting
+            if (!isDeleting) {
+                // Typing text
+                if (charIndex < fullText.length) {
+                    currentText = fullText.substring(0, charIndex + 1);
+                    document.getElementById('quote-text').innerHTML = currentText + '<span class="cursor"></span>';
+                    charIndex++;
+                    setTimeout(typeQuote, typeSpeed);
+                } 
+                // Finished typing text, now type author
+                else if (charIndex >= fullText.length && charIndex < fullText.length + authorText.length + 10) {
+                    // Show author after a brief pause
+                    if (charIndex === fullText.length) {
+                        setTimeout(() => {
+                            document.getElementById('quote-author').textContent = "";
+                        }, 500);
+                    }
+                    document.getElementById('quote-author').innerHTML = authorText.substring(0, charIndex - fullText.length) + '<span class="cursor"></span>';
+                    charIndex++;
+                    setTimeout(typeQuote, typeSpeed);
+                }
+                // Finished typing everything, pause then delete
+                else {
+                    // Remove cursor when finished typing
+                    document.getElementById('quote-text').innerHTML = currentText;
+                    document.getElementById('quote-author').innerHTML = authorText;
+                    
+                    setTimeout(() => {
+                        isDeleting = true;
+                        charIndex = fullText.length + authorText.length;
+                        typeQuote();
+                    }, pauseBetweenQuotes);
+                }
+            } else {
+                // Deleting text
+                if (charIndex > 0) {
+                    if (charIndex > fullText.length) {
+                        // Delete author text first
+                        const authorLength = charIndex - fullText.length;
+                        if (authorLength > 0) {
+                            document.getElementById('quote-author').innerHTML = authorText.substring(0, authorLength) + '<span class="cursor"></span>';
+                        } else {
+                            document.getElementById('quote-author').textContent = "";
+                        }
+                    } else {
+                        // Then delete quote text
+                        currentText = fullText.substring(0, charIndex);
+                        document.getElementById('quote-text').innerHTML = currentText + '<span class="cursor"></span>';
+                        document.getElementById('quote-author').textContent = "";
+                    }
+                    charIndex--;
+                    setTimeout(typeQuote, deleteSpeed);
+                } 
+                // Finished deleting, move to next quote
+                else {
+                    // Remove cursor when finished deleting
+                    document.getElementById('quote-text').innerHTML = "";
+                    document.getElementById('quote-author').innerHTML = "";
+                    
+                    isDeleting = false;
+                    currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                    setTimeout(typeQuote, 500); // Brief pause before starting next quote
+                }
+            }
+        }
+        
+        // Start typing effect
+        setTimeout(typeQuote, 1000);
+
         // Blog posts data - Work section
         const workPosts = [
             {
