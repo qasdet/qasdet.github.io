@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Психология Работы</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Slab:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto Slab', serif;
+            line-height: 1.5;
+            color: #000;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4d4d4' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .newspaper {
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ccc;
+            position: relative;
+        }
+        
+        .newspaper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .newspaper::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+        
+        .masthead {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .newspaper-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            color: #000;
+        }
+        
+        .newspaper-date {
+            font-size: 1rem;
+            margin: 0;
+            color: #666;
+            font-weight: 300;
+        }
+        
+        .newspaper-tagline {
+            font-size: 1.2rem;
+            margin: 5px 0 15px;
+            font-style: italic;
+            color: #333;
+        }
+        
+        .articles-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .article {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .article:last-child {
+            border-bottom: none;
+        }
+        
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            line-height: 1.2;
+            color: #000;
+        }
+        
+        .article-date {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0 0 15px 0;
+            font-weight: 300;
+        }
+        
+        .article-excerpt {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0 0 15px 0;
+            text-align: justify;
+        }
+        
+        .article-link {
+            display: inline-block;
+            font-weight: 700;
+            text-decoration: none;
+            color: #000;
+            border-bottom: 1px dotted #000;
+        }
+        
+        .article-link:hover {
+            border-bottom: 1px solid #000;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #666;
+            font-style: italic;
+        }
+        
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .decoration {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2rem;
+            color: #333;
+        }
+        
+        .article-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="newspaper">
+        <header class="masthead">
+            <h1 class="newspaper-name">ПСИХОЛОГИЯ РАБОТЫ</h1>
+            <p class="newspaper-tagline">Анализ рабочих ситуаций с психологической точки зрения</p>
+            <p class="newspaper-date" id="current-date"></p>
+        </header>
+        
+        <main>
+            <div id="posts-container">
+                <div class="loading">Загрузка статей...</div>
+            </div>
+        </main>
+        
+        <div class="decoration">❧ ❧ ❧</div>
+        
+        <footer>
+            <p>&copy; 2023 Психология Работы</p>
+        </footer>
+    </div>
+
+    <script>
+        // Set current date
+        const now = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', options).toUpperCase();
+        
+        // Blog posts data
+        const blogPosts = [
+            {
+                title: "Деструктивная манипуляция и токсичное лидерство",
+                date: "30 ноября 2023",
+                excerpt: "С психологической точки зрения, описанное поведение руководителя является ярким примером деструктивной манипуляции и токсичного лидерства, в основе которого лежит комплекс взаимосвязаных механизмов. Подробный анализ показывает, как такие руководители используют проекцию, газлайтинг и другие психологические механизмы для поддержания контроля.",
+                url: "posts/toxic-leadership-analysis.html"
+            },
+        ];
+
+        // Function to render blog posts in order
+        function renderPosts() {
+            const container = document.getElementById('posts-container');
+            
+            // Clear loading message
+            container.innerHTML = '';
+            
+            // Create articles container
+            const articlesContainer = document.createElement('div');
+            articlesContainer.className = 'articles-container';
+            
+            // Add posts in order with numbering
+            blogPosts.forEach((post, index) => {
+                const article = document.createElement('article');
+                article.className = 'article';
+                article.innerHTML = `
+                    <h2 class="article-title"><span class="article-number">${index + 1}</span>${post.title}</h2>
+                    <p class="article-date">${post.date}</p>
+                    <p class="article-excerpt">${post.excerpt}</p>
+                    <a href="${post.url}" class="article-link">Читать далее →</a>
+                `;
+                
+                articlesContainer.appendChild(article);
+            });
+            
+            container.appendChild(articlesContainer);
+        }
+
+        // Render posts immediately (no delay for ordered display)
+        renderPosts();
+    </script>
+</body>
+</html>
