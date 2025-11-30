@@ -256,8 +256,13 @@
         <div class="decoration">❧ ❧ ❧</div>
         
         <footer>
-            <p>&copy; 2025 Психология Работы</p>
+            <p>&copy; <span id="current-year"></span> Психология Работы</p>
         </footer>
     </div>
+    
+    <script>
+        // Set current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>
