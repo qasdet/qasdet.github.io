@@ -138,6 +138,34 @@
             background-color: #f0f0f0;
         }
         
+        .sort-controls {
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'Roboto Slab', serif;
+            font-size: 1rem;
+        }
+        
+        .sort-btn {
+            background-color: #fff;
+            border: 2px solid #000;
+            padding: 5px 15px;
+            margin: 0 5px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .sort-btn.active {
+            background-color: #000;
+            color: #fff;
+        }
+        
+        .sort-btn:hover:not(.active) {
+            background-color: #f0f0f0;
+        }
+        
         .section-title {
             font-family: 'Playfair Display', serif;
             font-size: 2rem;
@@ -272,6 +300,15 @@
                 max-width: 100%;
                 padding: 10px 15px;
             }
+            
+            .sort-controls {
+                font-size: 0.9rem;
+            }
+            
+            .sort-btn {
+                font-size: 0.9rem;
+                padding: 4px 10px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -299,6 +336,16 @@
                 font-size: 1rem;
                 padding: 6px 10px;
             }
+            
+            .sort-controls {
+                font-size: 0.8rem;
+            }
+            
+            .sort-btn {
+                font-size: 0.8rem;
+                padding: 3px 8px;
+                margin: 0 3px;
+            }
         }
     </style>
 </head>
@@ -318,6 +365,12 @@
             <div class="menu-item active" data-section="work">Карьера и работа</div>
             <div class="menu-item" data-section="testing">Тестирование</div>
         </nav>
+        
+        <div class="sort-controls">
+            <span>Сортировать по:</span>
+            <button class="sort-btn active" data-sort="date">Дате</button>
+            <button class="sort-btn" data-sort="title">Названию</button>
+        </div>
         
         <main>
             <div id="posts-container">
@@ -567,8 +620,25 @@
             }
         ];
 
+        // Current sort order
+        let currentSort = 'date'; // default sort by date
+        
+        // Function to sort posts
+        function sortPosts(posts, sortBy) {
+            if (sortBy === 'title') {
+                return [...posts].sort((a, b) => a.title.localeCompare(b.title, 'ru'));
+            } else {
+                // Default sort by date (newest first)
+                return [...posts].sort((a, b) => {
+                    const dateA = new Date(a.date.split('.').reverse().join('-'));
+                    const dateB = new Date(b.date.split('.').reverse().join('-'));
+                    return dateB - dateA;
+                });
+            }
+        }
+        
         // Function to render blog posts in sections
-        function renderPosts(section) {
+        function renderPosts(section, sortBy = currentSort) {
             const container = document.getElementById('posts-container');
             
             // Clear container
@@ -583,8 +653,9 @@
                 const workArticlesContainer = document.createElement('div');
                 workArticlesContainer.className = 'articles-container';
                 
-                // Add work posts
-                workPosts.forEach((post, index) => {
+                // Sort and add work posts
+                const sortedWorkPosts = sortPosts(workPosts, sortBy);
+                sortedWorkPosts.forEach((post, index) => {
                     const article = document.createElement('article');
                     article.className = 'article';
                     article.innerHTML = `
@@ -607,8 +678,9 @@
                 const testingArticlesContainer = document.createElement('div');
                 testingArticlesContainer.className = 'articles-container';
                 
-                // Add testing posts
-                testingPosts.forEach((post, index) => {
+                // Sort and add testing posts
+                const sortedTestingPosts = sortPosts(testingPosts, sortBy);
+                sortedTestingPosts.forEach((post, index) => {
                     const article = document.createElement('article');
                     article.className = 'article';
                     article.innerHTML = `
@@ -636,7 +708,25 @@
                 
                 // Render corresponding section
                 const section = this.getAttribute('data-section');
-                renderPosts(section);
+                renderPosts(section, currentSort);
+            });
+        });
+        
+        // Sort buttons interaction
+        document.querySelectorAll('.sort-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Update active sort button
+                document.querySelectorAll('.sort-btn').forEach(sortBtn => {
+                    sortBtn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Update current sort
+                currentSort = this.getAttribute('data-sort');
+                
+                // Re-render current section with new sort
+                const activeSection = document.querySelector('.menu-item.active').getAttribute('data-section');
+                renderPosts(activeSection, currentSort);
             });
         });
 
