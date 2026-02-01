@@ -364,6 +364,7 @@
         <nav class="menu">
             <div class="menu-item active" data-section="work">Карьера и работа</div>
             <div class="menu-item" data-section="testing">Тестирование</div>
+            <div class="menu-item" data-section="commands">Команды и lifehacks</div>
         </nav>
         
         <div class="sort-controls">
@@ -626,7 +627,33 @@
             }
         ];
 
-        // Current sort order
+        // Blog posts data - Commands section
+        const commandsPosts = [
+            {
+                title: "Docker: 30+ practicallyх команд и lifehacks",
+                date: "1 февраля 2026",
+                excerpt: "Полный набор команд Docker с practicalкими советами для эффективной работы с контейнерами. От базовых операций до продвинутых техник управления образами и контейнерами.",
+                url: "posts/commands/docker-commands.html"
+            },
+            {
+                title: "Git: 30+ команд для продуктивной работы",
+                date: "1 февраля 2026",
+                excerpt: "Комплексный справочник по Git с lifehacks для ежедневной работы. От простых коммитов до сложных операций с ветками и слияниями.",
+                url: "posts/commands/git-commands.html"
+            },
+            {
+                title: "Linux: 30+ команд для системного администрирования",
+                date: "1 февраля 2026",
+                excerpt: "Практические команды Linux для повседневной работы системного администратора. Файловая система, процессы, сети, безопасность и многое другое.",
+                url: "posts/commands/linux-commands.html"
+            },
+            {
+                title: "Python: 30+ команд и приемов программирования",
+                date: "1 февраля 2026",
+                excerpt: "Полезные команды для Python разработчиков. От базового синтаксиса до продвинутых техник отладки и оптимизации.",
+                url: "posts/commands/python-commands.html"
+            }
+        ];
         let currentSort = 'date'; // default sort by date
         
         // Function to sort posts
@@ -700,6 +727,31 @@
                 
                 testingSection.appendChild(testingArticlesContainer);
                 container.appendChild(testingSection);
+            } else if (section === 'commands') {
+                // Create commands section
+                const commandsSection = document.createElement('div');
+                commandsSection.className = 'section active';
+                commandsSection.id = 'commands-section';
+                commandsSection.innerHTML = '<h2 class="section-title">Команды и lifehacks</h2>';
+                const commandsArticlesContainer = document.createElement('div');
+                commandsArticlesContainer.className = 'articles-container';
+                
+                // Sort and add commands posts
+                const sortedCommandsPosts = sortPosts(commandsPosts, sortBy);
+                sortedCommandsPosts.forEach((post, index) => {
+                    const article = document.createElement('article');
+                    article.className = 'article';
+                    article.innerHTML = `
+                        <h3 class="article-title"><span class="article-number">${index + 1}</span>${post.title}</h3>
+                        <p class="article-date">${post.date}</p>
+                        <p class="article-excerpt">${post.excerpt}</p>
+                        <a href="${post.url}" class="article-link">Читать далее →</a>
+                    `;
+                    commandsArticlesContainer.appendChild(article);
+                });
+                
+                commandsSection.appendChild(commandsArticlesContainer);
+                container.appendChild(commandsSection);
             }
         }
 
