@@ -406,7 +406,7 @@
         },
         async loadBlog() {
             try {
-                const res = await fetch('./articles.json');
+                const res = await fetch('articles.json');
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 this.blogArticles = await res.json();
                 console.log('Loaded articles:', this.blogArticles.length);
