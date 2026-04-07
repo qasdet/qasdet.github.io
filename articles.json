@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "title": "Автоматизация тестирования с Pytest и Playwright",
+    "date": "2025-03-15",
+    "tags": ["Python", "QA", "Playwright"],
+    "excerpt": "Рассмотрим как построить E2E фреймворк с нуля, используя Pytest как тест-раннер и Playwright для взаимодействия с браузером.",
+    "content": "## Введение\n\nСоздание надёжного E2E фреймворка — это не просто выбор инструментов. Это архитектурное решение, которое влияет на поддерживаемость и скорость разработки тестов.\n\n## Почему Pytest + Playwright?\n\n**Pytest** предоставляет:\n- Простой и понятный синтаксис\n- Мощные фикстуры\n- Параметризацию тестов\n- Плагины для интеграции с CI/CD\n\n**Playwright** даёт:\n- Кроссбраузерное тестирование\n- Автоматические ожидания\n- Удобный API для действий пользователя\n\n## Структура проекта\n\n```\ntests/\n├── pages/           # Page Objects\n│   ├── __init__.py\n│   └── login_page.py\n├── conftest.py      # Фикстуры\n└── test_login.py    # Тесты\n```\n\n## Пример Page Object\n\n```python\nclass LoginPage:\n    def __init__(self, page):\n        self.page = page\n        self.username_input = page.locator('#username')\n        self.password_input = page.locator('#password')\n        self.submit_btn = page.locator('button[type=\"submit\"]')\n    \n    def login(self, username, password):\n        self.username_input.fill(username)\n        self.password_input.fill(password)\n        self.submit_btn.click()\n```\n\n## Заключение\n\nКомбинация Pytest + Playwright позволяет создать гибкий и масштабируемый фреймворк для E2E тестирования."
+  },
+  {
+    "id": 2,
+    "title": "CI/CD пайплайны для QA",
+    "date": "2025-02-20",
+    "tags": ["CI/CD", "GitLab", "Docker"],
+    "excerpt": "Настройка автоматического запуска тестов при каждом push в репозиторий с отчётами в Allure.",
+    "content": "## Зачем нужны CI/CD пайплайны?\n\nНепрерывная интеграция позволяет:\n- Запускать тесты на каждую ветку\n- Получать быструю обратную связь\n- Автоматизировать рутину\n\n## GitLab CI\n\n```yaml\nstages:\n  - test\n  - report\n\ntest:\n  stage: test\n  image: python:3.11\n  script:\n    - pip install -r requirements.txt\n    - pytest tests/ --json-report --json-report-file=report.json\n  artifacts:\n    reports:\n      junit: report.xml\n```\n\n## Docker окружение\n\nИзоляция тестового окружения через Docker:\n\n```dockerfile\nFROM python:3.11-slim\nRUN pip install pytest playwright\nRUN playwright install chromium\n```\n\n## Allure отчёты\n\nИнтеграция с Allure для красивых отчётов:\n\n```bash\nallure serve results/\n```"
+  },
+  {
+    "id": 3,
+    "title": "Тестирование API с помощью Python",
+    "date": "2025-01-10",
+    "tags": ["API", "Python", "QA"],
+    "excerpt": "Методы тестирования REST API: от простых запросов до сложных сценариев с авторизацией.",
+    "content": "## Библиотеки для тестирования API\n\nДля тестирования API в Python используют:\n- **requests** — простые HTTP запросы\n- **httpx** — асинхронные запросы\n- **pytest-httpbin** — моки для HTTP\n\n## Пример теста\n\n```python\nimport pytest\nimport requests\n\nclass TestAPI:\n    base_url = \"https://api.example.com\"\n    \n    def test_get_users(self):\n        response = requests.get(f\"{self.base_url}/users\")\n        assert response.status_code == 200\n        assert len(response.json()) > 0\n    \n    def test_create_user(self, auth_token):\n        headers = {\"Authorization\": f\"Bearer {auth_token}\"}\n        data = {\"name\": \"Test\", \"email\": \"test@example.com\"}\n        response = requests.post(\n            f\"{self.base_url}/users\",\n            json=data,\n            headers=headers\n        )\n        assert response.status_code == 201\n```\n\n## Авторизация\n\nПоддержка различных типов авторизации:\n\n```python\ndef get_token():\n    response = requests.post(\"/auth/login\", json={\"username\": \"user\", \"password\": \"pass\"})\n    return response.json()[\"access_token\"]\n```"
+  },
+  {
+    "id": 4,
+    "title": "LLM для QA инженера",
+    "date": "2024-12-05",
+    "tags": ["LLM", "AI", "Automation"],
+    "excerpt": "Как я использую большие языковые модели для ускорения рутинных задач в тестировании.",
+    "content": "## Генерация тест-кейсов\n\nLLM отлично справляется с генерацией тест-кейсов из описания функционала:\n\n```\nОпиши функционал: Авторизация через email\nРезультат: готовые test cases с positive/negative сценариями\n```\n\n## Генерация тестовых данных\n\nСоздание реалистичных данных для тестов:\n\n```python\nimport openai\n\ndef generate_test_user():\n    response = openai.ChatCompletion.create(\n        model=\"gpt-4\",\n        messages=[{\"role\": \"user\", \"content\": \"Сгенерируй JSON с тестовыми данными пользователя\"}]\n    )\n    return json.loads(response.choices[0].message.content)\n```\n\n## Анализ логов\n\nLLM помогает анализировать логи и находить причины багов:\n\n```\nВставь логи ошибки → LLM предлагает возможные причины\n```\n\n## Мой опыт\n\nЗа 3 месяца использования:\n- Сократил время на написание тест-кейсов на 40%\n- Автоматизировал генерацию тестовых данных\n- Ускорил анализ дефектов"
+  }
+]
