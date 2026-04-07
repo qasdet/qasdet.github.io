@@ -21,6 +21,16 @@
             color: #1a1a2e;
             background: #fafafa;
             min-height: 100vh;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        body.protected * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         .container {
             max-width: 800px;
@@ -647,6 +657,25 @@
     </style>
 </head>
 <body>
+    <script>
+        // Защита от копирования и скриншотов
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'p' || e.key === 'P')) {
+                e.preventDefault();
+            }
+            if (e.key === 'PrintScreen') {
+                document.body.classList.add('protected');
+                setTimeout(() => document.body.classList.remove('protected'), 200);
+            }
+        });
+        document.addEventListener('dragstart', e => e.preventDefault());
+        document.addEventListener('selectstart', e => {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+    </script>
     <!-- Header -->
     <header style="background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #e2e8f0; padding: 12px 24px; position: sticky; top: 0; z-index: 100;">
         <div style="max-width: 800px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
