@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Cheat Sheet — Галкин Александр</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #0f0f23;
+        }
+        .header-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+        }
+        .header-name { font-weight: 600; font-size: 1rem; }
+        .header-nav { display: flex; gap: 8px; }
+        .header-nav a {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .header-nav a:hover { color: #667eea; background: #f1f5f9; }
+        .header-nav a.active { color: #667eea; background: #f1f5f9; }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 48px 24px;
+            flex: 1;
+        }
+        .hero { text-align: center; margin-bottom: 48px; }
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f0f23;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+        .hero p { font-size: 1.1rem; color: #64748b; max-width: 600px; margin: 0 auto; }
+
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 48px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #1a1a2e;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .search-box input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+        .search-box input::placeholder { color: #94a3b8; }
+
+        .section {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+        .section.hidden { display: none; }
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0f0f23;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h2 .icon { font-size: 1.5rem; }
+
+        .subsection {
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .subsection:last-child { margin-bottom: 0; }
+        .subsection-header {
+            padding: 14px 20px;
+            font-weight: 600;
+            color: #0f0f23;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #fafafa;
+            transition: background 0.2s;
+        }
+        .subsection-header:hover { background: #f1f5f9; }
+        .subsection-header .arrow {
+            color: #667eea;
+            transition: transform 0.2s;
+            font-size: 0.8rem;
+        }
+        .subsection[open] .subsection-header .arrow { transform: rotate(90deg); }
+        .subsection-content { padding: 20px; }
+
+        .cmd-block {
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+        }
+        .cmd-block:last-child { margin-bottom: 0; }
+        .cmd-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .cmd {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #10b981;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.8;
+        }
+        .cmd .comment { color: #94a3b8; }
+        .cmd .flag { color: #f472b6; }
+        .cmd .string { color: #f59e0b; }
+        .cmd-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            background: #fafafa;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .card-title {
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        .card code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #10b981;
+            display: block;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        .card p {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            border-top: 1px solid #e2e8f0;
+            background: #fff;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 48px;
+            color: #64748b;
+        }
+
+        @media (max-width: 640px) {
+            .header-nav a:not(.active) { display: none; }
+            .hero h1 { font-size: 2rem; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="header-logo">
+                <img src="avatar.png" alt="Галкин Александр" width="40" height="40">
+                <span class="header-name">Галкин Александр</span>
+            </a>
+            <nav class="header-nav">
+                <a href="index.html">Резюме</a>
+                <a href="blog.html">Блог</a>
+                <a href="projects.html">Проекты</a>
+                <a href="git-guide.html" class="active">Git</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" x-data="{ query: '' }">
+        <div class="hero">
+            <h1>Git Cheat Sheet</h1>
+            <p>Шпаргалка по Git: коммиты, конфликты, история, восстановление и лайфхаки</p>
+        </div>
+
+        <div class="search-box">
+            <input
+                type="text"
+                x-model="query"
+                placeholder="Поиск по командам..."
+                @input="
+                    document.querySelectorAll('.section').forEach(s => {
+                        const text = s.textContent.toLowerCase();
+                        s.classList.toggle('hidden', query && !text.includes(query.toLowerCase()));
+                    })
+                "
+            >
+        </div>
+
+        <!-- КОММИТЫ -->
+        <section class="section" data-keywords="коммит commit amend изменить последний сообщение reset revert">
+            <h2><span class="icon">📝</span> Коммиты</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Изменить последний коммит
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Изменить сообщение</div>
+                        <div class="cmd">git commit --amend -m <span class="string">"Новое сообщение"</span></div>
+                        <div class="cmd-desc">Работает только для непушнутых коммитов.</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Добавить забытые файлы</div>
+                        <div class="cmd">git add --all && git commit --amend --no-edit</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Отменить коммиты
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Отменить (soft) — изменения в индексе</div>
+                        <div class="cmd">git reset --soft HEAD~1</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Отменить (mixed) — изменения не в индексе</div>
+                        <div class="cmd">git reset HEAD~1</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Отменить (hard) — удалить изменения</div>
+                        <div class="cmd">git reset --hard HEAD~1</div>
+                        <div class="cmd-desc">ОПАСНО! Необратимо.</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Отменить конкретный коммит</div>
+                        <div class="cmd">git revert <span class="flag">&lt;hash&gt;</span></div>
+                        <div class="cmd-desc">Создаёт новый коммит с обратными изменениями.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Создание коммита
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Коммит с сообщением</div>
+                        <div class="cmd">git commit -m <span class="string">"feat: add login"</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Коммит всех отслеживаемых</div>
+                        <div class="cmd">git commit -am <span class="string">"update"</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Пустой коммит (триггер CI)</div>
+                        <div class="cmd">git commit --allow-empty -m <span class="string">"trigger build"</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ИСТОРИЯ -->
+        <section class="section" data-keywords="история log коммит diff изменения blame show">
+            <h2><span class="icon">📜</span> История</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Просмотр истории
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Красивый лог с графом</div>
+                        <div class="cmd">git log --oneline --graph --all --decorate</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Лог конкретного файла</div>
+                        <div class="cmd">git log --oneline -- <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Лог с изменениями строк</div>
+                        <div class="cmd">git log -p <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Кто написал какую строку</div>
+                        <div class="cmd">git blame <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Поиск в истории
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Найти по сообщению</div>
+                        <div class="cmd">git log --oneline --grep=<span class="string">"fix"</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Найти по автору</div>
+                        <div class="cmd">git log --oneline --author=<span class="string">"name"</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Найти коммит с кодом</div>
+                        <div class="cmd">git log -S <span class="string">"function_name"</span> --oneline</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Сравнение
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Разница между ветками</div>
+                        <div class="cmd">git diff main..feature</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Изменения файла за 5 коммитов</div>
+                        <div class="cmd">git diff HEAD~5 -- <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Показать содержимое коммита</div>
+                        <div class="cmd">git show <span class="flag">&lt;hash&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Разница с индексом</div>
+                        <div class="cmd">git diff --cached</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- КОНФЛИКТЫ -->
+        <section class="section" data-keywords="конфликт merge rebase conflict theirs ours mergetool">
+            <h2><span class="icon">⚔️</span> Конфликты</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Прерывание и отмена
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Отменить merge</div>
+                        <div class="cmd">git merge --abort</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Отменить rebase</div>
+                        <div class="cmd">git rebase --abort</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Отменить cherry-pick</div>
+                        <div class="cmd">git cherry-pick --abort</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Разрешение конфликтов
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Список конфликтующих файлов</div>
+                        <div class="cmd">git diff --name-only --diff-filter=U</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Принять их версию</div>
+                        <div class="cmd">git checkout --theirs <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Принять свою версию</div>
+                        <div class="cmd">git checkout --ours <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Визуальный редактор</div>
+                        <div class="cmd">git mergetool</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> После разрешения
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Завершить merge</div>
+                        <div class="cmd">git add <span class="flag">&lt;file&gt;</span> && git commit</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Завершить rebase</div>
+                        <div class="cmd">git add <span class="flag">&lt;file&gt;</span> && git rebase --continue</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Пропустить коммит</div>
+                        <div class="cmd">git rebase --skip</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ВЕТКИ -->
+        <section class="section" data-keywords="ветка branch checkout switch создать удалить переименовать">
+            <h2><span class="icon">🌿</span> Ветки</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Основные операции
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Список локальных</div>
+                        <div class="cmd">git branch</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Список всех</div>
+                        <div class="cmd">git branch -a</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Создать и переключиться</div>
+                        <div class="cmd">git checkout -b <span class="flag">&lt;name&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Переключиться</div>
+                        <div class="cmd">git checkout <span class="flag">&lt;name&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Удалить локальную</div>
+                        <div class="cmd">git branch -d <span class="flag">&lt;name&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Удалить удалённую</div>
+                        <div class="cmd">git push origin --delete <span class="flag">&lt;name&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Переименование и трекинг
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Переименовать текущую</div>
+                        <div class="cmd">git branch -m <span class="flag">&lt;new-name&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Привязать к remote</div>
+                        <div class="cmd">git branch -u origin/main</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Список отслеживаемых</div>
+                        <div class="cmd">git branch -vv</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Предыдущая ветка</div>
+                        <div class="cmd">git checkout -</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STASH -->
+        <section class="section" data-keywords="stash спрятать сохранить временно">
+            <h2><span class="icon">📦</span> Stash</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Сохранение
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Сохранить всё</div>
+                        <div class="cmd">git stash</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">С сообщением</div>
+                        <div class="cmd">git stash push -m <span class="string">"WIP: login"</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Включая неотслеживаемые</div>
+                        <div class="cmd">git stash -u</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Без индексированных</div>
+                        <div class="cmd">git stash --keep-index</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Применение
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Применить и удалить</div>
+                        <div class="cmd">git stash pop</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Применить без удаления</div>
+                        <div class="cmd">git stash apply</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Конкретный запись</div>
+                        <div class="cmd">git stash apply stash@{2}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Управление
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Список</div>
+                        <div class="cmd">git stash list</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Посмотреть</div>
+                        <div class="cmd">git stash show -p stash@{0}</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Удалить</div>
+                        <div class="cmd">git stash drop stash@{0}</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Очистить всё</div>
+                        <div class="cmd">git stash clear</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Создать ветку из stash</div>
+                        <div class="cmd">git stash branch <span class="flag">&lt;name&gt;</span> stash@{0}</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REBASE -->
+        <section class="section" data-keywords="rebase интерактивный squash fixup объединить коммиты">
+            <h2><span class="icon">🔄</span> Rebase</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Интерактивный rebase
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Последние N коммитов</div>
+                        <div class="cmd">git rebase -i HEAD~5</div>
+                        <div class="cmd-desc">pick — оставить | squash — слить | fixup — слить без msg | reword — изменить msg | drop — удалить</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Перенести ветку на main</div>
+                        <div class="cmd">git rebase main</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Продвинутые
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Executes during rebase</div>
+                        <div class="cmd">x exec <span class="string">"npm test"</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Взять конкретный коммит</div>
+                        <div class="cmd">git rebase --onto <span class="flag">&lt;new&gt;</span> <span class="flag">&lt;old&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHERRY-PICK -->
+        <section class="section" data-keywords="cherry-pick перенести коммит">
+            <h2><span class="icon">🍒</span> Cherry-pick</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Перенос коммитов
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Один коммит</div>
+                        <div class="cmd">git cherry-pick <span class="flag">&lt;hash&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Несколько</div>
+                        <div class="cmd">git cherry-pick <span class="flag">&lt;hash1&gt;</span> <span class="flag">&lt;hash2&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Диапазон</div>
+                        <div class="cmd">git cherry-pick <span class="flag">&lt;start&gt;</span>..<span class="flag">&lt;end&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Без коммита</div>
+                        <div class="cmd">git cherry-pick -n <span class="flag">&lt;hash&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ВОССТАНОВЛЕНИЕ -->
+        <section class="section" data-keywords="reflog восстановить потерянный удаленный recover">
+            <h2><span class="icon">🩹</span> Восстановление</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Reflog — журнал действий
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">История всех действий</div>
+                        <div class="cmd">git reflog</div>
+                        <div class="cmd-desc">Показывает ВСЕ изменения HEAD за 90 дней.</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Восстановить после reset</div>
+                        <div class="cmd">git reflog <span class="comment"># найти хеш</span>
+git reset --hard <span class="flag">&lt;hash&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Файлы
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Восстановить из коммита</div>
+                        <div class="cmd">git checkout <span class="flag">&lt;hash&gt;</span> -- <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Восстановить последний</div>
+                        <div class="cmd">git restore <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Восстановить удалённый</div>
+                        <div class="cmd">git checkout HEAD~1 -- <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Потерянные коммиты
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Найти все коммиты</div>
+                        <div class="cmd">git fsck --lost-found</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Найти detached коммиты</div>
+                        <div class="cmd">git log --all --oneline | grep <span class="string">"detached"</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СЕКРЕТЫ -->
+        <section class="section" data-keywords="secret токен пароль удалить историю filter-branch filter-repo">
+            <h2><span class="icon">🔒</span> Секреты и история</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Удаление из истории
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Удалить файл из всех коммитов</div>
+                        <div class="cmd">git filter-repo --invert-paths --path=<span class="flag">&lt;file&gt;</span> --force</div>
+                        <div class="cmd-desc">Рекомендуемый способ (нужен filter-repo).</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Через filter-branch</div>
+                        <div class="cmd">git filter-branch --force --index-filter <span class="string">"git rm --cached --ignore-unmatch &lt;file&gt;"</span> --prune-empty --tag-name-filter cat -- --all</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> GitHub Secret Scanning
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Разблокировать секрет</div>
+                        <div class="cmd">https://github.com/OWNER/REPO/security/secret-scanning/unblock-secret/ID</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Профилактика</div>
+                        <div class="cmd">echo <span class="string">"TOKEN=*"</span> >> .gitignore
+git update-index --assume-unchanged <span class="flag">&lt;file&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GITHub -->
+        <section class="section" data-keywords="github push pull fetch clone remote">
+            <h2><span class="icon">🐙</span> GitHub</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Push, Pull, Fetch
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Клонировать</div>
+                        <div class="cmd">git clone <span class="string">URL</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Конкретная ветка</div>
+                        <div class="cmd">git clone -b <span class="flag">&lt;branch&gt;</span> <span class="string">URL</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Pull с rebase</div>
+                        <div class="cmd">git pull --rebase origin main</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Force push</div>
+                        <div class="cmd">git push --force</div>
+                        <div class="cmd-desc">ОПАСНО! Только для своих веток.</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Безопасный force</div>
+                        <div class="cmd">git push --force-with-lease</div>
+                        <div class="cmd-desc">Не перезапишет если кто-то уже пушнул.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> GitHub CLI
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Создать PR</div>
+                        <div class="cmd">gh pr create --title <span class="string">"Title"</span> --body <span class="string">"Desc"</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Squash merge</div>
+                        <div class="cmd">gh pr merge --squash <span class="flag">&lt;PR&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- АВТОРИЗАЦИЯ -->
+        <section class="section" data-keywords="ssh key авторизация token credential">
+            <h2><span class="icon">🔑</span> Авторизация</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> SSH Keys
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Генерация</div>
+                        <div class="cmd">ssh-keygen -t ed25519 -C <span class="string">"email@example.com"</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Добавить в агент</div>
+                        <div class="cmd">eval <span class="string">"$(ssh-agent -s)"</span>
+ssh-add ~/.ssh/id_ed25519</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Проверить</div>
+                        <div class="cmd">ssh -T git@github.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: false }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Credentials
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Кэш паролей (15 мин)</div>
+                        <div class="cmd">git config --global credential.helper cache</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Хранить навсегда</div>
+                        <div class="cmd">git config --global credential.helper store</div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Использовать SSH вместо HTTPS</div>
+                        <div class="cmd">git config --global url."git@github.com:".insteadOf <span class="string">"https://github.com/"</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUBMODULES И TAGS -->
+        <section class="section" data-keywords="submodule тег tag release">
+            <h2><span class="icon">📎</span> Submodules и Tags</h2>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Submodules
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Добавить</div>
+                        <div class="cmd">git submodule add <span class="string">URL</span> <span class="flag">&lt;path&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Клонировать с submodule</div>
+                        <div class="cmd">git clone --recursive <span class="string">URL</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Обновить</div>
+                        <div class="cmd">git submodule update --init --recursive</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" x-data="{ open: true }">
+                <div class="subsection-header" @click="open = !open">
+                    <span class="arrow">▶</span> Tags
+                </div>
+                <div class="subsection-content" x-show="open" x-collapse>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Создать</div>
+                        <div class="cmd">git tag <span class="flag">&lt;v1.0.0&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Аннотированный</div>
+                        <div class="cmd">git tag -a <span class="flag">&lt;v1.0.0&gt;</span> -m <span class="string">"Release"</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Удалить локальный</div>
+                        <div class="cmd">git tag -d <span class="flag">&lt;v1.0.0&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Удалить remote</div>
+                        <div class="cmd">git push origin --delete tag <span class="flag">&lt;v1.0.0&gt;</span></div>
+                    </div>
+                    <div class="cmd-block">
+                        <div class="cmd-title">Пушнуть и создать release</div>
+                        <div class="cmd">git tag <span class="flag">&lt;v1.0.0&gt;</span> && git push origin <span class="flag">&lt;v1.0.0&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ЛАЙФХАКИ -->
+        <section class="section" data-keywords="лайфхак tips alias undo clean">
+            <h2><span class="icon">✨</span> Лайфхаки</h2>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-title">Быстрые alias</div>
+                    <code>git config --global alias.st "status -s"</code>
+                    <code>git config --global alias.lg "log --oneline --graph"</code>
+                    <p>Создаёт короткие команды: git st, git lg</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Undo commit</div>
+                    <code>git reset --soft HEAD~1</code>
+                    <p>Отменяет коммит, файлы остаются в индексе</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Проверить перед merge</div>
+                    <code>git diff main..feature</code>
+                    <p>Покажет все изменения до слияния</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Squash через rebase</div>
+                    <code>git rebase -i HEAD~3</code>
+                    <p>Объединяет последние 3 коммита</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Поиск потерянного</div>
+                    <code>git reflog --all | grep "keyword"</code>
+                    <p>Находит коммит даже после reset</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Удалить неотслеживаемые</div>
+                    <code>git clean -fd</code>
+                    <p>Удаляет все новые файлы. ОПАСНО!</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Пуш с upstream</div>
+                    <code>git push -u origin feature</code>
+                    <p>-u запоминает связь для будущих push</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Remote URL</div>
+                    <code>git remote -v</code>
+                    <p>Показывает все remote репозитории</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Изменить remote</div>
+                    <code>git remote set-url origin URL</code>
+                    <p>Меняет URL для origin</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Проверить что игнорируется</div>
+                    <code>git check-ignore -v &lt;file&gt;</code>
+                    <p>Покажет почему файл игнорируется</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Убрать assume-unchanged</div>
+                    <code>git update-index --no-assume-unchanged &lt;file&gt;</code>
+                    <p>Вернуть файл к отслеживанию</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Squash merge локально</div>
+                    <code>git merge --squash feature</code>
+                    <code>git commit</code>
+                    <p>Объединяет все коммиты в один</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Показать только коммиты в ветке</div>
+                    <code>git log main..HEAD --oneline</code>
+                    <p>Коммиты которые есть только здесь</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">dry-run перед опасным</div>
+                    <code>git clean -fd --dry-run</code>
+                    <code>git reset --hard --dry-run</code>
+                    <p>Покажет что будет удалено</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Создать orphan branch</div>
+                    <code>git checkout --orphan clean</code>
+                    <code>git commit -m "Initial"</code>
+                    <p>Чистая история без коммитов</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- АЛИАСЫ -->
+        <section class="section" data-keywords="алиас gitconfig alias">
+            <h2><span class="icon">⚡</span> Алиасы для ~/.gitconfig</h2>
+
+            <div class="cmd-block">
+                <div class="cmd">[alias]
+  st = status -s
+  lg = log --oneline --graph --all
+  co = checkout
+  br = branch
+  unstage = reset HEAD --
+  last = log -1 HEAD
+  visual = log --graph --abbrev-commit
+  contributors = shortlog --sn --all
+  aliases = config --get-regexp alias</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Галкин Александр &copy; <span id="year"></span></p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
