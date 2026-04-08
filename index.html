@@ -4,17 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Галкин Александр — Senior AQA/LeadAQA Python</title>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
@@ -26,19 +20,11 @@
             -ms-user-select: none;
             user-select: none;
         }
-        body.protected * {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 60px 24px;
         }
-
-        /* Hero Section */
         .hero {
             text-align: center;
             margin-bottom: 60px;
@@ -82,11 +68,8 @@
             color: #667eea;
             text-decoration: none;
         }
-        .hero-meta a:hover {
-            text-decoration: underline;
-        }
+        .hero-meta a:hover { text-decoration: underline; }
 
-        /* Contact Row */
         .contact-row {
             display: flex;
             flex-wrap: wrap;
@@ -110,10 +93,7 @@
             color: #667eea;
         }
 
-        /* Section */
-        .section {
-            margin-bottom: 48px;
-        }
+        .section { margin-bottom: 48px; }
         .section-header {
             display: flex;
             align-items: center;
@@ -127,18 +107,9 @@
             letter-spacing: 0.1em;
             color: #94a3b8;
         }
-        .section-line {
-            flex: 1;
-            height: 1px;
-            background: #e2e8f0;
-        }
+        .section-line { flex: 1; height: 1px; background: #e2e8f0; }
 
-        /* Experience Accordion */
-        .experience-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .experience-list { display: flex; flex-direction: column; gap: 12px; }
         .experience-item {
             background: #fff;
             border-radius: 12px;
@@ -146,9 +117,7 @@
             overflow: hidden;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .experience-item:hover {
-            border-color: #cbd5e1;
-        }
+        .experience-item:hover { border-color: #cbd5e1; }
         .experience-item[aria-expanded="true"] {
             border-color: #667eea;
             box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
@@ -166,16 +135,9 @@
             text-align: left;
             font-family: inherit;
         }
-        .experience-trigger:focus {
-            outline: none;
-        }
-        .experience-trigger:focus-visible {
-            background: #f8fafc;
-        }
-        .experience-info {
-            flex: 1;
-            min-width: 0;
-        }
+        .experience-trigger:focus { outline: none; }
+        .experience-trigger:focus-visible { background: #f8fafc; }
+        .experience-info { flex: 1; min-width: 0; }
         .experience-company {
             font-size: 1rem;
             font-weight: 600;
@@ -235,16 +197,9 @@
             color: #475569;
             line-height: 1.7;
         }
-        .experience-description p {
-            margin-bottom: 12px;
-        }
-        .experience-description strong {
-            color: #334155;
-        }
-        .experience-description ul {
-            list-style: none;
-            padding: 0;
-        }
+        .experience-description p { margin-bottom: 12px; }
+        .experience-description strong { color: #334155; }
+        .experience-description ul { list-style: none; padding: 0; }
         .experience-description li {
             position: relative;
             padding-left: 20px;
@@ -264,16 +219,9 @@
             color: #667eea;
             text-decoration: none;
         }
-        .experience-description a:hover {
-            text-decoration: underline;
-        }
+        .experience-description a:hover { text-decoration: underline; }
 
-        /* Skills */
-        .skills-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
+        .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
         .skill-tag {
             background: #f1f5f9;
             color: #475569;
@@ -283,12 +231,8 @@
             font-weight: 500;
             transition: all 0.2s;
         }
-        .skill-tag:hover {
-            background: #667eea;
-            color: #fff;
-        }
+        .skill-tag:hover { background: #667eea; color: #fff; }
 
-        /* Education */
         .education-card {
             background: #fff;
             border: 1px solid #e2e8f0;
@@ -309,17 +253,9 @@
             color: #0f0f23;
             margin-bottom: 4px;
         }
-        .education-school {
-            font-size: 0.875rem;
-            color: #64748b;
-        }
+        .education-school { font-size: 0.875rem; color: #64748b; }
 
-        /* Certificates */
-        .cert-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .cert-list { display: flex; flex-direction: column; gap: 12px; }
         .cert-item {
             background: #fff;
             border: 1px solid #e2e8f0;
@@ -340,20 +276,13 @@
             color: #fff;
             flex-shrink: 0;
         }
-        .cert-info {
-            flex: 1;
-        }
         .cert-name {
             font-size: 0.9rem;
             font-weight: 600;
             color: #0f0f23;
         }
-        .cert-year {
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
+        .cert-year { font-size: 0.75rem; color: #94a3b8; }
 
-        /* About */
         .about-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 16px;
@@ -371,9 +300,7 @@
             text-decoration: underline;
             opacity: 0.9;
         }
-        .about-card a:hover {
-            opacity: 1;
-        }
+        .about-card a:hover { opacity: 1; }
         .about-highlights {
             display: flex;
             flex-wrap: wrap;
@@ -382,21 +309,14 @@
             padding-top: 24px;
             border-top: 1px solid rgba(255,255,255,0.2);
         }
-        .about-highlight {
-            flex: 1;
-            min-width: 200px;
-        }
+        .about-highlight { flex: 1; min-width: 200px; }
         .about-highlight-value {
             font-size: 1.5rem;
             font-weight: 700;
             opacity: 1;
         }
-        .about-highlight-label {
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
+        .about-highlight-label { font-size: 0.8rem; opacity: 0.8; }
 
-        /* Languages */
         .language-item {
             display: flex;
             align-items: center;
@@ -404,9 +324,7 @@
             padding: 12px 0;
             border-bottom: 1px solid #f1f5f9;
         }
-        .language-item:last-child {
-            border-bottom: none;
-        }
+        .language-item:last-child { border-bottom: none; }
         .language-name {
             font-size: 0.95rem;
             font-weight: 500;
@@ -418,7 +336,6 @@
             margin-left: auto;
         }
 
-        /* Blog */
         .blog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -445,11 +362,7 @@
             gap: 12px;
             margin-bottom: 12px;
         }
-        .blog-card-date {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            white-space: nowrap;
-        }
+        .blog-card-date { font-size: 0.75rem; color: #94a3b8; white-space: nowrap; }
         .blog-card-title {
             font-size: 1rem;
             font-weight: 600;
@@ -463,11 +376,7 @@
             line-height: 1.6;
             margin-bottom: 16px;
         }
-        .blog-card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
+        .blog-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
         .blog-tag {
             font-size: 0.7rem;
             padding: 4px 10px;
@@ -475,243 +384,93 @@
             background: #f1f5f9;
             color: #64748b;
         }
-        .blog-tag.active {
-            background: #667eea;
-            color: #fff;
-        }
-        .blog-filter {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 24px;
-        }
-        .blog-filter-btn {
-            font-size: 0.8rem;
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid #e2e8f0;
-            background: #fff;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        .blog-filter-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
-        }
-        .blog-filter-btn.active {
-            background: #667eea;
-            border-color: #667eea;
-            color: #fff;
-        }
-        .blog-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            z-index: 1000;
-            backdrop-filter: blur(4px);
-        }
-        .blog-modal-content {
-            background: #fff;
-            border-radius: 16px;
-            max-width: 720px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-        }
-        .blog-modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: #f1f5f9;
-            color: #64748b;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            z-index: 10;
-        }
-        .blog-modal-close:hover {
-            background: #e2e8f0;
-            color: #0f0f23;
-        }
-        .blog-modal-header {
-            padding: 32px 32px 24px;
+        .blog-loading { text-align: center; padding: 40px; color: #94a3b8; }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
             border-bottom: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .blog-modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #0f0f23;
-            margin-bottom: 12px;
-            padding-right: 40px;
-        }
-        .blog-modal-meta {
+        .header-inner {
+            max-width: 800px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
-            gap: 16px;
-            font-size: 0.875rem;
-            color: #94a3b8;
+            justify-content: space-between;
         }
-        .blog-modal-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .blog-modal-body {
-            padding: 32px;
-        }
-        .blog-modal-body h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #0f0f23;
-            margin: 24px 0 12px;
-        }
-        .blog-modal-body h2:first-child {
-            margin-top: 0;
-        }
-        .blog-modal-body p {
-            color: #475569;
-            line-height: 1.8;
-            margin-bottom: 16px;
-        }
-        .blog-modal-body ul, .blog-modal-body ol {
-            color: #475569;
-            line-height: 1.8;
-            margin-bottom: 16px;
-            padding-left: 24px;
-        }
-        .blog-modal-body li {
-            margin-bottom: 8px;
-        }
-        .blog-modal-body code {
-            background: #f1f5f9;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.875em;
-            color: #667eea;
-        }
-        .blog-modal-body pre {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 16px 20px;
+        .header-nav { display: flex; gap: 8px; }
+        .header-nav a {
+            padding: 8px 16px;
             border-radius: 8px;
-            overflow-x: auto;
-            margin-bottom: 16px;
-            font-size: 0.85rem;
-            line-height: 1.6;
-        }
-        .blog-modal-body pre code {
-            background: none;
-            padding: 0;
-            color: inherit;
-        }
-        .blog-modal-body strong {
-            color: #334155;
-        }
-        .blog-modal-body a {
-            color: #667eea;
             text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
         }
-        .blog-modal-body a:hover {
-            text-decoration: underline;
+        .header-nav a.active {
+            color: #667eea;
+            background: #f1f5f9;
         }
-        .blog-loading {
-            text-align: center;
-            padding: 40px;
-            color: #94a3b8;
+        .header-nav a:not(.active) {
+            color: #64748b;
+        }
+        .header-nav a:not(.active):hover {
+            color: #667eea;
+            background: #f1f5f9;
         }
 
-        /* Responsive */
         @media (max-width: 640px) {
-            .container {
-                padding: 40px 16px;
-            }
-            .hero h1 {
-                font-size: 1.75rem;
-            }
-            .contact-row {
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-            }
-            .experience-trigger {
-                padding: 16px 20px;
-            }
-            .about-highlights {
-                flex-direction: column;
-            }
+            .container { padding: 40px 16px; }
+            .hero h1 { font-size: 1.75rem; }
+            .contact-row { flex-direction: column; align-items: center; gap: 12px; }
+            .experience-trigger { padding: 16px 20px; }
+            .about-highlights { flex-direction: column; }
         }
     </style>
 </head>
 <body>
     <script>
-        // Защита от копирования и скриншотов
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'p' || e.key === 'P')) {
                 e.preventDefault();
             }
-            if (e.key === 'PrintScreen') {
-                document.body.classList.add('protected');
-                setTimeout(() => document.body.classList.remove('protected'), 200);
-            }
         });
-        document.addEventListener('dragstart', e => e.preventDefault());
         document.addEventListener('selectstart', e => {
             if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
                 e.preventDefault();
             }
         });
     </script>
-    <!-- Header -->
-    <header style="background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #e2e8f0; padding: 12px 24px; position: sticky; top: 0; z-index: 100;">
-        <div style="max-width: 800px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
-            <nav style="display: flex; gap: 8px;">
-                <a href="index.html" style="padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; color: #667eea; background: #f1f5f9;">Резюме</a>
-                <a href="blog.html" style="padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; color: #64748b;">Блог</a>
+
+    <header class="header">
+        <div class="header-inner">
+            <nav class="header-nav">
+                <a href="index.html" class="active">Резюме</a>
+                <a href="blog.html">Блог</a>
+                <a href="projects.html">Проекты</a>
             </nav>
         </div>
     </header>
 
     <div class="container" x-data="{
         expandedId: null,
-        blogArticles: [],
-        blogFilter: 'all',
+        articles: [],
         blogLoading: true,
         blogSelected: null,
         blogModalContent: '',
         certModal: false,
-        get filteredArticles() {
-            if (this.blogFilter === 'all') return this.blogArticles;
-            return this.blogArticles.filter(a => a.tags.includes(this.blogFilter));
-        },
-        get allTags() {
-            const tags = new Set();
-            this.blogArticles.forEach(a => a.tags.forEach(t => tags.add(t)));
-            return Array.from(tags);
-        },
-        async loadBlog() {
+        async loadArticles() {
             try {
                 const res = await fetch('articles.json');
-                this.blogArticles = await res.json();
-                this.blogLoading = false;
+                this.articles = await res.json();
             } catch (e) {
                 console.error('Failed to load articles', e);
-                this.blogLoading = false;
             }
+            this.blogLoading = false;
         },
         openArticle(article) {
             this.blogSelected = article;
@@ -721,13 +480,9 @@
             this.blogSelected = null;
             this.blogModalContent = '';
         },
-        openCertModal() {
-            this.certModal = true;
-        },
-        closeCertModal() {
-            this.certModal = false;
-        }
-    }" x-init="loadBlog()">
+        openCertModal() { this.certModal = true; },
+        closeCertModal() { this.certModal = false; }
+    }" x-init="loadArticles()">
 
         <!-- Hero -->
         <section class="hero">
@@ -735,18 +490,9 @@
             <h1>Галкин Александр</h1>
             <p class="hero-position">Senior AQA / LeadAQA Python</p>
             <div class="hero-meta">
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    39 лет, родился 5 мая 1986
-                </span>
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    Санкт-Петербург
-                </span>
-                <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    12+ лет опыта
-                </span>
+                <span>39 лет, родился 5 мая 1986</span>
+                <span>Санкт-Петербург</span>
+                <span>12+ лет опыта</span>
             </div>
         </section>
 
@@ -764,8 +510,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
                 <a href="https://github.com/qasdet" target="_blank">github.com/qasdet</a>
             </div>
-            <button @click="showContacts = !showContacts"
-                    style="background: none; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; color: #667eea; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+            <button @click="showContacts = !showContacts" style="background: none; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; color: #667eea; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
                 <svg x-show="!showContacts" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 <svg x-show="showContacts" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                 <span x-text="showContacts ? 'Скрыть контакты' : 'Показать контакты'"></span>
@@ -802,7 +547,6 @@
             </div>
 
             <div class="experience-list">
-
                 <!-- ВТБ -->
                 <div class="experience-item"
                      x-data="{ id: 1 }"
@@ -1005,7 +749,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -1062,10 +805,8 @@
                     <div class="cert-icon" @click="openCertModal()" style="cursor: pointer;">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
                     </div>
-                    <div class="cert-info">
-                        <div class="cert-name">Linux: File Management for Devops</div>
-                        <div class="cert-year">2021</div>
-                    </div>
+                    <div class="cert-name">Linux: File Management for Devops</div>
+                    <div class="cert-year">2021</div>
                 </div>
             </div>
         </section>
@@ -1096,7 +837,7 @@
             <template x-if="!blogLoading">
                 <div>
                     <div class="blog-grid" style="margin-bottom: 16px;">
-                        <template x-for="article in filteredArticles.slice(0, 3)" :key="article.id">
+                        <template x-for="article in articles.slice(0, 3)" :key="article.id">
                             <div class="blog-card" @click="openArticle(article)">
                                 <div class="blog-card-header">
                                     <span class="blog-card-date" x-text="article.date"></span>
@@ -1117,15 +858,9 @@
                 </div>
             </template>
         </section>
+    </div>
 
-        <!-- Certificate Modal -->
-        <div class="blog-modal" x-show="certModal" x-transition @click.self="closeCertModal()">
-            <div class="blog-modal-content" style="max-width: 900px; padding: 24px;">
-                <button class="blog-modal-close" @click="closeCertModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-                <img src="cert.png" alt="Сертификат" style="width: 100%; height: auto; display: block; border-radius: 8px;">
-            </div>
-        </div>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>
