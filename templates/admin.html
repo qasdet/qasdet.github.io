@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f0f23;
+        }
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .btn-danger {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        .btn-danger:hover { background: #fecaca; }
+        .btn-primary {
+            background: #667eea;
+            color: #fff;
+        }
+        .btn-primary:hover { background: #5a6fd6; }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+        .tab {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: #fff;
+            color: #0f0f23;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .tab:hover:not(.active) { color: #0f0f23; }
+
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* Articles */
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .article-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .article-card:hover { border-color: #cbd5e1; }
+        .article-info { flex: 1; }
+        .article-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 4px;
+        }
+        .article-date {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .article-excerpt {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .tag {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .article-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Form */
+        .form-section {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .form-section h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 20px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            min-height: 300px;
+            resize: vertical;
+            font-family: monospace;
+        }
+        textarea.description-editor {
+            min-height: 200px;
+            font-family: monospace;
+        }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        /* Resume sections */
+        .resume-section {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+        .resume-section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 16px;
+        }
+        .resume-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .resume-item {
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .resume-item label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+        .resume-item input, .resume-item textarea {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+
+        /* Experience list */
+        .experience-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .experience-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .experience-card:hover { border-color: #cbd5e1; }
+        .experience-info { flex: 1; }
+        .experience-company {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 4px;
+        }
+        .experience-role {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+        .experience-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .experience-badge {
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .experience-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Description blocks editor */
+        .desc-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .desc-block-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .desc-block-type {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #475569;
+        }
+        .desc-block-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .desc-block textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+        .desc-block textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .add-block-btn {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        /* Preview */
+        .preview-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .preview-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .preview-content {
+            font-size: 0.9rem;
+            color: #475569;
+            line-height: 1.7;
+        }
+        .preview-content p { margin-bottom: 8px; }
+        .preview-content ul { padding-left: 20px; margin-bottom: 8px; }
+        .preview-content li { margin-bottom: 4px; }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: #10b981; color: #fff; }
+        .toast.error { background: #ef4444; color: #fff; }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .tabs { width: 100%; }
+            .tab { flex: 1; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Админ-панель</h1>
+        <div class="header-right">
+            <a href="/" class="btn btn-secondary">На сайт</a>
+            <a href="/blog" class="btn btn-secondary">Блог</a>
+            <a href="/projects" class="btn btn-secondary">Проекты</a>
+            <button id="logoutBtn" class="btn btn-danger">Выйти</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" data-tab="blog">Блог</button>
+            <button class="tab" data-tab="resume">Резюме</button>
+        </div>
+
+        <!-- Blog Panel -->
+        <div class="panel active" id="panel-blog">
+            <button class="btn btn-primary" onclick="showArticleForm()" style="margin-bottom: 20px;">
+                + Новый пост
+            </button>
+
+            <div id="articleForm" class="form-section" style="display: none;">
+                <h2 id="formTitle">Новый пост</h2>
+                <input type="hidden" id="articleId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Заголовок</label>
+                        <input type="text" id="articleTitle" placeholder="Заголовок статьи">
+                    </div>
+                    <div class="form-group">
+                        <label>Дата</label>
+                        <input type="date" id="articleDate">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Краткое описание</label>
+                        <input type="text" id="articleExcerpt" placeholder="Краткое описание для карточки">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Теги (через запятую)</label>
+                        <input type="text" id="articleTags" placeholder="python, pytest, automation">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Контент (Markdown)</label>
+                        <textarea id="articleContent" placeholder="# Заголовок&#10;&#10;Контент статьи..."></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="saveArticle()">Сохранить</button>
+                    <button class="btn btn-secondary" onclick="hideArticleForm()">Отмена</button>
+                </div>
+            </div>
+
+            <div class="article-list" id="articleList"></div>
+        </div>
+
+        <!-- Resume Panel -->
+        <div class="panel" id="panel-resume">
+            <!-- Hero -->
+            <div class="resume-section">
+                <h3>Основная информация</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Имя</label>
+                        <input type="text" id="heroName" placeholder="Галкин Александр">
+                    </div>
+                    <div class="form-group">
+                        <label>Позиция</label>
+                        <input type="text" id="heroPosition" placeholder="Senior AQA / LeadAQA Python">
+                    </div>
+                    <div class="form-group">
+                        <label>Возраст</label>
+                        <input type="text" id="heroAge" placeholder="39 лет, родился 5 мая 1986">
+                    </div>
+                    <div class="form-group">
+                        <label>Опыт</label>
+                        <input type="text" id="heroExperience" placeholder="12+ лет опыта">
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="saveResumeSection('hero')">Сохранить</button>
+            </div>
+
+            <!-- About -->
+            <div class="resume-section">
+                <h3>О себе</h3>
+                <div class="form-group full-width">
+                    <label>Описание (каждый абзац с новой строки)</label>
+                    <textarea id="resumeAbout" rows="4" placeholder="Первый абзац&#10;Второй абзац"></textarea>
+                </div>
+                <div class="form-grid" style="margin-top: 16px;">
+                    <div class="resume-item">
+                        <label>Хайлайт 1 - Значение</label>
+                        <input type="text" id="highlight1Value" placeholder="6+ лет">
+                    </div>
+                    <div class="resume-item">
+                        <label>Хайлайт 1 - Описание</label>
+                        <input type="text" id="highlight1Label" placeholder="в QA Automation">
+                    </div>
+                    <div class="resume-item">
+                        <label>Хайлайт 2 - Значение</label>
+                        <input type="text" id="highlight2Value" placeholder="E2E фреймворки">
+                    </div>
+                    <div class="resume-item">
+                        <label>Хайлайт 2 - Описание</label>
+                        <input type="text" id="highlight2Label" placeholder="с нуля">
+                    </div>
+                    <div class="resume-item">
+                        <label>Хайлайт 3 - Значение</label>
+                        <input type="text" id="highlight3Value" placeholder="CI/CD">
+                    </div>
+                    <div class="resume-item">
+                        <label>Хайлайт 3 - Описание</label>
+                        <input type="text" id="highlight3Label" placeholder="pipeline">
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="saveResumeSection('about')" style="margin-top: 16px;">Сохранить</button>
+            </div>
+
+            <!-- Contacts -->
+            <div class="resume-section">
+                <h3>Контакты</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Телефон</label>
+                        <input type="text" id="resumePhone" placeholder="+7 (999) 123-45-67">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="resumeEmail" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>GitHub</label>
+                        <input type="text" id="resumeGitHub" placeholder="github.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label>Город</label>
+                        <input type="text" id="resumeLocation" placeholder="Санкт-Петербург">
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="saveResumeSection('contacts')" style="margin-top: 16px;">Сохранить</button>
+            </div>
+
+            <!-- Skills -->
+            <div class="resume-section">
+                <h3>Навыки</h3>
+                <div class="form-group full-width">
+                    <label>Теги навыков (через запятую)</label>
+                    <input type="text" id="resumeSkills" placeholder="Python, Pytest, Docker, SQL...">
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="saveResumeSection('skills')">Сохранить</button>
+            </div>
+
+            <!-- Experience -->
+            <div class="resume-section">
+                <h3>Опыт работы</h3>
+                <button class="btn btn-primary" onclick="showExperienceForm()" style="margin-bottom: 20px;">
+                    + Добавить опыт
+                </button>
+
+                <div id="experienceForm" class="form-section" style="display: none; margin-bottom: 24px;">
+                    <h2 id="expFormTitle">Новый опыт</h2>
+                    <input type="hidden" id="experienceId">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Компания</label>
+                            <input type="text" id="expCompany" placeholder="Название компании">
+                        </div>
+                        <div class="form-group">
+                            <label>Должность</label>
+                            <input type="text" id="expRole" placeholder="Должность">
+                        </div>
+                        <div class="form-group">
+                            <label>Период</label>
+                            <input type="text" id="expPeriod" placeholder="Июнь 2022 — Июнь 2024">
+                        </div>
+                        <div class="form-group">
+                            <label>Длительность</label>
+                            <input type="text" id="expDuration" placeholder="2 года 1 месяц">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Описание</label>
+                            <div class="add-block-btn">
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="addDescBlock('p')">+ Абзац</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="addDescBlock('ul')">+ Список</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="addDescBlock('ol')">+ Нумерованный</button>
+                            </div>
+                            <div id="descBlocks"></div>
+                            <div class="preview-section">
+                                <div class="preview-label">Предпросмотр</div>
+                                <div class="preview-content" id="descPreview"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary" onclick="saveExperience()">Сохранить</button>
+                        <button class="btn btn-secondary" onclick="hideExperienceForm()">Отмена</button>
+                    </div>
+                </div>
+
+                <div class="experience-list" id="experienceList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // State
+        let editingExpId = null;
+        let descBlocks = [];
+
+        // Tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============== ARTICLES ==============
+        async function loadArticles() {
+            try {
+                const res = await fetch('/api/articles');
+                const articles = await res.json();
+                const list = document.getElementById('articleList');
+
+                if (articles.length === 0) {
+                    list.innerHTML = '<div class="empty-state">Нет статей. Создайте первую!</div>';
+                    return;
+                }
+
+                list.innerHTML = articles.map(a => `
+                    <div class="article-card">
+                        <div class="article-info">
+                            <div class="article-title">${escapeHtml(a.title)}</div>
+                            <div class="article-date">${a.date}</div>
+                            <div class="article-excerpt">${escapeHtml(a.excerpt)}</div>
+                            <div class="article-tags">
+                                ${a.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="article-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="editArticle(${a.id})">Ред.</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteArticle(${a.id})">Удал.</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                showToast('Ошибка загрузки статей', 'error');
+            }
+        }
+
+        function showArticleForm(article = null) {
+            const form = document.getElementById('articleForm');
+            document.getElementById('formTitle').textContent = article ? 'Редактировать пост' : 'Новый пост';
+            document.getElementById('articleId').value = article ? article.id : '';
+            document.getElementById('articleTitle').value = article ? article.title : '';
+            document.getElementById('articleDate').value = article ? article.date : new Date().toISOString().split('T')[0];
+            document.getElementById('articleExcerpt').value = article ? article.excerpt : '';
+            document.getElementById('articleTags').value = article ? article.tags.join(', ') : '';
+            document.getElementById('articleContent').value = article ? article.content : '';
+            form.style.display = 'block';
+            form.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function hideArticleForm() {
+            document.getElementById('articleForm').style.display = 'none';
+        }
+
+        async function editArticle(id) {
+            try {
+                const res = await fetch('/api/articles/' + id);
+                const article = await res.json();
+                showArticleForm(article);
+            } catch (e) {
+                showToast('Ошибка загрузки статьи', 'error');
+            }
+        }
+
+        async function saveArticle() {
+            const id = document.getElementById('articleId').value;
+            const data = {
+                title: document.getElementById('articleTitle').value,
+                date: document.getElementById('articleDate').value,
+                excerpt: document.getElementById('articleExcerpt').value,
+                tags: document.getElementById('articleTags').value.split(',').map(t => t.trim()).filter(t => t),
+                content: document.getElementById('articleContent').value
+            };
+
+            if (!data.title) {
+                showToast('Введите заголовок', 'error');
+                return;
+            }
+
+            try {
+                const url = id ? '/api/articles/' + id : '/api/articles';
+                const method = id ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    showToast(id ? 'Статья обновлена' : 'Статья создана');
+                    hideArticleForm();
+                    loadArticles();
+                } else {
+                    showToast('Ошибка сохранения', 'error');
+                }
+            } catch (e) {
+                showToast('Ошибка сохранения', 'error');
+            }
+        }
+
+        async function deleteArticle(id) {
+            if (!confirm('Удалить статью?')) return;
+            try {
+                const res = await fetch('/api/articles/' + id, { method: 'DELETE' });
+                if (res.ok) {
+                    showToast('Статья удалена');
+                    loadArticles();
+                } else {
+                    showToast('Ошибка удаления', 'error');
+                }
+            } catch (e) {
+                showToast('Ошибка удаления', 'error');
+            }
+        }
+
+        // ============== RESUME ==============
+        async function loadResume() {
+            try {
+                const res = await fetch('/api/resume');
+                const data = await res.json();
+
+                if (data.hero) {
+                    document.getElementById('heroName').value = data.hero.name || '';
+                    document.getElementById('heroPosition').value = data.hero.position || '';
+                    document.getElementById('heroAge').value = data.hero.age || '';
+                    document.getElementById('heroExperience').value = data.hero.experience || '';
+                }
+                if (data.about) {
+                    document.getElementById('resumeAbout').value = (data.about.description || '').replace(/\\n/g, '\n');
+                    document.getElementById('highlight1Value').value = data.about.highlight1?.value || '';
+                    document.getElementById('highlight1Label').value = data.about.highlight1?.label || '';
+                    document.getElementById('highlight2Value').value = data.about.highlight2?.value || '';
+                    document.getElementById('highlight2Label').value = data.about.highlight2?.label || '';
+                    document.getElementById('highlight3Value').value = data.about.highlight3?.value || '';
+                    document.getElementById('highlight3Label').value = data.about.highlight3?.label || '';
+                }
+                if (data.contacts) {
+                    document.getElementById('resumePhone').value = data.contacts.phone || '';
+                    document.getElementById('resumeEmail').value = data.contacts.email || '';
+                    document.getElementById('resumeGitHub').value = data.contacts.github || '';
+                    document.getElementById('resumeLocation').value = data.contacts.location || '';
+                }
+                if (data.skills) {
+                    document.getElementById('resumeSkills').value = (data.skills.items || []).join(', ');
+                }
+            } catch (e) {
+                console.log('Resume not loaded yet');
+            }
+        }
+
+        async function saveResumeSection(section) {
+            let data = {};
+
+            if (section === 'hero') {
+                data = {
+                    name: document.getElementById('heroName').value,
+                    position: document.getElementById('heroPosition').value,
+                    age: document.getElementById('heroAge').value,
+                    experience: document.getElementById('heroExperience').value
+                };
+            } else if (section === 'about') {
+                data = {
+                    description: document.getElementById('resumeAbout').value,
+                    highlight1: {
+                        value: document.getElementById('highlight1Value').value,
+                        label: document.getElementById('highlight1Label').value
+                    },
+                    highlight2: {
+                        value: document.getElementById('highlight2Value').value,
+                        label: document.getElementById('highlight2Label').value
+                    },
+                    highlight3: {
+                        value: document.getElementById('highlight3Value').value,
+                        label: document.getElementById('highlight3Label').value
+                    }
+                };
+            } else if (section === 'contacts') {
+                data = {
+                    phone: document.getElementById('resumePhone').value,
+                    email: document.getElementById('resumeEmail').value,
+                    github: document.getElementById('resumeGitHub').value,
+                    location: document.getElementById('resumeLocation').value
+                };
+            } else if (section === 'skills') {
+                data = {
+                    items: document.getElementById('resumeSkills').value.split(',').map(t => t.trim()).filter(t => t)
+                };
+            }
+
+            try {
+                const res = await fetch('/api/resume/' + section, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    showToast('Сохранено');
+                } else {
+                    showToast('Ошибка сохранения', 'error');
+                }
+            } catch (e) {
+                showToast('Ошибка сохранения', 'error');
+            }
+        }
+
+        // ============== EXPERIENCE ==============
+        async function loadExperiences() {
+            try {
+                const res = await fetch('/api/experience');
+                const experiences = await res.json();
+                const list = document.getElementById('experienceList');
+
+                if (experiences.length === 0) {
+                    list.innerHTML = '<div class="empty-state">Нет опыта работы. Добавьте первый!</div>';
+                    return;
+                }
+
+                list.innerHTML = experiences.map(e => `
+                    <div class="experience-card">
+                        <div class="experience-info">
+                            <div class="experience-company">${escapeHtml(e.company)}</div>
+                            <div class="experience-role">${escapeHtml(e.role)}</div>
+                            <div class="experience-meta">
+                                <span class="experience-badge">${escapeHtml(e.period)}</span>
+                                <span>${escapeHtml(e.duration)}</span>
+                            </div>
+                        </div>
+                        <div class="experience-actions">
+                            <button class="btn btn-secondary btn-sm" onclick="editExperience(${e.id})">Ред.</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteExperience(${e.id})">Удал.</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                showToast('Ошибка загрузки опыта', 'error');
+            }
+        }
+
+        function parseDescription(desc) {
+            if (!desc) return [];
+            try {
+                return JSON.parse(desc);
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function buildDescription(blocks) {
+            return blocks.map(block => {
+                if (block.type === 'p') {
+                    return `<p>${escapeHtml(block.content)}</p>`;
+                } else if (block.type === 'ul') {
+                    const items = block.items.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+                    return `<ul>${items}</ul>`;
+                } else if (block.type === 'ol') {
+                    const items = block.items.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+                    return `<ol>${items}</ol>`;
+                }
+                return '';
+            }).join('');
+        }
+
+        function renderDescBlocks(blocks) {
+            const container = document.getElementById('descBlocks');
+            container.innerHTML = blocks.map((block, index) => `
+                <div class="desc-block">
+                    <div class="desc-block-header">
+                        <span class="desc-block-type">${block.type === 'p' ? 'Абзац' : block.type === 'ul' ? 'Список' : 'Нумерованный список'}</span>
+                        <div class="desc-block-actions">
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="moveBlock(${index}, -1)">↑</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="moveBlock(${index}, 1)">↓</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeBlock(${index})">×</button>
+                        </div>
+                    </div>
+                    ${block.type === 'p'
+                        ? `<textarea placeholder="Текст абзаца..." oninput="updateBlock(${index}, this.value)">${escapeHtml(block.content || '')}</textarea>`
+                        : `<div>
+                            <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px;">Каждый элемент с новой строки</div>
+                            <textarea placeholder="Элемент 1&#10;Элемент 2&#10;Элемент 3" oninput="updateBlockItems(${index}, this.value)">${(block.items || []).join('\n')}</textarea>
+                           </div>`
+                    }
+                </div>
+            `).join('');
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const preview = document.getElementById('descPreview');
+            preview.innerHTML = buildDescription(descBlocks);
+        }
+
+        function addDescBlock(type) {
+            if (type === 'p') {
+                descBlocks.push({ type: 'p', content: '' });
+            } else {
+                descBlocks.push({ type: type, items: [''] });
+            }
+            renderDescBlocks(descBlocks);
+        }
+
+        function removeBlock(index) {
+            descBlocks.splice(index, 1);
+            renderDescBlocks(descBlocks);
+        }
+
+        function moveBlock(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= descBlocks.length) return;
+            [descBlocks[index], descBlocks[newIndex]] = [descBlocks[newIndex], descBlocks[index]];
+            renderDescBlocks(descBlocks);
+        }
+
+        function updateBlock(index, value) {
+            descBlocks[index].content = value;
+            updatePreview();
+        }
+
+        function updateBlockItems(index, value) {
+            descBlocks[index].items = value.split('\n').filter(line => line.trim());
+            updatePreview();
+        }
+
+        function showExperienceForm(experience = null) {
+            const form = document.getElementById('experienceForm');
+            editingExpId = experience ? experience.id : null;
+
+            document.getElementById('expFormTitle').textContent = experience ? 'Редактировать опыт' : 'Новый опыт';
+            document.getElementById('experienceId').value = editingExpId || '';
+            document.getElementById('expCompany').value = experience ? experience.company : '';
+            document.getElementById('expRole').value = experience ? experience.role : '';
+            document.getElementById('expPeriod').value = experience ? experience.period : '';
+            document.getElementById('expDuration').value = experience ? experience.duration : '';
+
+            descBlocks = parseDescription(experience ? experience.description : '');
+            renderDescBlocks(descBlocks);
+
+            form.style.display = 'block';
+            form.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function hideExperienceForm() {
+            document.getElementById('experienceForm').style.display = 'none';
+            editingExpId = null;
+            descBlocks = [];
+        }
+
+        async function editExperience(id) {
+            try {
+                const res = await fetch('/api/experience/' + id);
+                const exp = await res.json();
+                showExperienceForm(exp);
+            } catch (e) {
+                showToast('Ошибка загрузки', 'error');
+            }
+        }
+
+        async function saveExperience() {
+            const id = editingExpId;
+            const company = document.getElementById('expCompany').value.trim();
+            const role = document.getElementById('expRole').value.trim();
+            const period = document.getElementById('expPeriod').value.trim();
+            const duration = document.getElementById('expDuration').value.trim();
+
+            if (!company || !role) {
+                showToast('Заполните компанию и должность', 'error');
+                return;
+            }
+
+            const description = JSON.stringify(descBlocks.filter(b =>
+                b.type === 'p' ? b.content.trim() : (b.items && b.items.some(i => i.trim()))
+            ));
+
+            const data = { company, role, period, duration, description };
+
+            try {
+                const url = id ? '/api/experience/' + id : '/api/experience';
+                const method = id ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    showToast(id ? 'Опыт обновлён' : 'Опыт добавлен');
+                    hideExperienceForm();
+                    loadExperiences();
+                } else {
+                    showToast('Ошибка сохранения', 'error');
+                }
+            } catch (e) {
+                showToast('Ошибка сохранения', 'error');
+            }
+        }
+
+        async function deleteExperience(id) {
+            if (!confirm('Удалить этот опыт работы?')) return;
+            try {
+                const res = await fetch('/api/experience/' + id, { method: 'DELETE' });
+                if (res.ok) {
+                    showToast('Опыт удалён');
+                    loadExperiences();
+                } else {
+                    showToast('Ошибка удаления', 'error');
+                }
+            } catch (e) {
+                showToast('Ошибка удаления', 'error');
+            }
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/logout');
+            window.location.href = '/';
+        });
+
+        // Init
+        loadArticles();
+        loadResume();
+        loadExperiences();
+    </script>
+</body>
+</html>

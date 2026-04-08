@@ -120,13 +120,12 @@
     "id": 10,
     "title": "NixOS: Знакомство с декларативным Linux",
     "date": "2025-03-01",
+    "excerpt": "Первое знакомство с NixOS — операционной системой с декларативным управлением конфигурацией. Почему стоит попробовать.",
     "tags": [
       "NixOS",
       "Linux",
-      "DevOps",
       "Infrastructure"
     ],
-    "excerpt": "Первое знакомство с NixOS — операционной системой с декларативным управлением конфигурацией. Почему стоит попробовать.",
     "content": "## Что такое NixOS\n\nNixOS — это Linux-дистрибутив с принципиально другим подходом к управлению системой. Вместо традиционных пакетов и конфигов здесь всё декларируется в одном файле.\n\nОсновные отличия:\n- **Декларативная конфигурация** — вы описываете желаемое состояние, система его достигает\n- **Атомарные обновления** — можно откатиться к любой предыдущей конфигурации\n- **Воспроизводимое окружение** — один и тот же конфиг даёт идентичную систему\n- **Изоляция пакетов** — несколько версий одного пакета могут существовать одновременно\n\n## Установка\n\nСкачиваем ISO с nixos.org и загружаемся. В Live-среде запускаем nixos-generate-config для создания начальной конфигурации.\n\n```bash\n# Разметка диска (пример для UEFI)\nsudo parted /dev/sda -- mklabel gpt\nsudo parted /dev/sda -- mkpart ESP fat32 1MiB 512MiB\nsudo parted /dev/sda -- set 1 esp on\nsudo parted /dev/sda -- mkpart primary linux-filesystem 512MiB 100%\n\n# Форматирование\nsudo mkfs.fat -F 32 /dev/sda1\nsudo mkfs.ext4 /dev/sda2\n\n# Монтирование\nsudo mount /dev/sda2 /mnt\nsudo mkdir /mnt/boot/efi\nsudo mount /dev/sda1 /mnt/boot/efi\n\n# Генерация конфигурации\nsudo nixos-generate-config --root /mnt\n```\n\n## Первая конфигурация\n\n```nix\n# /etc/nixos/configuration.nix\n{ config, pkgs, ... }:\n\n{\n  imports = [ ./hardware-configuration.nix ];\n\n  boot.loader.grub.enable = true;\n  boot.loader.grub.device = \"/dev/sda\";\n  boot.loader.grub.efiSupport = true;\n\n  networking.hostName = \"nixos\";\n  networking.firewall.enable = false;\n\n  time.timeZone = \"Europe/Moscow\";\n  i18n.defaultLocale = \"en_US.UTF-8\";\n\n  services.xserver.enable = true;\n  services.xserver.layout = \"us\";\n  services.xserver.displayManager.sddm.enable = true;\n  services.xserver.desktopManager.plasma5.enable = true;\n\n  users.users.alex = {\n    isNormalUser = true;\n    extraGroups = [ \"wheel\" ];\n  };\n\n  environment.systemPackages = with pkgs; [\n    vim wget curl firefox\n  ];\n\n  system.stateVersion = \"24.05\";\n}\n```\n\n## Применение конфигурации\n\n```bash\nsudo nixos-rebuild switch   # Применить без перезагрузки\nsudo nixos-rebuild boot     # Применить и перезагрузиться\nsudo nixos-rebuild switch --upgrade  # Обновить систему\n```\n\n## Каналы\n\n```bash\nnix-channel --list\nnix-channel --add https://nixos.org/channels/nixos-unstable nixos\nnix-channel --update\n```\n\n## Преимущества\n\n- Воспроизводимое окружение на любой машине\n- Несколько версий одного пакета одновременно\n- Атомарные обновления с возможностью отката\n\nПопробуйте в виртуальной машине!"
   },
   {
@@ -146,13 +145,12 @@
     "id": 12,
     "title": "NixOS: Home Manager для персональной конфигурации",
     "date": "2025-03-15",
+    "excerpt": "Home Manager — управление пользовательской конфигурацией в NixOS. Ваши dotfiles под контролем версий.",
     "tags": [
       "NixOS",
       "Home Manager",
-      "Dotfiles",
       "Automation"
     ],
-    "excerpt": "Home Manager — управление пользовательской конфигурацией в NixOS. Ваши dotfiles под контролем версий.",
     "content": "## Зачем Home Manager\n\nHome Manager управляет конфигурацией пользователя — dotfiles, переменные окружения, программы.\n\nПреимущества:\n- **Версионирование** — все dotfiles в Git\n- **Воспроизводимость** — тот же конфиг на любой машине\n- **Атомарность** — изменения либо применяются, либо нет\n\n## Установка\n\n```bash\nnix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager\nnix-channel --update\nnix-shell '<home-manager>' -A install\n```\n\n## Базовый home.nix\n\n```nix\n{ config, pkgs, ... }:\n\n{\n  home.username = \"alex\";\n  home.homeDirectory = \"/home/alex\";\n\n  home.packages = with pkgs; [\n    git curl wget tree htop vim\n  ];\n\n  programs.git = {\n    enable = true;\n    userName = \"Alex Galkin\";\n    userEmail = \"alex@example.com\";\n  };\n\n  programs.zsh = {\n    enable = true;\n    enableCompletion = true;\n    shellAliases = {\n      ll = \"eza -la\";\n      g = \"git\";\n    };\n  };\n\n  home.stateVersion = \"24.05\";\n}\n```\n\n## Git конфиг\n\n```nix\nprograms.git = {\n  enable = true;\n  userName = \"Alex Galkin\";\n  userEmail = \"alex@example.com\";\n\n  extraConfig = {\n    pull = \"rebase\";\n    push = \"current\";\n    core = { editor = \"vim\"; };\n    alias = {\n      s = \"status -sb\";\n      co = \"checkout\";\n    };\n  };\n};\n```\n\n## Zsh\n\n```nix\nprograms.zsh = {\n  enable = true;\n  enableCompletion = true;\n\n  shellAliases = {\n    ll = \"eza -la\";\n    g = \"git\";\n    gs = \"git status\";\n  };\n};\n```\n\n## Применение\n\n```bash\nhome-manager switch        # Применить конфиг\nhome-manager generations   # Посмотреть поколения\nhome-manager rollback      # Откатиться\n```\n\n## Структура dotfiles\n\n```\n~/.dotfiles/\n├── flake.nix\n├── home.nix\n└── modules/\n    ├── git.nix\n    ├── shell.nix\n    └── editor.nix\n```\n\nHome Manager превращает управление dotfiles в удовольствие!"
   }
 ]
