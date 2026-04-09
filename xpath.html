@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XPath — Полное руководство</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #fafafa;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+        .header-nav a {
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .header-nav a.active {
+            color: #667eea;
+            background: #f1f5f9;
+        }
+        .header-nav a:not(.active) {
+            color: #64748b;
+        }
+        .header-nav a:not(.active):hover {
+            color: #667eea;
+            background: #f1f5f9;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-top: 20px;
+        }
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f0f23;
+            margin-bottom: 8px;
+        }
+        .page-title p {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .section { margin-bottom: 48px; }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #94a3b8;
+        }
+        .section-line { flex: 1; height: 1px; background: #e2e8f0; }
+        .section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 16px;
+        }
+        .section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 12px;
+            margin-top: 24px;
+        }
+        .section p {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        .card:hover { border-color: #cbd5e1; }
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #0f0f23;
+        }
+
+        .xpath-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+        }
+        .xpath-table th {
+            background: #f8fafc;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .xpath-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #475569;
+        }
+        .xpath-table td:first-child {
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #667eea;
+            font-size: 0.85rem;
+        }
+        .xpath-table tr:last-child td { border-bottom: none; }
+        .xpath-table code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #667eea;
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+        .code-block pre {
+            margin: 0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        .code-block .comment { color: #6b7280; }
+        .code-block .keyword { color: #c084fc; }
+        .code-block .string { color: #86efac; }
+        .code-block .function { color: #67e8f9; }
+        .code-block .operator { color: #fbbf24; }
+        .code-block .axis { color: #f472b6; }
+        .code-block .nodetest { color: #a78bfa; }
+
+        .output-block {
+            background: #f8fafc;
+            border-left: 3px solid #667eea;
+            border-radius: 0 8px 8px 0;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #475569;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 20px 24px;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        .highlight-box p {
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 8px;
+        }
+        .highlight-box strong {
+            color: #fff;
+        }
+        .highlight-box code {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+        }
+
+        .dom-example {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+        }
+        .dom-example .tag { color: #667eea; }
+        .dom-example .attr { color: #f472b6; }
+        .dom-example .text { color: #86efac; }
+        .dom-example .comment { color: #6b7280; }
+        .dom-example .indent { padding-left: 20px; }
+
+        .axis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .axis-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .axis-card code {
+            display: block;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .axis-card p {
+            font-size: 0.8rem;
+            margin: 0;
+            color: #64748b;
+        }
+
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .function-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .function-card code {
+            display: block;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .function-card p {
+            font-size: 0.75rem;
+            margin: 0;
+            color: #64748b;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 32px 0;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 24px 16px 60px; }
+            .page-title h1 { font-size: 1.5rem; }
+            .xpath-table { font-size: 0.75rem; }
+            .code-block { padding: 12px 16px; }
+            .code-block pre { font-size: 0.75rem; }
+            .axis-grid { grid-template-columns: 1fr; }
+            .function-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <nav class="header-nav">
+                <a href="index.html" title="Резюме"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a>
+                <a href="blog.html" title="Блог"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></a>
+                <a href="projects.html" title="Проекты"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></a>
+                <a href="pytest.html" title="Pytest"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
+                <a href="xpath.html" class="active" title="XPath"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><path d="M8 12l4 4 4-4"></path><path d="M8 18l4-4 4 4"></path></svg></a>
+                <a href="test.html" title="Жизненный багаж"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg></a>
+                <a href="life.html" title="Профессия и навыки"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></a>
+                <a href="info.html" title="Информационный контекст"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1>XPath — Полное руководство</h1>
+            <p>Навигация по DOM-дереву, оси, функции и примеры для QA</p>
+        </div>
+
+        <!-- Section 1: Basics -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">1. Основы XPath</span>
+                <div class="section-line"></div>
+            </div>
+
+            <p>XPath (XML Path Language) — это язык для навигации по элементам XML/HTML документа. В тестировании XPath используется для поиска элементов в Selenium, Playwright и других инструментах.</p>
+
+            <table class="xpath-table">
+                <thead>
+                    <tr>
+                        <th>Выражение</th>
+                        <th>Описание</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>/html</code></td><td>Корневой элемент</td></tr>
+                    <tr><td><code>//div</code></td><td>Все элементы div в документе</td></tr>
+                    <tr><td><code>.</code></td><td>Текущий узел</td></tr>
+                    <tr><td><code>..</code></td><td>Родительский узел</td></tr>
+                    <tr><td><code>@attr</code></td><td>Атрибут элемента</td></tr>
+                    <tr><td><code>text()</code></td><td>Текстовый узел</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Пример HTML-структуры</h3>
+            <div class="dom-example">
+<span class="comment">&lt;!-- DOM Tree Example --&gt;</span>
+<span class="tag">&lt;html&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="string">"container"</span><span class="tag">&gt;</span>
+      <span class="tag">&lt;form</span> <span class="attr">class</span>=<span class="string">"login-form"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"username"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">id</span>=<span class="string">"password"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="string">"submit"</span><span class="tag">&gt;</span><span class="text">Войти</span><span class="tag">&lt;/button&gt;</span>
+      <span class="tag">&lt;/form&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 2: Node Types -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">2. Типы узлов</span>
+                <div class="section-line"></div>
+            </div>
+
+            <table class="xpath-table">
+                <thead>
+                    <tr>
+                        <th>Тип</th>
+                        <th>Обозначение</th>
+                        <th>Пример</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Element</td><td><code>tagname</code></td><td><code>div</code>, <code>button</code></td></tr>
+                    <tr><td>Attribute</td><td><code>@name</code></td><td><code>//div[@id='foo']</code></td></tr>
+                    <tr><td>Text</td><td><code>text()</code></td><td><code>//button/text()</code></td></tr>
+                    <tr><td>Comment</td><td><code>comment()</code></td><td><code>//comment()</code></td></tr>
+                    <tr><td>Node</td><td><code>node()</code></td><td>Любой узел</td></tr>
+                    <tr><td>Processing Instruction</td><td><code>processing-instruction()</code></td><td>XML инструкции</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Примеры поиска по типу узла</h3>
+            <div class="code-block">
+<pre><span class="comment">// Текст кнопки</span>
+<span class="nodetest">//button/text()</span>
+<span class="comment">→ "Войти"</span>
+
+<span class="comment">// Элемент по тексту</span>
+<span class="nodetest">//button[text()="Войти"]</span>
+<span class="comment">→ &lt;button&gt;Войти&lt;/button&gt;</span>
+
+<span class="comment">// Вход по текстовому содержимому</span>
+<span class="nodetest">//*[contains(text(), "Войти")]</span></pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 3: Axes -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">3. Оси XPath</span>
+                <div class="section-line"></div>
+            </div>
+
+            <p>Оси определяют направление движения по DOM-дереву относительно текущего узла.</p>
+
+            <div class="axis-grid">
+                <div class="axis-card">
+                    <code>self::</code>
+                    <p>Текущий узел</p>
+                </div>
+                <div class="axis-card">
+                    <code>parent::</code>
+                    <p>Родительский узел</p>
+                </div>
+                <div class="axis-card">
+                    <code>child::</code>
+                    <p>Дочерние элементы</p>
+                </div>
+                <div class="axis-card">
+                    <code>ancestor::</code>
+                    <p>Все предки (вверх)</p>
+                </div>
+                <div class="axis-card">
+                    <code>descendant::</code>
+                    <p>Все потомки (вниз)</p>
+                </div>
+                <div class="axis-card">
+                    <code>following-sibling::</code>
+                    <p>Следующие соседи</p>
+                </div>
+                <div class="axis-card">
+                    <code>preceding-sibling::</code>
+                    <p>Предыдущие соседи</p>
+                </div>
+                <div class="axis-card">
+                    <code>following::</code>
+                    <p>Все после (в документе)</p>
+                </div>
+                <div class="axis-card">
+                    <code>preceding::</code>
+                    <p>Все до (в документе)</p>
+                </div>
+                <div class="axis-card">
+                    <code>ancestor-or-self::</code>
+                    <p>Предки + текущий</p>
+                </div>
+                <div class="axis-card">
+                    <code>descendant-or-self::</code>
+                    <p>Потомки + текущий</p>
+                </div>
+                <div class="axis-card">
+                    <code>namespace::</code>
+                    <p>Пространство имён</p>
+                </div>
+            </div>
+
+            <h3>Сокращённый синтаксис</h3>
+            <table class="xpath-table">
+                <thead>
+                    <tr>
+                        <th>Полная форма</th>
+                        <th>Сокращение</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>child::*</code></td><td><code>*</code></td></tr>
+                    <tr><td><code>descendant::*</code></td><td><code>//</code></td></tr>
+                    <tr><td><code>self::node()</code></td><td><code>.</code></td></tr>
+                    <tr><td><code>parent::node()</code></td><td><code>..</code></td></tr>
+                    <tr><td><code>attribute::*</code></td><td><code>@*</code></td></tr>
+                </tbody>
+            </table>
+
+            <h3>Примеры с осями</h3>
+            <div class="code-block">
+<pre><span class="comment">// Кнопка рядом с input</span>
+<span class="axis">//input[@id='username']</span><span class="operator">/following-sibling::</span><span class="nodetest">button</span>
+
+<span class="comment">// Родитель формы</span>
+<span class="axis">//input[@id='username']</span><span class="operator">/parent::</span><span class="nodetest">form</span>
+
+<span class="comment">// Корневой элемент</span>
+<span class="axis">//button[@type='submit']</span><span class="operator">/ancestor::</span><span class="nodetest">html</span>
+
+<span class="comment">// Предыдущий сосед</span>
+<span class="axis">//button</span><span class="operator">/preceding-sibling::</span><span class="nodetest">input[1]</span></pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 4: Predicates -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">4. Предикаты (фильтры)</span>
+                <div class="section-line"></div>
+            </div>
+
+            <p>Предикаты — это условия в квадратных скобках <code>[]</code>, которые фильтруют узлы.</p>
+
+            <h3>Фильтрация по индексу</h3>
+            <div class="code-block">
+<pre><span class="comment">// Первый div</span>
+<span class="nodetest">//div[</span><span class="number">1</span><span class="nodetest">]</span>
+
+<span class="comment">// Последний элемент списка</span>
+<span class="nodetest">//li[</span><span class="function">last</span><span class="nodetest">()]</span>
+
+<span class="comment">// Предпоследний</span>
+<span class="nodetest">//li[</span><span class="function">last()</span><span class="operator">-</span><span class="number">1</span><span class="nodetest">]</span>
+
+<span class="comment">// Первые 3 элемента</span>
+<span class="nodetest">//li[</span><span class="function">position()</span><span class="operator">&lt;=</span><span class="number">3</span><span class="nodetest">]</span></pre>
+            </div>
+
+            <h3>Фильтрация по атрибутам</h3>
+            <div class="code-block">
+<pre><span class="comment">// По id</span>
+<span class="nodetest">//div[@id='container']</span>
+
+<span class="comment">// По class (точное совпадение)</span>
+<span class="nodetest">//div[@class='login-form']</span>
+
+<span class="comment">// По class (содержит)</span>
+<span class="nodetest">//div[contains(@class, 'login')]</span>
+
+<span class="comment">// По нескольким атрибутам</span>
+<span class="nodetest">//input[@type='text' and @name='username']</span>
+
+<span class="comment">// Не равно</span>
+<span class="nodetest">//button[@type!='submit']</span></pre>
+            </div>
+
+            <h3>Фильтрация по тексту</h3>
+            <div class="code-block">
+<pre><span class="comment">// Точное совпадение текста</span>
+<span class="nodetest">//button[text()='Войти']</span>
+
+<span class="comment">// Текст содержит</span>
+<span class="nodetest">//span[contains(text(), 'Привет')]</span>
+
+<span class="comment">// Начинается с</span>
+<span class="nodetest">//a[starts-with(text(), 'Подробнее')]</span>
+
+<span class="comment">// Текст содержит слово (целое слово)</span>
+<span class="nodetest">//p[contains(concat(' ', normalize-space(text()), ' '), ' важно ')]</span></pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 5: Functions -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">5. Функции XPath</span>
+                <div class="section-line"></div>
+            </div>
+
+            <h3>Строковые функции</h3>
+            <div class="function-grid">
+                <div class="function-card">
+                    <code>contains(str, substr)</code>
+                    <p>Содержит подстроку</p>
+                </div>
+                <div class="function-card">
+                    <code>starts-with(str, prefix)</code>
+                    <p>Начинается с</p>
+                </div>
+                <div class="function-card">
+                    <code>ends-with(str, suffix)</code>
+                    <p>Заканчивается на</p>
+                </div>
+                <div class="function-card">
+                    <code>substring(str, pos, len)</code>
+                    <p>Подстрока</p>
+                </div>
+                <div class="function-card">
+                    <code>normalize-space(str)</code>
+                    <p>Убирает лишние пробелы</p>
+                </div>
+                <div class="function-card">
+                    <code>string-length(str)</code>
+                    <p>Длина строки</p>
+                </div>
+                <div class="function-card">
+                    <code>concat(str1, str2, ...)</code>
+                    <p>Конкатенация</p>
+                </div>
+                <div class="function-card">
+                    <code>translate(str, from, to)</code>
+                    <p>Замена символов</p>
+                </div>
+            </div>
+
+            <h3>Числовые функции</h3>
+            <div class="function-grid">
+                <div class="function-card">
+                    <code>count(node-set)</code>
+                    <p>Количество узлов</p>
+                </div>
+                <div class="function-card">
+                    <code>sum(node-set)</code>
+                    <p>Сумма значений</p>
+                </div>
+                <div class="function-card">
+                    <code>position()</code>
+                    <p>Позиция в наборе</p>
+                </div>
+                <div class="function-card">
+                    <code>last()</code>
+                    <p>Последняя позиция</p>
+                </div>
+            </div>
+
+            <h3>Логические функции</h3>
+            <div class="function-grid">
+                <div class="function-card">
+                    <code>boolean(value)</code>
+                    <p>Приведение к bool</p>
+                </div>
+                <div class="function-card">
+                    <code>not(expr)</code>
+                    <p>Отрицание</p>
+                </div>
+                <div class="function-card">
+                    <code>true()</code>
+                    <p>Истина</p>
+                </div>
+                <div class="function-card">
+                    <code>false()</code>
+                    <p>Ложь</p>
+                </div>
+            </div>
+
+            <h3>Функции узлов</h3>
+            <div class="function-grid">
+                <div class="function-card">
+                    <code>name(node?)</code>
+                    <p>Имя тега</p>
+                </div>
+                <div class="function-card">
+                    <code>local-name(node?)</code>
+                    <p>Локальное имя</p>
+                </div>
+                <div class="function-card">
+                    <code>namespace-uri(node?)</code>
+                    <p>URI пространства имён</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 6: DOM Navigation -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">6. Навигация по DOM</span>
+                <div class="section-line"></div>
+            </div>
+
+            <h3>Спуск вниз (child axis)</h3>
+            <div class="dom-example">
+<span class="tag">&lt;form</span> <span class="attr">id</span>=<span class="string">"login"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div&gt;</span>
+    <span class="tag">&lt;input</span> <span class="attr">id</span>=<span class="string">"user"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/form&gt;</span>
+            </div>
+            <div class="code-block">
+<pre><span class="comment">// Прямой дочерний элемент</span>
+<span class="nodetest">//form[@id='login']/div</span>
+
+<span class="comment">// Любой дочерний input</span>
+<span class="nodetest">//form[@id='login']/input</span>
+
+<span class="comment">// Все потомки input</span>
+<span class="nodetest">//form[@id='login']//input</span>
+
+<span class="comment">// Первый дочерний div</span>
+<span class="nodetest">//form[@id='login']/div[1]</span></pre>
+            </div>
+
+            <h3>Подъём вверх (parent axis)</h3>
+            <div class="code-block">
+<pre><span class="comment">// Родитель по оси</span>
+<span class="axis">//input[@id='user']/parent::</span><span class="nodetest">div</span>
+
+<span class="comment">// То же через ..</span>
+<span class="nodetest">//input[@id='user']/../</span><span class="nodetest">div</span>
+
+<span class="comment">// Два уровня вверх</span>
+<span class="nodetest">//input[@id='user']/../../</span>
+
+<span class="comment">// Корневой элемент</span>
+<span class="nodetest">//input[@id='user']/ancestor::</span><span class="nodetest">form</span></pre>
+            </div>
+
+            <h3>Боковое движение (sibling axes)</h3>
+            <div class="dom-example">
+<span class="tag">&lt;div&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">id</span>=<span class="string">"firstName"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">id</span>=<span class="string">"lastName"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">id</span>=<span class="string">"email"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+            </div>
+            <div class="code-block">
+<pre><span class="comment">// Следующий сосед (после lastName идёт email)</span>
+<span class="axis">//input[@id='lastName']/following-sibling::</span><span class="nodetest">input</span>
+
+<span class="comment">// Предыдущий сосед (перед lastName идёт firstName)</span>
+<span class="axis">//input[@id='lastName']/preceding-sibling::</span><span class="nodetest">input</span>
+
+<span class="comment">// Первый следующий input</span>
+<span class="axis">//input[@id='firstName']/following-sibling::</span><span class="nodetest">input[1]</span>
+
+<span class="comment">// Все следующие соседи</span>
+<span class="axis">//input[@id='firstName']/following-sibling::</span><span class="nodetest">*</span></pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 7: Combined Examples -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">7. Практические примеры</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="card">
+                <h3>Поиск кнопки по тексту</h3>
+                <div class="code-block">
+<pre><span class="comment">// Точное совпадение</span>
+<span class="nodetest">//button[text()='Отправить']</span>
+
+<span class="comment">// Текст содержит</span>
+<span class="nodetest">//button[contains(text(), 'Отправ')]</span>
+
+<span class="comment">// Ссылка с текстом</span>
+<span class="nodetest">//a[text()='Читать далее']</span></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Работа с формами</h3>
+                <div class="code-block">
+<pre><span class="comment">// Все поля ввода в форме</span>
+<span class="nodetest">//form[@id='registration']//input</span>
+
+<span class="comment">// Input по name</span>
+<span class="nodetest">//input[@name='email']</span>
+
+<span class="comment">// Обязательные поля</span>
+<span class="nodetest">//input[@required]</span>
+
+<span class="comment">// Поле по placeholder</span>
+<span class="nodetest">//input[@placeholder='Введите email']</span>
+
+<span class="comment">// Кнопка submit в форме</span>
+<span class="nodetest">//form[@id='login']//button[@type='submit']</span></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Таблицы</h3>
+                <div class="code-block">
+<pre><span class="comment">// Заголовки таблицы</span>
+<span class="nodetest">//table[@id='data']/thead//th</span>
+
+<span class="comment">// Строки таблицы</span>
+<span class="nodetest">//table[@id='data']/tbody/tr</span>
+
+<span class="comment">// Ячейка по координатам [row, col]</span>
+<span class="nodetest">//table//tr[2]/td[3]</span>
+
+<span class="comment">// Строка по содержимому</span>
+<span class="nodetest">//table//tr[td[contains(text(), 'Иванов')]]</span></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Динамические элементы</h3>
+                <div class="code-block">
+<pre><span class="comment">// Элемент с динамическим id</span>
+<span class="nodetest">//div[starts-with(@id, 'dropdown-')]</span>
+
+<span class="comment">// Меню с вложенными пунктами</span>
+<span class="nodetest">//ul[@class='menu']//li[contains(@class, 'active')]</span>
+
+<span class="comment">// Скрытый элемент</span>
+<span class="nodetest">//div[@style='display: none;' and @class='tooltip']</span>
+
+<span class="comment">//disabled кнопка</span>
+<span class="nodetest">//button[@disabled and contains(text(), 'Загрузка')]</span></pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Комбинированные условия</h3>
+                <div class="code-block">
+<pre><span class="comment">// AND - оба условия</span>
+<span class="nodetest">//input[@type='text' and @required]</span>
+
+<span class="comment">// OR - хотя бы одно</span>
+<span class="nodetest">//input[@name='phone' or @name='mobile']</span>
+
+<span class="comment">// NOT - отрицание</span>
+<span class="nodetest">//button[not(@disabled)]</span>
+
+<span class="comment">// Сложное условие</span>
+<span class="nodetest">//div[@class='card' and contains(@id, 'product') and position() &lt;= 5]</span></pre>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 8: XPath 2.0+ -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">8. XPath 2.0+ улучшения</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Примечание:</strong> XPath 2.0+ поддерживается не всеми браузерами и инструментами. Selenium WebDriver использует XPath 1.0. Для Playwright доступны некоторые функции XPath 2.0+.</p>
+            </div>
+
+            <table class="xpath-table">
+                <thead>
+                    <tr>
+                        <th>Функция</th>
+                        <th>Описание</th>
+                        <th>XPath</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>lower-case()</td><td>Нижний регистр</td><td>2.0+</td></tr>
+                    <tr><td>upper-case()</td><td>Верхний регистр</td><td>2.0+</td></tr>
+                    <tr><td>matches()</td><td>Регулярное выражение</td><td>2.0+</td></tr>
+                    <tr><td>replace()</td><td>Замена по regex</td><td>2.0+</td></tr>
+                    <tr><td>tokenize()</td><td>Разбиение строки</td><td>2.0+</td></tr>
+                    <tr><td>avg()</td><td>Среднее значение</td><td>2.0+</td></tr>
+                    <tr><td>min(), max()</td><td>Мин/макс</td><td>2.0+</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 9: Best Practices -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">9. Лучшие практики</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="card">
+                <h3>Рекомендации</h3>
+                <ul style="padding-left: 20px; color: #475569; font-size: 0.9rem; line-height: 1.8;">
+                    <li><strong>Используйте уникальные атрибуты</strong> — <code>id</code>, <code>data-testid</code>, <code>data-qa</code></li>
+                    <li><strong>Избегайте абсолютных путей</strong> — начинайте с <code>//</code> для гибкости</li>
+                    <li><strong>Короче = надёжнее</strong> — <code>//[@data-qa='submit-btn']</code> лучше длинного DOM-пути</li>
+                    <li><strong>Текстовые селекторы хрупкие</strong> — используйте при необходимости</li>
+                    <li><strong>Проверяйте на динамический контент</strong> — идентификаторы могут меняться</li>
+                    <li><strong>Используйте contains() осторожно</strong> — может найти лишние элементы</li>
+                    <li><strong>Комбинируйте стратегии</strong> — XPath + CSS часто надёжнее</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Порядок поиска локаторов (по приоритету):</strong></p>
+                <p>1. <code>data-testid</code> / <code>data-qa</code> → 2. <code>id</code> → 3. <code>name</code> → 4. <code>CSS selector</code> → 5. <code>XPath</code></p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
