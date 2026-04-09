@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой жизненный багаж</title>
+    <title>Информационный контекст</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -119,19 +119,6 @@
             width: 16px;
             height: 16px;
         }
-        .year-input {
-            padding: 10px 16px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            width: 100px;
-            font-family: inherit;
-        }
-        .year-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
 
         .table-wrapper {
             background: #fff;
@@ -145,7 +132,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px;
+            min-width: 500px;
         }
         thead {
             background: #f8fafc;
@@ -196,12 +183,6 @@
         .input-cell textarea {
             resize: vertical;
             min-height: 60px;
-        }
-        .input-cell.year-input {
-            width: 100px;
-        }
-        .input-cell.year-input input {
-            width: 100%;
         }
 
         .delete-btn {
@@ -287,46 +268,39 @@
                 <a href="index.html">Резюме</a>
                 <a href="blog.html">Блог</a>
                 <a href="projects.html">Проекты</a>
-                <a href="test.html" class="active">Жизненный багаж</a>
+                <a href="test.html">Жизненный багаж</a>
                 <a href="life.html">Профессия и навыки</a>
-                <a href="info.html">Информационный контекст</a>
+                <a href="info.html" class="active">Информационный контекст</a>
             </nav>
         </div>
     </header>
 
     <div class="container" x-data="{
         entries: [],
-        newEntry: { year: '', event: '', experience: '', improvement: '' },
 
         init() {
-            const saved = localStorage.getItem('lifeLuggage');
+            const saved = localStorage.getItem('infoContext');
             if (saved) {
                 this.entries = JSON.parse(saved);
             } else {
                 this.entries = [
-                    { id: 1, year: '2024', event: '', experience: '', improvement: '' },
-                    { id: 2, year: '2023', event: '', experience: '', improvement: '' },
-                    { id: 3, year: '2022', event: '', experience: '', improvement: '' }
+                    { id: 1, resource: '', benefit: '' },
+                    { id: 2, resource: '', benefit: '' },
+                    { id: 3, resource: '', benefit: '' }
                 ];
             }
         },
 
         save() {
-            localStorage.setItem('lifeLuggage', JSON.stringify(this.entries));
+            localStorage.setItem('infoContext', JSON.stringify(this.entries));
         },
 
         addEntry() {
-            const year = this.newEntry.year.trim();
-            if (!year) return;
-
             this.entries.unshift({
                 id: Date.now(),
-                year: year,
-                event: '',
-                experience: '',
-                improvement: ''
+                resource: '',
+                benefit: ''
             });
-            this.newEntry = { year: '', event: '', experience: '', improvement: '' };
             this.save();
         },
 
@@ -345,10 +319,8 @@
 
         downloadExcel() {
             const data = this.entries.map(e => ({
-                'Год': e.year,
-                'Событие': e.event,
-                'Мой опыт': e.experience,
-                'Чем это сделало меня лучше?': e.improvement
+                'Информационный ресурс': e.resource,
+                'Что он мне дает?': e.benefit
             }));
 
             if (data.length === 0) {
@@ -358,17 +330,15 @@
 
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Жизненный багаж');
+            XLSX.utils.book_append_sheet(wb, ws, 'Информационный контекст');
 
             const colWidths = [
-                { wch: 10 },
-                { wch: 30 },
                 { wch: 40 },
-                { wch: 40 }
+                { wch: 60 }
             ];
             ws['!cols'] = colWidths;
 
-            XLSX.writeFile(wb, 'мой_жизненный_багаж.xlsx');
+            XLSX.writeFile(wb, 'информационный_контекст.xlsx');
         },
 
         clearAll() {
@@ -380,8 +350,8 @@
     }">
 
         <div class="page-title">
-            <h1>Мой жизненный багаж</h1>
-            <p>Записывайте важные события и выводы из них</p>
+            <h1>Информационный контекст</h1>
+            <p>Записывайте информационные ресурсы и их ценность для вас</p>
         </div>
 
         <div class="actions">
@@ -389,14 +359,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 Скачать Excel
             </button>
-            <input type="text"
-                   x-model="newEntry.year"
-                   @keydown.enter="addEntry()"
-                   placeholder="Год"
-                   class="year-input">
             <button class="btn btn-secondary" @click="addEntry()">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Добавить год
+                Добавить ресурс
             </button>
             <button class="btn btn-secondary" @click="clearAll()" x-show="entries.length > 0">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -409,7 +374,7 @@
                 <div class="empty-state">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     <p>Записей пока нет</p>
-                    <small>Нажмите «Добавить год» чтобы начать</small>
+                    <small>Нажмите «Добавить ресурс» чтобы начать</small>
                 </div>
             </div>
         </template>
@@ -420,10 +385,8 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 100px;">Год</th>
-                                <th>Событие</th>
-                                <th>Мой опыт</th>
-                                <th>Чем это сделало меня лучше?</th>
+                                <th>Информационный ресурс</th>
+                                <th>Что он мне дает?</th>
                                 <th style="width: 50px;"></th>
                             </tr>
                         </thead>
@@ -431,34 +394,18 @@
                             <template x-for="entry in entries" :key="entry.id">
                                 <tr>
                                     <td>
-                                        <div class="input-cell year-input">
-                                            <input type="text"
-                                                   x-model="entry.year"
-                                                   @input="updateEntry(entry.id, 'year', $event.target.value)"
-                                                   placeholder="Год">
-                                        </div>
-                                    </td>
-                                    <td>
                                         <div class="input-cell">
-                                            <textarea x-model="entry.event"
-                                                      @input="updateEntry(entry.id, 'event', $event.target.value)"
-                                                      placeholder="Опишите событие"
+                                            <textarea x-model="entry.resource"
+                                                      @input="updateEntry(entry.id, 'resource', $event.target.value)"
+                                                      placeholder="Название ресурса, канала, книги..."
                                                       rows="2"></textarea>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-cell">
-                                            <textarea x-model="entry.experience"
-                                                      @input="updateEntry(entry.id, 'experience', $event.target.value)"
-                                                      placeholder="Что вы поняли, узнали?"
-                                                      rows="2"></textarea>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-cell">
-                                            <textarea x-model="entry.improvement"
-                                                      @input="updateEntry(entry.id, 'improvement', $event.target.value)"
-                                                      placeholder="Как это повлияло на вас?"
+                                            <textarea x-model="entry.benefit"
+                                                      @input="updateEntry(entry.id, 'benefit', $event.target.value)"
+                                                      placeholder="Какую пользу приносит этот ресурс?"
                                                       rows="2"></textarea>
                                         </div>
                                     </td>
@@ -478,11 +425,11 @@
         <div class="stats" x-show="entries.length > 0">
             <div class="stat-item">
                 <div class="stat-value" x-text="entries.length"></div>
-                <div class="stat-label">Записей</div>
+                <div class="stat-label">Ресурсов</div>
             </div>
             <div class="stat-item">
-                <div class="stat-value" x-text="entries.filter(e => e.event.trim()).length"></div>
-                <div class="stat-label">С событиями</div>
+                <div class="stat-value" x-text="entries.filter(e => e.resource.trim()).length"></div>
+                <div class="stat-label">С названием</div>
             </div>
         </div>
 
