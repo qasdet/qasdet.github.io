@@ -487,35 +487,38 @@
 
             <h3>Примеры с осями</h3>
 
-            <h3>DOM-структура для примеров</h3>
-            <div class="dom-example">
+            <div class="card">
+                <h4>DOM-структура для примеров</h4>
+                <div class="dom-example" style="margin-top: 12px;">
 <span class="tag">&lt;form</span> <span class="attr">id</span>=<span class="string">"login"</span><span class="tag">&gt;</span>
   <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"username"</span> <span class="attr">placeholder</span>=<span class="string">"Имя пользователя"</span><span class="tag">/&gt;</span>
   <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">id</span>=<span class="string">"password"</span> <span class="attr">placeholder</span>=<span class="string">"Пароль"</span><span class="tag">/&gt;</span>
   <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="string">"submit"</span><span class="tag">&gt;</span><span class="text">Войти</span><span class="tag">&lt;/button&gt;</span>
 <span class="tag">&lt;/form&gt;</span>
-            </div>
+                </div>
 
-            <div class="code-block">
-<pre><span class="comment">// Кнопка рядом с input (следующий сосед)</span>
-<span class="axis">//input[@id='username']</span><span class="operator">/following-sibling::</span><span class="nodetest">button</span>
-<span class="comment">// → &lt;button type="submit"&gt;Войти&lt;/button&gt;</span>
+                <h4>XPath-запросы и результаты</h4>
+                <div class="code-block" style="margin-top: 12px; margin-bottom: 0;">
+<pre><span class="comment">// 1. Следующий сосед (following-sibling)</span>
+<span class="axis">//input[@id='username']/following-sibling::</span><span class="nodetest">button</span>
+<span class="comment">// Результат: &lt;button type="submit"&gt;Войти&lt;/button&gt;</span>
 
-<span class="comment">// Родитель элемента (подъём вверх)</span>
-<span class="axis">//input[@id='username']</span><span class="operator">/parent::</span><span class="nodetest">form</span>
-<span class="comment">// → &lt;form id="login"&gt;...&lt;/form&gt;</span>
+<span class="comment">// 2. Родитель (parent)</span>
+<span class="axis">//input[@id='username']/parent::</span><span class="nodetest">form</span>
+<span class="comment">// Результат: &lt;form id="login"&gt;...&lt;/form&gt;</span>
 
-<span class="comment">// Пароль - сосед после username</span>
-<span class="axis">//input[@id='username']</span><span class="operator">/following-sibling::</span><span class="nodetest">input[1]</span>
-<span class="comment">// → &lt;input id="password"&gt;</span>
+<span class="comment">// 3. Первый следующий сосед</span>
+<span class="axis">//input[@id='username']/following-sibling::</span><span class="nodetest">input[1]</span>
+<span class="comment">// Результат: &lt;input id="password"&gt;</span>
 
-<span class="comment">// Корневой элемент (все предки)</span>
-<span class="axis">//button[@type='submit']</span><span class="operator">/ancestor::</span><span class="nodetest">html</span>
-<span class="comment">// → &lt;html&gt;...&lt;/html&gt;</span>
+<span class="comment">// 4. Все предки (ancestor)</span>
+<span class="axis">//button[@type='submit']/ancestor::</span><span class="nodetest">html</span>
+<span class="comment">// Результат: &lt;html&gt;...&lt;/html&gt;</span>
 
-<span class="comment">// Дочерние элементы формы (спуск вниз)</span>
+<span class="comment">// 5. Дочерние элементы (child)</span>
 <span class="nodetest">//form[@id='login']/child::</span><span class="nodetest">*</span>
-<span class="comment">// → [input#username, input#password, button]</span></pre>
+<span class="comment">// Результат: [input#username, input#password, button]</span></pre>
+                </div>
             </div>
         </section>
 
