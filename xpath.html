@@ -534,51 +534,109 @@
             <p>Предикаты — это условия в квадратных скобках <code>[]</code>, которые фильтруют узлы.</p>
 
             <h3>Фильтрация по индексу</h3>
-            <div class="code-block">
-<pre><span class="comment">// Первый div</span>
-<span class="nodetest">//div[</span><span class="number">1</span><span class="nodetest">]</span>
+            <div class="card">
+                <h4>DOM-структура</h4>
+                <div class="dom-example" style="margin-top: 12px;">
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="text">Первый</span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="text">Второй</span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="text">Третий</span><span class="tag">&lt;/li&gt;</span>
+  <span class="tag">&lt;li&gt;</span><span class="text">Последний</span><span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+                </div>
+                <h4>XPath-запросы</h4>
+                <div class="code-block" style="margin-top: 12px; margin-bottom: 0;">
+<pre><span class="comment">// Первый элемент списка</span>
+<span class="nodetest">//li[</span><span class="number">1</span><span class="nodetest">]</span>
+<span class="comment">// Результат: &lt;li&gt;Первый&lt;/li&gt;</span>
 
-<span class="comment">// Последний элемент списка</span>
+<span class="comment">// Последний элемент</span>
 <span class="nodetest">//li[</span><span class="function">last</span><span class="nodetest">()]</span>
+<span class="comment">// Результат: &lt;li&gt;Последний&lt;/li&gt;</span>
 
 <span class="comment">// Предпоследний</span>
 <span class="nodetest">//li[</span><span class="function">last()</span><span class="operator">-</span><span class="number">1</span><span class="nodetest">]</span>
+<span class="comment">// Результат: &lt;li&gt;Третий&lt;/li&gt;</span>
 
-<span class="comment">// Первые 3 элемента</span>
-<span class="nodetest">//li[</span><span class="function">position()</span><span class="operator">&lt;=</span><span class="number">3</span><span class="nodetest">]</span></pre>
+<span class="comment">// Первые 2 элемента</span>
+<span class="nodetest">//li[</span><span class="function">position()</span><span class="operator">&lt;=</span><span class="number">2</span><span class="nodetest">]</span>
+<span class="comment">// Результат: [&lt;li&gt;Первый&lt;/li&gt;, &lt;li&gt;Второй&lt;/li&gt;]</span></pre>
+                </div>
             </div>
 
             <h3>Фильтрация по атрибутам</h3>
-            <div class="code-block">
-<pre><span class="comment">// По id</span>
-<span class="nodetest">//div[@id='container']</span>
+            <div class="card">
+                <h4>DOM-структура</h4>
+                <div class="dom-example" style="margin-top: 12px;">
+<span class="tag">&lt;div</span> <span class="attr">id</span>=<span class="string">"header"</span><span class="tag">&gt;</span><span class="text">Шапка</span><span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"login-form active"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"username"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">name</span>=<span class="string">"password"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">disabled</span><span class="tag">&gt;</span><span class="text">Войти</span><span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="string">"hidden"</span><span class="tag">&gt;</span><span class="text">Скрытый</span><span class="tag">&lt;/div&gt;</span>
+                </div>
+                <h4>XPath-запросы</h4>
+                <div class="code-block" style="margin-top: 12px; margin-bottom: 0;">
+<pre><span class="comment">// По id (уникальный)</span>
+<span class="nodetest">//div[@id='header']</span>
+<span class="comment">// Результат: &lt;div id="header"&gt;Шапка&lt;/div&gt;</span>
 
 <span class="comment">// По class (точное совпадение)</span>
-<span class="nodetest">//div[@class='login-form']</span>
+<span class="nodetest">//div[@class='login-form active']</span>
+<span class="comment">// Результат: &lt;div class="login-form active"&gt;...&lt;/div&gt;</span>
 
-<span class="comment">// По class (содержит)</span>
+<span class="comment">// class содержит 'login'</span>
 <span class="nodetest">//div[contains(@class, 'login')]</span>
+<span class="comment">// Результат: &lt;div class="login-form active"&gt;...&lt;/div&gt;</span>
 
-<span class="comment">// По нескольким атрибутам</span>
+<span class="comment">// Несколько атрибутов (AND)</span>
 <span class="nodetest">//input[@type='text' and @name='username']</span>
+<span class="comment">// Результат: &lt;input type="text" name="username"&gt;</span>
 
-<span class="comment">// Не равно</span>
-<span class="nodetest">//button[@type!='submit']</span></pre>
+<span class="comment">// Элемент с атрибутом disabled</span>
+<span class="nodetest">//button[@disabled]</span>
+<span class="comment">// Результат: &lt;button type="submit" disabled&gt;Войти&lt;/button&gt;</span>
+
+<span class="comment">// class НЕ содержит 'hidden'</span>
+<span class="nodetest">//div[not(contains(@class, 'hidden'))]</span>
+<span class="comment">// Результат: [&lt;div id="header"&gt;, &lt;div class="login-form active"&gt;]</span></pre>
+                </div>
             </div>
 
             <h3>Фильтрация по тексту</h3>
-            <div class="code-block">
+            <div class="card">
+                <h4>DOM-структура</h4>
+                <div class="dom-example" style="margin-top: 12px;">
+<span class="tag">&lt;nav&gt;</span>
+  <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"/"</span><span class="tag">&gt;</span><span class="text">Главная</span><span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"/about"</span><span class="tag">&gt;</span><span class="text">О компании</span><span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="string">"/services"</span><span class="tag">&gt;</span><span class="text">Подробнее о услугах</span><span class="tag">&lt;/a&gt;</span>
+  <span class="tag">&lt;button&gt;</span><span class="text">Отправить</span><span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/nav&gt;</span>
+                </div>
+                <h4>XPath-запросы</h4>
+                <div class="code-block" style="margin-top: 12px; margin-bottom: 0;">
 <pre><span class="comment">// Точное совпадение текста</span>
-<span class="nodetest">//button[text()='Войти']</span>
+<span class="nodetest">//a[text()='Главная']</span>
+<span class="comment">// Результат: &lt;a href="/"&gt;Главная&lt;/a&gt;</span>
 
-<span class="comment">// Текст содержит</span>
-<span class="nodetest">//span[contains(text(), 'Привет')]</span>
+<span class="comment">// Текст содержит подстроку</span>
+<span class="nodetest">//a[contains(text(), 'услуг')]</span>
+<span class="comment">// Результат: &lt;a&gt;Подробнее о услугах&lt;/a&gt;</span>
 
-<span class="comment">// Начинается с</span>
-<span class="nodetest">//a[starts-with(text(), 'Подробнее')]</span>
+<span class="comment">// Текст начинается с</span>
+<span class="nodetest">//a[starts-with(text(), 'О')]</span>
+<span class="comment">// Результат: &lt;a href="/about"&gt;О компании&lt;/a&gt;</span>
 
-<span class="comment">// Текст содержит слово (целое слово)</span>
-<span class="nodetest">//p[contains(concat(' ', normalize-space(text()), ' '), ' важно ')]</span></pre>
+<span class="comment">// Любой элемент с текстом 'Отправить'</span>
+<span class="nodetest">//*[text()='Отправить']</span>
+<span class="comment">// Результат: &lt;button&gt;Отправить&lt;/button&gt;</span>
+
+<span class="comment">// Ссылка с текстом содержащим 'Подробнее'</span>
+<span class="nodetest">//a[contains(text(), 'Подробнее')]</span>
+<span class="comment">// Результат: &lt;a&gt;Подробнее о услугах&lt;/a&gt;</span></pre>
+                </div>
             </div>
         </section>
 
