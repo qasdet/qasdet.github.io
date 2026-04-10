@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О себе — Галкин Александр</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #fafafa;
+            min-height: 100vh;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .hero-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 24px;
+            display: block;
+            border: 3px solid #e2e8f0;
+        }
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f0f23;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .section { margin-bottom: 48px; }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #94a3b8;
+        }
+        .section-line { flex: 1; height: 1px; background: #e2e8f0; }
+
+        .intro-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 32px;
+            color: #fff;
+        }
+        .intro-card p {
+            font-size: 1rem;
+            line-height: 1.8;
+            opacity: 0.95;
+        }
+        .intro-card strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        .intro-card code {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .story-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 28px;
+        }
+        .story-card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 16px;
+        }
+        .story-card p {
+            font-size: 0.95rem;
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        .story-card p:last-child { margin-bottom: 0; }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .metric-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .metric-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .metric-label {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .quote-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            border-left: 4px solid #667eea;
+        }
+        .quote-card p {
+            font-size: 0.95rem;
+            color: #475569;
+            font-style: italic;
+            line-height: 1.7;
+        }
+        .quote-card .source {
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-style: normal;
+        }
+
+        .highlight-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .highlight-box h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 12px;
+        }
+        .highlight-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .highlight-box li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+        .highlight-box li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #667eea;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-nav { display: flex; gap: 4px; }
+        .header-nav a {
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header-nav a.active {
+            color: #667eea;
+            background: #f1f5f9;
+        }
+        .header-nav a:not(.active) {
+            color: #64748b;
+        }
+        .header-nav a:not(.active):hover {
+            color: #667eea;
+            background: #f1f5f9;
+        }
+        .nav-group {
+            position: relative;
+        }
+        .nav-group-toggle {
+            cursor: pointer;
+        }
+        .nav-group-toggle svg {
+            transition: transform 0.2s;
+        }
+        .nav-group:hover .nav-group-toggle svg {
+            transform: rotate(180deg);
+        }
+        .nav-group-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 160px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s;
+            z-index: 200;
+        }
+        .nav-group:hover .nav-group-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .nav-group-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: #475569;
+            white-space: nowrap;
+        }
+        .nav-group-dropdown a:hover {
+            background: #f1f5f9;
+            color: #667eea;
+        }
+        .nav-group-dropdown a.active {
+            background: #f1f5f9;
+            color: #667eea;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 40px 16px; }
+            .hero h1 { font-size: 1.75rem; }
+            .metrics-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('selectstart', e => {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <header class="header">
+        <div class="header-inner">
+            <nav class="header-nav">
+                <div class="nav-group">
+                    <a href="index.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Резюме
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="about.html" class="active" title="О себе">О себе</a>
+                    </div>
+                </div>
+
+                <div class="nav-group">
+                    <a href="blog.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        Блог
+                    </a>
+                </div>
+
+                <a href="projects.html" title="Проекты">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Проекты
+                </a>
+
+                <div class="nav-group">
+                    <a href="pytest.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        Обучение
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="pytest.html" title="Pytest">Pytest</a>
+                        <a href="xpath.html" title="XPath">XPath</a>
+                    </div>
+                </div>
+
+                <div class="nav-group">
+                    <a href="test.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                        Опыт
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="test.html" title="Жизненный багаж">Жизненный багаж</a>
+                        <a href="life.html" title="Профессия и навыки">Профессия и навыки</a>
+                        <a href="info.html" title="Информационный контекст">Инфо контекст</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <img class="hero-avatar" src="avatar.png" alt="Галкин Александр" width="100" height="100">
+            <h1>О себе</h1>
+            <p class="hero-subtitle">Галкин Александр, Senior/Lead AQA</p>
+        </section>
+
+        <!-- Вступление -->
+        <section class="section">
+            <div class="intro-card">
+                <p>
+                    Меня зовут Александр, я <strong>Senior/Lead AQA</strong> с фокусом на Python и построением автотестирования с нуля.
+                </p>
+                <p style="margin-top: 16px;">
+                    Ключевой кейс, который лучше всего отражает мой подход, — работа в <strong>МТС</strong> над платформой медиа-планирования <code>mediapush.mts.ru</code>.
+                </p>
+            </div>
+        </section>
+
+        <!-- МТС: Вступление -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">МТС — mediapush.mts.ru</span>
+                <div class="section-line"></div>
+            </div>
+            <div class="intro-card">
+                <p>
+                    Я пришёл в проект, где автоматизации не было вообще: <strong>0% покрытия</strong>, релизы проверялись вручную, инциденты на проде были регулярными.
+                </p>
+                <p style="margin-top: 16px;">
+                    За 9 месяцев я спроектировал и внедрил <strong>E2E-фреймворк на Python + Playwright</strong>, довёл покрытие до 85%.
+                </p>
+            </div>
+        </section>
+
+        <!-- МТС: Метрики -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">МТС — Ключевые метрики</span>
+                <div class="section-line"></div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">0 → 85%</div>
+                    <div class="metric-label">покрытие за 9 месяцев</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">50+</div>
+                    <div class="metric-label">тестовых набора в CI</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">3 джуна</div>
+                    <div class="metric-label">прошли менторинг</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- МТС: Что было сделано -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">МТС — Что было сделано</span>
+                <div class="section-line"></div>
+            </div>
+            <div class="quote-card">
+                <p>
+                    Внедрил CI/CD в GitLab CI: автотесты запускаются ежедневно + по pull request'ам разработчиков.
+                    После этого количество инцидентов на проде сократилось заметно — потому что мы начали ловить регресс на ранних стадиях.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Дополнительные результаты</h3>
+                <ul>
+                    <li>Разработал утилиту для генерации ORM-моделей из схемы PostgreSQL — убрало часы рутины при миграциях</li>
+                    <li>Обучил 3 джунов Page Object + Factory, чтобы фреймворк развивался без меня</li>
+                    <li>50+ наборов — это не 50 тестов, а 50 логических сценариев (каждый с параметризацией)</li>
+                    <li>В Allure отчёты собирались автоматически, и разработчик за 2–3 минуты понимал: упал реальный баг или флаки-тест</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- МТС: Про покрытие -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">МТС — Про покрытие 85%</span>
+                <div class="section-line"></div>
+            </div>
+            <div class="story-card">
+                <p>
+                    <strong>85% — это покрытие критических и высокорисковых сценариев.</strong>
+                </p>
+                <p>
+                    За базу покрытия (100%) брали не все мыслимые действия, а критический пользовательский путь (CJP) + ключевой функционал по требованиям.
+                </p>
+                <p>
+                    15% остались в ручном регрессе: это либо слишком частые изменения UI, либо сценарии с внешними системами, где автотесты давали ложные срабатывания. Решение было осознанным — чтобы команда доверяла автотестам.
+                </p>
+            </div>
+        </section>
+
+        <!-- Т1: Вступление -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">Т1 — Аналог Active Directory</span>
+                <div class="section-line"></div>
+            </div>
+            <div class="intro-card">
+                <p>
+                    В Т1 я разработал с нуля <strong>стратегию и фреймворк автоматизации (Python, Pytest)</strong> для продукта-аналога импортозамещения Active Directory.
+                </p>
+                <p style="margin-top: 16px;">
+                    Тестировал протоколы <strong>LDAP, Kerberos, NTLM</strong> для интеграционного тестирования с разными ОС в гетерогенной среде.
+                </p>
+            </div>
+        </section>
+
+        <!-- Т1: Метрики -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">Т1 — Ключевые метрики</span>
+                <div class="section-line"></div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">70%</div>
+                    <div class="metric-label">покрытие критических сценариев</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">3 дня → 4 часа</div>
+                    <div class="metric-label">сокращение регресса</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">6×</div>
+                    <div class="metric-label">ускорение за счёт параллелизации</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Т1: Что было сделано -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">Т1 — Что было сделано</span>
+                <div class="section-line"></div>
+            </div>
+            <div class="story-card">
+                <h2>Сокращение регресса с 3 дней до 4 часов</h2>
+                <p>
+                    До этого тесты запускались последовательно на одном стенде.
+                </p>
+                <p>
+                    Я разбил их на группы по протоколам и ОС, добавил параллельный запуск в CI (pytest-xdist + GitLab CI parallel matrix). Это дало ускорение в 6 раз.
+                </p>
+            </div>
+        </section>
+
+        <!-- Т1: Про покрытие -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">Т1 — Про покрытие протоколов</span>
+                <div class="section-line"></div>
+            </div>
+            <div class="quote-card">
+                <p>
+                    70% покрытия критических сценариев для LDAP / Kerberos — это не UI, а протоколы.
+                </p>
+                <p class="source">
+                    100% покрытия невозможно из-за множества комбинаций ОС и версий. Мы зафиксировали матрицу совместимости и покрыли все сочетания, которые реально встречаются у заказчиков.
+                </p>
+            </div>
+        </section>
+
+        <!-- Менторинг -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">Про менторинг</span>
+                <div class="section-line"></div>
+            </div>
+            <div class="story-card">
+                <p>
+                    До менторинга джуны писали тесты-монолиты, боялись править существующий код.
+                </p>
+                <p>
+                    После внедрения Page Object и Factory они стали самостоятельно добавлять новые тесты за 1–2 дня вместо недели. Код-ревью перестало блокировать, а фреймворк начал жить без моего постоянного участия.
+                </p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
