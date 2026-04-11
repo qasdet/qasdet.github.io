@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playwright + Pytest — Полное руководство</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #fafafa;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-nav { display: flex; gap: 4px; }
+        .header-nav a {
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header-nav a.active {
+            color: #667eea;
+            background: #f1f5f9;
+        }
+        .header-nav a:not(.active) {
+            color: #64748b;
+        }
+        .header-nav a:not(.active):hover {
+            color: #667eea;
+            background: #f1f5f9;
+        }
+        .nav-group { position: relative; }
+        .nav-group-toggle { cursor: pointer; }
+        .nav-group-toggle svg:last-child { transition: transform 0.2s; }
+        .nav-group:hover .nav-group-toggle svg:last-child { transform: rotate(180deg); }
+        .nav-group-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 160px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s;
+            z-index: 200;
+        }
+        .nav-group:hover .nav-group-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .nav-group-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: #475569;
+            white-space: nowrap;
+        }
+        .nav-group-dropdown a:hover { background: #f1f5f9; color: #667eea; }
+        .nav-group-dropdown a.active { background: #f1f5f9; color: #667eea; }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-top: 20px;
+        }
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f0f23;
+            margin-bottom: 8px;
+        }
+        .page-title p {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .section { margin-bottom: 48px; }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #94a3b8;
+        }
+        .section-line { flex: 1; height: 1px; background: #e2e8f0; }
+        .section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 16px;
+        }
+        .section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 12px;
+            margin-top: 24px;
+        }
+        .section p {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        .card:hover { border-color: #cbd5e1; }
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #0f0f23;
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+        .code-block pre {
+            margin: 0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        .code-block .comment { color: #6b7280; }
+        .code-block .keyword { color: #c084fc; }
+        .code-block .string { color: #86efac; }
+        .code-block .function { color: #67e8f9; }
+        .code-block .decorator { color: #fbbf24; }
+        .code-block .builtin { color: #f472b6; }
+        .code-block .class { color: #a78bfa; }
+        .code-block .method { color: #34d399; }
+        .code-block .number { color: #fb923c; }
+        .code-block .operator { color: #fbbf24; }
+
+        .output-block {
+            background: #f8fafc;
+            border-left: 3px solid #667eea;
+            border-radius: 0 8px 8px 0;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #475569;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 20px 24px;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        .highlight-box p {
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 8px;
+        }
+        .highlight-box strong { color: #fff; }
+        .highlight-box code {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+        }
+
+        .warning-box {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+        .warning-box strong { color: #92400e; }
+        .warning-box p { color: #78350f; margin-bottom: 8px; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .info-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .info-card code {
+            display: block;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .info-card p {
+            font-size: 0.8rem;
+            margin: 0;
+            color: #64748b;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 16px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        .data-table th {
+            background: #f8fafc;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #475569;
+        }
+        .data-table td:first-child {
+            font-family: 'Monaco', 'Consolas', monospace;
+            color: #667eea;
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #667eea;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .step-content { flex: 1; }
+        .step-content h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #0f0f23;
+            margin-bottom: 8px;
+        }
+        .step-content p {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 32px 0;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 24px 16px 60px; }
+            .page-title h1 { font-size: 1.5rem; }
+            .code-block { padding: 12px 16px; }
+            .code-block pre { font-size: 0.75rem; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <nav class="header-nav">
+                <div class="nav-group">
+                    <a href="index.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Резюме
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="about.html" title="О себе">О себе</a>
+                    </div>
+                </div>
+
+                <div class="nav-group">
+                    <a href="blog.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        Блог
+                    </a>
+                </div>
+
+                <a href="projects.html" title="Проекты">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Проекты
+                </a>
+
+                <div class="nav-group">
+                    <a href="pytest.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        Обучение
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="pytest.html" title="Pytest">Pytest</a>
+                        <a href="xpath.html" title="XPath">XPath</a>
+                        <a href="framework.html" class="active" title="Playwright + Pytest">Playwright + Pytest</a>
+                    </div>
+                </div>
+
+                <div class="nav-group">
+                    <a href="test.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                        Опыт
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="test.html" title="Жизненный багаж">Жизненный багаж</a>
+                        <a href="life.html" title="Профессия и навыки">Профессия и навыки</a>
+                        <a href="info.html" title="Информационный контекст">Инфо контекст</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1>Playwright + Pytest</h1>
+            <p>Полное руководство по E2E тестированию с Python</p>
+        </div>
+
+        <!-- Section 1: Introduction -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">1. Введение</span>
+                <div class="section-line"></div>
+            </div>
+
+            <p>Playwright — это библиотека для автоматизации браузеров от Microsoft. В паре с Pytest получается мощный фреймворк для E2E тестирования веб-приложений.</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <code>playwright</code>
+                    <p>Кросс-браузерная автоматизация (Chromium, Firefox, WebKit)</p>
+                </div>
+                <div class="info-card">
+                    <code>pytest</code>
+                    <p>Тестовый фреймворк с фикстурами и параметризацией</p>
+                </div>
+                <div class="info-card">
+                    <code>pytest-playwright</code>
+                    <p>Интеграция Playwright в Pytest</p>
+                </div>
+                <div class="info-card">
+                    <code>playwright codegen</code>
+                    <p>Генерация кода из действий в браузере</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Преимущества связки:</strong></p>
+                <p>Автоматическое управление браузером • Встроенные фикстуры Pytest • Скриншоты и видео • Ожидание элементов • Перехват сетевых запросов • JavaScript виконание</p>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 2: Installation -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">2. Установка</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Установка библиотек</h4>
+                        <p>Создайте виртуальное окружение и установите зависимости</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+<pre><span class="comment"># Создание виртуального окружения</span>
+python -m venv venv
+<span class="keyword">source</span> venv/bin/activate  <span class="comment"># Linux/macOS</span>
+<span class="comment"># или</span>
+venv\Scripts\activate  <span class="comment"># Windows</span>
+
+<span class="comment"># Установка Playwright и pytest-playwright</span>
+pip install pytest pytest-playwright
+
+<span class="comment"># Установка браузеров (один раз)</span>
+playwright install</pre>
+            </div>
+
+            <div class="code-block">
+<pre><span class="comment"># Или через poetry</span>
+poetry add pytest pytest-playwright
+poetry run playwright install</pre>
+            </div>
+
+            <div class="warning-box">
+                <strong>Windows PowerShell:</strong>
+                <p>Если установка браузеров зависает, используйте команду с правами администратора или установите браузеры по отдельности:</p>
+                <p><code>playwright install chromium</code></p>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 3: Basic Setup -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">3. Базовая настройка</span>
+                <div class="section-line"></div>
+            </div>
+
+            <h3>conftest.py — конфигурация фикстур</h3>
+            <div class="code-block">
+<pre><span class="comment"># conftest.py</span>
+<span class="keyword">import</span> pytest
+<span class="keyword">from</span> playwright.sync_api <span class="keyword">import</span> sync_playwright
+
+
+<span class="decorator">@pytest.fixture</span>(scope=<span class="string">"session"</span>)
+<span class="keyword">def</span> <span class="function">browser_context</span>(browser_type_launch_args):
+    <span class="string">"""Фикстура браузера на всю сессию."""</span>
+    <span class="keyword">with</span> sync_playwright() <span class="keyword">as</span> p:
+        browser = p.chromium.launch(<span class="string">**</span>browser_type_launch_args)
+        <span class="keyword">yield</span> browser
+        browser.close()
+
+
+<span class="decorator">@pytest.fixture</span>(scope=<span class="string">"function"</span>)
+<span class="keyword">def</span> <span class="function">page</span>(browser_context):
+    <span class="string">"""Каждая функция получает чистую страницу."""</span>
+    context = browser_context.new_context()
+    page = context.new_page()
+    <span class="keyword">yield</span> page
+    context.close()
+
+
+<span class="decorator">@pytest.fixture</span>(scope=<span class="string">"session"</span>)
+<span class="keyword">def</span> <span class="function">base_url</span>():
+    <span class="string">"""Базовый URL для тестов."""</span>
+    <span class="keyword">return</span> <span class="string">"https://example.com"</span></pre>
+            </div>
+
+            <h3>pytest.ini — конфигурация</h3>
+            <div class="code-block">
+<pre><span class="comment"># pytest.ini</span>
+<span class="comment">[pytest]</span>
+testpaths = tests
+python_files = test_*.py
+python_classes = Test*
+python_functions = test_*
+addopts = --tb=short -v
+<span class="comment"># Скриншоты при падении</span>
+playwright_screenshot = only-on-failure</pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 4: Page Object Pattern -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">4. Page Object Pattern</span>
+                <div class="section-line"></div>
+            </div>
+
+            <p>Page Object — паттерн для инкапсуляции взаимодействия с элементами страницы. Упрощает поддержку и читаемость тестов.</p>
+
+            <h3>Базовый Page Object</h3>
+            <div class="code-block">
+<pre><span class="comment"># pages/login_page.py</span>
+<span class="keyword">class</span> <span class="class">LoginPage</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="class">self</span>, page):
+        <span class="class">self</span>.page = page
+        <span class="class">self</span>.username_input = page.locator(<span class="string">"#username"</span>)
+        <span class="class">self</span>.password_input = page.locator(<span class="string">"#password"</span>)
+        <span class="class">self</span>.submit_button = page.locator(<span class="string">"button[type=submit]"</span>)
+        <span class="class">self</span>.error_message = page.locator(<span class="string">".alert-error"</span>)
+
+    <span class="keyword">def</span> <span class="function">open</span>(<span class="class">self</span>):
+        <span class="class">self</span>.page.goto(<span class="string">"/login"</span>)
+
+    <span class="keyword">def</span> <span class="function">login</span>(<span class="class">self</span>, username, password):
+        <span class="class">self</span>.username_input.fill(username)
+        <span class="class">self</span>.password_input.fill(password)
+        <span class="class">self</span>.submit_button.click()
+
+    <span class="keyword">def</span> <span class="function">get_error</span>(<span class="class">self</span>):
+        <span class="keyword">return</span> <span class="class">self</span>.error_message.text_content()</pre>
+            </div>
+
+            <h3>Использование в тестах</h3>
+            <div class="code-block">
+<pre><span class="comment"># tests/test_login.py</span>
+<span class="keyword">import</span> pytest
+<span class="keyword">from</span> pages.login_page <span class="keyword">import</span> LoginPage
+
+
+<span class="decorator">@pytest.fixture</span>
+<span class="keyword">def</span> <span class="function">login_page</span>(page):
+    <span class="keyword">return</span> LoginPage(page)
+
+
+<span class="decorator">@pytest.mark.parametrize</span>(<span class="string">"username,password,expected_error"</span>, [
+    (<span class="string">"wrong"</span>, <span class="string">"wrong"</span>, <span class="string">"Неверные учетные данные"</span>),
+    (<span class="string">""</span>, <span class="string">"password"</span>, <span class="string">"Введите имя пользователя"</span>),
+])
+<span class="keyword">def</span> <span class="function">test_login_validation</span>(login_page, expected_error):
+    login_page.open()
+    login_page.login(username, password)
+    <span class="builtin">assert</span> expected_error <span class="keyword">in</span> login_page.get_error()</pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 5: Locators -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">5. Локаторы</span>
+                <div class="section-line"></div>
+            </div>
+
+            <p>Playwright поддерживает множество стратегий поиска элементов. Приоритет: CSS → XPath → текст.</p>
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Локатор</th>
+                            <th>Пример</th>
+                            <th>Описание</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>ID</td><td>page.locator("#id")</td><td>По атрибуту id</td></tr>
+                        <tr><td>CSS</td><td>page.locator(".class")</td><td>CSS селектор</td></tr>
+                        <tr><td>Text</td><td>page.get_by_text("Click")</td><td>По тексту</td></tr>
+                        <tr><td>Role</td><td>page.get_by_role("button")</td><td>По ARIA role</td></tr>
+                        <tr><td>Label</td><td>page.get_by_label("Email")</td><td>По label</td></tr>
+                        <tr><td>Placeholder</td><td>page.get_by_placeholder("Search")</td><td>По placeholder</td></tr>
+                        <tr><td>XPath</td><td>page.locator("xpath=//button")</td><td>XPath выражение</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Примеры локаторов</h3>
+            <div class="code-block">
+<pre><span class="comment"># ID селектор</span>
+page.locator(<span class="string">"#submit-btn"</span>)
+
+<span class="comment"># CSS селектор с атрибутами</span>
+page.locator(<span class="string">"button[type='submit'][data-qa='login']"</span>)
+
+<span class="comment"># Текст элемента (точное совпадение)</span>
+page.get_by_text(<span class="string">"Войти"</span>)
+
+<span class="comment"># Текст элемента (содержит)</span>
+page.get_by_text(<span class="string">"Войти"</span>, exact=<span class="builtin">False</span>)
+
+<span class="comment"># По ARIA label</span>
+page.get_by_label(<span class="string">"Имя пользователя"</span>)
+
+<span class="comment"># По роли</span>
+page.get_by_role(<span class="string">"button"</span>, name=<span class="string">"Отправить"</span>)
+page.get_by_role(<span class="string">"alert"</span>)
+
+<span class="comment"># XPath (для сложных запросов)</span>
+page.locator(<span class="string">"xpath=//div[contains(@class, 'card')]//button[last()]"</span>)</pre>
+            </div>
+
+            <h3>Ожидание элементов</h3>
+            <div class="code-block">
+<pre><span class="comment"># По умолчанию: ждать до появления (timeout 30 сек)</span>
+page.locator(<span class="string">"#content"</span>).click()
+
+<span class="comment"># Явное ожидание</span>
+page.locator(<span class="string">"#modal"</span>).wait_for(state=<span class="string">"visible"</span>)
+page.locator(<span class="string">".spinner"</span>).wait_for(state=<span class="string">"hidden"</span>)
+
+<span class="comment"># С timeout</span>
+page.locator(<span class="string">"#result"</span>).click(timeout=<span class="number">5000</span>)
+
+<span class="comment"># Ждать URL</span>
+page.wait_for_url(<span class="string">"**/success"</span>)
+
+<span class="comment"># Ждать load state</span>
+page.wait_for_load_state(<span class="string">"networkidle"</span>)</pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 6: Actions -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">6. Действия</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="card">
+                <h3>Клик и ввод</h3>
+                <div class="code-block" style="margin-bottom: 0;">
+<pre><span class="comment"># Клик</span>
+page.locator(<span class="string">"#btn"</span>).click()
+page.locator(<span class="string">"#btn"</span>).dblclick()
+page.locator(<span class="string">"#btn"</span>).click(button=<span class="string">"right"</span>)  <span class="comment"># ПКМ</span>
+
+<span class="comment"># Заполнить поле ввода</span>
+page.locator(<span class="string">"#input"</span>).fill(<span class="string">"text"</span>)
+page.locator(<span class="string">"#input"</span>).type(<span class="string">"text"</span>, delay=<span class="number">100</span>)  <span class="comment"># Посимвольно</span>
+
+<span class="comment"># Очистить и ввести</span>
+page.locator(<span class="string">"#input"</span>).clear()
+page.locator(<span class="string">"#input"</span>).fill(<span class="string">"new value"</span>)
+
+<span class="comment"># Нажать клавишу</span>
+page.locator(<span class="string">"#input"</span>).press(<span class="string">"Enter"</span>)
+page.locator(<span class="string">"#input"</span>).press(<span class="string">"Control+A"</span>)
+page.locator(<span class="string">"body"</span>).press(<span class="string">"Escape"</span>)</pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Навигация</h3>
+                <div class="code-block" style="margin-bottom: 0;">
+<pre><span class="comment"># Переход по URL</span>
+page.goto(<span class="string">"https://example.com"</span>)
+page.goto(<span class="string">"/login"</span>)
+
+<span class="comment"># Назад/вперёд</span>
+page.go_back()
+page.go_forward()
+
+<span class="comment"># Обновить страницу</span>
+page.reload()
+
+<span class="comment"># Получить URL и заголовок</span>
+page.url
+page.title()</pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Проверки (assertions)</h3>
+                <div class="code-block" style="margin-bottom: 0;">
+<pre><span class="comment"># Проверки видимости</span>
+page.locator(<span class="string">"#element"</span>).is_visible()
+page.locator(<span class="string">"#element"</span>).is_hidden()
+page.locator(<span class="string">"#element"</span>).is_enabled()
+page.locator(<span class="string">"#element"</span>).is_disabled()
+
+<span class="comment"># Проверки содержимого</span>
+page.locator(<span class="string">"#title"</span>).text_content()  <span class="comment"># -> "Заголовок"</span>
+page.locator(<span class="string">"#title"</span>).inner_text()   <span class="comment"># -> "  Заголовок  "</span>
+page.locator(<span class="string">"#title"</span>).inner_html()   <span class="comment"># -> "&lt;b&gt;Заголовок&lt;/b&gt;"</span>
+page.locator(<span class="string">"#input"</span>).input_value()  <span class="comment"># -> "value"</span>
+page.locator(<span class="string">"#checkbox"</span>).is_checked()
+
+<span class="comment"># Ожидание проверки</span>
+<span class="keyword">assert</span> page.locator(<span class="string">"#result"</span>).filter(has_text=<span class="string">"Успешно"</span>).is_visible()</pre>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 7: Network -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">7. Работа с сетью</span>
+                <div class="section-line"></div>
+            </div>
+
+            <h3>Перехват запросов (MOCK)</h3>
+            <div class="code-block">
+<pre><span class="keyword">def</span> <span class="function">test_api_mock</span>(page):
+    <span class="comment"># Перехватить API запрос</span>
+    page.route(<span class="string">"**/api/users"</span>, <span class="keyword">lambda</span> route: route.fulfill(
+        status=<span class="number">200</span>,
+        content_type=<span class="string">"application/json"</span>,
+        body=<span class="string">'{"users": [{"id": 1, "name": "Test User"}]}'</span>
+    ))
+
+    page.goto(<span class="string">"/users"</span>)
+    <span class="builtin">assert</span> page.locator(<span class="string">".user-name"</span>).text_content() == <span class="string">"Test User"</span></pre>
+            </div>
+
+            <h3>Ожидание ответов</h3>
+            <div class="code-block">
+<pre><span class="comment"># Дождаться конкретного запроса</span>
+<span class="keyword">with</span> page.expect_response(<span class="string">"**/api/data"</span>) <span class="keyword">as</span> response_info:
+    page.locator(<span class="string">"#load-btn"</span>).click()
+response = response_info.value
+<span class="builtin">assert</span> response.status == <span class="number">200</span>
+
+<span class="comment"># Дождаться запроса с проверкой</span>
+<span class="keyword">with</span> page.expect_request(<span class="string">"**/analytics"</span>) <span class="keyword">as</span> request:
+    page.locator(<span class="string">"#track-btn"</span>).click()
+<span class="builtin">assert</span> <span class="string">"event=click"</span> <span class="keyword">in</span> request.value.url</pre>
+            </div>
+
+            <h3>Обработка ошибок</h3>
+            <div class="code-block">
+<pre><span class="comment"># Заблокировать рекламу</span>
+page.route(<span class="string">"**/ads/**"</span>, <span class="keyword">lambda</span> route: route.abort())
+
+<span class="comment"># Изменить оригинальный ответ</span>
+<span class="keyword">def</span> <span class="function">modify_response</span>(route):
+    fetched_response = route.fetch()
+    <span class="comment"># Изменяем JSON</span>
+    json_data = fetched_response.json()
+    json_data[<span class="string">"price"</span>] = <span class="number">0</span>
+    route.fulfill(
+        status=fetched_response.status,
+        content_type=<span class="string">"application/json"</span>,
+        body=<span class="string">json.dumps(json_data)</span>
+    )
+
+page.route(<span class="string">"**/product/**"</span>, modify_response)</pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 8: Fixtures Advanced -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">8. Фикстуры Pytest + Playwright</span>
+                <div class="section-line"></div>
+            </div>
+
+            <h3>Авторизованный контекст</h3>
+            <div class="code-block">
+<pre><span class="decorator">@pytest.fixture</span>(scope=<span class="string">"module"</span>)
+<span class="keyword">def</span> <span class="function">auth_context</span>(browser_context, base_url):
+    <span class="string">"""Авторизованный контекст для тестов."""</span>
+    context = browser_context.new_context()
+    page = context.new_page()
+    page.goto(<span class="string">f"<span class="string">{base_url}</span>/login"</span>)
+    page.locator(<span class="string">"#username"</span>).fill(<span class="string">"testuser"</span>)
+    page.locator(<span class="string">"#password"</span>).fill(<span class="string">"password"</span>)
+    page.locator(<span class="string">"button[type=submit]"</span>).click()
+    page.wait_for_url(<span class="string">"**/dashboard"</span>)
+    <span class="keyword">yield</span> context
+    context.close()
+
+
+<span class="decorator">@pytest.fixture</span>
+<span class="keyword">def</span> <span class="function">authenticated_page</span>(auth_context):
+    <span class="keyword">return</span> auth_context.new_page()</pre>
+            </div>
+
+            <h3>База данных</h3>
+            <div class="code-block">
+<pre><span class="decorator">@pytest.fixture</span>(scope=<span class="string">"session"</span>)
+<span class="keyword">def</span> <span class="function">db_connection</span>():
+    <span class="string">"""Подключение к тестовой БД."""</span>
+    conn = psycopg2.connect(<span class="string">"postgresql://test:test@localhost/test"</span>)
+    <span class="keyword">yield</span> conn
+    conn.close()
+
+
+<span class="decorator">@pytest.fixture</span>(scope=<span class="string">"function"</span>)
+<span class="keyword">def</span> <span class="function">clean_db</span>(db_connection):
+    <span class="string">"""Очистка БД после каждого теста."""</span>
+    <span class="keyword">yield</span>
+    <span class="keyword">with</span> db_connection.cursor() <span class="keyword">as</span> cur:
+        cur.execute(<span class="string">"TRUNCATE TABLE users RESTART IDENTITY CASCADE"</span>)
+    db_connection.commit()</pre>
+            </div>
+
+            <h3>Page Object Factory</h3>
+            <div class="code-block">
+<pre><span class="decorator">@pytest.fixture</span>
+<span class="keyword">def</span> <span class="function">login_page</span>(page):
+    <span class="string">"""Фабрика Page Objects."""</span>
+    <span class="keyword">from</span> pages <span class="keyword">import</span> LoginPage, DashboardPage, ProfilePage
+    page.goto(<span class="string">"/"</span>)
+    <span class="keyword">return</span> {
+        <span class="string">"login"</span>: LoginPage(page),
+        <span class="string">"dashboard"</span>: DashboardPage(page),
+        <span class="string">"profile"</span>: ProfilePage(page),
+    }
+
+
+<span class="keyword">def</span> <span class="function">test_user_profile</span>(login_page):
+    login_page[<span class="string">"login"</span>].open()
+    login_page[<span class="string">"login"</span>].login(<span class="string">"user"</span>, <span class="string">"pass"</span>)
+    profile_page = login_page[<span class="string">"profile"</span>]
+    profile_page.open()
+    <span class="builtin">assert</span> profile_page.get_username() == <span class="string">"user"</span></pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 9: Screenshots and Videos -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">9. Скриншоты и видео</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="code-block">
+<pre><span class="comment"># Скриншот элемента</span>
+page.locator(<span class="string">"#widget"</span>).screenshot(path=<span class="string">"widget.png"</span>)
+
+<span class="comment"># Полный скриншот страницы</span>
+page.screenshot(path=<span class="string">"full_page.png"</span>, full_page=<span class="builtin">True</span>)
+
+<span class="comment"># Видео запись (включить в контексте)</span>
+<span class="decorator">@pytest.fixture</span>
+<span class="keyword">def</span> <span class="function">video_context</span>(browser_context):
+    context = browser_context.new_context(
+        record_video_dir=<span class="string">"videos/"</span>,
+        record_video_size=<span class="string">"1920x1080"</span>
+    )
+    <span class="keyword">yield</span> context
+    context.close()
+
+
+<span class="keyword">def</span> <span class="function">test_with_video</span>(page):
+    page.goto(<span class="string">"/complex-form"</span>)
+    <span class="comment"># ... действия ...</span>
+    <span class="comment"># Получить путь к видео после закрытия контекста</span>
+    video_path = page.video.path()</pre>
+            </div>
+
+            <h3>Автоматические скриншоты при падениях</h3>
+            <div class="code-block">
+<pre><span class="comment"># pytest.ini или pyproject.toml</span>
+<span class="comment">[pytest]</span>
+playwright_screenshot = only-on-failure
+
+<span class="comment"># Или в conftest.py</span>
+<span class="decorator">@pytest.fixture</span>(scope=<span class="string">"session"</span>)
+<span class="keyword">def</span> <span class="function">browser_context</span>(browser_type_launch_args, pytest_config):
+    <span class="comment"># screenshot на падение включен по умолчанию</span>
+    <span class="comment"># Но можно настроить:</span>
+    pytest_config.stash[<span class="string">"playwright"</span>][<span class="string">"screenshot"</span>] = <span class="string">"only-on-failure"</span></pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 10: Parallel Execution -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">10. Паралленое выполнение</span>
+                <div class="section-line"></div>
+            </div>
+
+            <p>Pytest-xdist позволяет запускать тесты параллельно для ускорения.</p>
+
+            <div class="code-block">
+<pre><span class="comment"># Установка</span>
+pip install pytest-xdist
+
+<span class="comment"># Запуск в 4 потока</span>
+pytest -n 4
+
+<span class="comment"># Автоопределение количества ядер</span>
+pytest -n auto
+
+<span class="comment"># С файлом распределением</span>
+pytest --dist loadfile -n auto</pre>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Важно:</strong> При параллельном запуске:</p>
+                <p>1. Каждый воркер создаёт свой браузер (фикстура session)</p>
+                <p>2. Фикстуры module/class делят контекст в рамках одного воркера</p>
+                <p>3. Используйте уникальные данные для параллельных тестов</p>
+            </div>
+
+            <h3>Правила параллелизации</h3>
+            <div class="code-block">
+<pre><span class="comment"># conftest.py</span>
+<span class="decorator">@pytest.fixture</span>
+<span class="keyword">def</span> <span class="function">unique_user</span>(db_connection, worker_id):
+    <span class="string">"""Уникальный пользователь для каждого воркера."""</span>
+    username = <span class="string">f"user_</span>{worker_id}<span class="string">"</span>
+    <span class="comment"># создаём пользователя</span>
+    <span class="keyword">yield</span> username
+    <span class="comment"># очищаем</span>
+
+
+<span class="comment"># Или через pytest-xdist</span>
+<span class="keyword">def</span> <span class="function">worker_id</span>(pytestconfig):
+    <span class="keyword">if</span> <span class="keyword">hasattr</span>(pytestconfig, <span class="string">"workerinput"</span>):
+        <span class="keyword">return</span> pytestconfig.workerinput[<span class="string">"workerid"</span>]
+    <span class="keyword">return</span> <span class="string">"master"</span></pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 11: CI/CD -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">11. CI/CD интеграция</span>
+                <div class="section-line"></div>
+            </div>
+
+            <h3>GitLab CI</h3>
+            <div class="code-block">
+<pre><span class="comment"># .gitlab-ci.yml</span>
+stages:
+  - test
+
+e2e-tests:
+  stage: test
+  image: python:3.11
+  services:
+    - postgres:15
+  before_script:
+    - pip install -r requirements.txt
+    - playwright install --with-deps chromium
+  script:
+    - pytest tests/e2e -v --tb=short
+  artifacts:
+    when: always
+    paths:
+      - screenshots/
+      - videos/
+      - htmlcov/
+    reports:
+      junit: junit.xml
+  parallel: 4</pre>
+            </div>
+
+            <h3>GitHub Actions</h3>
+            <div class="code-block">
+<pre><span class="comment"># .github/workflows/e2e.yml</span>
+<span class="keyword">name</span>: E2E Tests
+<span class="keyword">on</span>: [push, pull_request]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        <span class="keyword">with</span>:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+      - name: Run tests
+        run: pytest --shard=${{ matrix.shard }}/4
+      - uses: actions/upload-artifact@v4
+        <span class="keyword">if</span>: always()
+        <span class="keyword">with</span>:
+          name: test-results-${{ matrix.shard }}
+          path: |
+            screenshots/
+            videos/</pre>
+            </div>
+
+            <h3>Allure Report</h3>
+            <div class="code-block">
+<pre><span class="comment"># Установка</span>
+pip install allure-pytest
+
+<span class="comment"># Запуск с отчётом</span>
+pytest --alluredir=allure-results
+allure serve allure-results
+
+<span class="comment"># Генерация HTML</span>
+allure generate allure-results -o allure-report --clean</pre>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 12: Debugging -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">12. Отладка</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="code-block">
+<pre><span class="comment"># Режим отладки (браузер открыт, ждёт)</span>
+pytest --headed
+
+<span class="comment"># Замедление (slow Mo)</span>
+pytest --slowmo=1000  <span class="comment"># 1 секунда между действиями</span>
+
+<span class="comment"># Debug порт для playwright</span>
+<span class="comment"># Используйте playwright.sync_api.debugger = True</span>
+
+<span class="comment"># Trace viewer</span>
+<span class="decorator">@pytest.fixture</span>
+<span class="keyword">def</span> <span class="function">page</span>(browser_context, pytest_config):
+    context = browser_context.new_context(record_video_dir=<span class="string">"videos/"</span>)
+    page = context.new_page()
+    <span class="comment"># Включаем trace</span>
+    page.context.tracing.start(screenshots=<span class="builtin">True</span>, snapshots=<span class="builtin">True</span>)
+    <span class="keyword">yield</span> page
+    page.context.tracing.stop(path=<span class="string">"trace.zip"</span>)
+    context.close()
+
+<span class="comment"># Просмотр trace:</span>
+<span class="comment"># python -m playwright show-trace trace.zip</span></pre>
+            </div>
+
+            <h3>Полезные команды</h3>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Команда</th>
+                            <th>Описание</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>--headed</td><td>Показать браузер</td></tr>
+                        <tr><td>--slowmo=500</td><td>Замедлить на 500ms</td></tr>
+                        <tr><td>--timeout=10000</td><td>Таймаут 10 сек</td></tr>
+                        <tr><td>-k "test_name"</td><td>Запустить по имени</td></tr>
+                        <tr><td>-x</td><td>Остановиться на первом падении</td></tr>
+                        <tr><td>--lf</td><td>Только упавшие тесты</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Section 13: Best Practices -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">13. Лучшие практики</span>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="card">
+                <h3>Структура проекта</h3>
+                <div class="code-block" style="margin-bottom: 0;">
+<pre>tests/
+├── conftest.py           <span class="comment"># Глобальные фикстуры</span>
+├── pages/
+│   ├── __init__.py
+│   ├── base_page.py      <span class="comment"># Базовый класс</span>
+│   ├── login_page.py
+│   └── dashboard_page.py
+├── api/
+│   └── client.py         <span class="comment"># API клиент</span>
+├── fixtures/
+│   └── data.py           <span class="comment"># Тестовые данные</span>
+└── test_*.py             <span class="comment"># Тесты</span>
+
+pytest.ini
+requirements.txt
+README.md</pre>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Рекомендации</h3>
+                <ul style="padding-left: 20px; color: #475569; font-size: 0.9rem; line-height: 1.8;">
+                    <li><strong>Один assertion за тест</strong> — проще анализировать ошибки</li>
+                    <li><strong>Page Object для каждой страницы</strong> — избегаем селекторов в тестах</li>
+                    <li><strong>Фикстуры для общих данных</strong> — не дублируйте setup/teardown</li>
+                    <li><strong>Уникальные локаторы</strong> — data-testid > id > CSS > XPath</li>
+                    <li><strong>Ожидайте элементы</strong> — не time.sleep()</li>
+                    <li><strong>Чистые URL</strong> — используйте base_url</li>
+                    <li><strong>Скриншоты при падениях</strong> — настраивайте в pytest.ini</li>
+                    <li><strong>Параллельный запуск</strong> — экономьте время CI</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Порядок приоритетов локаторов:</strong></p>
+                <p>1. <code>get_by_role()</code> → 2. <code>get_by_label()</code> → 3. <code>get_by_text()</code> → 4. <code>locator("#id")</code> → 5. <code>locator(".class")</code> → 6. XPath</p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
