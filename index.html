@@ -93,6 +93,46 @@
             color: #667eea;
         }
 
+        [x-cloak] { display: none !important; }
+        .loading-stage {
+            text-align: center;
+            padding: 40px 24px;
+        }
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        .loading-text {
+            font-size: 1rem;
+            color: #64748b;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .experience-list .experience-item {
+            opacity: 0;
+        }
+        .experience-loaded .experience-item {
+            animation: fadeInUp 0.4s ease forwards;
+        }
+        .experience-loaded .experience-item:nth-child(1) { animation-delay: 0.1s; }
+        .experience-loaded .experience-item:nth-child(2) { animation-delay: 0.2s; }
+        .experience-loaded .experience-item:nth-child(3) { animation-delay: 0.3s; }
+        .experience-loaded .experience-item:nth-child(4) { animation-delay: 0.4s; }
+        .experience-loaded .experience-item:nth-child(5) { animation-delay: 0.5s; }
+        .experience-loaded .experience-item:nth-child(6) { animation-delay: 0.6s; }
+        .experience-loaded .experience-item:nth-child(7) { animation-delay: 0.7s; }
+
         .section { margin-bottom: 48px; }
         .section-header {
             display: flex;
@@ -109,7 +149,17 @@
         }
         .section-line { flex: 1; height: 1px; background: #e2e8f0; }
 
-        .experience-list { display: flex; flex-direction: column; gap: 12px; }
+        .experience-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .experience-list:not(.experience-loaded) .experience-item {
+            display: none;
+        }
+        .experience-loaded .experience-item {
+            animation: fadeInUp 0.4s ease forwards;
+        }
         .experience-item {
             background: #fff;
             border-radius: 12px;
@@ -597,6 +647,9 @@
 
     <div class="container" x-data="{
         expandedId: null,
+        loading: true,
+        stage: '',
+        experienceLoaded: false,
         articles: [],
         blogLoading: true,
         blogSelected: null,
@@ -611,6 +664,12 @@
             }
             this.blogLoading = false;
         },
+        init() {
+            setTimeout(() => { this.stage = 'Загрузка опыта...'; }, 300);
+            setTimeout(() => { this.stage = 'Валидация опыта...'; }, 1200);
+            setTimeout(() => { this.loading = false; this.experienceLoaded = true; }, 2000);
+            this.loadArticles();
+        },
         openArticle(article) {
             this.blogSelected = article;
             this.blogModalContent = marked.parse(article.content);
@@ -621,7 +680,7 @@
         },
         openCertModal() { this.certModal = true; },
         closeCertModal() { this.certModal = false; }
-    }" x-init="loadArticles()">
+    }">
 
         <!-- Hero -->
         <section class="hero">
@@ -689,7 +748,14 @@
                 <div class="section-line"></div>
             </div>
 
-            <div class="experience-list">
+            <!-- Loading Animation -->
+            <div class="loading-stage" x-show="loading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" x-text="stage"></div>
+            </div>
+
+            <!-- Experience List -->
+            <div class="experience-list" :class="{ 'experience-loaded': experienceLoaded }">
                 <!-- ВТБ -->
                 <div class="experience-item"
                      x-data="{ id: 1 }"
@@ -893,6 +959,7 @@
                     </div>
                 </div>
             </div>
+            <div x-show="experienceLoaded" x-transition.opacity style="display: none;"></div>
         </section>
 
         <!-- Skills -->
@@ -1012,7 +1079,7 @@
             </div>
         </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>
