@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Теория тестирования — Галкин Александр</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #0f0f23;
+        }
+        .header-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+        }
+        .header-name { font-weight: 600; font-size: 1rem; }
+        .header-nav { display: flex; gap: 4px; }
+        .header-nav a {
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            color: #64748b;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .header-nav a:hover { color: #667eea; background: #f1f5f9; }
+        .header-nav a.active { color: #667eea; background: #f1f5f9; }
+        .nav-group { position: relative; }
+        .nav-group-toggle { cursor: pointer; }
+        .nav-group-toggle svg:last-child { transition: transform 0.2s; }
+        .nav-group:hover .nav-group-toggle svg:last-child { transform: rotate(180deg); }
+        .nav-group-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 160px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s;
+            z-index: 200;
+        }
+        .nav-group:hover .nav-group-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .nav-group-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: #475569;
+            white-space: nowrap;
+        }
+        .nav-group-dropdown a:hover { background: #f1f5f9; color: #667eea; }
+        .nav-group-dropdown a.active { background: #f1f5f9; color: #667eea; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 48px 24px;
+            flex: 1;
+        }
+        .hero { text-align: center; margin-bottom: 40px; }
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f0f23;
+            margin-bottom: 12px;
+        }
+        .hero p { font-size: 1rem; color: #64748b; }
+
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        .progress-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 24px;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        .question-number {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #0f0f23;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover { border-color: #667eea; background: #f8fafc; }
+        .option.selected { border-color: #667eea; background: #f1f5f9; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 32px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-primary { background: #667eea; color: #fff; }
+        .btn-primary:hover { background: #5a67ea; }
+        .btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .btn-secondary { background: #f1f5f9; color: #475569; }
+        .btn-secondary:hover { background: #e2e8f0; }
+
+        .results-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+        .results-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .results-score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #0f0f23;
+            margin-bottom: 8px;
+        }
+        .results-score span { color: #667eea; }
+        .results-label {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .chart-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .chart-label {
+            width: 200px;
+            font-size: 0.9rem;
+            color: #475569;
+            flex-shrink: 0;
+        }
+        .chart-bar-container {
+            flex: 1;
+            background: #f1f5f9;
+            border-radius: 8px;
+            height: 28px;
+            overflow: hidden;
+        }
+        .chart-bar {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.6s ease;
+        }
+        .chart-bar.good { background: linear-gradient(90deg, #10b981, #34d399); }
+        .chart-bar.medium { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .chart-bar.bad { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .chart-value {
+            width: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .recommendations {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 28px;
+            color: #fff;
+        }
+        .recommendations h3 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .recommendations ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .recommendations li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+        .recommendations li::before {
+            content: "→";
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .restart-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 24px;
+        }
+        .restart-btn:hover { background: #e2e8f0; }
+
+        .footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            border-top: 1px solid #e2e8f0;
+            background: #fff;
+        }
+
+        [x-cloak] { display: none !important; }
+
+        @media (max-width: 640px) {
+            .header-inner { flex-direction: column; gap: 12px; }
+            .header-logo { display: none; }
+            .hero h1 { font-size: 1.75rem; }
+            .nav-buttons { flex-direction: column; }
+            .chart-label { width: 120px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="index.html" class="header-logo">
+                <img src="avatar.png" alt="Галкин Александр" width="40" height="40">
+                <span class="header-name">Галкин Александр</span>
+            </a>
+            <nav class="header-nav">
+                <div class="nav-group">
+                    <a href="index.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        Резюме
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="about.html" title="О себе">О себе</a>
+                    </div>
+                </div>
+
+                <div class="nav-group">
+                    <a href="blog.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        Блог
+                    </a>
+                </div>
+
+                <a href="projects.html" title="Проекты">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Проекты
+                </a>
+
+                <div class="nav-group">
+                    <a href="pytest.html" class="nav-group-toggle active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        Обучение
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="pytest.html" title="Pytest">Pytest</a>
+                        <a href="xpath.html" title="XPath">XPath</a>
+                        <a href="framework.html" title="Playwright + Pytest">Playwright + Pytest</a>
+                        <a href="theory_testing.html" title="Теория тестирования" class="active">Теория тестирования</a>
+                    </div>
+                </div>
+
+                <div class="nav-group">
+                    <a href="test.html" class="nav-group-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                        Опыт
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="test.html" title="Жизненный багаж">Жизненный багаж</a>
+                        <a href="life.html" title="Профессия и навыки">Профессия и навыки</a>
+                        <a href="info.html" title="Информационный контекст">Инфо контекст</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" x-data="{
+        currentQuestion: 0,
+        answers: [],
+        showResults: false,
+        questions: [
+            {text:'Что такое тестирование ПО?',options:['Процесс уничтожения багов','Процесс поиска дефектов и проверки требованиям','Процесс написания автотестов','Процесс настройки CI/CD'],category:0},
+            {text:'Какой основной принцип тестирования?',options:['Тестировать только в конце','Найти все дефекты','Подтвердить что ПО соответствует требованиям','Проверить производительность'],category:0},
+            {text:'Принцип Exhaustive testing is impossible?',options:['Нельзя тестировать без документации','Нельзя проверить все комбинации','Тестирование должно быть автоматизировано','Баги невозможно найти'],category:0},
+            {text:'Какой уровень тестирования проверяет взаимодействие компонентов?',options:['Unit testing','Integration testing','System testing','Acceptance testing'],category:1},
+            {text:'Что тестируется при альфа-тестировании?',options:['Производительность в продакшене','Функциональность силами команды','Безопасность приложения','Совместимость'],category:1},
+            {text:'Black box тестирование это?',options:['Тестирование без знания кода','Тестирование только UI','Тестирование с доступом к коду','Нагрузочное тестирование'],category:2},
+            {text:'Smoke-тестирование проверяет?',options:['Все критические функции','Базовую работоспособность ключевых модулей','Безопасность','Производительность'],category:2},
+            {text:'Какой вид тестирования выявляет узкие места?',options:['Функциональное','Нагрузочное (Load testing)','Безопасности','Регрессионное'],category:2},
+            {text:'Метод разбиения данных на группы?',options:['Boundary Value Analysis','Equivalence Partitioning','Decision Table Testing','State Transition'],category:3},
+            {text:'Метод проверки граничных значений?',options:['State Transition','Decision Table','Boundary Value Analysis','Pairwise Testing'],category:3},
+            {text:'Что такое баг-репорт?',options:['Автоматический скрипт','Документ о найденном дефекте','Лог ошибок','Протокол встречи'],category:4},
+            {text:'Какой атрибут НЕ обязателен в баг-репорте?',options:['Шаги воспроизведения','Ожидаемый результат','Имя разработчика','Фактический результат'],category:4},
+            {text:'Severity в баг-репорте означает?',options:['Срочность для бизнеса','Степень влияния на функциональность','Время на исправление','Приоритет в спринте'],category:4},
+            {text:'Какой документ описывает подход к тестированию?',options:['Test Plan','Test Case','Bug Report','Test Strategy'],category:5},
+            {text:'Что входит в тест-кейс?',options:['Описание проекта','Список всех функций','Набор действий для проверки','Результаты прогона'],category:5},
+            {text:'Принцип Agile-тестирования?',options:['Тестирование в конце квартала','Непрерывное тестирование','Ручное тестирование всей функциональности','Тестирование после спринта'],category:6},
+            {text:'Что такое регрессионное тестирование?',options:['Тестирование новой функциональности','Проверка что существующие функции не сломаны','Тестирование перед релизом','Нагрузочное тестирование'],category:6},
+            {text:'Что такое Risk-based testing?',options:['Тестирование по списку требований','На основе приоритетов рисков','Всех модулей одновременно','Автоматическое тестирование'],category:7},
+            {text:'Что проверяет OR-тестирование?',options:['Система не даёт неожиданных результатов','Каждый модуль работает изолированно','Система выдаёт ожидаемый результат','Система работает без ошибок'],category:7},
+            {text:'Критерий окончания тестирования?',options:['Закончились тест-кейсы','Проект в продакшене','Критерии выхода выполнены','Все баги исправлены'],category:8}
+        ],
+        correctAnswers:[2,2,1,1,1,0,1,1,1,2,1,2,1,0,2,1,1,1,2,2],
+        categories:['Основы тестирования','Жизненный цикл ПО','Виды тестирования','Тест-дизайн','Дефекты и баги','Документация','Методологии','Техники тестирования','Тест-планирование'],
+        categoryScores:[0,0,0,0,0,0,0,0,0],
+        selectAnswer(index) {
+            this.answers[this.currentQuestion] = index;
+        },
+        next() {
+            if (this.currentQuestion < this.questions.length - 1) this.currentQuestion++;
+        },
+        prev() {
+            if (this.currentQuestion > 0) this.currentQuestion--;
+        },
+        finish() {
+            this.categoryScores = [0,0,0,0,0,0,0,0,0];
+            for (let i = 0; i < this.questions.length; i++) {
+                if (this.answers[i] === this.correctAnswers[i]) {
+                    this.categoryScores[this.questions[i].category]++;
+                }
+            }
+            this.showResults = true;
+        },
+        score() {
+            return this.answers.filter((a,i) => a === this.correctAnswers[i]).length;
+        },
+        catProgress(idx) {
+            let total = 0, correct = 0;
+            for (let i = 0; i < this.questions.length; i++) {
+                if (this.questions[i].category === idx) {
+                    total++;
+                    if (this.answers[i] !== undefined && this.answers[i] === this.correctAnswers[i]) correct++;
+                }
+            }
+            return total > 0 ? Math.round(correct / total * 100) : 0;
+        },
+        restart() {
+            this.currentQuestion = 0;
+            this.answers = [];
+            this.showResults = false;
+            this.categoryScores = [0,0,0,0,0,0,0,0,0];
+        }
+    }">
+
+        <template x-if="!showResults">
+            <div>
+                <div class="hero">
+                    <h1>Теория тестирования</h1>
+                    <p>Проверь свои знания основ тестирования ПО</p>
+                </div>
+
+                <div class="progress-text">Вопрос <span x-text="currentQuestion + 1"></span> из <span x-text="questions.length"></span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" :style="'width:' + ((currentQuestion + 1) / questions.length * 100) + '%'"></div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-number">Вопрос <span x-text="currentQuestion + 1"></span></div>
+                    <div class="question-text" x-text="questions[currentQuestion].text"></div>
+                    <div class="options">
+                        <template x-for="(opt, idx) in questions[currentQuestion].options" :key="idx">
+                            <div class="option" :class="{'selected': answers[currentQuestion] === idx}" @click="selectAnswer(idx)">
+                                <span class="option-label" x-text="opt"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" @click="prev()" :disabled="currentQuestion === 0">← Назад</button>
+                    <button class="btn btn-primary" @click="currentQuestion < questions.length - 1 ? next() : finish()" :disabled="answers[currentQuestion] === undefined">
+                        <span x-text="currentQuestion < questions.length - 1 ? 'Далее →' : 'Завершить'"></span>
+                    </button>
+                </div>
+            </div>
+        </template>
+
+        <template x-if="showResults">
+            <div>
+                <div class="hero">
+                    <h1>Результаты</h1>
+                    <p>Анализ твоих знаний</p>
+                </div>
+
+                <div class="results-card">
+                    <div class="results-header">
+                        <div class="results-score"><span x-text="score()"></span> / <span x-text="questions.length"></span></div>
+                        <div class="results-label">правильных ответов</div>
+                    </div>
+
+                    <div class="chart-container">
+                        <template x-for="(cat, idx) in categories" :key="idx">
+                            <div class="chart-row">
+                                <div class="chart-label" x-text="cat"></div>
+                                <div class="chart-bar-container">
+                                    <div class="chart-bar" :class="{'good': catProgress(idx) >= 70, 'medium': catProgress(idx) >= 40 && catProgress(idx) < 70, 'bad': catProgress(idx) < 40}" :style="'width:' + catProgress(idx) + '%'"></div>
+                                </div>
+                                <div class="chart-value" x-text="catProgress(idx) + '%'"></div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="recommendations">
+                    <h3>Рекомендации</h3>
+                    <ul>
+                        <template x-if="catProgress(0) < 70"><li>Основы тестирования: изучи ISTQB, книгу "Тестирование dot COM"</li></template>
+                        <template x-if="catProgress(1) < 70"><li>Жизненный цикл ПО: модели SDLC, STLC, уровни тестирования</li></template>
+                        <template x-if="catProgress(2) < 70"><li>Виды тестирования: классификации (функциональное, нефункциональное, White box)</li></template>
+                        <template x-if="catProgress(3) < 70"><li>Тест-дизайн: equivalence partitioning, boundary values, decision tables</li></template>
+                        <template x-if="catProgress(4) < 70"><li>Дефекты: жизненный цикл бага, Severity vs Priority</li></template>
+                        <template x-if="catProgress(5) < 70"><li>Документация: Test Plan, Test Case, Test Strategy</li></template>
+                        <template x-if="catProgress(6) < 70"><li>Методологии: Waterfall, Agile, Scrum, Kanban</li></template>
+                        <template x-if="catProgress(7) < 70"><li>Техники: risk-based, exploratory, checklist-based testing</li></template>
+                        <template x-if="catProgress(8) < 70"><li>Тест-планирование: exit criteria, test coverage, traceability</li></template>
+                        <template x-if="score() >= 16"><li>Отличный результат! Практикуй на реальных проектах</li></template>
+                        <template x-if="score() >= 12 && score() < 16"><li>Хороший уровень! Закрой пробелы в слабых категориях</li></template>
+                        <template x-if="score() < 12"><li>Рекомендую пройти базовый курс по тестированию</li></template>
+                    </ul>
+                </div>
+
+                <button class="restart-btn" @click="restart()">Пройти заново</button>
+            </div>
+        </template>
+    </main>
+
+    <footer class="footer">
+        <p>Галкин Александр © <span id="year"></span></p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.0/dist/cdn.min.js"></script>
+</body>
+</html>
