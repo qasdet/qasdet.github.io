@@ -206,6 +206,46 @@
         }
         .project-year { font-size: 0.8rem; color: #94a3b8; }
 
+        [x-cloak] { display: none !important; }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .loading-stage {
+            text-align: center;
+            padding: 60px 24px;
+        }
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+        .loading-text {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        .loading-subtext {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        .projects-loaded .project-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        .projects-loaded .project-card:nth-child(1) { animation-delay: 0.1s; }
+        .projects-loaded .project-card:nth-child(2) { animation-delay: 0.2s; }
+        .projects-loaded .project-card:nth-child(3) { animation-delay: 0.3s; }
+        .projects-loaded .project-card:nth-child(4) { animation-delay: 0.4s; }
+
         .footer {
             text-align: center;
             padding: 40px 24px;
@@ -282,13 +322,25 @@
         </div>
     </header>
 
-    <main class="container">
+    <main class="container" x-data="{ loading: true, stage: '', projectsReady: false }" x-init="
+            setTimeout(() => { stage = 'Загрузка проектов...'; }, 300);
+            setTimeout(() => { stage = 'Проверка доступности...'; }, 1200);
+            setTimeout(() => { loading = false; projectsReady = true; }, 2000);
+        ">
         <div class="hero">
             <h1>Проекты</h1>
             <p>Инструменты и приложения для автоматизации тестирования и не только</p>
         </div>
 
-        <div class="projects-grid">
+        <!-- Loading Animation -->
+        <div class="loading-stage" x-show="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text" x-text="stage"></div>
+            <div class="loading-subtext">Пожалуйста, подождите</div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="projects-grid" x-show="!loading" x-cloak>
             <!-- Articles Editor -->
             <article class="project-card">
                 <div class="project-card-header">
@@ -394,6 +446,9 @@
                 </div>
             </article>
         </div>
+
+        <!-- Projects loaded trigger -->
+        <div x-show="projectsReady" x-transition:enter="projects-loaded" style="display: none;"></div>
     </main>
 
     <footer class="footer">
@@ -403,5 +458,6 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
     </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </body>
 </html>
