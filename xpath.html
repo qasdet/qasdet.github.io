@@ -6,15 +6,44 @@
     <title>XPath — Полное руководство</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-darker: #0a0f1f;
+            --bg-light: #f8fafc;
+            --bg-lighter: #1e293b;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #94a3b8;
+            --border: #e2e8f0;
+            --border-dark: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
-            color: #1a1a2e;
-            background: #fafafa;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             min-height: 100vh;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            overflow-x: hidden;
         }
         .container {
             max-width: 800px;
@@ -22,80 +51,69 @@
             padding: 40px 24px 80px;
         }
 
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-light); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
         .header {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e2e8f0;
-            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: var(--shadow-sm);
         }
         .header-inner {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .header-nav { display: flex; gap: 4px; }
+        .header-nav { display: flex; gap: 8px; flex-wrap: wrap; }
         .header-nav a {
-            padding: 8px 12px;
+            padding: 10px 14px;
             border-radius: 8px;
             text-decoration: none;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; align-items: center; gap: 6px;
+            color: var(--text-secondary);
+        }
+        .header-nav a:hover {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.08);
+            transform: translateY(-2px);
         }
         .header-nav a.active {
-            color: #667eea;
-            background: #f1f5f9;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.12);
         }
-        .header-nav a:not(.active) {
-            color: #64748b;
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .header-nav a:not(.active):hover {
-            color: #667eea;
-            background: #f1f5f9;
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .nav-group { position: relative; }
-        .nav-group-toggle { cursor: pointer; }
-        .nav-group-toggle svg:last-child { transition: transform 0.2s; }
-        .nav-group:hover .nav-group-toggle svg:last-child { transform: rotate(180deg); }
-        .nav-group-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 8px;
-            min-width: 160px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-8px);
-            transition: all 0.2s;
-            z-index: 200;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-        .nav-group:hover .nav-group-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        .nav-group-dropdown a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            border-radius: 8px;
-            color: #475569;
-            white-space: nowrap;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(-20px) translateX(10px); }
         }
-        .nav-group-dropdown a:hover { background: #f1f5f9; color: #667eea; }
-        .nav-group-dropdown a.active { background: #f1f5f9; color: #667eea; }
 
         .page-title {
             text-align: center;
@@ -336,39 +354,42 @@
             .axis-grid { grid-template-columns: 1fr; }
             .function-grid { grid-template-columns: 1fr; }
         }
+
+        .nav-group { position: relative; }
+        .nav-group-toggle { cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); transition: all 0.3s; }
+        .nav-group-toggle:hover { color: var(--primary); background: rgba(99, 102, 241, 0.08); }
+        .nav-group-toggle svg:last-child { transition: transform 0.2s; }
+        .nav-group:hover .nav-group-toggle svg:last-child { transform: rotate(180deg); }
+        .nav-group-dropdown { position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 8px; min-width: 160px; box-shadow: var(--shadow-lg); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.2s; z-index: 200; margin-top: 4px; }
+        .nav-group:hover .nav-group-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-group-dropdown a { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text-secondary); white-space: nowrap; font-size: 0.85rem; transition: all 0.2s; }
+        .nav-group-dropdown a:hover, .nav-group-dropdown a.active { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
     </style>
 </head>
 <body>
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'p' || e.key === 'P')) {
+                e.preventDefault();
+            }
+        });
+        document.addEventListener('selectstart', e => {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+    </script>
+
     <header class="header">
         <div class="header-inner">
             <nav class="header-nav">
-                <div class="nav-group">
-                    <a href="index.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        Резюме
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </a>
-                    <div class="nav-group-dropdown">
-                        <a href="about.html" title="О себе">О себе</a>
-                    </div>
-                </div>
-
-                <div class="nav-group">
-                    <a href="blog.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                        Блог
-                    </a>
-                </div>
-
-                <a href="projects.html" title="Проекты">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                    Проекты
-                </a>
-
+                <a href="index2.html">📄 Резюме</a>
+                <a href="blog.html">📝 Блог</a>
+                <a href="projects.html">💻 Проекты</a>
                 <div class="nav-group">
                     <a href="pytest.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        Обучение
+                        🎓 Обучение
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </a>
                     <div class="nav-group-dropdown">
@@ -377,11 +398,9 @@
                         <a href="framework.html" title="Playwright + Pytest">Playwright + Pytest</a>
                     </div>
                 </div>
-
                 <div class="nav-group">
                     <a href="test.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-                        Опыт
+                        🎯 Опыт
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </a>
                     <div class="nav-group-dropdown">

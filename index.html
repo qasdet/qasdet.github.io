@@ -6,175 +6,420 @@
     <title>Галкин Александр — Senior AQA/LeadAQA Python</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            
+            --bg-dark: #0f172a;
+            --bg-darker: #0a0f1f;
+            --bg-light: #f8fafc;
+            --bg-lighter: #1e293b;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #94a3b8;
+            
+            --border: #e2e8f0;
+            --border-dark: #cbd5e1;
+            
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
-            color: #1a1a2e;
-            background: #fafafa;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             min-height: 100vh;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            overflow-x: hidden;
         }
+
+        /* Smooth scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 60px 24px;
+            padding: 80px 32px;
         }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .header-nav a {
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+        }
+
+        .header-nav a:hover {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .header-nav a.active {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        /* Hero Section */
         .hero {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 80px;
+            animation: fadeInDown 0.8s ease-out;
         }
+
         .hero-avatar {
-            width: 100px;
-            height: 100px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto 24px;
+            margin: 0 auto 32px;
             display: block;
-            border: 3px solid #e2e8f0;
+            border: 4px solid var(--border);
+            box-shadow: 0 0 0 2px #fff, var(--shadow-lg);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .hero-avatar:hover {
+            transform: scale(1.05) rotate(-5deg);
+            border-color: var(--primary);
+        }
+
         .hero h1 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            color: #0f0f23;
-            margin-bottom: 8px;
+            color: var(--text-primary);
+            margin-bottom: 12px;
             letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
+
         .hero-position {
-            font-size: 1.1rem;
-            color: #667eea;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
             font-weight: 500;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
+
         .hero-meta {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 16px;
-            font-size: 0.875rem;
-            color: #64748b;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
         }
+
         .hero-meta span {
             display: flex;
             align-items: center;
             gap: 6px;
+            padding: 8px 12px;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 6px;
+            transition: all 0.3s;
         }
-        .hero-meta a {
-            color: #667eea;
-            text-decoration: none;
-        }
-        .hero-meta a:hover { text-decoration: underline; }
 
+        .hero-meta span:hover {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary);
+        }
+
+        /* Contact Row */
         .contact-row {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 24px;
-            padding: 20px 0;
-            border-top: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-            margin-bottom: 48px;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 60px;
+            backdrop-filter: blur(8px);
         }
+
+        .contact-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contact-toggle-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .contact-item {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 0.9rem;
-            color: #475569;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            padding: 0 12px;
+            position: relative;
         }
+
+        .contact-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 20px;
+            background: linear-gradient(180deg, transparent 0%, var(--primary) 50%, transparent 100%);
+        }
+
+        .contact-item:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
         .contact-item svg {
             width: 18px;
             height: 18px;
-            color: #667eea;
+            color: var(--primary);
         }
 
-        [x-cloak] { display: none !important; }
-        .loading-stage {
-            text-align: center;
-            padding: 40px 24px;
+        .contact-item a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 500;
         }
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #e2e8f0;
-            border-top-color: #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        .loading-text {
-            font-size: 1rem;
-            color: #64748b;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .experience-list .experience-item {
-            opacity: 0;
-        }
-        .experience-loaded .experience-item {
-            animation: fadeInUp 0.4s ease forwards;
-        }
-        .experience-loaded .experience-item:nth-child(1) { animation-delay: 0.1s; }
-        .experience-loaded .experience-item:nth-child(2) { animation-delay: 0.2s; }
-        .experience-loaded .experience-item:nth-child(3) { animation-delay: 0.3s; }
-        .experience-loaded .experience-item:nth-child(4) { animation-delay: 0.4s; }
-        .experience-loaded .experience-item:nth-child(5) { animation-delay: 0.5s; }
-        .experience-loaded .experience-item:nth-child(6) { animation-delay: 0.6s; }
-        .experience-loaded .experience-item:nth-child(7) { animation-delay: 0.7s; }
 
-        .section { margin-bottom: 48px; }
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 80px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
         .section-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 16px;
+            margin-bottom: 32px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
+
+        .section-header:hover .section-title {
+            color: var(--primary);
+        }
+
         .section-title {
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #94a3b8;
+            letter-spacing: 0.15em;
+            color: var(--text-tertiary);
+            transition: all 0.3s;
+            min-width: fit-content;
         }
-        .section-line { flex: 1; height: 1px; background: #e2e8f0; }
 
+        .section-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+        }
+
+        /* About Card */
+        .about-card {
+            background: #fff;
+            border-radius: 0 0 20px 20px;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border);
+            border-top: none;
+            position: relative;
+        }
+
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 50%, #ec4899 100%);
+        }
+
+        .about-card p {
+            font-size: 1rem;
+            line-height: 1.75;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        .about-card a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .about-card a:hover {
+            border-bottom-color: var(--primary);
+        }
+
+        .about-highlights {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .about-highlight {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .about-highlight-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .about-highlight-label {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Experience List */
         .experience-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
-        .experience-list:not(.experience-loaded) .experience-item {
-            display: none;
-        }
-        .experience-loaded .experience-item {
-            animation: fadeInUp 0.4s ease forwards;
-        }
+
         .experience-item {
             background: #fff;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border: 2px solid var(--border);
             overflow: hidden;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
         }
-        .experience-item:hover { border-color: #cbd5e1; }
+
+        .experience-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+        }
+
         .experience-item[aria-expanded="true"] {
-            border-color: #667eea;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), var(--shadow-lg);
         }
+
         .experience-trigger {
             width: 100%;
-            padding: 20px 24px;
+            padding: 24px;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -184,227 +429,293 @@
             cursor: pointer;
             text-align: left;
             font-family: inherit;
+            transition: all 0.3s;
         }
-        .experience-trigger:focus { outline: none; }
-        .experience-trigger:focus-visible { background: #f8fafc; }
-        .experience-info { flex: 1; min-width: 0; }
+
+        .experience-trigger:hover {
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        .experience-trigger:focus {
+            outline: none;
+        }
+
+        .experience-trigger:focus-visible {
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .experience-info {
+            flex: 1;
+            min-width: 0;
+        }
+
         .experience-company {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #0f0f23;
-            margin-bottom: 4px;
-        }
-        .experience-role {
-            font-size: 0.875rem;
-            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
             margin-bottom: 6px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
+
+        .experience-role {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
         .experience-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            font-size: 0.75rem;
-            color: #94a3b8;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
         }
+
         .experience-badge {
-            background: #f1f5f9;
-            padding: 4px 10px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            padding: 6px 12px;
             border-radius: 6px;
+            font-weight: 600;
+            color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.2);
         }
+
         .experience-item[aria-expanded="true"] .experience-badge {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: #fff;
+            border: none;
         }
+
         .experience-chevron {
-            width: 20px;
-            height: 20px;
-            color: #94a3b8;
-            transition: transform 0.3s ease;
+            width: 24px;
+            height: 24px;
+            color: var(--text-tertiary);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
-            margin-top: 4px;
+            margin-top: 2px;
         }
+
         .experience-item[aria-expanded="true"] .experience-chevron {
             transform: rotate(180deg);
-            color: #667eea;
+            color: var(--primary);
         }
+
         .experience-content {
             padding: 0 24px;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.4s ease;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .experience-item[aria-expanded="true"] .experience-content {
             max-height: 2000px;
             padding-bottom: 24px;
         }
+
         .experience-divider {
-            height: 1px;
-            background: #e2e8f0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
             margin-bottom: 20px;
         }
+
         .experience-description {
-            font-size: 0.9rem;
-            color: #475569;
-            line-height: 1.7;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
         }
-        .experience-description p { margin-bottom: 12px; }
-        .experience-description strong { color: #334155; }
-        .experience-description ul { list-style: none; padding: 0; }
+
+        .experience-description p {
+            margin-bottom: 12px;
+        }
+
+        .experience-description strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .experience-description ul {
+            list-style: none;
+            padding: 0;
+        }
+
         .experience-description li {
             position: relative;
-            padding-left: 20px;
-            margin-bottom: 8px;
+            padding-left: 24px;
+            margin-bottom: 10px;
         }
+
         .experience-description li::before {
-            content: "";
+            content: '';
             position: absolute;
             left: 0;
             top: 10px;
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
         }
+
         .experience-description a {
-            color: #667eea;
+            color: var(--primary);
             text-decoration: none;
-        }
-        .experience-description a:hover { text-decoration: underline; }
-
-        .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-        .skill-tag {
-            background: #f1f5f9;
-            color: #475569;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
-        .skill-tag:hover { background: #667eea; color: #fff; }
 
+        .experience-description a:hover {
+            text-decoration: underline;
+            color: var(--secondary);
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+            color: var(--primary);
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .skill-tag:hover {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #fff;
+            border-color: transparent;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Education Card */
         .education-card {
-            background: #fff;
-            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 2px solid var(--border);
             border-radius: 12px;
             padding: 24px;
+            transition: all 0.3s;
         }
-        .education-year {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #667eea;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-        }
-        .education-degree {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #0f0f23;
-            margin-bottom: 4px;
-        }
-        .education-school { font-size: 0.875rem; color: #64748b; }
 
-        .cert-list { display: flex; flex-direction: column; gap: 12px; }
+        .education-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+        }
+
+        .education-year {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+
+        .education-degree {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .education-school {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        /* Certificates */
+        .cert-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
         .cert-item {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 16px 20px;
             display: flex;
             align-items: center;
             gap: 12px;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .cert-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
         .cert-icon {
             width: 40px;
             height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 10px;
             color: #fff;
             flex-shrink: 0;
         }
+
         .cert-name {
-            font-size: 0.9rem;
+            flex: 1;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: #0f0f23;
-        }
-        .cert-year { font-size: 0.75rem; color: #94a3b8; }
-
-        .about-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 16px;
-            padding: 32px;
-            color: #fff;
-        }
-        .about-card p {
-            font-size: 0.95rem;
-            line-height: 1.7;
-            margin-bottom: 12px;
-            opacity: 0.95;
-        }
-        .about-card a {
-            color: #fff;
-            text-decoration: underline;
-            opacity: 0.9;
-        }
-        .about-card a:hover { opacity: 1; }
-        .about-highlights {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid rgba(255,255,255,0.2);
-        }
-        .about-highlight { flex: 1; min-width: 200px; }
-        .about-highlight-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            opacity: 1;
-        }
-        .about-highlight-label { font-size: 0.8rem; opacity: 0.8; }
-
-        .language-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .language-item:last-child { border-bottom: none; }
-        .language-name {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #0f0f23;
-        }
-        .language-level {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            margin-left: auto;
+            color: var(--text-primary);
         }
 
+        .cert-year {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            padding: 6px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 6px;
+        }
+
+        /* Blog Section */
         .blog-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
             margin-bottom: 32px;
         }
+
         .blog-card {
             background: #fff;
-            border: 1px solid #e2e8f0;
+            border: 2px solid var(--border);
             border-radius: 12px;
             padding: 24px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
         }
+
         .blog-card:hover {
-            border-color: #667eea;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
-            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-8px);
         }
+
         .blog-card-header {
             display: flex;
             align-items: flex-start;
@@ -412,137 +723,71 @@
             gap: 12px;
             margin-bottom: 12px;
         }
-        .blog-card-date { font-size: 0.75rem; color: #94a3b8; white-space: nowrap; }
-        .blog-card-title {
-            font-size: 1rem;
+
+        .blog-card-date {
+            font-size: 0.8rem;
+            color: var(--primary);
+            white-space: nowrap;
             font-weight: 600;
-            color: #0f0f23;
-            margin-bottom: 8px;
-            line-height: 1.4;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
+
+        .blog-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+            flex: 1;
+        }
+
         .blog-card-excerpt {
-            font-size: 0.875rem;
-            color: #64748b;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 16px;
+            flex: 1;
         }
-        .blog-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-        .blog-tag {
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: #f1f5f9;
-            color: #64748b;
-        }
-        .blog-loading { text-align: center; padding: 40px; color: #94a3b8; }
 
-        .header {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid #e2e8f0;
-            padding: 12px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .header-inner {
-            max-width: 800px;
-            margin: 0 auto;
+        .blog-card-tags {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .header-nav { display: flex; gap: 4px; }
-        .header-nav a {
-            padding: 8px 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .header-nav a.active {
-            color: #667eea;
-            background: #f1f5f9;
-        }
-        .header-nav a:not(.active) {
-            color: #64748b;
-        }
-        .header-nav a:not(.active):hover {
-            color: #667eea;
-            background: #f1f5f9;
-        }
-        .nav-group {
-            position: relative;
-        }
-        .nav-group-toggle {
-            cursor: pointer;
-        }
-        .nav-group-toggle svg {
-            transition: transform 0.2s;
-        }
-        .nav-group:hover .nav-group-toggle svg {
-            transform: rotate(180deg);
-        }
-        .nav-group-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 8px;
-            min-width: 160px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-8px);
-            transition: all 0.2s;
-            z-index: 200;
-        }
-        .nav-group:hover .nav-group-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        .nav-group-dropdown a {
-            display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             gap: 8px;
-            padding: 10px 12px;
-            border-radius: 8px;
-            color: #475569;
-            white-space: nowrap;
-        }
-        .nav-group-dropdown a:hover {
-            background: #f1f5f9;
-            color: #667eea;
-        }
-        .nav-group-dropdown a.active {
-            background: #f1f5f9;
-            color: #667eea;
+            margin-top: auto;
         }
 
-        @media (max-width: 640px) {
-            .container { padding: 40px 16px; }
-            .hero h1 { font-size: 1.75rem; }
-            .contact-row { flex-direction: column; align-items: center; gap: 12px; }
-            .experience-trigger { padding: 16px 20px; }
-            .about-highlights { flex-direction: column; }
+        .blog-tag {
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
         }
+
+        .blog-tag:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* Modal */
         .blog-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px;
             z-index: 1000;
             backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease;
         }
+
         .blog-modal-content {
             background: #fff;
             border-radius: 16px;
@@ -551,31 +796,232 @@
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .blog-modal-close {
             position: absolute;
             top: 16px;
             right: 16px;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             border: none;
-            background: #f1f5f9;
-            color: #64748b;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--text-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.3s;
             z-index: 10;
+            font-size: 0;
         }
+
         .blog-modal-close:hover {
-            background: #e2e8f0;
-            color: #0f0f23;
+            background: var(--primary);
+            color: #fff;
+            transform: rotate(90deg);
         }
+
+        /* Loading */
+        .loading-stage {
+            text-align: center;
+            padding: 60px 24px;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Experience list animations */
+        .experience-list:not(.experience-loaded) .experience-item {
+            opacity: 0;
+            display: none;
+        }
+
+        .experience-loaded .experience-item {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .experience-loaded .experience-item:nth-child(1) { animation-delay: 0.1s; }
+        .experience-loaded .experience-item:nth-child(2) { animation-delay: 0.2s; }
+        .experience-loaded .experience-item:nth-child(3) { animation-delay: 0.3s; }
+        .experience-loaded .experience-item:nth-child(4) { animation-delay: 0.4s; }
+        .experience-loaded .experience-item:nth-child(5) { animation-delay: 0.5s; }
+        .experience-loaded .experience-item:nth-child(6) { animation-delay: 0.6s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 60px 20px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .about-card {
+                padding: 32px 24px;
+            }
+
+            .about-highlights {
+                grid-template-columns: 1fr;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-nav {
+                gap: 4px;
+            }
+
+            .header-nav a {
+                font-size: 0.75rem;
+                padding: 8px 10px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 40px 16px;
+            }
+
+            .hero-avatar {
+                width: 100px;
+                height: 100px;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero-position {
+                font-size: 1rem;
+            }
+
+            .contact-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .contact-item {
+                justify-content: center;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .section-line {
+                width: 100%;
+            }
+
+            .about-card {
+                padding: 24px;
+            }
+
+            .experience-trigger {
+                padding: 16px;
+            }
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .nav-group { position: relative; }
+        .nav-group-toggle { cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); transition: all 0.3s; }
+        .nav-group-toggle:hover { color: var(--primary); background: rgba(99, 102, 241, 0.08); }
+        .nav-group-toggle svg:last-child { transition: transform 0.2s; }
+        .nav-group:hover .nav-group-toggle svg:last-child { transform: rotate(180deg); }
+        .nav-group-dropdown { position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 8px; min-width: 160px; box-shadow: var(--shadow-lg); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.2s; z-index: 200; margin-top: 4px; }
+        .nav-group:hover .nav-group-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-group-dropdown a { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text-secondary); white-space: nowrap; font-size: 0.85rem; transition: all 0.2s; }
+        .nav-group-dropdown a:hover, .nav-group-dropdown a.active { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
     </style>
 </head>
-<body>
+<body x-data="{
+    expandedId: null,
+    loading: true,
+    stage: '',
+    experienceLoaded: false,
+    articles: [],
+    blogLoading: true,
+    blogSelected: null,
+    certModalOpen: false,
+    openCertModal() {
+        this.certModalOpen = true;
+    },
+}">
     <script>
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
@@ -590,36 +1036,16 @@
         });
     </script>
 
+    <!-- Header -->
     <header class="header">
         <div class="header-inner">
             <nav class="header-nav">
-                <div class="nav-group">
-                    <a href="index.html" class="active nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        Резюме
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </a>
-                    <div class="nav-group-dropdown">
-                        <a href="about.html" title="О себе">О себе</a>
-                    </div>
-                </div>
-
-                <div class="nav-group">
-                    <a href="blog.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                        Блог
-                    </a>
-                </div>
-
-                <a href="projects.html" title="Проекты">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                    Проекты
-                </a>
-
+                <a href="index2.html" class="active">📄 Резюме</a>
+                <a href="blog.html">📝 Блог</a>
+                <a href="projects.html">💻 Проекты</a>
                 <div class="nav-group">
                     <a href="pytest.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        Обучение
+                        🎓 Обучение
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </a>
                     <div class="nav-group-dropdown">
@@ -628,11 +1054,9 @@
                         <a href="framework.html" title="Playwright + Pytest">Playwright + Pytest</a>
                     </div>
                 </div>
-
                 <div class="nav-group">
                     <a href="test.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-                        Опыт
+                        🎯 Опыт
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </a>
                     <div class="nav-group-dropdown">
@@ -645,348 +1069,283 @@
         </div>
     </header>
 
-    <div class="container" x-data="{
+    <div class="container" x-cloak x-data="{
         expandedId: null,
         loading: true,
         stage: '',
         experienceLoaded: false,
-        articles: [],
-        blogLoading: true,
-        blogSelected: null,
-        blogModalContent: '',
-        certModal: false,
-        async loadArticles() {
-            try {
-                const res = await fetch('articles.json');
-                this.articles = await res.json();
-            } catch (e) {
-                console.error('Failed to load articles', e);
-            }
-            this.blogLoading = false;
-        },
         init() {
             setTimeout(() => { this.stage = 'Загрузка опыта...'; }, 300);
-            setTimeout(() => { this.stage = 'Валидация опыта...'; }, 1200);
-            setTimeout(() => { this.loading = false; this.experienceLoaded = true; }, 2000);
-            this.loadArticles();
-        },
-        openArticle(article) {
-            this.blogSelected = article;
-            this.blogModalContent = marked.parse(article.content);
-        },
-        closeArticle() {
-            this.blogSelected = null;
-            this.blogModalContent = '';
-        },
-        openCertModal() { this.certModal = true; },
-        closeCertModal() { this.certModal = false; }
+            setTimeout(() => { this.stage = 'Валидация навыков...'; }, 1200);
+            setTimeout(() => { this.stage = 'Компиляция результатов...'; }, 1800);
+            setTimeout(() => { this.loading = false; this.experienceLoaded = true; }, 2400);
+        }
     }">
-
-        <!-- Hero -->
+        <!-- Hero Section -->
         <section class="hero">
-            <img class="hero-avatar" src="avatar.png" alt="Галкин Александр" width="100" height="100">
+            <img class="hero-avatar" src="avatar.png" alt="Галкин Александр" width="140" height="140">
             <h1>Галкин Александр</h1>
             <p class="hero-position">Senior AQA / LeadAQA Python</p>
             <div class="hero-meta">
-                <span>39 лет, родился 5 мая 1986</span>
-                <span>Санкт-Петербург</span>
-                <span>12+ лет опыта</span>
+                <span>🎂 40 лет</span>
+                <span>📍 Санкт-Петербург</span>
+                <span>⭐ 12+ лет опыта</span>
             </div>
         </section>
 
-        <!-- Contact Row -->
+        <!-- Contact Section -->
         <div class="contact-row" x-data="{ showContacts: false }">
-            <div class="contact-item" x-show="showContacts" x-transition>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                <a href="tel:+79955901658">+7 (995) 590-16-58</a>
+            <div class="contact-items" x-show="showContacts" x-transition>
+                <div class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <a href="tel:+79955901658">+7 (995) 590-16-58</a>
+                </div>
+                <div class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <a href="mailto:qa_engineer86@vk.com">qa_engineer86@vk.com</a>
+                </div>
+                <div class="contact-item">
+                    <a href="https://t.me/qa_lead_automation" target="_blank">Telegram</a>
+                </div>
+                <div class="contact-item">
+                    <a href="https://github.com/qasdet" target="_blank">github.com/qasdet</a>
+                </div>
             </div>
-            <div class="contact-item" x-show="showContacts" x-transition>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <a href="mailto:qa_engineer86@vk.com">qa_engineer86@vk.com</a>
-            </div>
-            <div class="contact-item" x-show="showContacts" x-transition>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <a href="https://t.me/qa_lead_automation" target="_blank">Telegram</a>
-            </div>
-            <div class="contact-item" x-show="showContacts" x-transition>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
-                <a href="https://github.com/qasdet" target="_blank">github.com/qasdet</a>
-            </div>
-            <button @click="showContacts = !showContacts" style="background: none; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; color: #667eea; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
-                <svg x-show="!showContacts" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                <svg x-show="showContacts" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                <span x-text="showContacts ? 'Скрыть контакты' : 'Показать контакты'"></span>
+            <button @click="showContacts = !showContacts"
+                    class="contact-toggle-btn"
+                    @mouseenter="this.style.transform='scale(1.05)'"
+                    @mouseleave="this.style.transform='scale(1)'">
+                <span x-text="showContacts ? '🙈 Скрыть' : '👁️ Контакты'"></span>
             </button>
         </div>
 
-        <!-- About -->
+        <!-- About Section -->
         <section class="section">
             <div class="about-card">
-                <p>Моя главная цель как QA — помогать развитию компании, повышая качество программного обеспечения.</p>
-                <p>Есть опыт использования <strong>LLM</strong> для ускорения разработки. Мой пет-проект — билдер резюме с помощью LLM: <a href="https://github.com/qasdet/resume" target="_blank">github.com/qasdet/resume</a></p>
+                <p>Senior Automation QA Engineer с 6+ годами практического опыта автоматизации в высоконагруженных системах, инфраструктурных решениях и мобильных приложениях. Создавал E2E-фреймворки и процессы тестирования с нуля, достигая до 85% тестового покрытия и сокращая циклы регресса с дней до часов.</p>
+                <p>Обеспечивал тестирование критически важных модулей аутентификации для 100+ млн пользователей и продукта импортозамещения Active Directory. Силён в анализе первопричин, риск-ориентированном тестировании и руководстве QA-командами до 9 человек.</p>
+                <p>Активно использую <strong>LLM</strong> для ускорения разработки. Мой пет-проект — интеллектуальный билдер резюме: <a href="https://github.com/qasdet/resume" target="_blank">github.com/qasdet/resume</a></p>
                 <div class="about-highlights">
                     <div class="about-highlight">
-                        <div class="about-highlight-value">6+ лет</div>
-                        <div class="about-highlight-label">в QA Automation</div>
+                        <div class="about-highlight-value">6+</div>
+                        <div class="about-highlight-label">Лет в QA</div>
                     </div>
                     <div class="about-highlight">
-                        <div class="about-highlight-value">E2E фреймворки</div>
-                        <div class="about-highlight-label">с нуля</div>
+                        <div class="about-highlight-value">85%</div>
+                        <div class="about-highlight-label">Покрытие</div>
                     </div>
                     <div class="about-highlight">
-                        <div class="about-highlight-value">CI/CD</div>
-                        <div class="about-highlight-label">pipeline</div>
+                        <div class="about-highlight-value">9</div>
+                        <div class="about-highlight-label">Человек в команде</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Experience -->
+        <!-- Experience Section -->
         <section class="section">
             <div class="section-header">
                 <span class="section-title">Опыт работы</span>
                 <div class="section-line"></div>
             </div>
 
-            <!-- Loading Animation -->
             <div class="loading-stage" x-show="loading">
                 <div class="loading-spinner"></div>
                 <div class="loading-text" x-text="stage"></div>
             </div>
 
-            <!-- Experience List -->
-            <div class="experience-list" :class="{ 'experience-loaded': experienceLoaded }">
-                <!-- ВТБ -->
-                <div class="experience-item"
-                     x-data="{ id: 1 }"
-                     :aria-expanded="expandedId === 1"
-                     @click="expandedId = expandedId === 1 ? null : 1">
+            <div class="experience-list" x-show="!loading" x-transition :class="{ 'experience-loaded': experienceLoaded }">
+                <!-- Т1 -->
+                <div class="experience-item" :aria-expanded="expandedId === 1" @click="expandedId = expandedId === 1 ? null : 1">
                     <button class="experience-trigger" :aria-expanded="expandedId === 1">
                         <div class="experience-info">
-                            <div class="experience-company">Банк ВТБ (ПАО)</div>
+                            <div class="experience-company">🚀 Т1, Москва (удалённо)</div>
                             <div class="experience-role">Ведущий инженер по тестированию</div>
-                            <div class="experience-meta">
-                                <span class="experience-badge">Июнь 2025 — Октябрь 2025</span>
-                                <span>5 месяцев</span>
-                            </div>
-                        </div>
-                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                    <div class="experience-content">
-                        <div class="experience-divider"></div>
-                        <div class="experience-description">
-                            <p><em>Проектная работа в рамках Т1, переводили в ВТБ на 1/100ую</em></p>
-                            <ul>
-                                <li>Проводил комплексное тестирование критически важного модуля аутентификации в мобильном приложении (100+ млн пользователей)</li>
-                                <li>Выявил и задокументировал 15+ нетривиальных дефектов на стыке систем, предотвратив потенциальные риски для безопасности</li>
-                                <li>Разработал методику подготовки тестовых данных, которая сократила время на подготовку к регрессу</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Т1 -->
-                <div class="experience-item"
-                     x-data="{ id: 2 }"
-                     :aria-expanded="expandedId === 2"
-                     @click="expandedId = expandedId === 2 ? null : 2">
-                    <button class="experience-trigger" :aria-expanded="expandedId === 2">
-                        <div class="experience-info">
-                            <div class="experience-company">Т1</div>
-                            <div class="experience-role">Lead QA инженер</div>
                             <div class="experience-meta">
                                 <span class="experience-badge">Июнь 2024 — Октябрь 2025</span>
                                 <span>1 год 5 месяцев</span>
                             </div>
                         </div>
-                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
+                            <p><em>Продукт импортозамещения Active Directory, высоконагруженная аутентификация и службы каталогов.</em></p>
                             <ul>
-                                <li>Разработал с нуля стратегию и фреймворк автоматизации (Python, Pytest) для продукта-аналога импортозамещения Active Directory, достигнув 70% покрытия критических сценариев за 8 месяцев</li>
-                                <li>Тестировал протоколы LDAP, Kerberos, NTLM для интеграционного тестирования с разными ОС в гетерогенной среде</li>
-                                <li>Сократил полный цикл регрессионного тестирования с 3 дней до 4 часов, внедрив параллельный запуск E2E-тестов в CI</li>
-                                <li>Автоматизировал развертывание тестовых окружений (Ansible, Vagrant), уменьшив время подготовки стенда с 90 до 30 минут</li>
+                                <li>Разработал с нуля фреймворк автоматизации (Python, Pytest, Playwright), достигнув 70% покрытия критических сценариев за 8 месяцев.</li>
+                                <li>Сократил полный цикл регрессионного тестирования с 3 дней до 4 часов за счёт параллельного запуска E2E-тестов в GitLab CI.</li>
+                                <li>Автоматизировал развёртывание тестовых окружений (Ansible, Vagrant), сократив время подготовки стенда с 90 до 30 минут и исключив ошибки ручной настройки.</li>
+                                <li>Проектная работа в ВТБ: тестировал модуль аутентификации мобильного приложения с аудиторией 100+ млн пользователей; выявил 15+ сложных кросс-системных дефектов, предотвратив потенциальные риски безопасности.</li>
+                                <li>Разработал методику подготовки тестовых данных, существенно сократив время подготовки к регрессу.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <!-- МТС -->
-                <div class="experience-item"
-                     x-data="{ id: 3 }"
-                     :aria-expanded="expandedId === 3"
-                     @click="expandedId = expandedId === 3 ? null : 3">
-                    <button class="experience-trigger" :aria-expanded="expandedId === 3">
+                <div class="experience-item" :aria-expanded="expandedId === 2" @click="expandedId = expandedId === 2 ? null : 2">
+                    <button class="experience-trigger" :aria-expanded="expandedId === 2">
                         <div class="experience-info">
-                            <div class="experience-company">МТС</div>
-                            <div class="experience-role">Senior QA инженер</div>
+                            <div class="experience-company">📱 Мобильные ТелеСистемы (МТС), Москва (удалённо)</div>
+                            <div class="experience-role">Старший инженер по автоматизации тестирования (Python)</div>
                             <div class="experience-meta">
-                                <span class="experience-badge">Июнь 2022 — Июнь 2024</span>
-                                <span>2 года 1 месяц</span>
+                                <span class="experience-badge">Март 2022 — Июнь 2024</span>
+                                <span>2 года 4 месяца</span>
                             </div>
                         </div>
-                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
-                            <p>Тестировал проект по рекламным интеграциям медиа-планирования <a href="https://mediapush.mts.ru/" target="_blank">mediapush.mts.ru</a></p>
+                            <p><em>Платформа медиапланирования (mediapush.mts.ru), рекламные интеграции, GraphQL, PostgreSQL.</em></p>
                             <ul>
-                                <li>Спроектировал и внедрил E2E-фреймворк (Python, Playwright) с нуля, увеличив тестовое покрытие с 0 до 85% за 9 месяцев</li>
-                                <li>Настроил CI/CD пайплайн (GitLab CI) для ежедневного запуска 50+ тестовых наборов с отчетностью в Allure</li>
-                                <li>Разработал инструмент на Python для генерации ORM-моделей из схемы PostgreSQL</li>
-                                <li>Менторил 3-х Junior QA по паттернам автоматизации (Page Object, Factory)</li>
+                                <li>С нуля создал E2E-фреймворк автоматизации (Python, Playwright), подняв тестовое покрытие с 0% до 85% за 9 месяцев.</li>
+                                <li>Внедрил CI/CD (GitLab CI) с Allure-отчётностью для 50+ тестовых наборов, сократив время анализа падений и ускорив time-to-market.</li>
+                                <li>Связал репозитории разработчиков и QA для выборочного запуска тестов (frontend/backend), сократив цикл обратной связи.</li>
+                                <li>Анализировал и тестировал требования на этапе их формирования, выявляя логические противоречия на ранних стадиях.</li>
+                                <li>Создал Python-инструмент для автогенерации ORM-моделей из схемы PostgreSQL, экономя часы ручной работы при каждой миграции базы данных.</li>
+                                <li>Обучил 3 junior-инженеров паттернам автоматизации (Page Object, Factory), что позволило им самостоятельно расширять авто-фреймворк.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- Проектная работа -->
-                <div class="experience-item"
-                     x-data="{ id: 4 }"
-                     :aria-expanded="expandedId === 4"
-                     @click="expandedId = expandedId === 4 ? null : 4">
-                    <button class="experience-trigger" :aria-expanded="expandedId === 4">
+                <!-- QA Automation Consultant -->
+                <div class="experience-item" :aria-expanded="expandedId === 3" @click="expandedId = expandedId === 3 ? null : 3">
+                    <button class="experience-trigger" :aria-expanded="expandedId === 3">
                         <div class="experience-info">
-                            <div class="experience-company">Проектная работа</div>
-                            <div class="experience-role">QA Automation Consultant</div>
+                            <div class="experience-company">🛠️ QA Automation Consultant (проектная работа)</div>
+                            <div class="experience-role">Консультант по автоматизации тестирования</div>
                             <div class="experience-meta">
-                                <span class="experience-badge">Август 2020 — Июнь 2022</span>
-                                <span>1 год 11 месяцев</span>
+                                <span class="experience-badge">2023 – 2024</span>
+                                <span>Несколько проектов по 4 месяца</span>
                             </div>
                         </div>
-                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
-                            <p><strong>Special Technology Center (4 мес.):</strong> Автоматизировал API-тестирование для сервиса парсинга почты.</p>
-                            <p><strong>Лаборатория Касперского (4 мес.):</strong> Автоматизировал регресс для продуктов на macOS и проводил исследовательское тестирование KIS/SAAS.</p>
-                            <p><strong>Лига Цифровой Экономики (4 мес.):</strong></p>
+                            <p><em>Различные заказчики, Санкт-Петербург</em></p>
                             <ul>
-                                <li>Запустил релиз мобильного приложения Эльдорадо</li>
-                                <li>Проводил нагрузочное тестирование для М.Видео/Эльдорадо (JMeter, Gatling, Kubernetes, Docker, Prometheus, Grafana)</li>
-                                <li>Координировал работу SRE-инженеров по настройке мониторинга</li>
+                                <li><strong>Special Technology Center (STC):</strong> Автоматизировал API-тестирование сервиса парсинга почты (Python, Pytest, REST API).</li>
+                                <li><strong>Лаборатория Касперского:</strong> Автоматизировал регресс для продуктов macOS; проводил исследовательское тестирование KIS/SAAS, выявляя нетривиальные дефекты.</li>
+                                <li><strong>Лига Цифровой Экономики:</strong> Обеспечил успешный запуск мобильного приложения «Эльдорадо»; проводил нагрузочное тестирование для М.Видео/Эльдорадо с использованием JMeter, Gatling, Kubernetes, Docker, Prometheus, Grafana. Координировал работу SRE-инженеров по настройке мониторинга и выявлению узких мест в микросервисной архитектуре.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <!-- Нмаркет.ПРО -->
-                <div class="experience-item"
-                     x-data="{ id: 5 }"
-                     :aria-expanded="expandedId === 5"
-                     @click="expandedId = expandedId === 5 ? null : 5">
-                    <button class="experience-trigger" :aria-expanded="expandedId === 5">
+                <div class="experience-item" :aria-expanded="expandedId === 4" @click="expandedId = expandedId === 4 ? null : 4">
+                    <button class="experience-trigger" :aria-expanded="expandedId === 4">
                         <div class="experience-info">
-                            <div class="experience-company">Нмаркет.ПРО</div>
-                            <div class="experience-role">Lead QA Automation Engineer</div>
+                            <div class="experience-company">🛍️ Nmarket.PRO, Санкт-Петербург</div>
+                            <div class="experience-role">Ведущий инженер по тестированию</div>
                             <div class="experience-meta">
                                 <span class="experience-badge">Март 2021 — Март 2022</span>
                                 <span>1 год 1 месяц</span>
                             </div>
                         </div>
-                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
+                            <p><em>Маркетплейс недвижимости: веб-портал, приложения Android и iOS.</em></p>
                             <ul>
-                                <li>Тестировал портал и мобильные приложения для Android и iOS, доводил фичи до релиза в прод</li>
-                                <li>Управлял командой тестирования из 9 человек, отвечал за планирование спринтов и полный цикл выпуска</li>
-                                <li>Предложил бизнесовую идею конструктора сайтов, реализованную на проектах Сайт.Плюс и Каталог.ПРО</li>
-                                <li>Разработал E2E-тесты для SPA (CodeceptJS/TypeScript, PyTest/Playwright)</li>
-                                <li>Автоматизация тестирования: Appium + Pytest</li>
+                                <li>Сформировал и возглавил команду тестирования из 9 человек, выстроив процессы планирования, приоритизации и code review, что обеспечило стабильный выпуск релизов для веба и мобильных приложений.</li>
+                                <li>Внедрил CI/CD с нуля, запуская автотесты в Docker-контейнерах через GitLab CI.</li>
+                                <li>Разработал E2E-тесты для SPA на CodeceptJS/TypeScript и Pytest/Playwright; автоматизировал тестирование мобильных приложений с помощью Appium + Pytest.</li>
+                                <li>Предложил бизнес-идею конструктора сайтов из перемещаемых блоков, которая была реализована в двух продуктах (Сайт.Плюс и Каталог.ПРО), напрямую внеся вклад в бизнес.</li>
+                                <li>Участвовал в найме, онбординге и ревью кода инженеров в команде тестирования.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <!-- Конфидент -->
-                <div class="experience-item"
-                     x-data="{ id: 6 }"
-                     :aria-expanded="expandedId === 6"
-                     @click="expandedId = expandedId === 6 ? null : 6">
-                    <button class="experience-trigger" :aria-expanded="expandedId === 6">
+                <div class="experience-item" :aria-expanded="expandedId === 5" @click="expandedId = expandedId === 5 ? null : 5">
+                    <button class="experience-trigger" :aria-expanded="expandedId === 5">
                         <div class="experience-info">
-                            <div class="experience-company">Конфидент</div>
+                            <div class="experience-company">🔐 Конфидент, Санкт-Петербург</div>
                             <div class="experience-role">Специалист по тестированию и сопровождению</div>
                             <div class="experience-meta">
                                 <span class="experience-badge">Июнь 2018 — Февраль 2020</span>
                                 <span>1 год 9 месяцев</span>
                             </div>
                         </div>
-                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
-                            <p>Проекты: Тестирование и внедрение продуктов информационной безопасности (Web Application Firewall, Dallas Lock). Сертификация ФСТЭК и ФСБ.</p>
+                            <p><em>Продукты информационной безопасности (Web Application Firewall, Dallas Lock), сертифицированные ФСТЭК/ФСБ.</em></p>
                             <ul>
-                                <li>Настраивал HyperV, SQL, кластера для тестирования Firewall</li>
-                                <li>Автоматизировал тестирование UI (Python/Selenium)</li>
-                                <li>Тестирование в гетерогенной среде: Астра Linux, Рэд ОС, Ubuntu, Unix</li>
-                                <li>Работа с PKI — Rutoken, NFC ридерами</li>
+                                <li>Инициировал и довёл до реализации два новых продуктовых модуля (межсетевой экран и резервное копирование) в линейке Dallas Lock.</li>
+                                <li>Автоматизировал UI-тестирование Web Application Firewall (Python, Selenium).</li>
+                                <li>Проводил интеграционное и нагрузочное тестирование систем защиты информации в гетерогенных средах (Astra Linux, Рэд ОС, Ubuntu и др.).</li>
+                                <li>Автоматизировал развёртывание тестовых окружений (VSphere/ESXI, oVirt/zVirt), сократив время подготовки и исключив ошибки ручной настройки.</li>
+                                <li>Тестировал интеграции с РКІ (Рутокен, NFC-ридеры), настраивал аутентификацию в Windows с использованием токенов.</li>
+                                <li>Выездные командировки в систему 112 для внедрения Dallas Lock на рабочих местах.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- ООО УК ЖКС -->
-                <div class="experience-item"
-                     x-data="{ id: 7 }"
-                     :aria-expanded="expandedId === 7"
-                     @click="expandedId = expandedId === 7 ? null : 7">
-                    <button class="experience-trigger" :aria-expanded="expandedId === 7">
+                <!-- УК ЖКС -->
+                <div class="experience-item" :aria-expanded="expandedId === 6" @click="expandedId = expandedId === 6 ? null : 6">
+                    <button class="experience-trigger" :aria-expanded="expandedId === 6">
                         <div class="experience-info">
-                            <div class="experience-company">ООО УК ЖКС</div>
+                            <div class="experience-company">🏢 ООО УК ЖКС Красноярск</div>
                             <div class="experience-role">Системный администратор (Ведущий)</div>
                             <div class="experience-meta">
                                 <span class="experience-badge">Июнь 2013 — Июль 2017</span>
                                 <span>4 года 2 месяца</span>
                             </div>
                         </div>
-                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </button>
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
-                            <p>Администрировал гетерогенную IT-инфраструктуру (Windows/Linux) для 50+ пользователей.</p>
+                            <p><em>IT-инфраструктура на 50+ пользователей в муниципальном предприятии ЖКХ.</em></p>
+                            <ul>
+                                <li>Администрировал гетерогенную инфраструктуру Windows/Linux, обеспечивая стабильную работу критичных сервисов.</li>
+                                <li>Возглавил перевод всего предприятия на 1С для бухгалтерии и аварийно-диспетчерской службы (72 рабочих места): писал технические задания для разработчиков, был связующим звеном между директором и командой разработки, проверял полноту доработок конфигураций перед внедрением.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            <div x-show="experienceLoaded" x-transition.opacity style="display: none;"></div>
         </section>
 
-        <!-- Skills -->
+        <!-- Skills Section -->
         <section class="section">
             <div class="section-header">
-                <span class="section-title">Навыки</span>
+                <span class="section-title">Ключевые навыки</span>
                 <div class="section-line"></div>
             </div>
             <div class="skills-grid">
                 <span class="skill-tag">Python</span>
+                <span class="skill-tag">Pytest</span>
+                <span class="skill-tag">Playwright</span>
+                <span class="skill-tag">Selenium</span>
+                <span class="skill-tag">Appium</span>
+                <span class="skill-tag">TypeScript</span>
                 <span class="skill-tag">PostgreSQL</span>
                 <span class="skill-tag">Docker</span>
-                <span class="skill-tag">SQL</span>
-                <span class="skill-tag">Pytest</span>
-                <span class="skill-tag">Linux</span>
-                <span class="skill-tag">Selenium</span>
-                <span class="skill-tag">Bash</span>
-                <span class="skill-tag">API</span>
-                <span class="skill-tag">GraphQL</span>
-                <span class="skill-tag">gRPC</span>
-                <span class="skill-tag">CI/CD</span>
                 <span class="skill-tag">GitLab CI</span>
                 <span class="skill-tag">Ansible</span>
-                <span class="skill-tag">Git</span>
-                <span class="skill-tag">Playwright</span>
-                <span class="skill-tag">Appium</span>
-                <span class="skill-tag">Allure</span>
+                <span class="skill-tag">REST API</span>
+                <span class="skill-tag">GraphQL</span>
+                <span class="skill-tag">Kubernetes</span>
+                <span class="skill-tag">Linux</span>
+                <span class="skill-tag">CI/CD</span>
+                <span class="skill-tag">Team Leadership</span>
+                <span class="skill-tag">Root Cause Analysis</span>
             </div>
         </section>
 
@@ -1021,65 +1380,38 @@
             </div>
         </section>
 
-        <!-- Languages -->
-        <section class="section">
-            <div class="section-header">
-                <span class="section-title">Языки</span>
-                <div class="section-line"></div>
-            </div>
-            <div class="language-item">
-                <span class="language-name">Русский</span>
-                <span class="language-level">Родной</span>
-            </div>
+        <!-- Footer -->
+        <section style="text-align: center; margin-top: 100px; padding-top: 48px; border-top: 2px solid var(--border); color: var(--text-tertiary);">
+            <p style="font-size: 0.95rem;">Создано с 💜 на Alpine.js | 2026</p>
         </section>
+    </div>
 
-        <!-- Blog Preview -->
-        <section class="section">
-            <div class="section-header">
-                <span class="section-title">Блог</span>
-                <div class="section-line"></div>
-            </div>
-
-            <template x-if="blogLoading">
-                <div style="text-align: center; padding: 40px; color: #94a3b8;">Загрузка...</div>
-            </template>
-
-            <template x-if="!blogLoading">
-                <div>
-                    <div class="blog-grid" style="margin-bottom: 16px;">
-                        <template x-for="article in articles.slice(0, 3)" :key="article.id">
-                            <div class="blog-card" @click="openArticle(article)">
-                                <div class="blog-card-header">
-                                    <span class="blog-card-date" x-text="article.date"></span>
-                                </div>
-                                <h3 class="blog-card-title" x-text="article.title"></h3>
-                                <p class="blog-card-excerpt" x-text="article.excerpt"></p>
-                                <div class="blog-card-tags">
-                                    <template x-for="tag in article.tags" :key="tag">
-                                        <span class="blog-tag" x-text="tag"></span>
-                                    </template>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                    <div style="text-align: center;">
-                        <a href="blog.html" style="display: inline-block; padding: 12px 24px; background: #667eea; color: #fff; text-decoration: none; border-radius: 8px; font-size: 0.9rem; font-weight: 500; transition: background 0.2s;">Все статьи →</a>
-                    </div>
-                </div>
-            </template>
-        </section>
-
-        <!-- Certificate Modal -->
-        <div class="blog-modal" x-show="certModal" x-transition @click.self="closeCertModal()">
-            <div class="blog-modal-content" style="max-width: 900px; padding: 24px;">
-                <button class="blog-modal-close" @click="closeCertModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-                <img src="cert.png" alt="Сертификат" style="width: 100%; height: auto; display: block; border-radius: 8px;">
+    <!-- Cert Modal -->
+    <div class="cert-modal" x-show="certModalOpen" x-cloak
+         @click.self="certModalOpen = false"
+         @keydown.escape.window="certModalOpen = false"
+         style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; padding: 40px; z-index: 1000; backdrop-filter: blur(8px); overflow-y: auto;">
+        <div class="cert-modal-content" x-show="certModalOpen"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform scale-95"
+             x-transition:enter-end="opacity-100 transform scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 transform scale-100"
+             x-transition:leave-end="opacity-0 transform scale-95"
+             style="background: #fff; border-radius: 20px; max-width: 900px; width: 100%; max-height: 90vh; margin: auto; position: relative; box-shadow: var(--shadow-xl); overflow: hidden;">
+            <button @click="certModalOpen = false"
+                    style="position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border-radius: 50%; border: none; background: rgba(99, 102, 241, 0.1); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; z-index: 10;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <div style="padding: 32px; text-align: center;">
+                <img src="cert.png" alt="Сертификат" style="max-width: 100%; max-height: 70vh; width: auto; height: auto; border-radius: 12px; box-shadow: var(--shadow-lg); margin-bottom: 16px; object-fit: contain;">
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Linux: File Management for DevOps</h3>
+                <p style="font-size: 0.9rem; color: var(--text-tertiary);">Coursera | 2021</p>
             </div>
         </div>
+    </div>
 
+    <!-- Initialize Alpine -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>

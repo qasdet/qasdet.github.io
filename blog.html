@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -8,264 +8,347 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            
+            --bg-dark: #0f172a;
+            --bg-darker: #0a0f1f;
+            --bg-light: #f8fafc;
+            --bg-lighter: #1e293b;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #94a3b8;
+            
+            --border: #e2e8f0;
+            --border-dark: #cbd5e1;
+            
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
-            color: #1a1a2e;
-            background: #fafafa;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             min-height: 100vh;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            overflow-x: hidden;
+        }
+
+        /* Smooth scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 32px;
         }
 
         /* Header */
         .header {
-            background: #fff;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: var(--shadow-sm);
         }
+
         .header-inner {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 0 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .header-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: #0f0f23;
-        }
-        .header-logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #e2e8f0;
-        }
-        .header-name {
-            font-weight: 600;
-            font-size: 1rem;
-        }
+
         .header-nav {
             display: flex;
-            gap: 4px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
+
         .header-nav a {
-            padding: 8px 12px;
+            padding: 10px 14px;
             border-radius: 8px;
             text-decoration: none;
-            font-size: 0.85rem;
-            color: #64748b;
-            transition: all 0.2s;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             gap: 6px;
+            color: var(--text-secondary);
         }
+
         .header-nav a:hover {
-            color: #667eea;
-            background: #f1f5f9;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.08);
+            transform: translateY(-2px);
         }
+
         .header-nav a.active {
-            color: #667eea;
-            background: #f1f5f9;
-        }
-        .nav-group { position: relative; }
-        .nav-group-toggle { cursor: pointer; }
-        .nav-group-toggle svg:last-child { transition: transform 0.2s; }
-        .nav-group:hover .nav-group-toggle svg:last-child { transform: rotate(180deg); }
-        .nav-group-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 8px;
-            min-width: 160px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-8px);
-            transition: all 0.2s;
-            z-index: 200;
-        }
-        .nav-group:hover .nav-group-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        .nav-group-dropdown a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            border-radius: 8px;
-            color: #475569;
-            white-space: nowrap;
-        }
-        .nav-group-dropdown a:hover { background: #f1f5f9; color: #667eea; }
-        .nav-group-dropdown a.active { background: #f1f5f9; color: #667eea; }
-
-        /* Main */
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 48px 24px;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.12);
         }
 
-        /* Hero */
-        .blog-hero {
+        /* Hero Section */
+        .hero {
             text-align: center;
-            margin-bottom: 48px;
+            margin-bottom: 80px;
+            animation: fadeInDown 0.8s ease-out;
         }
-        .blog-hero h1 {
+
+        .hero h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #0f0f23;
+            color: var(--text-primary);
             margin-bottom: 12px;
             letter-spacing: -0.02em;
-        }
-        .blog-hero p {
-            font-size: 1.1rem;
-            color: #64748b;
-            max-width: 600px;
-            margin: 0 auto;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Blog */
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 80px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .section-header:hover .section-title {
+            color: var(--primary);
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-tertiary);
+            transition: all 0.3s;
+            min-width: fit-content;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
+        }
+
+        /* Blog Grid */
         .blog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 24px;
-            margin-bottom: 48px;
+            margin-bottom: 32px;
         }
+
         .blog-card {
             background: #fff;
-            border: 1px solid #e2e8f0;
+            border: 2px solid var(--border);
             border-radius: 12px;
             padding: 24px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
         }
+
         .blog-card:hover {
-            border-color: #667eea;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
-            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-8px);
         }
+
         .blog-card-header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
+            gap: 12px;
             margin-bottom: 12px;
         }
+
         .blog-card-date {
             font-size: 0.8rem;
-            color: #94a3b8;
+            color: var(--primary);
+            white-space: nowrap;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
+
         .blog-card-title {
             font-size: 1.1rem;
-            font-weight: 600;
-            color: #0f0f23;
-            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
             line-height: 1.4;
+            flex: 1;
         }
+
         .blog-card-excerpt {
-            font-size: 0.9rem;
-            color: #64748b;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 16px;
             flex: 1;
         }
+
         .blog-card-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
+            margin-top: auto;
         }
+
         .blog-tag {
             font-size: 0.75rem;
-            padding: 4px 10px;
+            padding: 6px 12px;
             border-radius: 6px;
-            background: #f1f5f9;
-            color: #64748b;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
         }
-        .blog-tag.active {
-            background: #667eea;
+
+        .blog-tag:hover {
+            background: var(--primary);
             color: #fff;
         }
+
+        /* Blog Filter and Empty State */
         .blog-filter {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 32px;
-            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
         }
+
         .blog-filter-btn {
-            font-size: 0.85rem;
-            padding: 8px 18px;
-            border-radius: 20px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             background: #fff;
-            color: #64748b;
+            color: var(--text-secondary);
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
+            transition: all 0.25s ease;
         }
+
         .blog-filter-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
         }
+
         .blog-filter-btn.active {
-            background: #667eea;
-            border-color: #667eea;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-color: transparent;
             color: #fff;
         }
-        .blog-loading {
-            text-align: center;
-            padding: 60px;
-            color: #94a3b8;
-            font-size: 1rem;
-        }
+
         .blog-empty {
+            background: #fff;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
             text-align: center;
-            padding: 60px;
-            color: #94a3b8;
+            padding: 28px;
+            margin-bottom: 24px;
+            font-weight: 500;
         }
 
         /* Modal */
         .blog-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px;
             z-index: 1000;
             backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease;
         }
+
         .blog-modal-content {
             background: #fff;
             border-radius: 16px;
-            max-width: 760px;
+            max-width: 720px;
             width: 100%;
-            max-height: 88vh;
+            max-height: 85vh;
             overflow-y: auto;
             position: relative;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .blog-modal-close {
             position: absolute;
             top: 16px;
@@ -274,192 +357,250 @@
             height: 40px;
             border-radius: 50%;
             border: none;
-            background: #f1f5f9;
-            color: #64748b;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--text-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.3s;
             z-index: 10;
+            font-size: 0;
         }
+
         .blog-modal-close:hover {
-            background: #e2e8f0;
-            color: #0f0f23;
+            background: var(--primary);
+            color: #fff;
+            transform: rotate(90deg);
         }
+
         .blog-modal-header {
-            padding: 32px 32px 24px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 28px 28px 18px;
+            border-bottom: 1px solid var(--border);
         }
+
         .blog-modal-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #0f0f23;
-            margin-bottom: 12px;
-            padding-right: 50px;
-            line-height: 1.3;
+            font-size: 1.45rem;
+            line-height: 1.35;
+            margin-bottom: 10px;
+            color: var(--text-primary);
         }
+
         .blog-modal-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 0.875rem;
-            color: #94a3b8;
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            margin-bottom: 12px;
         }
+
         .blog-modal-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 16px;
-        }
-        .blog-modal-body {
-            padding: 32px;
-            color: #475569;
-            line-height: 1.8;
-        }
-        .blog-modal-body h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #0f0f23;
-            margin: 28px 0 14px;
-        }
-        .blog-modal-body h2:first-child {
-            margin-top: 0;
-        }
-        .blog-modal-body h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1e293b;
-            margin: 24px 0 12px;
-        }
-        .blog-modal-body p {
-            margin-bottom: 16px;
-        }
-        .blog-modal-body ul, .blog-modal-body ol {
-            margin-bottom: 16px;
-            padding-left: 24px;
-        }
-        .blog-modal-body li {
-            margin-bottom: 8px;
-        }
-        .blog-modal-body code {
-            background: #f1f5f9;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.875em;
-            color: #667eea;
-        }
-        .blog-modal-body pre {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 20px 24px;
-            border-radius: 10px;
-            overflow-x: auto;
-            margin-bottom: 20px;
-            font-size: 0.875rem;
-            line-height: 1.6;
-        }
-        .blog-modal-body pre code {
-            background: none;
-            padding: 0;
-            color: inherit;
-        }
-        .blog-modal-body strong {
-            color: #334155;
-            font-weight: 600;
-        }
-        .blog-modal-body a {
-            color: #667eea;
-            text-decoration: none;
-        }
-        .blog-modal-body a:hover {
-            text-decoration: underline;
-        }
-        .blog-modal-body blockquote {
-            border-left: 4px solid #667eea;
-            padding-left: 20px;
-            margin: 20px 0;
-            color: #64748b;
-            font-style: italic;
         }
 
-        /* Footer */
+        .blog-modal-body {
+            padding: 24px 28px 30px;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+
+        .blog-modal-body h2,
+        .blog-modal-body h3 {
+            color: var(--text-primary);
+            margin: 18px 0 10px;
+        }
+
+        .blog-modal-body p,
+        .blog-modal-body ul,
+        .blog-modal-body pre {
+            margin-bottom: 12px;
+        }
+
+        .blog-modal-body pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+            overflow-x: auto;
+            font-family: 'Geist Mono', monospace;
+            font-size: 0.82rem;
+        }
+
         .footer {
             text-align: center;
-            padding: 40px 24px;
-            color: #94a3b8;
-            font-size: 0.875rem;
-            border-top: 1px solid #e2e8f0;
-            background: #fff;
+            color: var(--text-tertiary);
+            padding: 24px 16px 36px;
+            font-size: 0.9rem;
+        }
+
+        /* Loading */
+        .loading-stage {
+            text-align: center;
+            padding: 60px 24px;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 60px 20px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-nav {
+                gap: 4px;
+            }
+
+            .header-nav a {
+                font-size: 0.75rem;
+                padding: 8px 10px;
+            }
         }
 
         @media (max-width: 640px) {
-            .header-nav a:not(.active) {
-                display: none;
+            .container {
+                padding: 40px 16px;
             }
-            .blog-hero h1 {
-                font-size: 2rem;
+
+            .hero h1 {
+                font-size: 1.75rem;
             }
-            .blog-modal-content {
-                max-height: 92vh;
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
             }
-            .blog-modal-header, .blog-modal-body {
-                padding: 24px 20px;
-            }
-            .blog-modal-title {
-                font-size: 1.4rem;
+
+            .section-line {
+                width: 100%;
             }
         }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .nav-group { position: relative; }
+        .nav-group-toggle { cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); transition: all 0.3s; }
+        .nav-group-toggle:hover { color: var(--primary); background: rgba(99, 102, 241, 0.08); }
+        .nav-group-toggle svg:last-child { transition: transform 0.2s; }
+        .nav-group:hover .nav-group-toggle svg:last-child { transform: rotate(180deg); }
+        .nav-group-dropdown { position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 8px; min-width: 160px; box-shadow: var(--shadow-lg); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.2s; z-index: 200; margin-top: 4px; }
+        .nav-group:hover .nav-group-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-group-dropdown a { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text-secondary); white-space: nowrap; font-size: 0.85rem; transition: all 0.2s; }
+        .nav-group-dropdown a:hover, .nav-group-dropdown a.active { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
     </style>
 </head>
 <body>
+    <script>
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'p' || e.key === 'P')) {
+                e.preventDefault();
+            }
+        });
+        document.addEventListener('selectstart', e => {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+    </script>
+
     <!-- Header -->
     <header class="header">
         <div class="header-inner">
-            <a href="index.html" class="header-logo">
-                <img src="avatar.png" alt="Галкин Александр" width="40" height="40">
-                <span class="header-name">Галкин Александр</span>
-            </a>
             <nav class="header-nav">
-                <div class="nav-group">
-                    <a href="index.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        Резюме
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </a>
-                    <div class="nav-group-dropdown">
-                        <a href="about.html" title="О себе">О себе</a>
-                    </div>
-                </div>
-
-                <div class="nav-group">
-                    <a href="blog.html" class="active nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                        Блог
-                    </a>
-                </div>
-
-                <a href="projects.html" title="Проекты">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                    Проекты
-                </a>
-
+                <a href="index2.html">📄 Резюме</a>
+                <a href="blog.html" class="active">📝 Блог</a>
+                <a href="projects.html">💻 Проекты</a>
                 <div class="nav-group">
                     <a href="pytest.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        Обучение
+                        🎓 Обучение
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </a>
                     <div class="nav-group-dropdown">
                         <a href="pytest.html" title="Pytest">Pytest</a>
                         <a href="xpath.html" title="XPath">XPath</a>
+                        <a href="framework.html" title="Playwright + Pytest">Playwright + Pytest</a>
                     </div>
                 </div>
-
                 <div class="nav-group">
                     <a href="test.html" class="nav-group-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-                        Опыт
+                        🎯 Опыт
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </a>
                     <div class="nav-group-dropdown">
@@ -472,7 +613,6 @@
         </div>
     </header>
 
-    <!-- Main -->
     <main class="container" x-data="{
         blogArticles: [],
         blogFilter: 'all',
@@ -511,14 +651,17 @@
     }" x-init="loadBlog()">
 
         <!-- Hero -->
-        <div class="blog-hero">
+        <section class="hero">
             <h1>Блог</h1>
-            <p>Статьи о тестировании, автоматизации и разработке</p>
-        </div>
+            <p class="hero-subtitle">Статьи о тестировании, автоматизации и разработке</p>
+        </section>
 
         <!-- Blog content -->
         <template x-if="blogLoading">
-            <div class="blog-loading">Загрузка статей...</div>
+            <div class="loading-stage">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Загрузка статей...</div>
+            </div>
         </template>
 
         <template x-if="!blogLoading && filteredArticles.length === 0">
