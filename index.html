@@ -59,7 +59,6 @@
             overflow-x: hidden;
         }
 
-        /* Smooth scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -83,7 +82,6 @@
             padding: 80px 32px;
         }
 
-        /* Header */
         .header {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
@@ -133,7 +131,6 @@
             background: rgba(99, 102, 241, 0.12);
         }
 
-        /* Hero Section */
         .hero {
             text-align: center;
             margin-bottom: 80px;
@@ -200,7 +197,6 @@
             color: var(--primary);
         }
 
-        /* Contact Row */
         .contact-row {
             display: flex;
             flex-direction: column;
@@ -280,7 +276,6 @@
             text-decoration: underline;
         }
 
-        /* Section */
         .section {
             margin-bottom: 80px;
             animation: fadeInUp 0.8s ease-out;
@@ -315,7 +310,6 @@
             background: linear-gradient(90deg, var(--primary) 0%, transparent 100%);
         }
 
-        /* About Card */
         .about-card {
             background: #fff;
             border-radius: 0 0 20px 20px;
@@ -390,7 +384,6 @@
             letter-spacing: 0.05em;
         }
 
-        /* Experience List */
         .experience-list {
             display: flex;
             flex-direction: column;
@@ -572,11 +565,52 @@
             color: var(--secondary);
         }
 
-        /* Skills Grid */
         .skills-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
+        }
+
+        .skills-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .skill-category {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.06) 0%, rgba(139, 92, 246, 0.03) 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .skill-category:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .skill-category-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+        }
+
+        .skill-category-items {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .skills-categories { grid-template-columns: 1fr; }
         }
 
         .skill-tag {
@@ -602,7 +636,6 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* Education Card */
         .education-card {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
             border: 2px solid var(--border);
@@ -638,7 +671,6 @@
             color: var(--text-secondary);
         }
 
-        /* Certificates */
         .cert-list {
             display: flex;
             flex-direction: column;
@@ -690,142 +722,6 @@
             border-radius: 6px;
         }
 
-        /* Blog Section */
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .blog-card {
-            background: #fff;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .blog-card:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-8px);
-        }
-
-        .blog-card-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .blog-card-date {
-            font-size: 0.8rem;
-            color: var(--primary);
-            white-space: nowrap;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .blog-card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            line-height: 1.4;
-            flex: 1;
-        }
-
-        .blog-card-excerpt {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 16px;
-            flex: 1;
-        }
-
-        .blog-card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: auto;
-        }
-
-        .blog-tag {
-            font-size: 0.75rem;
-            padding: 6px 12px;
-            border-radius: 6px;
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.3s;
-        }
-
-        .blog-tag:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-
-        /* Modal */
-        .blog-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            z-index: 1000;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .blog-modal-content {
-            background: #fff;
-            border-radius: 16px;
-            max-width: 720px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: var(--shadow-xl);
-            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .blog-modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--text-secondary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            z-index: 10;
-            font-size: 0;
-        }
-
-        .blog-modal-close:hover {
-            background: var(--primary);
-            color: #fff;
-            transform: rotate(90deg);
-        }
-
-        /* Loading */
         .loading-stage {
             text-align: center;
             padding: 60px 24px;
@@ -847,7 +743,6 @@
             font-weight: 500;
         }
 
-        /* Animations */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -870,36 +765,11 @@
             }
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* Experience list animations */
         .experience-list:not(.experience-loaded) .experience-item {
             opacity: 0;
             display: none;
@@ -916,7 +786,6 @@
         .experience-loaded .experience-item:nth-child(5) { animation-delay: 0.5s; }
         .experience-loaded .experience-item:nth-child(6) { animation-delay: 0.6s; }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 60px 20px;
@@ -928,14 +797,6 @@
 
             .about-card {
                 padding: 32px 24px;
-            }
-
-            .about-highlights {
-                grid-template-columns: 1fr;
-            }
-
-            .blog-grid {
-                grid-template-columns: 1fr;
             }
 
             .header-nav {
@@ -1086,7 +947,7 @@
         <section class="hero">
             <img class="hero-avatar" src="avatar.png" alt="Галкин Александр" width="140" height="140">
             <h1>Галкин Александр</h1>
-            <p class="hero-position">Senior AQA / LeadAQA Python</p>
+            <p class="hero-position">Senior Automation QA Engineer (Python)</p>
             <div class="hero-meta">
                 <span>🎂 40 лет</span>
                 <span>📍 Санкт-Петербург</span>
@@ -1123,21 +984,19 @@
         <!-- About Section -->
         <section class="section">
             <div class="about-card">
-                <p>Senior Automation QA Engineer с 6+ годами практического опыта автоматизации в высоконагруженных системах, инфраструктурных решениях и мобильных приложениях. Создавал E2E-фреймворки и процессы тестирования с нуля, достигая до 85% тестового покрытия и сокращая циклы регресса с дней до часов.</p>
-                <p>Обеспечивал тестирование критически важных модулей аутентификации для 100+ млн пользователей и продукта импортозамещения Active Directory. Силён в анализе первопричин, риск-ориентированном тестировании и руководстве QA-командами до 9 человек.</p>
-                <p>Активно использую <strong>LLM</strong> для ускорения разработки. Мой пет-проект — интеллектуальный билдер резюме: <a href="https://github.com/qasdet/resume" target="_blank">github.com/qasdet/resume</a></p>
+                <p>Senior Automation QA Engineer с 11-летним опытом, из них 6+ лет в автоматизации. Строил E2E-фреймворки и CI/CD с нуля для высоконагруженных систем (100+ млн пользователей), инфраструктурных решений (импортозамещение Active Directory: LDAP, Kerberos, NTLM), мобильных приложений (iOS/Android). Сокращал полный регресс с 3 дней до 4 часов, достигал покрытия критических сценариев до 85%. Работал с гетерогенными средами (Astra Linux, Рэд ОС, Ubuntu, Windows), виртуализацией (VSphere/ESXi, oVirt, Hyper-V), PKI (Рутокен, NFC). Руководил QA-командой из 9 человек, обучал junior-инженеров. Эксперт в анализе первопричин, риск-ориентированном тестировании и нагрузочном тестировании (JMeter, Gatling, Kubernetes, Prometheus, Grafana).</p>
                 <div class="about-highlights">
                     <div class="about-highlight">
                         <div class="about-highlight-value">6+</div>
-                        <div class="about-highlight-label">Лет в QA</div>
+                        <div class="about-highlight-label">Лет в автоматизации</div>
                     </div>
                     <div class="about-highlight">
                         <div class="about-highlight-value">85%</div>
                         <div class="about-highlight-label">Покрытие</div>
                     </div>
                     <div class="about-highlight">
-                        <div class="about-highlight-value">9</div>
-                        <div class="about-highlight-label">Человек в команде</div>
+                        <div class="about-highlight-value">4ч</div>
+                        <div class="about-highlight-label">Регресс</div>
                     </div>
                 </div>
             </div>
@@ -1161,7 +1020,7 @@
                     <button class="experience-trigger" :aria-expanded="expandedId === 1">
                         <div class="experience-info">
                             <div class="experience-company">🚀 Т1, Москва (удалённо)</div>
-                            <div class="experience-role">Ведущий инженер по тестированию</div>
+                            <div class="experience-role">Ведущий инженер по тестированию (Python)</div>
                             <div class="experience-meta">
                                 <span class="experience-badge">Июнь 2024 — Октябрь 2025</span>
                                 <span>1 год 5 месяцев</span>
@@ -1172,13 +1031,14 @@
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
-                            <p><em>Продукт импортозамещения Active Directory, высоконагруженная аутентификация и службы каталогов.</em></p>
+                            <p><em>Импортозамещение Active Directory (службы каталогов, высоконагруженная аутентификация). Проектная работа в ВТБ: модуль аутентификации мобильного приложения с аудиторией 100+ млн пользователей.</em></p>
+                            <p><strong>Технологический стек:</strong> Python, Pytest, Playwright, LDAP, Kerberos, NTLM, Ansible, Vagrant, GitLab CI, Docker, Allure.</p>
                             <ul>
-                                <li>Разработал с нуля фреймворк автоматизации (Python, Pytest, Playwright), достигнув 70% покрытия критических сценариев за 8 месяцев.</li>
+                                <li>Разработал с нуля фреймворк автоматизации, достигнув 70% покрытия критических сценариев за 8 месяцев.</li>
                                 <li>Сократил полный цикл регрессионного тестирования с 3 дней до 4 часов за счёт параллельного запуска E2E-тестов в GitLab CI.</li>
                                 <li>Автоматизировал развёртывание тестовых окружений (Ansible, Vagrant), сократив время подготовки стенда с 90 до 30 минут и исключив ошибки ручной настройки.</li>
-                                <li>Проектная работа в ВТБ: тестировал модуль аутентификации мобильного приложения с аудиторией 100+ млн пользователей; выявил 15+ сложных кросс-системных дефектов, предотвратив потенциальные риски безопасности.</li>
-                                <li>Разработал методику подготовки тестовых данных, существенно сократив время подготовки к регрессу.</li>
+                                <li>Выявил и задокументировал 15+ кросс-системных дефектов в модуле аутентификации, предотвратив риски для 100+ млн пользователей.</li>
+                                <li>Тестировал протоколы LDAP, Kerberos, NTLM для интеграционного взаимодействия с разными ОС в гетерогенной среде.</li>
                             </ul>
                         </div>
                     </div>
@@ -1191,8 +1051,8 @@
                             <div class="experience-company">📱 Мобильные ТелеСистемы (МТС), Москва (удалённо)</div>
                             <div class="experience-role">Старший инженер по автоматизации тестирования (Python)</div>
                             <div class="experience-meta">
-                                <span class="experience-badge">Март 2022 — Июнь 2024</span>
-                                <span>2 года 4 месяца</span>
+                                <span class="experience-badge">Июнь 2022 — Июнь 2024</span>
+                                <span>2 года 1 месяц</span>
                             </div>
                         </div>
                         <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1220,8 +1080,8 @@
                             <div class="experience-company">🛠️ QA Automation Consultant (проектная работа)</div>
                             <div class="experience-role">Консультант по автоматизации тестирования</div>
                             <div class="experience-meta">
-                                <span class="experience-badge">2023 – 2024</span>
-                                <span>Несколько проектов по 4 месяца</span>
+                                <span class="experience-badge">Август 2020 — Июнь 2022</span>
+                                <span>1 год 11 месяцев</span>
                             </div>
                         </div>
                         <svg class="experience-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1229,11 +1089,12 @@
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
-                            <p><em>Различные заказчики, Санкт-Петербург</em></p>
+                            <p><em>Special Technology Center, Лаборатория Касперского, Лига Цифровой Экономики.</em></p>
+                            <p><strong>Технологический стек:</strong> Python, Pytest, REST API, JMeter, Gatling, Kubernetes, Docker, Prometheus, Grafana.</p>
                             <ul>
-                                <li><strong>Special Technology Center (STC):</strong> Автоматизировал API-тестирование сервиса парсинга почты (Python, Pytest, REST API).</li>
-                                <li><strong>Лаборатория Касперского:</strong> Автоматизировал регресс для продуктов macOS; проводил исследовательское тестирование KIS/SAAS, выявляя нетривиальные дефекты.</li>
-                                <li><strong>Лига Цифровой Экономики:</strong> Обеспечил успешный запуск мобильного приложения «Эльдорадо»; проводил нагрузочное тестирование для М.Видео/Эльдорадо с использованием JMeter, Gatling, Kubernetes, Docker, Prometheus, Grafana. Координировал работу SRE-инженеров по настройке мониторинга и выявлению узких мест в микросервисной архитектуре.</li>
+                                <li><strong>STC:</strong> Автоматизировал API-тестирование сервиса парсинга почты (Python, Pytest, REST API) и регресс для продуктов на macOS.</li>
+                                <li><strong>Лаборатория Касперского:</strong> Проводил исследовательское тестирование KIS/SAAS, выявляя нетривиальные дефекты.</li>
+                                <li><strong>Лига Цифровой Экономики:</strong> Обеспечил успешный запуск мобильного приложения «Эльдорадо»; провёл нагрузочное тестирование для М.Видео/Эльдорадо (JMeter, Gatling), координировал SRE по настройке мониторинга (Prometheus, Grafana) в Kubernetes (Docker).</li>
                             </ul>
                         </div>
                     </div>
@@ -1255,13 +1116,12 @@
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
-                            <p><em>Маркетплейс недвижимости: веб-портал, приложения Android и iOS.</em></p>
+                            <p><em>Маркетплейс недвижимости: веб-портал, мобильные приложения Android и iOS.</em></p>
+                            <p><strong>Технологический стек:</strong> CodeceptJS, TypeScript, Python, Pytest, Playwright, Appium, Docker, GitLab CI, Allure.</p>
                             <ul>
-                                <li>Сформировал и возглавил команду тестирования из 9 человек, выстроив процессы планирования, приоритизации и code review, что обеспечило стабильный выпуск релизов для веба и мобильных приложений.</li>
-                                <li>Внедрил CI/CD с нуля, запуская автотесты в Docker-контейнерах через GitLab CI.</li>
-                                <li>Разработал E2E-тесты для SPA на CodeceptJS/TypeScript и Pytest/Playwright; автоматизировал тестирование мобильных приложений с помощью Appium + Pytest.</li>
-                                <li>Предложил бизнес-идею конструктора сайтов из перемещаемых блоков, которая была реализована в двух продуктах (Сайт.Плюс и Каталог.ПРО), напрямую внеся вклад в бизнес.</li>
-                                <li>Участвовал в найме, онбординге и ревью кода инженеров в команде тестирования.</li>
+                                <li>Сформировал и возглавил команду тестирования из 9 человек — стабильные релизы веба и мобильных приложений.</li>
+                                <li>Внедрил CI/CD с нуля (Docker, GitLab CI), разработал E2E-тесты на CodeceptJS/TypeScript и Pytest/Playwright, автоматизировал мобильное тестирование с Appium + Pytest.</li>
+                                <li>Предложил бизнес-идею конструктора сайтов из перемещаемых блоков — реализована в двух продуктах компании (Сайт.Плюс, Каталог.ПРО).</li>
                             </ul>
                         </div>
                     </div>
@@ -1283,14 +1143,13 @@
                     <div class="experience-content">
                         <div class="experience-divider"></div>
                         <div class="experience-description">
-                            <p><em>Продукты информационной безопасности (Web Application Firewall, Dallas Lock), сертифицированные ФСТЭК/ФСБ.</em></p>
+                            <p><em>Продукты информационной безопасности (Web Application Firewall, Dallas Lock), сертификация ФСТЭК/ФСБ.</em></p>
+                            <p><strong>Технологический стек:</strong> Python, Selenium, Hyper-V, SQL, VSphere/ESXi, oVirt/zVirt, Astra Linux, Рэд ОС, Ubuntu, Bash.</p>
                             <ul>
-                                <li>Инициировал и довёл до реализации два новых продуктовых модуля (межсетевой экран и резервное копирование) в линейке Dallas Lock.</li>
-                                <li>Автоматизировал UI-тестирование Web Application Firewall (Python, Selenium).</li>
-                                <li>Проводил интеграционное и нагрузочное тестирование систем защиты информации в гетерогенных средах (Astra Linux, Рэд ОС, Ubuntu и др.).</li>
-                                <li>Автоматизировал развёртывание тестовых окружений (VSphere/ESXI, oVirt/zVirt), сократив время подготовки и исключив ошибки ручной настройки.</li>
-                                <li>Тестировал интеграции с РКІ (Рутокен, NFC-ридеры), настраивал аутентификацию в Windows с использованием токенов.</li>
-                                <li>Выездные командировки в систему 112 для внедрения Dallas Lock на рабочих местах.</li>
+                                <li>Автоматизировал UI-тестирование Web Application Firewall (Python, Selenium) и развёртывание тестовых окружений (VSphere/ESXi, oVirt/zVirt, Hyper-V), сократив время подготовки стенда и исключив ошибки ручной настройки.</li>
+                                <li>Проводил интеграционное и нагрузочное тестирование систем защиты информации в гетерогенной среде (Astra Linux, Рэд ОС, Ubuntu, Windows) с использованием Bash.</li>
+                                <li>Тестировал интеграции с PKI (Рутокен, NFC-ридеры), настраивал аутентификацию в Windows с использованием токенов.</li>
+                                <li>Инициировал и довёл до реализации два продуктовых модуля (межсетевой экран, резервное копирование) в линейке Dallas Lock.</li>
                             </ul>
                         </div>
                     </div>
@@ -1300,8 +1159,8 @@
                 <div class="experience-item" :aria-expanded="expandedId === 6" @click="expandedId = expandedId === 6 ? null : 6">
                     <button class="experience-trigger" :aria-expanded="expandedId === 6">
                         <div class="experience-info">
-                            <div class="experience-company">🏢 ООО УК ЖКС Красноярск</div>
-                            <div class="experience-role">Системный администратор (Ведущий)</div>
+                            <div class="experience-company">🏢 ООО УК ЖКС, Красноярск</div>
+                            <div class="experience-role">Ведущий системный администратор</div>
                             <div class="experience-meta">
                                 <span class="experience-badge">Июнь 2013 — Июль 2017</span>
                                 <span>4 года 2 месяца</span>
@@ -1329,24 +1188,39 @@
                 <span class="section-title">Ключевые навыки</span>
                 <div class="section-line"></div>
             </div>
-            <div class="skills-grid">
-                <span class="skill-tag">Python</span>
-                <span class="skill-tag">Pytest</span>
-                <span class="skill-tag">Playwright</span>
-                <span class="skill-tag">Selenium</span>
-                <span class="skill-tag">Appium</span>
-                <span class="skill-tag">TypeScript</span>
-                <span class="skill-tag">PostgreSQL</span>
-                <span class="skill-tag">Docker</span>
-                <span class="skill-tag">GitLab CI</span>
-                <span class="skill-tag">Ansible</span>
-                <span class="skill-tag">REST API</span>
-                <span class="skill-tag">GraphQL</span>
-                <span class="skill-tag">Kubernetes</span>
-                <span class="skill-tag">Linux</span>
-                <span class="skill-tag">CI/CD</span>
-                <span class="skill-tag">Team Leadership</span>
-                <span class="skill-tag">Root Cause Analysis</span>
+            <div class="skills-categories">
+                <div class="skill-category">
+                    <span class="skill-category-name">Языки и фреймворки</span>
+                    <span class="skill-category-items">Python, Pytest, Playwright, Selenium, CodeceptJS, TypeScript, Appium, Bash</span>
+                </div>
+                <div class="skill-category">
+                    <span class="skill-category-name">API и протоколы</span>
+                    <span class="skill-category-items">REST, GraphQL, gRPC, LDAP, Kerberos, NTLM</span>
+                </div>
+                <div class="skill-category">
+                    <span class="skill-category-name">Базы данных</span>
+                    <span class="skill-category-items">PostgreSQL, SQL</span>
+                </div>
+                <div class="skill-category">
+                    <span class="skill-category-name">CI/CD и инфраструктура</span>
+                    <span class="skill-category-items">GitLab CI, Docker, Ansible, Vagrant, Hyper-V, VSphere/ESXi, oVirt/zVirt</span>
+                </div>
+                <div class="skill-category">
+                    <span class="skill-category-name">Мониторинг и нагрузка</span>
+                    <span class="skill-category-items">Prometheus, Grafana, JMeter, Gatling, Allure</span>
+                </div>
+                <div class="skill-category">
+                    <span class="skill-category-name">ОС и среды</span>
+                    <span class="skill-category-items">Astra Linux, Рэд ОС, Ubuntu, Windows, macOS</span>
+                </div>
+                <div class="skill-category">
+                    <span class="skill-category-name">PKI и безопасность</span>
+                    <span class="skill-category-items">Рутокен, NFC-ридеры, WAF, Dallas Lock, ФСТЭК/ФСБ</span>
+                </div>
+                <div class="skill-category">
+                    <span class="skill-category-name">Управление</span>
+                    <span class="skill-category-items">руководство командой (до 9 человек), менторство, код-ревью</span>
+                </div>
             </div>
         </section>
 
