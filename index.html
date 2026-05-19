@@ -312,11 +312,11 @@
 
         .about-card {
             background: #fff;
-            border-radius: 0 0 20px 20px;
-            padding: 40px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.06);
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border);
-            border-top: none;
+            border-left: 3px solid var(--primary);
             position: relative;
         }
 
@@ -326,8 +326,9 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 50%, #ec4899 100%);
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 16px 16px 0 0;
         }
 
         .about-card p {
@@ -366,7 +367,7 @@
         }
 
         .about-highlight-value {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             -webkit-background-clip: text;
@@ -902,6 +903,7 @@
         <div class="header-inner">
             <nav class="header-nav">
                 <a href="index.html" class="active">📄 Резюме</a>
+                <a href="about.html">👤 Обо мне</a>
                 <a href="blog.html">📝 Блог</a>
                 <a href="projects.html">💻 Проекты</a>
                 <div class="nav-group">

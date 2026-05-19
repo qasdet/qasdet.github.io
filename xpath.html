@@ -17,81 +17,120 @@
             --success: #10b981;
             --warning: #f59e0b;
             --error: #ef4444;
+
             --bg-dark: #0f172a;
             --bg-darker: #0a0f1f;
-            --bg-light: #f8fafc;
+            --bg-light: #fafbfc;
             --bg-lighter: #1e293b;
+
             --text-primary: #0f172a;
             --text-secondary: #475569;
             --text-tertiary: #94a3b8;
+
             --border: #e2e8f0;
             --border-dark: #cbd5e1;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-            --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.15);
+
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 60px rgba(99, 102, 241, 0.15);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
         body {
             font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            line-height: 1.6;
+            line-height: 1.65;
             color: var(--text-primary);
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 100% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 30% at 0% 80%, rgba(236, 72, 153, 0.04) 0%, transparent 50%),
+                linear-gradient(180deg, #fafbfc 0%, #f1f5f9 50%, #f8fafc 100%);
             min-height: 100vh;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
             overflow-x: hidden;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 24px 80px;
+            position: relative;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-light); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
 
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 96px 32px;
+        }
+
         .header {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 32px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            padding: 14px 32px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 4px 12px rgba(0, 0, 0, 0.03);
         }
+
         .header-inner {
-            max-width: 900px;
+            max-width: 920px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .header-nav { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .header-nav { display: flex; gap: 6px; flex-wrap: wrap; }
         .header-nav a {
-            padding: 10px 14px;
-            border-radius: 8px;
+            padding: 10px 16px;
+            border-radius: 10px;
             text-decoration: none;
             font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; align-items: center; gap: 6px;
             color: var(--text-secondary);
+            position: relative;
         }
         .header-nav a:hover {
             color: var(--primary);
             background: rgba(99, 102, 241, 0.08);
-            transform: translateY(-2px);
         }
         .header-nav a.active {
             color: var(--primary);
             background: rgba(99, 102, 241, 0.12);
+            font-weight: 600;
+        }
+        .header-nav a.active::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            pointer-events: none;
         }
 
         @keyframes fadeInDown {
@@ -232,12 +271,14 @@
             line-height: 1.6;
         }
         .code-block .comment { color: #6b7280; }
+        .code-block .comment-result { color: #10b981; font-weight: 500; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px; }
         .code-block .keyword { color: #c084fc; }
         .code-block .string { color: #86efac; }
         .code-block .function { color: #67e8f9; }
         .code-block .operator { color: #fbbf24; }
         .code-block .axis { color: #f472b6; }
         .code-block .nodetest { color: #a78bfa; }
+        .code-block .number { color: #f472b6; font-weight: 600; }
 
         .output-block {
             background: #f8fafc;
@@ -251,6 +292,8 @@
             line-height: 1.6;
             white-space: pre;
         }
+        .output-block .result-label { color: #10b981; font-weight: 600; }
+        .output-block .result-value { color: #0f172a; background: #e0e7ff; padding: 2px 6px; border-radius: 4px; }
 
         .highlight-box {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -283,10 +326,13 @@
             font-family: 'Monaco', 'Consolas', monospace;
             font-size: 0.8rem;
             line-height: 1.8;
+            white-space: pre-wrap;
+            overflow-x: auto;
         }
         .dom-example .tag { color: #667eea; }
         .dom-example .attr { color: #f472b6; }
         .dom-example .text { color: #86efac; }
+        .dom-example .string { color: #f59e0b; }
         .dom-example .comment { color: #6b7280; }
         .dom-example .indent { padding-left: 20px; }
 
@@ -356,13 +402,13 @@
         }
 
         .nav-group { position: relative; }
-        .nav-group-toggle { cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); transition: all 0.3s; }
+        .nav-group-toggle { cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 10px; text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
         .nav-group-toggle:hover { color: var(--primary); background: rgba(99, 102, 241, 0.08); }
         .nav-group-toggle svg:last-child { transition: transform 0.2s; }
         .nav-group:hover .nav-group-toggle svg:last-child { transform: rotate(180deg); }
-        .nav-group-dropdown { position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 8px; min-width: 160px; box-shadow: var(--shadow-lg); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.2s; z-index: 200; margin-top: 4px; }
+        .nav-group-dropdown { position: absolute; top: 100%; left: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); border: 1px solid rgba(226, 232, 240, 0.6); border-radius: 14px; padding: 10px; min-width: 180px; box-shadow: var(--shadow-lg); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 200; margin-top: 6px; }
         .nav-group:hover .nav-group-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
-        .nav-group-dropdown a { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text-secondary); white-space: nowrap; font-size: 0.85rem; transition: all 0.2s; }
+        .nav-group-dropdown a { display: block; padding: 12px 14px; border-radius: 10px; color: var(--text-secondary); white-space: nowrap; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
         .nav-group-dropdown a:hover, .nav-group-dropdown a.active { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
     </style>
 </head>
@@ -385,6 +431,7 @@
         <div class="header-inner">
             <nav class="header-nav">
                 <a href="index.html">📄 Резюме</a>
+                <a href="about.html">👤 Обо мне</a>
                 <a href="blog.html">📝 Блог</a>
                 <a href="projects.html">💻 Проекты</a>
                 <div class="nav-group">
@@ -599,23 +646,23 @@
                 <div class="code-block" style="margin-top: 12px; margin-bottom: 0;">
 <pre><span class="comment">// 1. Следующий сосед (following-sibling)</span>
 <span class="axis">//input[@id='username']/following-sibling::</span><span class="nodetest">button</span>
-<span class="comment">// Результат: &lt;button type="submit"&gt;Войти&lt;/button&gt;</span>
+<span class="comment-result">// Результат: &lt;button type="submit"&gt;Войти&lt;/button&gt;</span>
 
 <span class="comment">// 2. Родитель (parent)</span>
 <span class="axis">//input[@id='username']/parent::</span><span class="nodetest">form</span>
-<span class="comment">// Результат: &lt;form id="login"&gt;...&lt;/form&gt;</span>
+<span class="comment-result">// Результат: &lt;form id="login"&gt;...&lt;/form&gt;</span>
 
 <span class="comment">// 3. Первый следующий сосед</span>
 <span class="axis">//input[@id='username']/following-sibling::</span><span class="nodetest">input[1]</span>
-<span class="comment">// Результат: &lt;input id="password"&gt;</span>
+<span class="comment-result">// Результат: &lt;input id="password"&gt;</span>
 
 <span class="comment">// 4. Все предки (ancestor)</span>
 <span class="axis">//button[@type='submit']/ancestor::</span><span class="nodetest">html</span>
-<span class="comment">// Результат: &lt;html&gt;...&lt;/html&gt;</span>
+<span class="comment-result">// Результат: &lt;html&gt;...&lt;/html&gt;</span>
 
 <span class="comment">// 5. Дочерние элементы (child)</span>
 <span class="nodetest">//form[@id='login']/child::</span><span class="nodetest">*</span>
-<span class="comment">// Результат: [input#username, input#password, button]</span></pre>
+<span class="comment-result">// Результат: [input#username, input#password, button]</span></pre>
                 </div>
             </div>
         </section>
@@ -646,19 +693,19 @@
                 <div class="code-block" style="margin-top: 12px; margin-bottom: 0;">
 <pre><span class="comment">// Первый элемент списка</span>
 <span class="nodetest">//li[</span><span class="number">1</span><span class="nodetest">]</span>
-<span class="comment">// Результат: &lt;li&gt;Первый&lt;/li&gt;</span>
+<span class="comment-result">// Результат: &lt;li&gt;Первый&lt;/li&gt;</span>
 
 <span class="comment">// Последний элемент</span>
 <span class="nodetest">//li[</span><span class="function">last</span><span class="nodetest">()]</span>
-<span class="comment">// Результат: &lt;li&gt;Последний&lt;/li&gt;</span>
+<span class="comment-result">// Результат: &lt;li&gt;Последний&lt;/li&gt;</span>
 
 <span class="comment">// Предпоследний</span>
 <span class="nodetest">//li[</span><span class="function">last()</span><span class="operator">-</span><span class="number">1</span><span class="nodetest">]</span>
-<span class="comment">// Результат: &lt;li&gt;Третий&lt;/li&gt;</span>
+<span class="comment-result">// Результат: &lt;li&gt;Третий&lt;/li&gt;</span>
 
 <span class="comment">// Первые 2 элемента</span>
 <span class="nodetest">//li[</span><span class="function">position()</span><span class="operator">&lt;=</span><span class="number">2</span><span class="nodetest">]</span>
-<span class="comment">// Результат: [&lt;li&gt;Первый&lt;/li&gt;, &lt;li&gt;Второй&lt;/li&gt;]</span></pre>
+<span class="comment-result">// Результат: [&lt;li&gt;Первый&lt;/li&gt;, &lt;li&gt;Второй&lt;/li&gt;]</span></pre>
                 </div>
             </div>
 
@@ -678,27 +725,27 @@
                 <div class="code-block" style="margin-top: 12px; margin-bottom: 0;">
 <pre><span class="comment">// По id (уникальный)</span>
 <span class="nodetest">//div[@id='header']</span>
-<span class="comment">// Результат: &lt;div id="header"&gt;Шапка&lt;/div&gt;</span>
+<span class="comment-result">// Результат: &lt;div id="header"&gt;Шапка&lt;/div&gt;</span>
 
 <span class="comment">// По class (точное совпадение)</span>
 <span class="nodetest">//div[@class='login-form active']</span>
-<span class="comment">// Результат: &lt;div class="login-form active"&gt;...&lt;/div&gt;</span>
+<span class="comment-result">// Результат: &lt;div class="login-form active"&gt;...&lt;/div&gt;</span>
 
 <span class="comment">// class содержит 'login'</span>
 <span class="nodetest">//div[contains(@class, 'login')]</span>
-<span class="comment">// Результат: &lt;div class="login-form active"&gt;...&lt;/div&gt;</span>
+<span class="comment-result">// Результат: &lt;div class="login-form active"&gt;...&lt;/div&gt;</span>
 
 <span class="comment">// Несколько атрибутов (AND)</span>
 <span class="nodetest">//input[@type='text' and @name='username']</span>
-<span class="comment">// Результат: &lt;input type="text" name="username"&gt;</span>
+<span class="comment-result">// Результат: &lt;input type="text" name="username"&gt;</span>
 
 <span class="comment">// Элемент с атрибутом disabled</span>
 <span class="nodetest">//button[@disabled]</span>
-<span class="comment">// Результат: &lt;button type="submit" disabled&gt;Войти&lt;/button&gt;</span>
+<span class="comment-result">// Результат: &lt;button type="submit" disabled&gt;Войти&lt;/button&gt;</span>
 
 <span class="comment">// class НЕ содержит 'hidden'</span>
 <span class="nodetest">//div[not(contains(@class, 'hidden'))]</span>
-<span class="comment">// Результат: [&lt;div id="header"&gt;, &lt;div class="login-form active"&gt;]</span></pre>
+<span class="comment-result">// Результат: [&lt;div id="header"&gt;, &lt;div class="login-form active"&gt;]</span></pre>
                 </div>
             </div>
 
@@ -717,23 +764,23 @@
                 <div class="code-block" style="margin-top: 12px; margin-bottom: 0;">
 <pre><span class="comment">// Точное совпадение текста</span>
 <span class="nodetest">//a[text()='Главная']</span>
-<span class="comment">// Результат: &lt;a href="/"&gt;Главная&lt;/a&gt;</span>
+<span class="comment-result">// Результат: &lt;a href="/"&gt;Главная&lt;/a&gt;</span>
 
 <span class="comment">// Текст содержит подстроку</span>
 <span class="nodetest">//a[contains(text(), 'услуг')]</span>
-<span class="comment">// Результат: &lt;a&gt;Подробнее о услугах&lt;/a&gt;</span>
+<span class="comment-result">// Результат: &lt;a&gt;Подробнее о услугах&lt;/a&gt;</span>
 
 <span class="comment">// Текст начинается с</span>
 <span class="nodetest">//a[starts-with(text(), 'О')]</span>
-<span class="comment">// Результат: &lt;a href="/about"&gt;О компании&lt;/a&gt;</span>
+<span class="comment-result">// Результат: &lt;a href="/about"&gt;О компании&lt;/a&gt;</span>
 
 <span class="comment">// Любой элемент с текстом 'Отправить'</span>
 <span class="nodetest">//*[text()='Отправить']</span>
-<span class="comment">// Результат: &lt;button&gt;Отправить&lt;/button&gt;</span>
+<span class="comment-result">// Результат: &lt;button&gt;Отправить&lt;/button&gt;</span>
 
 <span class="comment">// Ссылка с текстом содержащим 'Подробнее'</span>
 <span class="nodetest">//a[contains(text(), 'Подробнее')]</span>
-<span class="comment">// Результат: &lt;a&gt;Подробнее о услугах&lt;/a&gt;</span></pre>
+<span class="comment-result">// Результат: &lt;a&gt;Подробнее о услугах&lt;/a&gt;</span></pre>
                 </div>
             </div>
         </section>
@@ -1063,6 +1110,178 @@
                 <p><strong>Порядок поиска локаторов (по приоритету):</strong></p>
                 <p>1. <code>data-testid</code> / <code>data-qa</code> → 2. <code>id</code> → 3. <code>name</code> → 4. <code>CSS selector</code> → 5. <code>XPath</code></p>
             </div>
+        </section>
+
+        <!-- Section 10: Interactive XPath Builder -->
+        <section class="section">
+            <div class="section-header">
+                <span class="section-title">10. Интерактивный XPath-конструктор</span>
+                <div class="section-line"></div>
+            </div>
+
+            <p>Кликните на узел в дереве, чтобы увидеть XPath до этого элемента. Нажмите "Сбросить" для очистки.</p>
+
+            <div class="xpath-builder">
+                <div class="builder-controls">
+                    <button class="builder-btn" onclick="resetXPath()">Сбросить</button>
+                </div>
+                <div id="xpath-tree-container"></div>
+                <div class="xpath-result" id="xpath-result">
+                    <div class="xpath-label">XPath:</div>
+                    <div class="xpath-path" id="xpath-path">//html</div>
+                </div>
+                <div class="xpath-hint" id="xpath-hint">
+                    <span class="hint-icon">💡</span>
+                    <span class="hint-text">Кликните на любой узел, чтобы увидеть XPath-путь до него</span>
+                </div>
+            </div>
+
+            <style>
+                .xpath-builder { background: #1a1a2e; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+                .builder-controls { margin-bottom: 16px; }
+                .builder-btn { background: #667eea; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+                .builder-btn:hover { background: #5568d3; transform: translateY(-2px); }
+                #xpath-tree-container { background: #fff; border-radius: 8px; padding: 20px; min-height: 300px; overflow: auto; }
+                .xpath-result { margin-top: 16px; background: rgba(102, 126, 234, 0.1); border-radius: 8px; padding: 16px; display: flex; align-items: center; gap: 12px; }
+.xpath-label { color: #667eea; font-weight: 600; }
+                .xpath-path { color: #10b981; font-family: 'Monaco', 'Consolas', monospace; font-size: 1rem; }
+                .xpath-hint { margin-top: 12px; padding: 12px 16px; background: rgba(102, 126, 234, 0.1); border-radius: 8px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #64748b; }
+                .xpath-hint .hint-icon { font-size: 1rem; }
+                .tree-node { cursor: pointer; transition: all 0.2s; }
+                .tree-node:hover circle { fill: #8b5cf6; transform: scale(1.2); }
+                .tree-node circle { fill: #667eea; stroke: #5568d3; stroke-width: 2; transition: all 0.2s; }
+                .tree-node.selected circle { fill: #10b981; stroke: #059669; }
+                .tree-node text { font-family: 'Monaco', 'Consolas', monospace; font-size: 11px; fill: #0f172a; }
+                .tree-link { fill: none; stroke: #cbd5e1; stroke-width: 2; }
+            </style>
+
+            <script src="https://d3js.org/d3.v7.min.js"></script>
+            <script>
+                const treeData = {
+                    name: "html",
+                    children: [
+                        {
+                            name: "body",
+                            children: [
+                                { name: "header" },
+                                {
+                                    name: "main",
+                                    children: [
+                                        {
+                                            name: "div",
+                                            attrs: { id: "content" },
+                                            children: [
+                                                {
+                                                    name: "form",
+                                                    attrs: { class: "login-form" },
+                                                    children: [
+                                                        { name: "input", attrs: { type: "text", id: "username" } },
+                                                        { name: "input", attrs: { type: "password", id: "password" } },
+                                                        { name: "button", attrs: { type: "submit" }, text: "Войти" }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { name: "footer" }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                };
+
+                let currentPath = "//html";
+                let selectedNode = null;
+
+                function buildHierarchy(data, parentPath = "") {
+                    const path = parentPath ? parentPath + "/" + data.name : "/" + data.name;
+                    const node = { name: data.name, path: path, attrs: data.attrs, text: data.text };
+                    if (data.children) {
+                        node.children = data.children.map(child => buildHierarchy(child, path));
+                    }
+                    return node;
+                }
+
+                const hierarchyData = buildHierarchy(treeData);
+
+                const margin = { top: 20, right: 120, bottom: 30, left: 120 };
+                const container = document.getElementById("xpath-tree-container");
+                const width = Math.max(600, container.clientWidth - margin.left - margin.right);
+                const height = 380 - margin.top - margin.bottom;
+
+                const svg = d3.select("#xpath-tree-container").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                const treemap = d3.tree().size([height, width]);
+                const root = d3.hierarchy(hierarchyData);
+                const treeData2 = treemap(root);
+
+                treeData2.descendants().forEach((d, i) => {
+                    d.id = i;
+                });
+
+                svg.selectAll(".tree-link")
+                    .data(treeData2.links())
+                    .enter().append("path")
+                    .attr("class", "tree-link")
+                    .attr("d", d3.linkHorizontal()
+                        .x(d => d.y)
+                        .y(d => d.x));
+
+                const nodes = svg.selectAll(".tree-node")
+                    .data(treeData2.descendants())
+                    .enter().append("g")
+                    .attr("class", "tree-node")
+                    .attr("transform", d => "translate(" + d.y + "," + d.x + ")")
+                    .on("click", function(event, d) { selectNode(event, d); });
+
+                nodes.append("circle")
+                    .attr("r", 8);
+
+                nodes.append("text")
+                    .attr("dy", "0.31em")
+                    .attr("x", d => d.children ? -12 : 12)
+                    .attr("text-anchor", d => d.children ? "end" : "start")
+                    .text(d => {
+                        let label = d.data.name;
+                        if (d.data.attrs && d.data.attrs.id) label += "#" + d.data.attrs.id;
+                        else if (d.data.attrs && d.data.attrs.class) label += "." + d.data.attrs.class.split(" ")[0];
+                        return label;
+                    });
+
+                function selectNode(event, d) {
+                    document.querySelectorAll(".tree-node").forEach(n => n.classList.remove("selected"));
+                    d3.select(event.target.closest(".tree-node")).classed("selected", true);
+                    
+                    let xpath = "//" + d.data.name;
+                    if (d.data.attrs && d.data.attrs.id) {
+                        xpath = "//" + d.data.name + "[@id='" + d.data.attrs.id + "']";
+                    } else if (d.data.attrs && d.data.attrs.class) {
+                        xpath = "//" + d.data.name + "[@class='" + d.data.attrs.class + "']";
+                    } else if (d.parent && d.parent.data.children) {
+                        const siblings = d.parent.children.filter(c => c.data.name === d.data.name);
+                        const index = siblings.indexOf(d) + 1;
+                        if (siblings.length > 1) {
+                            xpath = "//" + d.data.name + "[" + index + "]";
+                        }
+                    }
+                    
+                    currentPath = xpath;
+                    document.getElementById("xpath-path").textContent = xpath;
+                    document.getElementById("xpath-hint").innerHTML = `<span class="hint-icon">✨</span><span class="hint-text">Вы выбрали: <strong>${d.data.name}</strong> — XPath построен с учётом позиции и атрибутов</span>`;
+                }
+
+                function resetXPath() {
+                    document.querySelectorAll(".tree-node").forEach(n => n.classList.remove("selected"));
+                    document.getElementById("xpath-path").textContent = "//html";
+                    document.getElementById("xpath-hint").innerHTML = `<span class="hint-icon">💡</span><span class="hint-text">Кликните на любой узел, чтобы увидеть XPath-путь до него</span>`;
+                    currentPath = "//html";
+                }
+            </script>
         </section>
     </div>
 </body>
