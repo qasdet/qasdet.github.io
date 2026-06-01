@@ -11,11 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
-        body {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+        .page-title {
+            animation: fadeInUp 0.8s ease-out;
         }
 
         .actions {
@@ -27,7 +24,7 @@
         }
         .year-input {
             padding: 10px 16px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 0.875rem;
             width: 100px;
@@ -35,14 +32,14 @@
         }
         .year-input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
         }
 
         .table-wrapper {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             overflow: hidden;
         }
         .table-scroll {
@@ -54,7 +51,7 @@
             min-width: 700px;
         }
         thead {
-            background: #f8fafc;
+            background: var(--bg-card);
         }
         th {
             padding: 16px 20px;
@@ -63,19 +60,19 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #64748b;
-            border-bottom: 1px solid #e2e8f0;
+            color: var(--text-tertiary);
+            border-bottom: 1px solid var(--border);
         }
         td {
             padding: 12px 20px;
-            border-bottom: 1px solid #f1f5f9;
+            border-bottom: 1px solid var(--border);
             vertical-align: top;
         }
         tr:last-child td {
             border-bottom: none;
         }
         tbody tr:hover {
-            background: #fafbfc;
+            background: var(--bg-card);
         }
 
         .input-cell {
@@ -85,19 +82,19 @@
         .input-cell textarea {
             width: 100%;
             padding: 8px 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             border-radius: 6px;
             font-family: inherit;
             font-size: 0.875rem;
-            color: #1a1a2e;
-            background: #fff;
+            color: var(--text-primary);
+            background: var(--bg-card);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
         .input-cell input:focus,
         .input-cell textarea:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
         }
         .input-cell textarea {
             resize: vertical;
@@ -116,7 +113,7 @@
             border-radius: 6px;
             border: none;
             background: transparent;
-            color: #94a3b8;
+            color: var(--text-tertiary);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -124,8 +121,8 @@
             transition: all 0.2s;
         }
         .delete-btn:hover {
-            background: #fee2e2;
-            color: #ef4444;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
         }
         .delete-btn svg {
             width: 16px;
@@ -135,7 +132,7 @@
         .empty-state {
             text-align: center;
             padding: 60px 24px;
-            color: #94a3b8;
+            color: var(--text-tertiary);
         }
         .empty-state svg {
             width: 48px;
@@ -153,7 +150,7 @@
         }
 
         .intro-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #764ba2 100%);
             border-radius: 12px;
             padding: 24px 28px;
             margin-bottom: 32px;
@@ -198,8 +195,8 @@
             flex-wrap: wrap;
         }
         .stat-item {
-            background: #fff;
-            border: 1px solid #e2e8f0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 8px;
             padding: 16px 20px;
             min-width: 150px;
@@ -207,18 +204,17 @@
         .stat-value {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #667eea;
+            color: var(--primary);
         }
         .stat-label {
             font-size: 0.75rem;
-            color: #94a3b8;
+            color: var(--text-tertiary);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         @media (max-width: 640px) {
             .container { padding: 24px 16px; }
-            .page-title h1 { font-size: 1.5rem; }
             .actions { flex-direction: column; }
             .btn { justify-content: center; }
             .stats { flex-direction: column; }
@@ -242,6 +238,7 @@
                         <a href="pytest.html" title="Pytest">Pytest</a>
                         <a href="xpath.html" title="XPath">XPath</a>
                         <a href="framework.html" title="Playwright + Pytest">Playwright + Pytest</a>
+                        <a href="theory_testing.html" title="Теория тестирования">Теория тестирования</a>
                     </div>
                 </div>
                 <div class="nav-group">

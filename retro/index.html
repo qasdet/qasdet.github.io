@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>СССР 90-е — Ностальгия по детству</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --crt-bg: #1a0f0a;
+      --screen-bg: #f4e8c1;
+      --sepia: #d4b483;
+      --brown: #4a2810;
+      --orange: #c4561a;
+      --gold: #e8b830;
+      --red: #a03020;
+      --green: #3a6b35;
+      --blue: #2a4a7a;
+      --text: #2a1a0a;
+      --card-bg: #faf0d7;
+      --shadow: rgba(74, 40, 16, 0.3);
+    }
+
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--crt-bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* CRT Monitor */
+    .monitor {
+      width: 100%;
+      max-width: 1200px;
+      background: #2a1a0a;
+      border-radius: 40px 40px 20px 20px;
+      padding: 30px 30px 50px;
+      box-shadow:
+        0 0 60px rgba(196, 86, 26, 0.3),
+        inset 0 0 20px rgba(0,0,0,0.5),
+        0 20px 40px rgba(0,0,0,0.6);
+      border: 3px solid #3a2a1a;
+      position: relative;
+    }
+
+    .monitor::before {
+      content: '';
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 8px;
+      background: #1a0f0a;
+      border-radius: 4px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+
+    .monitor::after {
+      content: '';
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(30px);
+      width: 12px;
+      height: 12px;
+      background: #0a5a0a;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #0a5a0a, 0 0 16px #0a5a0a;
+      animation: powerLed 2s ease-in-out infinite;
+    }
+
+    @keyframes powerLed {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; box-shadow: 0 0 4px #0a5a0a; }
+    }
+
+    .screen {
+      background: var(--screen-bg);
+      border-radius: 16px;
+      padding: 40px 30px 30px;
+      position: relative;
+      overflow: hidden;
+      min-height: 80vh;
+      box-shadow: inset 0 0 60px rgba(74, 40, 16, 0.15);
+    }
+
+    /* Scanlines */
+    .scanlines {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.06) 2px,
+        rgba(0,0,0,0.06) 4px
+      );
+      pointer-events: none;
+      z-index: 10;
+      border-radius: 16px;
+    }
+
+    .screen-flicker {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(18, 16, 16, 0.03);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 11;
+      border-radius: 16px;
+      animation: flicker 8s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0; }
+      5% { opacity: 0.06; }
+      6% { opacity: 0; }
+      10% { opacity: 0.03; }
+      11% { opacity: 0; }
+      50% { opacity: 0.02; }
+      51% { opacity: 0; }
+    }
+
+    /* Screen curve effect */
+    .screen-curve {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at center, transparent 65%, rgba(0,0,0,0.15) 100%);
+      pointer-events: none;
+      z-index: 9;
+      border-radius: 16px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .header h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 28px;
+      color: var(--brown);
+      text-shadow:
+        3px 3px 0 var(--orange),
+        -1px -1px 0 rgba(196, 86, 26, 0.2);
+      line-height: 1.8;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .header .subtitle {
+      font-size: 16px;
+      color: var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .header .subtitle span {
+      animation: blink 1.2s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .divider {
+      border: none;
+      height: 4px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--orange) 0px, var(--orange) 10px,
+        transparent 10px, transparent 20px
+      );
+      margin: 20px 0;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .nav-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      padding: 12px 18px;
+      border: 3px solid var(--brown);
+      background: var(--card-bg);
+      color: var(--brown);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    .nav-btn:hover {
+      background: var(--sepia);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 0 var(--brown);
+    }
+
+    .nav-btn.active {
+      background: var(--orange);
+      color: var(--card-bg);
+      border-color: var(--orange);
+      box-shadow: 0 4px 0 var(--brown);
+      transform: translateY(-2px);
+    }
+
+    /* Content Sections */
+    .section {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 18px;
+      color: var(--orange);
+      margin-bottom: 25px;
+      padding-bottom: 10px;
+      border-bottom: 2px dashed var(--sepia);
+      text-transform: uppercase;
+    }
+
+    /* Cards Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 3px solid var(--brown);
+      padding: 18px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        6px 6px 0 var(--brown),
+        0 8px 20px var(--shadow);
+    }
+
+    .card:active {
+      transform: translateY(0px);
+      box-shadow: 2px 2px 0 var(--brown);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border: 2px solid var(--sepia);
+      margin-bottom: 12px;
+      background: var(--sepia);
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    .card h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: var(--brown);
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: #5a3a1a;
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+
+    .card .year {
+      display: inline-block;
+      background: var(--orange);
+      color: var(--card-bg);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: 4px 8px;
+      margin-top: 10px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px dashed var(--sepia);
+      text-align: center;
+      font-size: 12px;
+      color: #8a6a3a;
+    }
+
+    .footer .clock {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+
+    .footer .marquee {
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      margin-top: 10px;
+      padding: 6px 0;
+      border-top: 1px solid var(--sepia);
+      border-bottom: 1px solid var(--sepia);
+      background: rgba(196, 86, 26, 0.05);
+    }
+
+    .footer .marquee span {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+      font-size: 11px;
+      color: var(--orange);
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-200%); }
+    }
+
+    /* Retro tape decoration */
+    .tape {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: repeating-linear-gradient(
+        45deg,
+        var(--sepia) 0px, var(--sepia) 4px,
+        var(--card-bg) 4px, var(--card-bg) 6px
+      );
+      border: 1px solid var(--brown);
+      opacity: 0.15;
+    }
+
+    .tape-tl { top: 10px; left: 10px; }
+    .tape-tr { top: 10px; right: 10px; }
+    .tape-bl { bottom: 10px; left: 10px; }
+    .tape-br { bottom: 10px; right: 10px; }
+
+    /* Modal / Lightbox */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 5, 2, 0.88);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+      cursor: pointer;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 4px solid var(--brown);
+      padding: 20px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 90vh;
+      position: relative;
+      cursor: default;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    }
+
+    .modal-content img {
+      width: 100%;
+      max-height: 60vh;
+      object-fit: contain;
+      display: block;
+      background: var(--sepia);
+      border: 2px solid var(--sepia);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -16px;
+      right: -16px;
+      width: 40px;
+      height: 40px;
+      background: var(--orange);
+      border: 3px solid var(--brown);
+      color: var(--card-bg);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      z-index: 101;
+    }
+
+    .modal-close:hover {
+      background: var(--red);
+      transform: scale(1.1);
+    }
+
+    .modal-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: var(--brown);
+      margin: 15px 0 8px;
+      line-height: 1.6;
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: #5a3a1a;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .modal-caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .modal-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      gap: 10px;
+    }
+
+    .modal-nav-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      padding: 8px 16px;
+      border: 3px solid var(--brown);
+      background: var(--card-bg);
+      color: var(--brown);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex: 1;
+    }
+
+    .modal-nav-btn:hover {
+      background: var(--orange);
+      color: var(--card-bg);
+      border-color: var(--orange);
+    }
+
+    @media (max-width: 600px) {
+      .modal-content { padding: 12px; margin: 10px; }
+      .modal-title { font-size: 11px; }
+      .modal-close { top: -12px; right: -12px; width: 32px; height: 32px; font-size: 12px; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .monitor {
+        padding: 15px 15px 40px;
+        border-radius: 20px 20px 10px 10px;
+      }
+      .screen { padding: 20px 15px 15px; }
+      .header h1 { font-size: 14px; }
+      .header .subtitle { font-size: 11px; flex-wrap: wrap; }
+      .nav-btn { font-size: 8px; padding: 8px 12px; }
+      .section-title { font-size: 13px; }
+      .grid { grid-template-columns: 1fr; }
+      .card h3 { font-size: 9px; }
+      .card p { font-size: 12px; }
+      .footer .clock { font-size: 10px; }
+    }
+
+    /* Loading screen */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 50vh;
+    }
+
+    .loading span {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      color: var(--brown);
+      animation: loadingPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes loadingPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .loading-bar {
+      width: 200px;
+      height: 4px;
+      background: var(--sepia);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading-bar::after {
+      content: '';
+      position: absolute;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--orange);
+      animation: loadBar 2s ease-in-out infinite;
+    }
+
+    @keyframes loadBar {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="monitor">
+    <div class="screen" x-data="retroApp()" x-init="init()">
+      <div class="scanlines"></div>
+      <div class="screen-curve"></div>
+      <div class="screen-flicker"></div>
+
+      <!-- Loading Screen -->
+      <div x-show="loading" class="loading" x-cloak>
+        <span>ЗАГРУЗКА...</span>
+        <div class="loading-bar"></div>
+        <span style="font-size:8px;" x-text="loadingText"></span>
+      </div>
+
+      <!-- Main Content -->
+      <div x-show="!loading" x-cloak>
+        <!-- Header -->
+        <div class="header">
+          <div style="position:relative;">
+            <div class="tape tape-tl"></div>
+            <div class="tape tape-tr"></div>
+            <h1>🕹️ ДЕТСТВО<br>90-х</h1>
+            <div class="subtitle">
+              <span>►</span> СССР / Россия / Ностальгия <span>◄</span>
+            </div>
+          </div>
+          <hr class="divider">
+          <p style="font-size:13px; color:#6a4a2a; margin-top:10px;">
+            Помнишь?.. Нажми на раздел и окунись в прошлое
+          </p>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="nav">
+          <template x-for="tab in tabs" :key="tab.id">
+            <button
+              class="nav-btn"
+              :class="{ active: currentTab === tab.id }"
+              x-text="tab.label"
+              @click="currentTab = tab.id"
+            ></button>
+          </template>
+        </nav>
+
+        <!-- Sections -->
+        <template x-for="tab in tabs" :key="tab.id">
+          <div class="section" :class="{ active: currentTab === tab.id }">
+            <h2 class="section-title" x-text="tab.title"></h2>
+            <div class="grid">
+              <template x-for="item in getItems(tab.id)" :key="item.id">
+                <div class="card" @click="openModal(item, tab.id)">
+                  <img
+                    class="card-img"
+                    :src="item.thumb || 'https://placehold.co/400x280/' + item.imgBg + '/' + item.imgFg + '?text=' + encodeURIComponent(item.title)"
+                    :alt="item.title"
+                    loading="lazy"
+                    @error="$event.target.src = 'https://placehold.co/400x280/' + (item.imgBg || 'd4b483') + '/' + (item.imgFg || '5a3a1a') + '?text=' + encodeURIComponent(item.title)"
+                  >
+                  <h3 x-text="item.title"></h3>
+                  <p x-text="item.desc"></p>
+                  <span class="year" x-text="item.year"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <!-- Modal -->
+        <div
+          class="modal-overlay"
+          x-show="modalOpen"
+          x-cloak
+          x-transition.opacity.duration.200ms
+          @click="closeModal()"
+          @keydown.escape.window="closeModal()"
+        >
+          <div class="modal-content" @click.stop>
+            <button class="modal-close" @click="closeModal()">✕</button>
+            <img
+              :src="modalItem.realImg || 'https://placehold.co/600x400/' + modalItem.imgBg + '/' + modalItem.imgFg + '?text=' + encodeURIComponent(modalItem.title)"
+              :alt="modalItem.title"
+              @error="$event.target.src = 'https://placehold.co/600x400/' + (modalItem.imgBg || 'd4b483') + '/' + (modalItem.imgFg || '5a3a1a') + '?text=' + encodeURIComponent(modalItem.title)"
+            >
+            <h3 class="modal-title" x-text="modalItem.title"></h3>
+            <p class="modal-desc" x-text="modalItem.desc"></p>
+            <div class="modal-caption">
+              <span class="year" x-text="modalItem.year"></span>
+              <span style="font-size:11px; color:#8a6a3a;" x-text="'(' + modalTabLabel + ')'"></span>
+            </div>
+            <div class="modal-nav">
+              <button class="modal-nav-btn" @click="prevItem()" x-show="modalIndex > 0">‹ Назад</button>
+              <button class="modal-nav-btn" @click="nextItem()" x-show="modalIndex < getItems(modalTabId).length - 1">Вперёд ›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="clock" x-text="clock"></div>
+          <div style="font-size:11px;">
+            Сделано с ностальгией ❤️
+          </div>
+          <div class="marquee">
+            <span>
+              ★ Слава детству 90-х! ★ Помнишь жвачку Turbo? ★ А видел "Ну, погоди!"? ★ Денди — это легенда! ★ Вкладыши, вкладыши... ★ Сок в треугольных пакетах — вкус детства ★ Тамагочи умер, а жаль... ★
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('retroApp', () => ({
+        loading: true,
+        loadingText: 'Инициализация системы...',
+        currentTab: 'toys',
+        clock: '',
+        modalOpen: false,
+        modalItem: { title: '', desc: '', year: '', imgBg: 'd4b483', imgFg: '5a3a1a' },
+        modalIndex: 0,
+        modalTabId: 'toys',
+        get modalTabLabel() {
+          const tab = this.tabs.find(t => t.id === this.modalTabId);
+          return tab ? tab.label : '';
+        },
+        openModal(item, tabId) {
+          this.modalItem = item;
+          this.modalTabId = tabId;
+          this.modalIndex = this.getItems(tabId).indexOf(item);
+          this.modalOpen = true;
+          document.body.style.overflow = 'hidden';
+        },
+        closeModal() {
+          this.modalOpen = false;
+          document.body.style.overflow = '';
+        },
+        prevItem() {
+          const items = this.getItems(this.modalTabId);
+          if (this.modalIndex > 0) {
+            this.modalIndex--;
+            this.modalItem = items[this.modalIndex];
+          }
+        },
+        nextItem() {
+          const items = this.getItems(this.modalTabId);
+          if (this.modalIndex < items.length - 1) {
+            this.modalIndex++;
+            this.modalItem = items[this.modalIndex];
+          }
+        },
+        tabs: [
+          { id: 'toys', label: '🧸 Игрушки', title: '⭐ Игрушки детства' },
+          { id: 'food', label: '🍭 Еда', title: '🍬 Вкус детства' },
+          { id: 'tech', label: '📼 Техника', title: '📻 Гаджеты 90-х' },
+          { id: 'cartoons', label: '🎬 Мультфильмы', title: '📺 Любимые мультики' },
+          { id: 'games', label: '🎮 Игры', title: '🕹️ Игрушки для мальчиков и девочек' },
+          { id: 'life', label: '🏠 Быт', title: '🚲 Как мы жили' }
+        ],
+        items: {
+          toys: [
+            { id: 't1', title: 'Тамагочи', desc: 'Электронный питомец, которого нужно кормить, лечить и убирать за ним. Если забыл — он умирал. Настоящая драма 90-х!', year: '1996', imgBg: 'c4561a', imgFg: 'faf0d7', thumb: 'images/tamagotchi.jpg', realImg: 'images/tamagotchi.jpg' },
+            { id: 't2', title: 'Йо-йо', desc: 'Игрушка на верёвочке. Кто умел делать "собачку" и "луну" — тот был королём двора. Ходили с синяками, но гордо.', year: '1990', imgBg: '4a7a6a', imgFg: 'faf0d7', thumb: 'images/yoyo.jpg', realImg: 'images/yoyo.jpg' },
+            { id: 't3', title: 'Киндер-сюрприз', desc: 'Шоколадное яйцо с игрушкой внутри. Собирали коллекции, менялись в школе. Жёлтая капсула — как сундук с сокровищами.', year: '1974', imgBg: 'a03020', imgFg: 'f4e8c1', thumb: 'images/kinder.jpg', realImg: 'images/kinder.jpg' },
+            { id: 't4', title: 'Вкладыши Turbo, Bonk', desc: 'Жвачка стоила рубль, а внутри — вкладыш с крутой машинкой или черепом. Собирали, меняли, хвастались. Зелёный Turbo — мечта!', year: '1991', imgBg: '2a6a3a', imgFg: 'f4e8c1', thumb: 'images/turbo.jpg', realImg: 'images/turbo.jpg' },
+            { id: 't5', title: 'Неваляшка', desc: 'Кукла, которая всегда вставала. Её пытались уложить, но нет — она возвращалась. Символ стойкости СССР.', year: '1950', imgBg: 'c4561a', imgFg: 'f4e8c1', thumb: 'images/nevalyashka.png', realImg: 'images/nevalyashka.png' },
+            { id: 't6', title: 'Puzzle-пазлы', desc: 'Советские пазлы из картона с видами городов или героями мультиков. Собирали всей семьёй на полу.', year: '1980', imgBg: '3a5a8a', imgFg: 'f4e8c1', thumb: 'images/puzzle.jpg', realImg: 'images/puzzle.jpg' },
+            { id: 't7', title: 'Солдатики', desc: 'Пластмассовые, оловянные — целые армии. Расставляли, придумывали сценарии. Иногда плавили на костре...', year: '1970', imgBg: '6a6a3a', imgFg: 'f4e8c1', thumb: 'images/soldiers.jpg', realImg: 'images/soldiers.jpg' },
+            { id: 't8', title: 'Пружинка (Слинки)', desc: 'Радужная пружинка, которая "шагала" по лестнице. Купить можно было только у спекулянтов или из-под полы.', year: '1980', imgBg: '7a4a6a', imgFg: 'f4e8c1', thumb: 'images/slinky.jpg', realImg: 'images/slinky.jpg' },
+          ],
+          food: [
+            { id: 'f1', title: 'Шоколад "Алёнка"', desc: 'Красная фольга, пухлая девочка в платке. Вкус детства — молочный шоколад, который ели дольками, растягивая удовольствие.', year: '1965', imgBg: 'a03020', imgFg: 'faf0d7', thumb: 'images/alyonka.jpg', realImg: 'images/alyonka.jpg' },
+            { id: 'f2', title: 'Сок в треугольных пакетах', desc: 'Маленький треугольник с трубочкой. Яблочный, вишнёвый, виноградный. Уколоть палец, вставить трубочку — и ты счастлив.', year: '1975', imgBg: 'd4a83a', imgFg: '5a3a1a', thumb: 'images/juice.jpg', realImg: 'images/juice.jpg' },
+            { id: 'f3', title: 'Жвачка "Love Is..."', desc: 'Розовая жвачка с вкладышем про влюблённых. Собирали серии, а жвачку жевали, пока вкус не кончался — минут 5.', year: '1990', imgBg: 'c44a6a', imgFg: 'faf0d7', thumb: 'images/loveis.jpg', realImg: 'images/loveis.jpg' },
+            { id: 'f4', title: 'Мороженое за 33 коп.', desc: 'Эскимо на палочке, пломбир в вафельном стаканчике. Самое вкусное мороженое в мире — говорят те, кто пробовал его в СССР.', year: '1970', imgBg: 'd4b483', imgFg: '5a3a1a', thumb: 'images/icecream.jpg', realImg: 'images/icecream.jpg' },
+            { id: 'f5', title: 'Газировка из автомата', desc: 'Стакан 1 коп. без сиропа, 3 коп. с сиропом. Из одного стакана пили все — мыли его тут же струёй воды. Автоматы стояли на каждом углу.', year: '1960', imgBg: '2a5a7a', imgFg: 'd4b483', thumb: 'images/sodamachine.jpg', realImg: 'images/sodamachine.jpg' },
+            { id: 'f6', title: 'Шоколадка "Сникерс"', desc: 'Появилась в 92-м. "Сникерс — не тормози!" Ели, когда хотелось есть, но лучше было просто шоколад "Россия" — щедрая душа.', year: '1992', imgBg: '6a3a1a', imgFg: 'f4e8c1', thumb: 'images/snickers.jpg', realImg: 'images/snickers.jpg' },
+            { id: 'f7', title: 'Кефир в стеклянных бутылках', desc: 'Белые бутылки с фольгированной крышечкой. Сдавали пустые в пункт приёма стеклотары — 20 копеек за штуку.', year: '1950', imgBg: '8a8a8a', imgFg: 'f4e8c1', thumb: 'images/kefir.jpg', realImg: 'images/kefir.jpg' },
+            { id: 'f8', title: 'Кукурузные палочки', desc: 'Хрустящие, сладкие, тают во рту. Продавались в пакетах с изображением кукурузы. Одна пачка — и весь липкий.', year: '1980', imgBg: 'd4a83a', imgFg: '5a3a1a', thumb: 'images/cornsticks.jpg', realImg: 'images/cornsticks.jpg' },
+          ],
+          tech: [
+            { id: 'e1', title: 'Видеокассета VHS', desc: 'Большая чёрная коробка с плёнкой. Перематывали карандашом, чинили скотчем. Видеосалоны — это был культ! "Терминатор", "Рэмбо", "Крепкий орешек".', year: '1980', imgBg: '1a1a2a', imgFg: 'd4b483', thumb: 'images/vhs.jpg', realImg: 'images/vhs.jpg' },
+            { id: 'e2', title: 'Кассетный магнитофон', desc: 'Вес — как кирпич. Ласковый май, Мираж, Кар-Мэн. Записывали с радио, ждали когда "Голос" скажет "Сейчас прозвучит песня...".', year: '1980', imgBg: '3a3a3a', imgFg: 'd4b483', thumb: 'images/recorder.jpg', realImg: 'images/recorder.jpg' },
+            { id: 'e3', title: 'Дискета 3.5"', desc: '1.44 МБ — целое состояние! На дискету влезало несколько игр. Носили в кармане, ломали магнитный слой случайно. Синяя, квадратная...', year: '1984', imgBg: '2a3a6a', imgFg: 'd4b483', thumb: 'images/floppy.jpg', realImg: 'images/floppy.jpg' },
+            { id: 'e4', title: 'Nokia 3310', desc: 'Siemens, Nokia 3310, Motorola. Игра в "Змейку", монохромный дисплей, батарея на неделю. Мечта — Siemens C35!', year: '1995', imgBg: '4a4a4a', imgFg: 'e8e8e8', thumb: 'images/nokia.jpg', realImg: 'images/nokia.jpg' },
+            { id: 'e5', title: 'Пейджер', desc: 'Маленькая коробочка, которая пищала. Там можно было прочитать "Позвони домой" или "Я тебя люблю". Круче был только мобильник.', year: '1993', imgBg: '2a2a2a', imgFg: '8a8a8a', thumb: 'images/pager.jpg', realImg: 'images/pager.jpg' },
+            { id: 'e6', title: 'Видеомагнитофон', desc: 'Громадный ящик под телевизором. Кнопки с заеданием, головки чистили спиртом. Если "жуёт" плёнку — трагедия!', year: '1980', imgBg: '2a1a0a', imgFg: '6a4a2a', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/Electronika_505_video.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/Electronika_505_video.jpg' },
+            { id: 'e7', title: 'Радиола "Серенада"', desc: 'Проигрыватель винила с радио. Ставили пластинку — и весь дом слушал. Снимали иголку аккуратно, чтобы не поцарапать.', year: '1970', imgBg: '4a2a1a', imgFg: '8a6a3a', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/Serenada_record_player_and_Voskhod-2_black-and-white_TV_set_in_Chagoda,_Vologda_Oblast_(86).jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/Serenada_record_player_and_Voskhod-2_black-and-white_TV_set_in_Chagoda,_Vologda_Oblast_(86).jpg' },
+            { id: 'e8', title: 'Часы "Электроника"', desc: 'Зелёный или красный дисплей, будильник, секундомер. Мечта — часы на руку "Электроника" с калькулятором!', year: '1985', imgBg: '1a2a1a', imgFg: '3a8a3a', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%AD%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%B8%D0%BA%D0%B0-1_%D0%BF%D0%B5%D1%80%D0%B2%D1%8B%D0%B5_%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%B8%D0%B5_%D1%8D%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5_%D0%BD%D0%B0%D1%80%D1%83%D1%87%D0%BD%D1%8B%D0%B5_%D1%87%D0%B0%D1%81%D1%8B.JPG', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%AD%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%B8%D0%BA%D0%B0-1_%D0%BF%D0%B5%D1%80%D0%B2%D1%8B%D0%B5_%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%B8%D0%B5_%D1%8D%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5_%D0%BD%D0%B0%D1%80%D1%83%D1%87%D0%BD%D1%8B%D0%B5_%D1%87%D0%B0%D1%81%D1%8B.JPG' },
+          ],
+          cartoons: [
+            { id: 'c1', title: 'Ну, погоди!', desc: 'Волк гоняется за Зайцем. Серии смотрели по сотне раз. Любимая фраза: "Ну, заяц, погоди!" Каждая серия — шедевр.', year: '1969', imgBg: '3a6a3a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/Nu_Pogodi_9.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/Nu_Pogodi_9.jpg' },
+            { id: 'c2', title: 'Винни-Пух', desc: '"Кто ходит в гости по утрам — тот поступает мудро!" Советский Винни — философ с опилками в голове. Пятачок — его верный друг.', year: '1969', imgBg: 'c4a83a', imgFg: '5a3a1a', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/Russian_Pooh_and_Piglet_postcard_(cropped).png', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/Russian_Pooh_and_Piglet_postcard_(cropped).png' },
+            { id: 'c3', title: 'Чебурашка', desc: 'Непонятный зверёк с большими ушами. "Чебурашка — это не игрушка!" — пел крокодил Гена. Чебурашка стал символом России.', year: '1969', imgBg: '6a4a2a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/The_Soviet_Union_1988_CPA_5917_stamp_(Gena_the_Crocodile._Cheburashka._Shapoklyak).jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/The_Soviet_Union_1988_CPA_5917_stamp_(Gena_the_Crocodile._Cheburashka._Shapoklyak).jpg' },
+            { id: 'c4', title: 'Простоквашино', desc: 'Дядя Фёдор, Шарик, Матроскин и Печкин. "Я почему вредный был? Потому что у меня велосипеда не было!" Классика на все времена.', year: '1978', imgBg: '4a7a3a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/Prostokvashino_2026_stamp_of_Russia.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/Prostokvashino_2026_stamp_of_Russia.jpg' },
+            { id: 'c5', title: 'Бременские музыканты', desc: 'Трубадур, Принцесса, Разбойники. Гениальная музыка Геннадия Гладкова. "Ничего на свете лучше нету, чем бродить друзьям по белу свету!"', year: '1969', imgBg: '7a3a2a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/RR5111-0406R_3_%D1%80%D1%83%D0%B1%D0%BB%D1%8F_%D1%81%D0%B5%D1%80%D0%B5%D0%B1%D1%80%D0%BE_2019_%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B9%D1%81%D0%BA%D0%B0%D1%8F_%D0%BC%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%BF%D0%BB%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8F_%D0%91%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D1%81%D0%BA%D0%B8%D0%B5_%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D0%B0%D0%BD%D1%82%D1%8B_%D1%80%D0%B5%D0%B2%D0%B5%D1%80%D1%81.png', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/RR5111-0406R_3_%D1%80%D1%83%D0%B1%D0%BB%D1%8F_%D1%81%D0%B5%D1%80%D0%B5%D0%B1%D1%80%D0%BE_2019_%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B9%D1%81%D0%BA%D0%B0%D1%8F_%D0%BC%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%BF%D0%BB%D0%B8%D0%BA%D0%B0%D1%86%D0%B8%D1%8F_%D0%91%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D1%81%D0%BA%D0%B8%D0%B5_%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D0%B0%D0%BD%D1%82%D1%8B_%D1%80%D0%B5%D0%B2%D0%B5%D1%80%D1%81.png' },
+            { id: 'c6', title: 'Ёжик в тумане', desc: 'Философский мультфильм про Ёжика, который шёл к Медвежонку считать звёзды. Лошадь в тумане — образ, который вошёл в мировую культуру.', year: '1975', imgBg: '4a3a5a', imgFg: 'c4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/The_Soviet_Union_1988_CPA_5919_stamp_(Hedgehog_in_the_Fog).jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/The_Soviet_Union_1988_CPA_5919_stamp_(Hedgehog_in_the_Fog).jpg' },
+            { id: 'c7', title: 'Малыш и Карлсон', desc: '"Спокойствие, только спокойствие!" — Карлсон, мужчина в самом расцвете сил. Малыш, Карлсон и Фрекен Бок — комедия на все времена.', year: '1968', imgBg: '8a6a3a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/Stamp_of_Russia_2012_No_1654_Lillebror_and_Karlsson.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/Stamp_of_Russia_2012_No_1654_Lillebror_and_Karlsson.jpg' },
+            { id: 'c8', title: 'Трое из Простоквашино', desc: 'Серия про то, как Матроскин корову купил. "А я ничего покупать не буду — я экономить буду!" — Печкин. Каждая фраза — цитата.', year: '1980', imgBg: '2a5a4a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/Prostokvashino_2026_stamp_of_Russia.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/Prostokvashino_2026_stamp_of_Russia.jpg' },
+          ],
+          games: [
+            { id: 'g1', title: 'Dendy (Денди)', desc: '8-битная приставка, клон NES. "Танчики", "Марио", "Контра", "Черепашки-ниндзя". Картриджи вставляли с усилием, дули на контакты. 9999 игр в одном!', year: '1992', imgBg: 'c4561a', imgFg: 'faf0d7', thumb: 'images/dendy.jpg', realImg: 'images/dendy.jpg' },
+            { id: 'g2', title: 'Sega Mega Drive', desc: '16 бит — это было мощно! Соник, Mortal Kombat, Street Fighter. У кого была Sega — тот был королём района.', year: '1994', imgBg: '2a2a6a', imgFg: 'faf0d7', thumb: 'images/sega.png', realImg: 'images/sega.png' },
+            { id: 'g3', title: 'Тетрис', desc: 'Великая игра Алексея Пажитнова. Квадратики падают, собирай ряды. Был на каждом "Электронике", калькуляторе, телефоне.', year: '1984', imgBg: '2a4a3a', imgFg: '8aba6a', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/Tetris_on_Game_Boy.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/Tetris_on_Game_Boy.jpg' },
+            { id: 'g4', title: 'Game Boy', desc: 'Карманная радость. Чёрно-зелёный экран, никакой подсветки. Играли под одеялом с фонариком. Тетрис, Покемоны — бессмертная классика.', year: '1989', imgBg: '4a4a6a', imgFg: '8a8a3a', thumb: 'images/gameboy.jpg', realImg: 'images/gameboy.jpg' },
+            { id: 'g5', title: 'Морской бой (электронный)', desc: 'Плоская коробочка с экраном. Два корабля стреляют друг в друга. Пикает, гудит — батарейки хватало на час.', year: '1985', imgBg: '3a5a3a', imgFg: '8a8a3a', thumb: 'images/battleship.png', realImg: 'images/battleship.png' },
+            { id: 'g6', title: '"Ну, погоди!" (электронная игра)', desc: 'Волк ловит яйца в корзину. Задник — курятник. Если поймал — молодец, нет — яйцо разбивается. Бесплатный аналог аркад.', year: '1984', imgBg: '2a3a4a', imgFg: '5a8a3a', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/Nupogodi.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/Nupogodi.jpg' },
+            { id: 'g7', title: 'Лазертаг', desc: 'Стрелялки с инфракрасным лучом. Жилет, пистолет, попадание — визг. Бегали по подвалам и стройкам. Самый крутой день рождения!', year: '1995', imgBg: '3a3a2a', imgFg: 'c4561a', thumb: 'images/lasertag.jpg', realImg: 'images/lasertag.jpg' },
+            { id: 'g8', title: 'Карточные игры', desc: '"Ведьмак" не было — были "Дурак", "Пьяница", "Крокодил". Играли во дворе, в школе, в пионерлагере. Колода засаленная, но родная.', year: '1990', imgBg: '1a2a3a', imgFg: 'd4b483', thumb: 'images/playingcards.jpg', realImg: 'images/playingcards.jpg' },
+          ],
+          life: [
+            { id: 'l1', title: 'Дворовые игры', desc: 'Казаки-разбойники, прятки, вышибалы, классики, резиночка. Играли до темноты, приходили домой — "весь в грязи, а ну марш в ванну!"', year: '1980', imgBg: '4a6a3a', imgFg: 'd4b483', thumb: 'images/yardgames.jpg', realImg: 'images/yardgames.jpg' },
+            { id: 'l2', title: 'Пионерский лагерь', desc: 'Три смены летом. Зарядка, линейка, дискотека, походы. Свечка у костра, страшилки, первая любовь. Родители привозили гостинцы в передачках.', year: '1970', imgBg: '3a6a4a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A1%D0%A1%D0%A1%D0%A0%2C_1989%2C_%D0%90%D1%88%D0%B5%2C_%D0%9F%D0%B8%D0%BE%D0%BD%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%BB%D0%B0%D0%B3%D0%B5%D1%80%D1%8C_%D0%A3%D1%82%D1%80%D0%BE%2C_Pioneer_Camp%2C_Soviet_Union.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A1%D0%A1%D0%A1%D0%A0%2C_1989%2C_%D0%90%D1%88%D0%B5%2C_%D0%9F%D0%B8%D0%BE%D0%BD%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%BB%D0%B0%D0%B3%D0%B5%D1%80%D1%8C_%D0%A3%D1%82%D1%80%D0%BE%2C_Pioneer_Camp%2C_Soviet_Union.jpg' },
+            { id: 'l3', title: 'Школьная форма', desc: 'Коричневое платье с белым фартуком для девочек, синий костюм для мальчиков. Белые банты 1 сентября — обязательно!', year: '1980', imgBg: '5a3a2a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A1%D0%A1%D0%A1%D0%A0%2C_1986%2C_%D0%A0%D0%BE%D1%81%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%94%D0%BE%D0%BD%D1%83%2C_%D0%A1%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%B0%D1%8F_%D1%88%D0%BA%D0%BE%D0%BB%D0%B0%2C_%D0%A8%D0%BA%D0%BE%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA%D0%B8%2C_%D0%A4%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F_%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0%2C_Soviet_school%2C_Soviet_Union.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A1%D0%A1%D0%A1%D0%A0%2C_1986%2C_%D0%A0%D0%BE%D1%81%D1%82%D0%BE%D0%B2-%D0%BD%D0%B0-%D0%94%D0%BE%D0%BD%D1%83%2C_%D0%A1%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%B0%D1%8F_%D1%88%D0%BA%D0%BE%D0%BB%D0%B0%2C_%D0%A8%D0%BA%D0%BE%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA%D0%B8%2C_%D0%A4%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F_%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D0%B0%2C_Soviet_school%2C_Soviet_Union.jpg' },
+            { id: 'l4', title: 'Будильник "Электроника"', desc: 'Зелёный дисплей, мерзкий писк. Нажать на кнопку — ещё 5 минут. Стоял у каждого на тумбочке.', year: '1985', imgBg: '2a3a2a', imgFg: '4a8a4a', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A7%D0%B0%D1%81%D1%8B_%D0%AD%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%B8%D0%BA%D0%B0-5%2C_%D0%A1%D0%A1%D0%A1%D0%A0%2C_%D0%BA%D0%BE%D0%BD%D0%B5%D1%86_1980-%D1%85_%D1%841.JPG', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A7%D0%B0%D1%81%D1%8B_%D0%AD%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%B8%D0%BA%D0%B0-5%2C_%D0%A1%D0%A1%D0%A1%D0%A0%2C_%D0%BA%D0%BE%D0%BD%D0%B5%D1%86_1980-%D1%85_%D1%841.JPG' },
+            { id: 'l5', title: 'Автомат с газировкой', desc: 'Трёхгранный стакан на цепочке. Опускаешь монетку — наливай. Вкус газировки с сиропом — незабываемый.', year: '1960', imgBg: '3a4a6a', imgFg: '8aba6a', thumb: 'images/sodamachine.jpg', realImg: 'images/sodamachine.jpg' },
+            { id: 'l6', title: 'Квартира-хрущёвка', desc: 'Маленькая кухня, совмещённый санузел, проходные комнаты. Но там было уютно. Ковёр на стене — признак достатка!', year: '1960', imgBg: '6a4a3a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A0%D0%B5%D0%BC%D0%BE%D0%BD%D1%82_%D1%85%D1%80%D1%83%D1%89%D0%B5%D0%B2%D0%BA%D0%B8_2018.png', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A0%D0%B5%D0%BC%D0%BE%D0%BD%D1%82_%D1%85%D1%80%D1%83%D1%89%D0%B5%D0%B2%D0%BA%D0%B8_2018.png' },
+            { id: 'l7', title: 'Очередь за дефицитом', desc: 'За колбасой, за джинсами, за мебелью. Записывались, отмечались, отстаивали часы. Но добытый дефицит — победа!', year: '1980', imgBg: '4a4a4a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/J%C3%A4rjekord_raamatupoe_ees,_PMF2071_2.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/J%C3%A4rjekord_raamatupoe_ees,_PMF2071_2.jpg' },
+            { id: 'l8', title: 'Телевизор "Рубин"', desc: 'Огромный ящик с выпуклым экраном. Три канала, кнопки переключались с хрустом. Антенна — вешалка. "Спокойной ночи, малыши!" — ритуал.', year: '1970', imgBg: '3a2a1a', imgFg: '6a4a2a', thumb: 'images/rubintv.jpg', realImg: 'images/rubintv.jpg' },
+          ]
+        },
+        getItems(tabId) {
+          return this.items[tabId] || [];
+        },
+        init() {
+          this.loadingText = 'Загрузка данных...';
+          setTimeout(() => {
+            this.loadingText = 'Загрузка изображений...';
+          }, 400);
+          setTimeout(() => {
+            this.loadingText = 'Подготовка системы...';
+          }, 800);
+          setTimeout(() => {
+            this.loading = false;
+          }, 1500);
+
+          const updateClock = () => {
+            const now = new Date();
+            const f = (n) => String(n).padStart(2, '0');
+            this.clock = f(now.getHours()) + ':' + f(now.getMinutes()) + ':' + f(now.getSeconds());
+          };
+          updateClock();
+          setInterval(updateClock, 1000);
+        }
+      }));
+    });
+  </script>
+</body>
+</html>

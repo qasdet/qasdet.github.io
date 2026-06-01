@@ -11,18 +11,24 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <style>
-        body { display: flex; flex-direction: column; }
-        .header-inner { max-width: 800px; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 64px 32px; flex: 1; }
-        .hero { text-align: center; margin-bottom: 48px; }
+        .hero {
+            text-align: center;
+            margin-bottom: 48px;
+            animation: fadeInUp 0.8s ease-out;
+        }
         .hero h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #0f0f23;
+            color: var(--text-primary);
             margin-bottom: 12px;
             letter-spacing: -0.02em;
         }
-        .hero p { font-size: 1.1rem; color: #64748b; max-width: 600px; margin: 0 auto; }
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-tertiary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
         .search-box {
             max-width: 500px;
@@ -32,20 +38,25 @@
             width: 100%;
             padding: 14px 20px;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            background: #fff;
-            color: #1a1a2e;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 1rem;
             font-family: inherit;
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .search-box input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
-        .search-box input::placeholder { color: #94a3b8; }
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+        .search-box input::placeholder {
+            color: var(--text-tertiary);
+        }
 
         .section {
-            background: #fff;
-            border: 1px solid #e2e8f0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 32px;
             margin-bottom: 24px;
@@ -54,7 +65,7 @@
         .section h2 {
             font-size: 1.4rem;
             font-weight: 700;
-            color: #0f0f23;
+            color: var(--text-primary);
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -63,7 +74,7 @@
         .section h2 .icon { font-size: 1.5rem; }
 
         .subsection {
-            border: 1px solid #f1f5f9;
+            border: 1px solid var(--border);
             border-radius: 10px;
             margin-bottom: 12px;
             overflow: hidden;
@@ -72,18 +83,18 @@
         .subsection-header {
             padding: 14px 20px;
             font-weight: 600;
-            color: #0f0f23;
+            color: var(--text-primary);
             cursor: pointer;
             user-select: none;
             display: flex;
             align-items: center;
             gap: 8px;
-            background: #fafafa;
+            background: var(--bg-card);
             transition: background 0.2s;
         }
-        .subsection-header:hover { background: #f1f5f9; }
+        .subsection-header:hover { background: var(--bg-card-hover); }
         .subsection-header .arrow {
-            color: #667eea;
+            color: var(--primary);
             transition: transform 0.2s;
             font-size: 0.8rem;
         }
@@ -91,7 +102,7 @@
         .subsection-content { padding: 20px; }
 
         .cmd-block {
-            background: #fafafa;
+            background: var(--bg-card);
             border-radius: 10px;
             padding: 16px 20px;
             margin-bottom: 16px;
@@ -100,23 +111,23 @@
         .cmd-title {
             font-size: 0.9rem;
             font-weight: 600;
-            color: #667eea;
+            color: var(--primary);
             margin-bottom: 8px;
         }
         .cmd {
             font-family: 'Geist Mono', monospace;
             font-size: 0.8rem;
-            color: #10b981;
+            color: var(--success);
             white-space: pre-wrap;
             word-break: break-all;
             line-height: 1.8;
         }
-        .cmd .comment { color: #94a3b8; }
-        .cmd .flag { color: #f472b6; }
-        .cmd .string { color: #f59e0b; }
+        .cmd .comment { color: var(--text-tertiary); }
+        .cmd .flag { color: var(--accent); }
+        .cmd .string { color: var(--warning); }
         .cmd-desc {
             font-size: 0.8rem;
-            color: #64748b;
+            color: var(--text-tertiary);
             margin-top: 8px;
         }
 
@@ -126,62 +137,73 @@
             gap: 16px;
         }
         .card {
-            background: #fafafa;
-            border: 1px solid #f1f5f9;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 16px;
         }
         .card-title {
             font-weight: 600;
-            color: #0f0f23;
+            color: var(--text-primary);
             margin-bottom: 8px;
             font-size: 0.95rem;
         }
         .card code {
             font-family: 'Geist Mono', monospace;
             font-size: 0.75rem;
-            color: #10b981;
+            color: var(--success);
             display: block;
             margin-bottom: 8px;
             line-height: 1.6;
         }
         .card p {
             font-size: 0.8rem;
-            color: #64748b;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 40px 24px;
-            color: #94a3b8;
-            font-size: 0.875rem;
-            border-top: 1px solid #e2e8f0;
-            background: #fff;
+            color: var(--text-tertiary);
         }
 
         .no-results {
             text-align: center;
             padding: 48px;
-            color: #64748b;
+            color: var(--text-tertiary);
         }
 
         @media (max-width: 640px) {
-            .header-nav a:not(.active) { display: none; }
             .hero h1 { font-size: 2rem; }
             .card-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-<header class="header">
+    <header class="header">
         <div class="header-inner">
             <nav class="header-nav">
                 <a href="index.html">📄 Резюме</a>
                 <a href="about.html">👤 Обо мне</a>
                 <a href="blog.html">📝 Блог</a>
                 <a href="projects.html">💻 Проекты</a>
-                <a href="pytest.html">🎓 Обучение</a>
-                <a href="test.html">🎯 Опыт</a>
+                <div class="nav-group">
+                    <a href="pytest.html" class="nav-group-toggle">
+                        🎓 Обучение
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="pytest.html" title="Pytest">Pytest</a>
+                        <a href="xpath.html" title="XPath">XPath</a>
+                        <a href="framework.html" title="Playwright + Pytest">Playwright + Pytest</a>
+                        <a href="theory_testing.html" title="Теория тестирования">Теория тестирования</a>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <a href="test.html" class="nav-group-toggle">
+                        🎯 Опыт
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </a>
+                    <div class="nav-group-dropdown">
+                        <a href="test.html" title="Жизненный багаж">Жизненный багаж</a>
+                        <a href="life.html" title="Профессия и навыки">Профессия и навыки</a>
+                        <a href="info.html" title="Информационный контекст">Инфо контекст</a>
+                    </div>
+                </div>
             </nav>
         </div>
     </header>
