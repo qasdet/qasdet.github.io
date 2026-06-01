@@ -604,6 +604,7 @@
               <template x-for="item in getItems(tab.id)" :key="item.id">
                 <div class="card" @click="openModal(item, tab.id)">
                   <img
+                    x-show="tab.id !== 'rhymes'"
                     class="card-img"
                     :src="item.thumb || 'https://placehold.co/400x280/' + item.imgBg + '/' + item.imgFg + '?text=' + encodeURIComponent(item.title)"
                     :alt="item.title"
@@ -710,7 +711,8 @@
           { id: 'tech', label: '📼 Техника', title: '📻 Гаджеты 90-х' },
           { id: 'cartoons', label: '🎬 Мультфильмы', title: '📺 Любимые мультики' },
           { id: 'games', label: '🎮 Игры', title: '🕹️ Игрушки для мальчиков и девочек' },
-          { id: 'life', label: '🏠 Быт', title: '🚲 Как мы жили' }
+          { id: 'life', label: '🏠 Быт', title: '🚲 Как мы жили' },
+          { id: 'rhymes', label: '🔢 Считалки', title: '🎵 Детские считалки' }
         ],
         items: {
           toys: [
@@ -772,6 +774,16 @@
             { id: 'l6', title: 'Квартира-хрущёвка', desc: 'Маленькая кухня, совмещённый санузел, проходные комнаты. Но там было уютно. Ковёр на стене — признак достатка!', year: '1960', imgBg: '6a4a3a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A0%D0%B5%D0%BC%D0%BE%D0%BD%D1%82_%D1%85%D1%80%D1%83%D1%89%D0%B5%D0%B2%D0%BA%D0%B8_2018.png', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/%D0%A0%D0%B5%D0%BC%D0%BE%D0%BD%D1%82_%D1%85%D1%80%D1%83%D1%89%D0%B5%D0%B2%D0%BA%D0%B8_2018.png' },
             { id: 'l7', title: 'Очередь за дефицитом', desc: 'За колбасой, за джинсами, за мебелью. Записывались, отмечались, отстаивали часы. Но добытый дефицит — победа!', year: '1980', imgBg: '4a4a4a', imgFg: 'd4b483', thumb: 'https://commons.wikimedia.org/wiki/Special:FilePath/J%C3%A4rjekord_raamatupoe_ees,_PMF2071_2.jpg', realImg: 'https://commons.wikimedia.org/wiki/Special:FilePath/J%C3%A4rjekord_raamatupoe_ees,_PMF2071_2.jpg' },
             { id: 'l8', title: 'Телевизор "Рубин"', desc: 'Огромный ящик с выпуклым экраном. Три канала, кнопки переключались с хрустом. Антенна — вешалка. "Спокойной ночи, малыши!" — ритуал.', year: '1970', imgBg: '3a2a1a', imgFg: '6a4a2a', thumb: 'images/rubintv.jpg', realImg: 'images/rubintv.jpg' },
+          ],
+          rhymes: [
+            { id: 'r1', title: 'Вышел зайчик погулять', desc: 'Раз, два, три, четыре, пять,\nвышел зайчик погулять.\nВдруг охотник выбегает,\nпрямо в зайчика стреляет.\nПиф-паф! Ой-ой-ой!\nУмирает зайчик мой.\n\nПривезли его в больницу —\nон украл там рукавицу.\nПривезли его домой —\nоказался он живой!', year: '1851', imgBg: 'd4e8d4', imgFg: '3a5a3a', thumb: 'https://placehold.co/200x200/d4e8d4/3a5a3a?text=%F0%9F%90%87', realImg: 'https://upload.wikimedia.org/wikipedia/commons/4/49/PeterRabbit4.jpg' },
+            { id: 'r2', title: 'На златом крыльце сидели', desc: 'На златом крыльце сидели:\nцарь, царевич, король, королевич,\nсапожник, портной.\nКто ты будешь такой?\nВыходи поскорей,\nне задерживай добрых\nи честных людей!', year: 'XIX век', imgBg: 'e8d4a8', imgFg: '5a3a1a', thumb: 'https://placehold.co/200x200/e8d4a8/5a3a1a?text=%F0%9F%91%91', realImg: 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Ivan_Bilibin_-_illustration-for-alexander-pushkin-s-fairytale-of-the-tsar-saltan-1905-21.jpg' },
+            { id: 'r3', title: 'Эники-беники', desc: 'Эники-беники ели вареники,\nэники-беники — клёц.\nВышел весёлый матрос\nна палубу,\nсъел эники-беники\nпрямо на глазах у всех!', year: 'XIX век', imgBg: 'e8d8b8', imgFg: '6a4a2a', thumb: 'https://placehold.co/200x200/e8d8b8/6a4a2a?text=%F0%9F%A5%9F' },
+            { id: 'r4', title: 'Вышел месяц из тумана', desc: 'Вышел месяц из тумана,\nвынул ножик из кармана.\nБуду резать, буду бить —\nвсё равно тебе водить!\n\nА за месяцем — луна.\nКто остался — тот — \\"во!\\"', year: 'XX век', imgBg: '2a3a4a', imgFg: 'c4d4e4', thumb: 'https://placehold.co/200x200/2a3a4a/c4d4e4?text=%F0%9F%8C%99', realImg: 'https://upload.wikimedia.org/wikipedia/commons/8/84/The_Moon_Maiden%2C_by_Warwick_Goble.jpg' },
+            { id: 'r5', title: 'Шла машина тёмным лесом', desc: 'Шла машина тёмным лесом\nза каким-то интересам.\nИнтерес-переинтерес —\nвыходи на букву \\"С\\".\nБуква \\"С\\" не подошла —\nвыходи на букву \\"А\\"!', year: 'XX век', imgBg: '3a4a3a', imgFg: '8aba6a', thumb: 'https://placehold.co/200x200/3a4a3a/8aba6a?text=%F0%9F%9A%97', realImg: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/A_Brouhot_car_in_Paris%2C_1910.jpg' },
+            { id: 'r6', title: 'Кады-бады', desc: 'Кады-бады — налей воды\nкорове пить — тебе водить.\nКады-бады — налей кваску,\nа я на месте — на доске!\n\nКатился горох по блюду —\nводить тебя я буду!', year: 'XIX век', imgBg: '4a6a8a', imgFg: 'd4e4f4', thumb: 'https://placehold.co/200x200/4a6a8a/d4e4f4?text=%F0%9F%92%A7', realImg: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/Vasnetsov_Alenushka.jpg' },
+            { id: 'r7', title: 'Аты-баты — шли солдаты', desc: 'Аты-баты — шли солдаты,\nаты-баты — на базар.\nАты-баты — что купили?\nАты-баты — самовар!\n\nАты-баты — сколько стоит?\nАты-баты — три рубля.\nАты-баты — кто выходит?\nАты-баты — это я!', year: 'XIX век', imgBg: '6a5a3a', imgFg: 'd4c4a4', thumb: 'https://placehold.co/200x200/6a5a3a/d4c4a4?text=%E2%9A%94', realImg: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Viktor_Vasnetsov_-_%D0%91%D0%BE%D0%B3%D0%B0%D1%82%D1%8B%D1%80%D0%B8_-_Google_Art_Project.jpg' },
+            { id: 'r8', title: 'Кто не спит — тот выйди', desc: 'Раз, два, три, четыре —\nменя грамоте учили:\nне читать, не писать,\nтолько по полу скакать.\n\nЯ скакала, я скакала —\nсебе ноженьку сломала.\nСтала ноженька болеть —\nстала маменька жалеть.\n\nПожалела, поругала\nи за доктором послала.\nДоктор едет на быке\nс балалаечкой в руке!', year: 'XIX век', imgBg: '4a3a5a', imgFg: 'c4b4d4', thumb: 'https://placehold.co/200x200/4a3a5a/c4b4d4?text=%F0%9F%9B%8C' },
           ]
         },
         getItems(tabId) {
