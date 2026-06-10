@@ -8,24 +8,24 @@
     --warning: #f59e0b;
     --error: #ef4444;
 
-    --bg-primary: #0a0a1a;
-    --bg-secondary: #12122a;
-    --bg-tertiary: #1a1a3e;
-    --bg-card: rgba(255, 255, 255, 0.04);
-    --bg-card-hover: rgba(255, 255, 255, 0.08);
+    --bg-primary: #f8f9fc;
+    --bg-secondary: #f1f3f8;
+    --bg-tertiary: #e8ecf4;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f5f3ff;
 
-    --text-primary: #f1f5f9;
-    --text-secondary: #cbd5e1;
-    --text-tertiary: #94a3b8;
+    --text-primary: #1e1b4b;
+    --text-secondary: #4b4563;
+    --text-tertiary: #8b86a3;
 
     --border: rgba(124, 58, 237, 0.2);
-    --border-light: rgba(255, 255, 255, 0.08);
+    --border-light: rgba(0, 0, 0, 0.06);
 
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
-    --shadow-glow: 0 0 60px rgba(124, 58, 237, 0.15);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+    --shadow-glow: 0 0 60px rgba(124, 58, 237, 0.08);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -50,9 +50,9 @@ body::before {
     width: 200%;
     height: 200%;
     background:
-        radial-gradient(ellipse 60% 50% at 20% 0%, rgba(124, 58, 237, 0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 80% 30%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-        radial-gradient(ellipse 40% 30% at 50% 100%, rgba(236, 72, 153, 0.04) 0%, transparent 50%);
+        radial-gradient(ellipse 60% 50% at 20% 0%, rgba(124, 58, 237, 0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 30%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 30% at 50% 100%, rgba(236, 72, 153, 0.02) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
 }
@@ -76,12 +76,12 @@ body::after {
 ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
 
 ::selection {
-    background: rgba(124, 58, 237, 0.3);
-    color: #fff;
+    background: rgba(124, 58, 237, 0.2);
+    color: #1e1b4b;
 }
 
 .header {
-    background: rgba(10, 10, 26, 0.8);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid var(--border);
@@ -116,13 +116,13 @@ body::after {
 }
 
 .header-nav a:hover {
-    color: #fff;
-    background: rgba(124, 58, 237, 0.15);
+    color: var(--text-primary);
+    background: rgba(124, 58, 237, 0.1);
 }
 
 .header-nav a.active {
-    color: #fff;
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(109, 40, 217, 0.2) 100%);
+    color: var(--primary);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.12) 0%, rgba(109, 40, 217, 0.12) 100%);
     font-weight: 600;
     border: 1px solid var(--border);
 }
@@ -138,7 +138,7 @@ body::after {
 
 .nav-group { position: relative; }
 .nav-group-toggle { cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 10px; text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-.nav-group-toggle:hover { color: #fff; background: rgba(124, 58, 237, 0.15); }
+.nav-group-toggle:hover { color: var(--text-primary); background: rgba(124, 58, 237, 0.1); }
 .nav-group-toggle svg:last-child { transition: transform 0.2s; }
 .nav-group:hover .nav-group-toggle svg:last-child { transform: rotate(180deg); }
 
@@ -146,7 +146,7 @@ body::after {
     position: absolute;
     top: 100%;
     left: 0;
-    background: rgba(18, 18, 42, 0.95);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     border: 1px solid var(--border);
@@ -181,8 +181,8 @@ body::after {
 
 .nav-group-dropdown a:hover,
 .nav-group-dropdown a.active {
-    background: rgba(124, 58, 237, 0.15);
-    color: #fff;
+    background: rgba(124, 58, 237, 0.1);
+    color: var(--primary);
 }
 
 .container { max-width: 920px; margin: 0 auto; padding: 96px 32px; }
@@ -231,7 +231,7 @@ body::after {
 
 .btn-secondary:hover {
     border-color: var(--primary);
-    color: #fff;
+    color: var(--primary);
     background: rgba(124, 58, 237, 0.1);
 }
 
