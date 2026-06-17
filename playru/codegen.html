@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Генератор тестов (Codegen)</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link active" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Генератор тестов (Codegen)</h1>
+<p>Автоматическая генерация тестового кода по действиям пользователя в браузере. Запись кликов, ввода и навигации в готовый Python-код.</p>
+</div>
+<div class="card">
+<h2>Что такое Playwright Codegen</h2>
+<p>Playwright Codegen — это встроенный инструмент, который записывает ваши действия в браузере и преобразует их в готовый тестовый код. Достаточно выполнить одну команду в терминале, и откроется браузер, каждое ваше действие будет записано в виде стабильного, готового к использованию теста на Python.</p>
+
+<div class="box box-info">
+<p><strong>Важно:</strong> Сгенерированный код использует правильные локаторы с auto-waiting, что делает тесты надёжными и читаемыми. Codegen — отличный способ начать изучение Playwright или быстро создать каркас теста для сложной страницы.</p>
+</div>
+
+<h2>Запуск генератора</h2>
+
+<h3>Базовый запуск</h3>
+<p>Просто выполните команду в терминале:</p>
+
+<pre><span class="cm"># Запуск генератора в режиме по умолчанию</span>
+playwright codegen</pre>
+
+<p>После запуска откроется два окна: браузер (где вы выполняете действия) и Playwright Inspector (с генерируемым кодом). Выберите язык Python в Inspector, если он не установлен по умолчанию.</p>
+
+<h3>С указанием URL</h3>
+<p>Можно сразу указать адрес страницы, с которой начать:</p>
+
+<pre><span class="cm"># Открыть playwright.dev и начать запись</span>
+playwright codegen playwright.dev
+
+<span class="cm"># Запуск с локальным сервером</span>
+playwright codegen http://localhost:3000</pre>
+
+<h3>Настройка размера окна</h3>
+<p>По умолчанию окно браузера имеет размер 1280x720. Вы можете изменить его:</p>
+
+<pre><span class="cm"># Кастомный размер окна просмотра</span>
+playwright codegen --viewport-size=1280,720
+
+<span class="cm"># Мобильный размер</span>
+playwright codegen --viewport-size=375,812</pre>
+
+<h2>Эмуляция устройств</h2>
+<p>Codegen поддерживает эмуляцию мобильных устройств, что позволяет генерировать код для мобильных сценариев:</p>
+
+<pre><span class="cm"># Эмуляция iPhone 13</span>
+playwright codegen --device=<span class="st">"iPhone 13"</span>
+
+<span class="cm"># Эмуляция Pixel 5</span>
+playwright codegen --device=<span class="st">"Pixel 5"</span>
+
+<span class="cm"># Эмуляция iPad Pro</span>
+playwright codegen --device=<span class="st">"iPad Pro 11"</span></pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> При использовании <code>--device</code> размер окна, user-agent и другие параметры автоматически устанавливаются под выбранное устройство. Дополнительный <code>--viewport-size</code> в этом случае игнорируется.</p>
+</div>
+
+<h2>Цветовая схема</h2>
+<p>Вы можете задать цветовую схему для тестирования тёмной темы:</p>
+
+<pre><span class="cm"># Тёмная тема</span>
+playwright codegen --color-scheme=dark
+
+<span class="cm"># Светлая тема (по умолчанию)</span>
+playwright codegen --color-scheme=light</pre>
+
+<h2>Сохранение результата в файл</h2>
+<p>Сгенерированный код можно сразу сохранить в файл:</p>
+
+<pre><span class="cm"># Сохранение в файл test_my.py</span>
+playwright codegen --output test_my.py
+
+<span class="cm"># Сохранение с указанием полного пути</span>
+playwright codegen --output tests/test_login.py</pre>
+
+<h2>Выбор целевого языка</h2>
+<p>По умолчанию Codegen генерирует код на Python. Можно явно указать целевой язык:</p>
+
+<pre><span class="cm"># Python (по умолчанию)</span>
+playwright codegen --target=python
+
+<span class="cm"># JavaScript</span>
+playwright codegen --target=javascript
+
+<span class="cm"># Java</span>
+playwright codegen --target=java
+
+<span class="cm"># .NET C#</span>
+playwright codegen --target=csharp</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Изменение языка происходит только на старте. Если нужно переключиться во время сессии, используйте выпадающий список в Inspector.</p>
+</div>
+
+<h2>Запись действий</h2>
+<p>Когда браузер открыт, каждое ваше действие записывается в реальный код. Вот что поддерживается:</p>
+
+<ul>
+<li><strong>Клики</strong> — по кнопкам, ссылкам, любым элементам. Генерируется <code>locator.click()</code></li>
+<li><strong>Ввод текста</strong> — заполнение полей ввода. Генерируется <code>locator.fill()</code></li>
+<li><strong>Навигация</strong> — переход по ссылкам, ввод URL. Генерируется <code>page.goto()</code></li>
+<li><strong>Выбор опций</strong> — из выпадающих списков. Генерируется <code>locator.select_option()</code></li>
+<li><strong>Отметка чекбоксов</strong> — генерируется <code>locator.check()</code> / <code>locator.uncheck()</code></li>
+<li><strong>Drag-and-drop</strong> — генерируется <code>locator.drag_to()</code></li>
+</ul>
+
+<p>Пример сгенерированного кода:</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">run</span>(playwright):
+    browser <span class="op">=</span> playwright.chromium.launch(headless=<span class="kw">False</span>)
+    context <span class="op">=</span> browser.new_context()
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).click()
+    page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+    page.get_by_role(<span class="st">"combobox"</span>, name=<span class="st">"Country"</span>).select_option(<span class="st">"RU"</span>)
+    page.get_by_role(<span class="st">"checkbox"</span>, name=<span class="st">"Agree"</span>).check()
+    page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Logout"</span>).click()
+    context.close()
+    browser.close()
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> playwright:
+    run(playwright)</pre>
+
+<h2>Playwright Inspector</h2>
+<p>Playwright Inspector — это графический интерфейс, который открывается вместе с Codegen. Он предоставляет:</p>
+
+<ul>
+<li><strong>Дерево локаторов</strong> — иерархия DOM с подсветкой элементов при наведении</li>
+<li><strong>Генерируемый код</strong> — обновляется в реальном времени по мере действий</li>
+<li><strong>Копирование селекторов</strong> — можно скопировать рекомендованный локатор для любого элемента</li>
+<li><strong>Режим Pick Locator</strong> — выберите элемент на странице и получите лучший локатор</li>
+</ul>
+
+<h3>Pick Locator mode</h3>
+<p>Режим Pick Locator позволяет навести курсор на любой элемент страницы и мгновенно получить рекомендуемый локатор для него. Playwright анализирует DOM и выбирает наиболее стабильный и читаемый локатор (обычно <code>get_by_role</code> или <code>get_by_text</code>).</p>
+
+<pre><span class="cm"># Включение Pick Locator из командной строки</span>
+playwright codegen --inspector</pre>
+
+<p>В Inspector нажмите кнопку "Pick Locator" (значок прицела), затем наведитесь на элемент на странице — в Inspector отобразится лучший локатор.</p>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Pick Locator особенно полезен для сложных SPA-приложений, где ручной поиск стабильного селектора может занять много времени.</p>
+</div>
+
+<h2>Assertion tools (Утверждения)</h2>
+<p>Codegen позволяет добавлять проверки прямо во время записи. В Inspector есть три кнопки для утверждений:</p>
+
+<ul>
+<li><strong>Visibility</strong> — проверка видимости элемента. Генерирует <code>expect(locator).is_visible()</code></li>
+<li><strong>Text</strong> — проверка текста элемента. Генерирует <code>expect(locator).to_have_text()</code></li>
+<li><strong>Value</strong> — проверка значения поля. Генерирует <code>expect(locator).to_have_value()</code></li>
+</ul>
+
+<p>Пример сгенерированного кода с утверждениями:</p>
+
+<pre><span class="kw">def</span> <span class="fn">run</span>(playwright):
+    browser <span class="op">=</span> playwright.chromium.launch(headless=<span class="kw">False</span>)
+    context <span class="op">=</span> browser.new_context()
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Утверждение: кнопка видна</span>
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).is_visible()
+
+    <span class="cm"># Утверждение: текст заголовка</span>
+    page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Welcome"</span>).is_visible()
+
+    <span class="cm"># Утверждение: поле содержит значение</span>
+    page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+    page.get_by_label(<span class="st">"Email"</span>).input_value() <span class="op">==</span> <span class="st">"user@example.com"</span>
+
+    context.close()
+    browser.close()</pre>
+
+<h2>Эмуляционные опции</h2>
+<p>Codegen поддерживает множество опций для эмуляции различных условий:</p>
+
+<h3>Часовой пояс</h3>
+<pre><span class="cm"># Эмуляция часового пояса Москвы</span>
+playwright codegen --timezone=<span class="st">"Europe/Moscow"</span>
+
+<span class="cm"># Эмуляция часового пояса Нью-Йорка</span>
+playwright codegen --timezone=<span class="st">"America/New_York"</span></pre>
+
+<h3>Геолокация</h3>
+<pre><span class="cm"># Эмуляция координат (Москва)</span>
+playwright codegen --geolocation=<span class="st">"55.7558,37.6173"</span>
+
+<span class="cm"># Эмуляция координат (Нью-Йорк)</span>
+playwright codegen --geolocation=<span class="st">"40.7128,-74.0060"</span></pre>
+
+<h3>Язык браузера</h3>
+<pre><span class="cm"># Русский язык интерфейса</span>
+playwright codegen --lang=<span class="st">"ru-RU"</span>
+
+<span class="cm"># Несколько языков</span>
+playwright codegen --lang=<span class="st">"de-DE,en-US"</span></pre>
+
+<h2>page.pause() — открытие Inspector в коде</h2>
+<p>Вы можете вставить вызов <code>page.pause()</code> в свой тестовый код, чтобы вручную открыть Playwright Inspector в нужный момент выполнения. Это позволяет переключиться в режим записи прямо посередине теста.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_example</span>(page):
+    page.goto(<span class="st">"https://example.com"</span>)
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Login"</span>).click()
+
+    <span class="cm"># Открыть Inspector для ручного взаимодействия</span>
+    page.pause()
+
+    <span class="cm"># Код после паузы продолжится после нажатия "Resume" в Inspector</span>
+    page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Dashboard"</span>).is_visible()</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> <code>page.pause()</code> приостанавливает выполнение теста до тех пор, пока вы не нажмёте кнопку "Resume" в Playwright Inspector. Это полезно для отладки, не оставляйте pause() в финальной версии теста.</p>
+</div>
+
+<h2>Сохранение и загрузка аутентификации</h2>
+<p>Codegen поддерживает сохранение состояния аутентификации (cookies, localStorage) для повторного использования в последующих сессиях.</p>
+
+<h3>Сохранение состояния</h3>
+<pre><span class="cm"># Запись действий с сохранением сессии</span>
+playwright codegen --save-storage=auth.json
+
+<span class="cm"># После закрытия браузера файл auth.json будет содержать куки и localStorage</span></pre>
+
+<h3>Загрузка состояния</h3>
+<pre><span class="cm"># Запуск с ранее сохранённой сессией</span>
+playwright codegen --load-storage=auth.json
+
+<span class="cm"># Пользователь уже будет авторизован</span>
+playwright codegen --load-storage=auth.json https://example.com/dashboard</pre>
+
+<p>Программное использование storageState:</p>
+
+<pre><span class="kw">import</span> json
+
+<span class="cm"># Сохранение состояния контекста</span>
+storage <span class="op">=</span> context.storage_state(path=<span class="st">"auth.json"</span>)
+
+<span class="cm"># Загрузка состояния в новый контекст</span>
+context <span class="op">=</span> browser.new_context(storage_state=<span class="st">"auth.json"</span>)</pre>
+
+<h2>Настройка трассировки, видео и скриншотов из Codegen</h2>
+<p>Вы можете настроить дополнительные опции прямо при запуске Codegen:</p>
+
+<h3>Трассировка</h3>
+<pre><span class="cm"># Включение трассировки</span>
+playwright codegen --trace on
+
+<span class="cm"># Трассировка только при ошибках</span>
+playwright codegen --trace retain-on-failure</pre>
+
+<h3>Видеозапись</h3>
+<pre><span class="cm"># Запись видео теста</span>
+playwright codegen --video on
+
+<span class="cm"># Видео только при падении</span>
+playwright codegen --video retain-on-failure</pre>
+
+<h3>Скриншоты</h3>
+<pre><span class="cm"># Скриншоты на каждом шаге</span>
+playwright codegen --screenshot on
+
+<span class="cm"># Скриншоты только при падении</span>
+playwright codegen --screenshot only-on-failure</pre>
+
+<h2>Практический пример: запись теста авторизации</h2>
+<p>Полный сценарий работы с Codegen для создания теста авторизации:</p>
+
+<pre><span class="cm"># Шаг 1: Запуск генератора с эмуляцией мобильного устройства и русским языком</span>
+playwright codegen --device=<span class="st">"iPhone 13"</span> --lang=<span class="st">"ru-RU"</span> --output test_auth.py
+
+<span class="cm"># Шаг 2: Выполните в браузере:
+# 1. Перейдите на страницу логина
+# 2. Введите email
+# 3. Введите пароль
+# 4. Нажмите кнопку "Войти"
+# 5. Добавьте утверждение (visibility) на элемент после входа</span>
+
+<span class="cm"># Шаг 3: Закройте браузер — код сохранится в test_auth.py</span></pre>
+
+<p>Результат в файле test_auth.py:</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">run</span>(playwright):
+    iphone_13 <span class="op">=</span> playwright.devices[<span class="st">"iPhone 13"</span>]
+    browser <span class="op">=</span> playwright.webkit.launch(headless=<span class="kw">False</span>)
+    context <span class="op">=</span> browser.new_context(
+        <span class="op">**</span>iphone_13,
+        locale=<span class="st">"ru-RU"</span>,
+    )
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com/login"</span>)
+    page.get_by_placeholder(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+    page.get_by_placeholder(<span class="st">"Пароль"</span>).fill(<span class="st">"mypassword"</span>)
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Войти"</span>).click()
+    page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Dashboard"</span>).is_visible()
+    context.close()
+    browser.close()
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> playwright:
+    run(playwright)</pre>
+
+<h2>Советы и рекомендации</h2>
+<div class="box box-tip">
+<p><strong>Совет 1:</strong> Используйте <code>--output</code> для автоматического сохранения кода. Это удобно при длительных сессиях записи.</p>
+</div>
+<div class="box box-tip">
+<p><strong>Совет 2:</strong> Комбинируйте <code>--device</code> с <code>--lang</code> и <code>--geolocation</code> для максимально реалистичной эмуляции пользователя.</p>
+</div>
+<div class="box box-tip">
+<p><strong>Совет 3:</strong> После генерации кода просмотрите его и, при необходимости, добавьте <code>expect()</code> для ключевых проверок. Codegen записывает базовые утверждения, но не может предугадать все бизнес-требования.</p>
+</div>
+<div class="box box-tip">
+<p><strong>Совет 4:</strong> Используйте <code>--save-storage</code> для длинных сценариев, где нужно пройти аутентификацию один раз, а затем многократно генерировать тесты для защищённых разделов.</p>
+</div>
+
+<h2>Заключение</h2>
+<p>Playwright Codegen — мощный инструмент для быстрого создания тестов. Он не только ускоряет написание кода, но и помогает изучать правильные паттерны использования локаторов и API Playwright. Используйте его как отправную точку, а затем дорабатывайте тесты под свои нужды.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

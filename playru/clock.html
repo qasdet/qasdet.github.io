@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clock API (Часы) — Playwright Python</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link active" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Clock API (Часы)</h1>
+<p>Управление временем в браузере: эмуляция, ускорение, фиксация для тестирования таймеров, анимаций и календарей.</p>
+</div>
+<div class="card">
+<h2>Обзор Clock API</h2>
+<p>Clock API в Playwright позволяет полностью контролировать время в браузере: перехватывать <span class="fn">Date</span>, <span class="fn">setTimeout</span>, <span class="fn">setInterval</span>, <span class="fn">requestAnimationFrame</span> и другие временные функции. Это необходимо для детерминированного тестирования анимаций, таймеров, календарей и поведения, зависящего от времени.</p>
+
+<h2>Установка и управление</h2>
+
+<h3>page.clock.install() — перехват времени</h3>
+<p>Устанавливает перехват всех временных функций в браузере. После вызова все таймеры и <span class="fn">Date</span> управляются через Clock API.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    page <span class="op">=</span> browser.new_page()
+    page.clock.install()
+    page.goto(<span class="st">"https://example.com"</span>)
+    browser.close()</pre>
+
+<h3>page.clock.install(time="2024-01-01T00:00:00")</h3>
+<p>Установка перехвата времени с начальной точкой отсчёта.</p>
+
+<pre>page.clock.install(time=<span class="st">"2024-01-01T00:00:00"</span>)</pre>
+
+<h3>page.clock.set_fixed_time() — фиксированное время</h3>
+<p>Устанавливает фиксированное время, которое не изменяется.</p>
+
+<pre>page.clock.set_fixed_time(<span class="st">"2024-06-15T12:00:00"</span>)
+<span class="cm"># Date.now() всегда будет возвращать это значение</span></pre>
+
+<h3>page.clock.set_system_time() — системное время</h3>
+<p>Устанавливает системное время (время течёт как обычно, но стартует с указанной точки).</p>
+
+<pre>page.clock.set_system_time(<span class="st">"2024-06-15T12:00:00"</span>)
+<span class="cm"># Время течёт, но начальная точка задана</span></pre>
+
+<h3>page.clock.pause_at() — остановка в конкретное время</h3>
+<p>Останавливает время в указанный момент.</p>
+
+<pre>page.clock.pause_at(<span class="st">"2024-06-15T12:30:00"</span>)</pre>
+
+<h3>page.clock.resume() — возобновление</h3>
+<p>Возобновляет течение времени после паузы.</p>
+
+<pre>page.clock.resume()</pre>
+
+<h2>Управление таймерами и анимациями</h2>
+
+<h3>page.clock.fast_forward() — ускорение времени</h3>
+<p>Прокручивает время вперёд на указанное количество миллисекунд, выполняя все ожидающие таймеры.</p>
+
+<pre>page.clock.fast_forward(<span class="nm">5000</span>)  <span class="cm"># перемотать на 5 секунд вперёд</span></pre>
+
+<h3>page.clock.fast_forward_async() — ускорение с async</h3>
+<p>То же, что <span class="fn">fast_forward()</span>, но в асинхронном режиме.</p>
+
+<pre><span class="kw">await</span> page.clock.fast_forward_async(<span class="nm">5000</span>)</pre>
+
+<h3>page.clock.advance() — продвинуть на N мс</h3>
+<p>Продвигает время на указанное количество миллисекунд (выполняет только таймеры, попавшие в этот интервал).</p>
+
+<pre>page.clock.advance(<span class="nm">1000</span>)  <span class="cm"># продвинуть на 1 секунду</span></pre>
+
+<h3>page.clock.run_for(1000) — пройти 1 сек</h3>
+<p>Запускает течение времени на указанный период, выполняя все таймеры и анимации.</p>
+
+<pre>page.clock.run_for(<span class="nm">1000</span>)  <span class="cm"># выполнить все таймеры за 1 секунду</span></pre>
+
+<h2>Примеры</h2>
+
+<h3>Тестирование setTimeout</h3>
+<pre><span class="kw">def</span> <span class="fn">test_settimeout</span>(page):
+    page.clock.install()
+    result <span class="op">=</span> []
+    page.evaluate(<span class="st">"setTimeout(() => window.__result = 'done', 1000)"</span>)
+    page.clock.fast_forward(<span class="nm">1000</span>)
+    <span class="kw">assert</span> page.evaluate(<span class="st">"window.__result"</span>) <span class="op">==</span> <span class="st">"done"</span></pre>
+
+<h3>Тестирование анимаций (requestAnimationFrame)</h3>
+<pre><span class="kw">def</span> <span class="fn">test_animation</span>(page):
+    page.clock.install()
+    page.goto(<span class="st">"https://example.com"</span>)
+    <span class="cm"># Прокрутить анимацию на 2 секунды</span>
+    page.clock.fast_forward(<span class="nm">2000</span>)</pre>
+
+<h3>Тестирование календаря с фиксированной датой</h3>
+<pre><span class="kw">def</span> <span class="fn">test_calendar</span>(page):
+    page.clock.set_fixed_time(<span class="st">"2024-12-25T10:00:00"</span>)
+    page.goto(<span class="st">"https://example.com/calendar"</span>)
+    <span class="cm"># Календарь всегда показывает 25 декабря 2024</span>
+    expect(page.get_by_text(<span class="st">"25 декабря 2024"</span>)).to_be_visible()</pre>
+
+<h3>Тестирование таймеров с setInterval</h3>
+<pre><span class="kw">def</span> <span class="fn">test_interval</span>(page):
+    page.clock.install()
+    count <span class="op">=</span> {<span class="st">"value"</span>: <span class="nm">0</span>}
+    page.expose_function(<span class="st">"increment"</span>, <span class="kw">lambda</span>: count.update(value<span class="op">=</span>count[<span class="st">"value"</span>] <span class="op">+</span> <span class="nm">1</span>))
+    page.evaluate(<span class="st">"setInterval(() => window.increment(), 500)"</span>)
+    page.clock.fast_forward(<span class="nm">2000</span>)
+    <span class="kw">assert</span> count[<span class="st">"value"</span>] <span class="op">==</span> <span class="nm">4</span>  <span class="cm"># 2000 / 500 = 4 срабатывания</span></pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте <span class="fn">page.clock.install()</span> перед навигацией, чтобы гарантировать, что все таймеры на странице будут под контролем с самого начала.</p>
+</div>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> После вызова <span class="fn">page.clock.install()</span> все временные функции в браузере перестают работать естественным образом. Вы должны явно управлять временем через методы Clock API.</p>
+</div>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Clock API поддерживается в Chromium и Firefox. В WebView2 также доступен, но с некоторыми ограничениями.</p>
+</div>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Playwright Python — Эмуляция устройств</title><link rel="stylesheet" href="playru-style.css"></head>
+<body>
+<div class="header"><div class="header-inner"><a href="index.html">Playwright Python — справочник</a><a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a></div></div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link active" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header"><h1>Эмуляция устройств</h1><p>Мобильные устройства, viewport, геолокация, цветовая схема и другие параметры эмуляции</p></div>
+<div class="card">
+
+<h2>Обзор</h2>
+<p>Playwright позволяет эмулировать мобильные устройства, различные разрешения экрана, часовые пояса, геолокацию и многое другое. Это делает тестирование адаптивных и мобильных версий сайта максимально реалистичным без физических устройств.</p>
+
+<h2>Встроенные устройства — <span class="fn">playwright.devices</span></h2>
+<p>Playwright содержит предустановленные профили популярных устройств. Словарь <span class="fn">playwright.devices</span> содержит настройки для каждого устройства.</p>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    <span class="cm"># Вывести все доступные устройства</span>
+    <span class="kw">for</span> name <span class="kw">in</span> p.devices:
+        <span class="kw">print</span>(name)</code></pre>
+
+<div class="box box-info">
+<strong>Примечание:</strong> Список устройств насчитывает более 80 профилей, включая iPhone, iPad, Samsung Galaxy, Pixel, Nokia, BlackBerry, Kindle и многие другие.
+</div>
+
+<h2>Использование профиля устройства</h2>
+<p>Профили устройств передаются в <span class="fn">browser.new_context()</span> через распаковку словаря:</p>
+<pre><code>context = browser.new_context(**p.devices[<span class="st">"iPhone 13"</span>])
+page = context.new_page()
+page.goto(<span class="st">"https://example.com"</span>)</code></pre>
+<p>То же самое для Android:</p>
+<pre><code>context = browser.new_context(**p.devices[<span class="st">"Pixel 5"</span>])</code></pre>
+
+<h2>Кастомный viewport</h2>
+<p>Если встроенные устройства не подходят, укажите свой viewport вручную:</p>
+<pre><code>context = browser.new_context(
+    viewport={<span class="st">"width"</span>: 1280, <span class="st">"height"</span>: 720}
+)</code></pre>
+
+<h2>Параметры эмуляции</h2>
+<table>
+<tr><th>Параметр</th><th>Описание</th><th>Пример</th></tr>
+<tr><td><code>viewport</code></td><td>Размер окна в пикселях</td><td><code>{"width": 390, "height": 844}</code></td></tr>
+<tr><td><code>device_scale_factor</code></td><td>DPI экрана (2, 3 и т.д.)</td><td><code>3</code></td></tr>
+<tr><td><code>is_mobile</code></td><td>Мобильный режим</td><td><code>True</code></td></tr>
+<tr><td><code>has_touch</code></td><td>Эмуляция тач-событий</td><td><code>True</code></td></tr>
+<tr><td><code>user_agent</code></td><td>Кастомный User-Agent</td><td><code>"Mozilla/5.0 ..."</code></td></tr>
+<tr><td><code>locale</code></td><td>Язык и регион</td><td><code>"de-DE"</code></td></tr>
+<tr><td><code>timezone_id</code></td><td>Часовой пояс</td><td><code>"Europe/Berlin"</code></td></tr>
+<tr><td><code>geolocation</code></td><td>Геопозиция</td><td><code>{"latitude": 55.75, "longitude": 37.62}</code></td></tr>
+<tr><td><code>permissions</code></td><td>Разрешения</td><td><code>["geolocation"]</code></td></tr>
+<tr><td><code>color_scheme</code></td><td>Цветовая схема</td><td><code>"dark"</code></td></tr>
+<tr><td><code>extra_http_headers</code></td><td>Дополнительные заголовки</td><td><code>{"X-Custom": "value"}</code></td></tr>
+<tr><td><code>offline</code></td><td>Эмуляция офлайн</td><td><code>True</code></td></tr>
+</table>
+
+<h2>Пример: полная эмуляция Pixel 5</h2>
+<pre><code>context = browser.new_context(
+    viewport={<span class="st">"width"</span>: 393, <span class="st">"height"</span>: 851},
+    device_scale_factor=2.75,
+    is_mobile=<span class="kw">True</span>,
+    has_touch=<span class="kw">True</span>,
+    user_agent=<span class="st">"Mozilla/5.0 (Linux; Android 12; Pixel 5) ..."</span>,
+    locale=<span class="st">"ru-RU"</span>,
+    timezone_id=<span class="st">"Europe/Moscow"</span>,
+    geolocation={<span class="st">"latitude"</span>: 55.75, <span class="st">"longitude"</span>: 37.62},
+    permissions=[<span class="st">"geolocation"</span>],
+    color_scheme=<span class="st">"dark"</span>,
+    extra_http_headers={<span class="st">"X-Device"</span>: <span class="st">"Pixel 5"</span>},
+    offline=<span class="kw">False</span>
+)</code></pre>
+
+<h2>Локаль и часовой пояс</h2>
+<p>Изменение локали влияет на формат дат, чисел и язык интерфейса сайта:</p>
+<pre><code>context = browser.new_context(
+    locale=<span class="st">"de-DE"</span>,
+    timezone_id=<span class="st">"Europe/Berlin"</span>
+)</code></pre>
+
+<div class="box box-tip">
+<strong>Совет:</strong> Комбинация <code>locale</code> и <code>timezone_id</code> позволяет тестировать интернационализацию (i18n) без реального перемещения между регионами.
+</div>
+
+<h2>Геолокация и разрешения</h2>
+<p>Установите геопозицию при создании контекста:</p>
+<pre><code>context = browser.new_context(
+    geolocation={<span class="st">"latitude"</span>: 55.75, <span class="st">"longitude"</span>: 37.62},
+    permissions=[<span class="st">"geolocation"</span>]
+)</code></pre>
+<p>Динамическое изменение через методы контекста:</p>
+<pre><code><span class="cm"># Изменить геопозицию</span>
+context.set_geolocation(
+    geolocation={<span class="st">"latitude"</span>: 59.93, <span class="st">"longitude"</span>: 30.31}
+)
+
+<span class="cm"># Выдать дополнительные разрешения</span>
+context.grant_permissions([<span class="st">"notifications"</span>])
+
+<span class="cm"># Отозвать все разрешения</span>
+context.clear_permissions()</code></pre>
+
+<h2>Цветовая схема (dark/light)</h2>
+<pre><code><span class="cm"># Темная тема</span>
+context = browser.new_context(color_scheme=<span class="st">"dark"</span>)
+
+<span class="cm"># Светлая тема</span>
+context = browser.new_context(color_scheme=<span class="st">"light"</span>)</code></pre>
+
+<h2>Эмуляция офлайн-режима</h2>
+<pre><code>context = browser.new_context(offline=<span class="kw">True</span>)
+page = context.new_page()
+page.goto(<span class="st">"https://example.com"</span>)  <span class="cm"># упадет с ошибкой сети</span></code></pre>
+
+<h2>Кастомные заголовки</h2>
+<pre><code>context = browser.new_context(
+    extra_http_headers={
+        <span class="st">"X-Forwarded-For"</span>: <span class="st">"192.168.1.1"</span>,
+        <span class="st">"X-Device-Type"</span>: <span class="st">"mobile"</span>
+    }
+)</code></pre>
+
+<h2>Популярные устройства</h2>
+<table>
+<tr><th>Название</th><th>Тип</th><th>Размер экрана</th></tr>
+<tr><td><code>"iPhone 13"</code></td><td>Смартфон</td><td>390 x 844</td></tr>
+<tr><td><code>"iPhone 13 Pro Max"</code></td><td>Смартфон</td><td>428 x 926</td></tr>
+<tr><td><code>"iPhone 15"</code></td><td>Смартфон</td><td>393 x 852</td></tr>
+<tr><td><code>"iPad Pro 11"</code></td><td>Планшет</td><td>834 x 1194</td></tr>
+<tr><td><code>"Pixel 5"</code></td><td>Смартфон Android</td><td>393 x 851</td></tr>
+<tr><td><code>"Pixel 7"</code></td><td>Смартфон Android</td><td>412 x 915</td></tr>
+<tr><td><code>"Galaxy S24"</code></td><td>Смартфон Android</td><td>384 x 854</td></tr>
+<tr><td><code>"Galaxy Tab S9"</code></td><td>Планшет Android</td><td>1280 x 800</td></tr>
+<tr><td><code>"iPhone SE"</code></td><td>Смартфон (малый)</td><td>375 x 667</td></tr>
+<tr><td><code>"Nexus 10"</code></td><td>Планшет</td><td>800 x 1280</td></tr>
+</table>
+
+<pre><code><span class="cm"># Пример: тест на нескольких устройствах</span>
+devices = [<span class="st">"iPhone 13"</span>, <span class="st">"Pixel 7"</span>, <span class="st">"iPad Pro 11"</span>]
+
+<span class="kw">for</span> device_name <span class="kw">in</span> devices:
+    context = browser.new_context(**p.devices[device_name])
+    page = context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    page.screenshot(path=<span class="st">f"screenshot-{device_name}.png"</span>)
+    context.close()</code></pre>
+
+<h2>Полный пример</h2>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">test_device_emulation</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser = p.chromium.launch()
+
+        <span class="cm"># Эмуляция iPhone 13</span>
+        iphone_context = browser.new_context(**p.devices[<span class="st">"iPhone 13"</span>])
+        page = iphone_context.new_page()
+        page.goto(<span class="st">"https://example.com"</span>)
+        <span class="kw">print</span>(page.viewport_size)  <span class="cm"># {'width': 390, 'height': 844}</span>
+        iphone_context.close()
+
+        <span class="cm"># Эмуляция Galaxy S24 с кастомной локалью</span>
+        galaxy_context = browser.new_context(
+            **p.devices[<span class="st">"Galaxy S24"</span>],
+            locale=<span class="st">"ko-KR"</span>,
+            timezone_id=<span class="st">"Asia/Seoul"</span>
+        )
+        page2 = galaxy_context.new_page()
+        page2.goto(<span class="st">"https://example.com"</span>)
+        galaxy_context.close()
+
+        browser.close()
+
+<span class="fn">test_device_emulation</span>()</code></pre>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

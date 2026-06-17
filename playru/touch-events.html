@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Сенсорные события — Playwright Python</title><link rel="stylesheet" href="playru-style.css"></head>
+<body>
+<div class="header"><div class="header-inner"><a href="index.html">Playwright Python — справочник</a><a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a></div></div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link active" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header"><h1>Сенсорные события</h1><p>Эмуляция касаний, жесты pan и pinch, DispatchEvent для Touch-событий</p></div>
+<div class="card">
+
+<h2>Legacy Touch Events API</h2>
+<p>Playwright позволяет эмулировать сенсорные события через <span class="fn">dispatch_event</span>. Это низкоуровневый механизм для отправки синтетических touch-событий в браузер. Он полезен для тестирования жестов на картах, галереях и других тач-интерфейсах, где стандартные методы <span class="fn">click()</span> или <span class="fn">tap()</span> недостаточны.</p>
+
+<div class="box box-warning">
+<strong>Важно:</strong> Touch Events API считается устаревшим (legacy). Современная альтернатива — эмуляция тач-устройства через параметр <code>has_touch=True</code> в контексте браузера, что заставляет браузер генерировать нативные Pointer Events.
+</div>
+
+<h2>Метод dispatch_event</h2>
+<p>Метод <span class="fn">locator.dispatch_event(type, event_init_dict)</span> отправляет DOM-событие указанному элементу. Для touch-событий тип может быть <span class="st">"touchstart"</span>, <span class="st">"touchmove"</span> или <span class="st">"touchend"</span>.</p>
+<pre><code>page.locator(<span class="st">"#map"</span>).dispatch_event(
+    <span class="st">"touchstart"</span>,
+    {
+        <span class="st">"touches"</span>: [{
+            <span class="st">"identifier"</span>: <span class="dv">0</span>,
+            <span class="st">"clientX"</span>: <span class="dv">100</span>,
+            <span class="st">"clientY"</span>: <span class="dv">200</span>,
+            <span class="st">"pageX"</span>: <span class="dv">100</span>,
+            <span class="st">"pageY"</span>: <span class="dv">200</span>,
+            <span class="st">"radiusX"</span>: <span class="dv">10</span>,
+            <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+            <span class="st">"rotationAngle"</span>: <span class="dv">0</span>,
+            <span class="st">"force"</span>: <span class="dv">1</span>
+        }],
+        <span class="st">"changedTouches"</span>: [],
+        <span class="st">"targetTouches"</span>: []
+    }
+)</code></pre>
+
+<h2>Параметры Touch-точки</h2>
+<p>Каждая touch-точка описывается объектом со следующими полями:</p>
+<table>
+<tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+<tr><td><code>identifier</code></td><td>int</td><td>Уникальный идентификатор касания (0, 1, 2 ...)</td></tr>
+<tr><td><code>clientX</code></td><td>int</td><td>Координата X относительно viewport</td></tr>
+<tr><td><code>clientY</code></td><td>int</td><td>Координата Y относительно viewport</td></tr>
+<tr><td><code>pageX</code></td><td>int</td><td>Координата X относительно документа</td></tr>
+<tr><td><code>pageY</code></td><td>int</td><td>Координата Y относительно документа</td></tr>
+<tr><td><code>radiusX</code></td><td>int</td><td>Радиус эллипса касания по оси X</td></tr>
+<tr><td><code>radiusY</code></td><td>int</td><td>Радиус эллипса касания по оси Y</td></tr>
+<tr><td><code>rotationAngle</code></td><td>int</td><td>Угол поворота эллипса касания (градусы)</td></tr>
+<tr><td><code>force</code></td><td>float</td><td>Сила нажатия (0.0 — 1.0)</td></tr>
+</table>
+
+<h2>События dispatch_event</h2>
+<ul>
+<li><span class="fn">dispatch_event(<span class="st">"touchstart"</span>, event_init_dict)</span> — начало касания</li>
+<li><span class="fn">dispatch_event(<span class="st">"touchmove"</span>, event_init_dict)</span> — перемещение пальца</li>
+<li><span class="fn">dispatch_event(<span class="st">"touchend"</span>, event_init_dict)</span> — завершение касания</li>
+</ul>
+<p>Структура <span class="nm">event_init_dict</span> включает три массива: <span class="st">"touches"</span> (все активные касания), <span class="st">"targetTouches"</span> (касания на данном элементе), <span class="st">"changedTouches"</span> (изменённые в последнем событии).</p>
+
+<h2>Пример жеста Pan (перемещение карты)</h2>
+<p>Жест pan имитирует перетаскивание одним пальцем. Последовательность: touchstart → touchmove (несколько раз) → touchend.</p>
+<pre><code><span class="kw">def</span> <span class="fn">pan</span>(page, selector, start_x, start_y, end_x, end_y, steps=<span class="dv">10</span>):
+    locator = page.locator(selector)
+    dx = (end_x - start_x) / steps
+    dy = (end_y - start_y) / steps
+
+    <span class="cm"># touchstart</span>
+    locator.dispatch_event(<span class="st">"touchstart"</span>, {
+        <span class="st">"touches"</span>: [{<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                       <span class="st">"clientX"</span>: start_x,
+                       <span class="st">"clientY"</span>: start_y,
+                       <span class="st">"pageX"</span>: start_x,
+                       <span class="st">"pageY"</span>: start_y,
+                       <span class="st">"radiusX"</span>: <span class="dv">10</span>,
+                       <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+                       <span class="st">"rotationAngle"</span>: <span class="dv">0</span>,
+                       <span class="st">"force"</span>: <span class="dv">1</span>}],
+        <span class="st">"changedTouches"</span>: [{<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                          <span class="st">"clientX"</span>: start_x,
+                          <span class="st">"clientY"</span>: start_y,
+                          <span class="st">"pageX"</span>: start_x,
+                          <span class="st">"pageY"</span>: start_y,
+                          <span class="st">"radiusX"</span>: <span class="dv">10</span>,
+                          <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+                          <span class="st">"rotationAngle"</span>: <span class="dv">0</span>,
+                          <span class="st">"force"</span>: <span class="dv">1</span>}],
+        <span class="st">"targetTouches"</span>: [{<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                          <span class="st">"clientX"</span>: start_x,
+                          <span class="st">"clientY"</span>: start_y,
+                          <span class="st">"pageX"</span>: start_x,
+                          <span class="st">"pageY"</span>: start_y,
+                          <span class="st">"radiusX"</span>: <span class="dv">10</span>,
+                          <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+                          <span class="st">"rotationAngle"</span>: <span class="dv">0</span>,
+                          <span class="st">"force"</span>: <span class="dv">1</span>}]
+    })
+
+    <span class="cm"># touchmove steps</span>
+    <span class="kw">for</span> step <span class="kw">in</span> <span class="kw">range</span>(<span class="dv">1</span>, steps + <span class="dv">1</span>):
+        x = <span class="kw">int</span>(start_x + dx * step)
+        y = <span class="kw">int</span>(start_y + dy * step)
+        locator.dispatch_event(<span class="st">"touchmove"</span>, {
+            <span class="st">"touches"</span>: [{<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                           <span class="st">"clientX"</span>: x, <span class="st">"clientY"</span>: y,
+                           <span class="st">"pageX"</span>: x, <span class="st">"pageY"</span>: y,
+                           <span class="st">"radiusX"</span>: <span class="dv">10</span>, <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+                           <span class="st">"rotationAngle"</span>: <span class="dv">0</span>, <span class="st">"force"</span>: <span class="dv">1</span>}],
+            <span class="st">"changedTouches"</span>: [{<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                              <span class="st">"clientX"</span>: x, <span class="st">"clientY"</span>: y,
+                              <span class="st">"pageX"</span>: x, <span class="st">"pageY"</span>: y,
+                              <span class="st">"radiusX"</span>: <span class="dv">10</span>, <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+                              <span class="st">"rotationAngle"</span>: <span class="dv">0</span>, <span class="st">"force"</span>: <span class="dv">1</span>}],
+            <span class="st">"targetTouches"</span>: [{<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                              <span class="st">"clientX"</span>: x, <span class="st">"clientY"</span>: y,
+                              <span class="st">"pageX"</span>: x, <span class="st">"pageY"</span>: y,
+                              <span class="st">"radiusX"</span>: <span class="dv">10</span>, <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+                              <span class="st">"rotationAngle"</span>: <span class="dv">0</span>, <span class="st">"force"</span>: <span class="dv">1</span>}]
+        })
+
+    <span class="cm"># touchend</span>
+    locator.dispatch_event(<span class="st">"touchend"</span>, {
+        <span class="st">"touches"</span>: [],
+        <span class="st">"changedTouches"</span>: [{<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                          <span class="st">"clientX"</span>: end_x,
+                          <span class="st">"clientY"</span>: end_y,
+                          <span class="st">"pageX"</span>: end_x,
+                          <span class="st">"pageY"</span>: end_y,
+                          <span class="st">"radiusX"</span>: <span class="dv">10</span>,
+                          <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+                          <span class="st">"rotationAngle"</span>: <span class="dv">0</span>,
+                          <span class="st">"force"</span>: <span class="dv">1</span>}],
+        <span class="st">"targetTouches"</span>: []
+    })
+
+<span class="cm"># Использование</span>
+pan(page, <span class="st">"#map"</span>, <span class="dv">300</span>, <span class="dv">400</span>, <span class="dv">100</span>, <span class="dv">400</span>)</code></pre>
+
+<h2>Пример жеста Pinch (масштабирование двумя пальцами)</h2>
+<p>Жест pinch требует двух touch-точек. Пальцы двигаются в противоположных направлениях.</p>
+<pre><code><span class="kw">def</span> <span class="fn">pinch</span>(page, selector, center_x, center_y, distance, steps=<span class="dv">10</span>):
+    locator = page.locator(selector)
+    half = distance // <span class="dv">2</span>
+
+    <span class="cm"># touchstart с двумя пальцами</span>
+    locator.dispatch_event(<span class="st">"touchstart"</span>, {
+        <span class="st">"touches"</span>: [
+            {<span class="st">"identifier"</span>: <span class="dv">0</span>, <span class="st">"clientX"</span>: center_x - half,
+             <span class="st">"clientY"</span>: center_y, <span class="st">"pageX"</span>: center_x - half,
+             <span class="st">"pageY"</span>: center_y, <span class="st">"radiusX"</span>: <span class="dv">10</span>,
+             <span class="st">"radiusY"</span>: <span class="dv">10</span>, <span class="st">"rotationAngle"</span>: <span class="dv">0</span>,
+             <span class="st">"force"</span>: <span class="dv">1</span>},
+            {<span class="st">"identifier"</span>: <span class="dv">1</span>, <span class="st">"clientX"</span>: center_x + half,
+             <span class="st">"clientY"</span>: center_y, <span class="st">"pageX"</span>: center_x + half,
+             <span class="st">"pageY"</span>: center_y, <span class="st">"radiusX"</span>: <span class="dv">10</span>,
+             <span class="st">"radiusY"</span>: <span class="dv">10</span>, <span class="st">"rotationAngle"</span>: <span class="dv">0</span>,
+             <span class="st">"force"</span>: <span class="dv">1</span>}
+        ],
+        <span class="st">"changedTouches"</span>: [
+            {<span class="st">"identifier"</span>: <span class="dv">0</span>, <span class="st">"clientX"</span>: center_x - half,
+             <span class="st">"clientY"</span>: center_y},
+            {<span class="st">"identifier"</span>: <span class="dv">1</span>, <span class="st">"clientX"</span>: center_x + half,
+             <span class="st">"clientY"</span>: center_y}
+        ],
+        <span class="st">"targetTouches"</span>: [
+            {<span class="st">"identifier"</span>: <span class="dv">0</span>, <span class="st">"clientX"</span>: center_x - half,
+             <span class="st">"clientY"</span>: center_y},
+            {<span class="st">"identifier"</span>: <span class="dv">1</span>, <span class="st">"clientX"</span>: center_x + half,
+             <span class="st">"clientY"</span>: center_y}
+        ]
+    })
+
+    <span class="cm"># Сведение пальцев (zoom out)</span>
+    <span class="kw">for</span> step <span class="kw">in</span> <span class="kw">range</span>(<span class="dv">1</span>, steps + <span class="dv">1</span>):
+        offset = half - <span class="kw">int</span>((half / steps) * step)
+        locator.dispatch_event(<span class="st">"touchmove"</span>, {
+            <span class="st">"touches"</span>: [
+                {<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                 <span class="st">"clientX"</span>: center_x - offset,
+                 <span class="st">"clientY"</span>: center_y,
+                 <span class="st">"pageX"</span>: center_x - offset,
+                 <span class="st">"pageY"</span>: center_y,
+                 <span class="st">"radiusX"</span>: <span class="dv">10</span>, <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+                 <span class="st">"rotationAngle"</span>: <span class="dv">0</span>, <span class="st">"force"</span>: <span class="dv">1</span>},
+                {<span class="st">"identifier"</span>: <span class="dv">1</span>,
+                 <span class="st">"clientX"</span>: center_x + offset,
+                 <span class="st">"clientY"</span>: center_y,
+                 <span class="st">"pageX"</span>: center_x + offset,
+                 <span class="st">"pageY"</span>: center_y,
+                 <span class="st">"radiusX"</span>: <span class="dv">10</span>, <span class="st">"radiusY"</span>: <span class="dv">10</span>,
+                 <span class="st">"rotationAngle"</span>: <span class="dv">0</span>, <span class="st">"force"</span>: <span class="dv">1</span>}
+            ],
+            <span class="st">"changedTouches"</span>: [
+                {<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                 <span class="st">"clientX"</span>: center_x - offset,
+                 <span class="st">"clientY"</span>: center_y},
+                {<span class="st">"identifier"</span>: <span class="dv">1</span>,
+                 <span class="st">"clientX"</span>: center_x + offset,
+                 <span class="st">"clientY"</span>: center_y}
+            ],
+            <span class="st">"targetTouches"</span>: [
+                {<span class="st">"identifier"</span>: <span class="dv">0</span>,
+                 <span class="st">"clientX"</span>: center_x - offset,
+                 <span class="st">"clientY"</span>: center_y},
+                {<span class="st">"identifier"</span>: <span class="dv">1</span>,
+                 <span class="st">"clientX"</span>: center_x + offset,
+                 <span class="st">"clientY"</span>: center_y}
+            ]
+        })
+
+    <span class="cm"># touchend</span>
+    locator.dispatch_event(<span class="st">"touchend"</span>, {
+        <span class="st">"touches"</span>: [],
+        <span class="st">"changedTouches"</span>: [
+            {<span class="st">"identifier"</span>: <span class="dv">0</span>, <span class="st">"clientX"</span>: center_x,
+             <span class="st">"clientY"</span>: center_y},
+            {<span class="st">"identifier"</span>: <span class="dv">1</span>, <span class="st">"clientX"</span>: center_x,
+             <span class="st">"clientY"</span>: center_y}
+        ],
+        <span class="st">"targetTouches"</span>: []
+    })
+
+<span class="cm"># zoom out на карте</span>
+pinch(page, <span class="st">"#map"</span>, <span class="dv">300</span>, <span class="dv">400</span>, <span class="dv">100</span>)</code></pre>
+
+<h2>Event.isTrusted</h2>
+<p>Синтетические события, созданные через <span class="fn">dispatch_event</span>, имеют флаг <span class="nm">event.isTrusted = false</span>. Браузер помечает их как недоверенные. Некоторые приложения проверяют этот флаг и игнорируют программные события.</p>
+
+<div class="box box-warning">
+<strong>Важно:</strong> Если приложение игнорирует синтетические touch-события из-за проверки <code>isTrusted</code>, необходимо использовать современную эмуляцию тач-устройств (см. ниже) вместо DispatchEvent.
+</div>
+
+<pre><code><span class="cm"># Проверка из JavaScript:</span>
+element.addEventListener(<span class="st">"touchstart"</span>, (e) =&gt; {
+    <span class="kw">if</span> (!e.isTrusted) {
+        <span class="kw">return</span>;  <span class="cm">// игнорируем синтетику</span>
+    }
+    <span class="cm">// обработка реального касания</span>
+});</code></pre>
+
+<h2>Современная альтернатива: эмуляция тач-устройств</h2>
+<p>Вместо ручной отправки touch-событий рекомендуется использовать параметр <span class="fn">has_touch=True</span> при создании контекста браузера. В этом режиме Playwright эмулирует полноценное тач-устройство, и браузер сам генерирует нативные события Touch, Pointer и Mouse.</p>
+
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser = p.chromium.launch()
+    context = browser.new_context(
+        has_touch=<span class="kw">True</span>,
+        is_mobile=<span class="kw">True</span>,
+        viewport={<span class="st">"width"</span>: <span class="dv">390</span>, <span class="st">"height"</span>: <span class="dv">844</span>}
+    )
+    page = context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Метод tap() работает в тач-режиме</span>
+    page.get_by_text(<span class="st">"Меню"</span>).tap()
+
+    browser.close()</code></pre>
+
+<div class="box box-tip">
+<strong>Совет:</strong> Используйте <code>has_touch=True</code> вместе с профилем устройства, например <code>**p.devices["iPhone 13"]</code>, который уже включает все необходимые параметры тач-эмуляции.
+</div>
+
+<h2>Полный пример: тестирование карты</h2>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">test_map_gestures</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser = p.chromium.launch()
+        context = browser.new_context(**p.devices[<span class="st">"iPhone 13"</span>])
+        page = context.new_page()
+        page.goto(<span class="st">"https://openstreetmap.org"</span>)
+        page.wait_for_selector(<span class="st">"#map"</span>)
+
+        <span class="cm"># Pan gesture — сдвиг карты влево</span>
+        pan(page, <span class="st">"#map"</span>, <span class="dv">300</span>, <span class="dv">400</span>, <span class="dv">50</span>, <span class="dv">400</span>)
+
+        <span class="cm"># Pinch — уменьшение масштаба</span>
+        pinch(page, <span class="st">"#map"</span>, <span class="dv">200</span>, <span class="dv">300</span>, <span class="dv">80</span>)
+
+        page.screenshot(path=<span class="st">"map-after-gestures.png"</span>)
+        browser.close()
+
+<span class="fn">test_map_gestures</span>()</code></pre>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

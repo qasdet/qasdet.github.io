@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Тестовые раннеры</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link active" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Тестовые раннеры</h1>
+<p>Запуск тестов Playwright с pytest, unittest и BDD-подходами. Встроенные и кастомные фикстуры, параллельный запуск, маркеры, шардирование и отчёты.</p>
+</div>
+<div class="card">
+<h2>pytest-playwright — основной раннер</h2>
+<p>Playwright предоставляет официальную интеграцию с pytest через пакет <code>pytest-playwright</code>. Это самый удобный и рекомендуемый способ запуска тестов. Он предоставляет встроенные фикстуры, автоматическую настройку браузеров и богатые возможности конфигурации.</p>
+
+<pre><span class="cm"># Установка</span>
+pip install pytest-playwright
+playwright install</pre>
+
+<div class="box box-info">
+<p><strong>Встроенные фикстуры:</strong> <code>page</code>, <code>context</code>, <code>browser</code>, <code>playwright</code> — доступны сразу после установки. Каждая фикстура создаётся заново для каждого теста, если не указано иное.</p>
+</div>
+
+<h3>Базовый пример с pytest-playwright</h3>
+<pre><span class="cm"># test_example.py</span>
+<span class="kw">def</span> <span class="fn">test_login</span>(page):
+    page.goto(<span class="st">"https://example.com/login"</span>)
+    page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+    page.get_by_label(<span class="st">"Пароль"</span>).fill(<span class="st">"secret123"</span>)
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Войти"</span>).click()
+    expect(page.get_by_text(<span class="st">"Добро пожаловать"</span>)).to_be_visible()</pre>
+
+<h2>Фикстуры pytest-playwright</h2>
+
+<h3>page — изолированная страница</h3>
+<p>Каждый тест получает новую <code>page</code> (и новый контекст, и новый браузер). Это обеспечивает полную изоляцию.</p>
+
+<h3>context — браузерный контекст</h3>
+<p>Позволяет работать с контекстом напрямую, например, для тестирования нескольких вкладок.</p>
+<pre><span class="kw">def</span> <span class="fn">test_multi_tab</span>(context):
+    page1 <span class="op">=</span> context.new_page()
+    page2 <span class="op">=</span> context.new_page()
+    page1.goto(<span class="st">"https://example.com"</span>)
+    page2.goto(<span class="st">"https://playwright.dev"</span>)</pre>
+
+<h3>browser — браузерный процесс</h3>
+<p>Даёт доступ к запущенному браузеру. Полезно для создания контекстов с кастомными настройками.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_custom_context</span>(browser):
+    context <span class="op">=</span> browser.new_context(
+        viewport={<span class="st">"width"</span>: <span class="nm">1920</span>, <span class="st">"height"</span>: <span class="nm">1080</span>},
+        locale=<span class="st">"ru-RU"</span>
+    )
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)</pre>
+
+<h3>playwright — корневой объект</h3>
+<p>Предоставляет доступ к <code>Playwright</code> API для запуска браузеров вручную.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_with_playwright</span>(playwright):
+    chromium <span class="op">=</span> playwright.chromium
+    browser <span class="op">=</span> chromium.launch(headless=<span class="kw">True</span>)</pre>
+
+<h2>Кастомные фикстуры</h2>
+<p>Вы можете создавать собственные фикстуры для переиспользования логики между тестами.</p>
+
+<pre><span class="cm"># conftest.py</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> Page
+
+<span class="kw">@pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">auth_page</span>(page: Page) <span class="op">-&gt;</span> Page:
+    page.goto(<span class="st">"https://example.com/login"</span>)
+    page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"admin@example.com"</span>)
+    page.get_by_label(<span class="st">"Пароль"</span>).fill(<span class="st">"admin123"</span>)
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Войти"</span>).click()
+    <span class="kw">return</span> page
+
+<span class="cm"># test_dashboard.py</span>
+<span class="kw">def</span> <span class="fn">test_dashboard</span>(auth_page):
+    auth_page.goto(<span class="st">"https://example.com/dashboard"</span>)
+    expect(auth_page.get_by_text(<span class="st">"Панель управления"</span>)).to_be_visible()</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте <code>scope="session"</code> для фикстур, которые должны создаваться один раз на всю сессию тестирования, например, для авторизованного контекста.</p>
+</div>
+
+<pre><span class="kw">@pytest.fixture</span>(scope=<span class="st">"session"</span>)
+<span class="kw">def</span> <span class="fn">auth_context</span>(browser):
+    context <span class="op">=</span> browser.new_context(storage_state=<span class="st">"auth.json"</span>)
+    <span class="kw">yield</span> context
+    context.close()
+
+<span class="kw">def</span> <span class="fn">test_with_auth</span>(auth_context):
+    page <span class="op">=</span> auth_context.new_page()
+    page.goto(<span class="st">"https://example.com/profile"</span>)</pre>
+
+<h2>conftest.py — глобальные фикстуры и хуки</h2>
+<p>Файл <code>conftest.py</code> автоматически загружается pytest и позволяет определять глобальные фикстуры, хуки и переопределения. Размещайте его в корне тестовой директории.</p>
+
+<pre><span class="cm"># conftest.py — расширенный пример</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">@pytest.fixture</span>(scope=<span class="st">"session"</span>)
+<span class="kw">def</span> <span class="fn">browser_context_args</span>(browser_context_args):
+    <span class="kw">return</span> {
+        <span class="st">"viewport"</span>: {<span class="st">"width"</span>: <span class="nm">1920</span>, <span class="st">"height"</span>: <span class="nm">1080</span>},
+        <span class="st">"locale"</span>: <span class="st">"ru-RU"</span>,
+        <span class="st">"timezone_id"</span>: <span class="st">"Europe/Moscow"</span>,
+    }
+
+<span class="kw">def</span> <span class="fn">pytest_runtest_makereport</span>(item, call):
+    <span class="st">"""Хук: скриншот при падении теста"""</span>
+    <span class="kw">if</span> call.when <span class="op">==</span> <span class="st">"call"</span> <span class="kw">and</span> call.excinfo <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        page <span class="op">=</span> item.funcargs.get(<span class="st">"page"</span>)
+        <span class="kw">if</span> page:
+            page.screenshot(path=<span class="st">"failure.png"</span>)</pre>
+
+<h2>pytest.ini / pyproject.toml — конфигурация</h2>
+<p>Настройки pytest-playwright можно задать в <code>pytest.ini</code> или <code>pyproject.toml</code>.</p>
+
+<h3>pytest.ini</h3>
+<pre><span class="cm"># pytest.ini</span>
+[pytest]
+testpaths = tests
+addopts = -v --headed --slowmo=100
+filterwarnings =
+    ignore::DeprecationWarning</pre>
+
+<h3>pyproject.toml</h3>
+<pre><span class="cm"># pyproject.toml</span>
+[tool.pytest.ini_options]
+testpaths = [<span class="st">"tests"</span>]
+addopts = <span class="st">"-v --headed --slowmo=100"</span></pre>
+
+<p>Основные CLI-флаги pytest-playwright:</p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Флаг</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--headed</code></td><td>Запуск с видимым браузером</td></tr>
+<tr><td><code>--browser=chromium</code></td><td>Выбор браузера (chromium/firefox/webkit)</td></tr>
+<tr><td><code>--browser=all</code></td><td>Запуск во всех браузерах</td></tr>
+<tr><td><code>--slowmo=100</code></td><td>Задержка между действиями в мс</td></tr>
+<tr><td><code>--device="iPhone 13"</code></td><td>Эмуляция устройства</td></tr>
+<tr><td><code>--video=on</code></td><td>Запись видео</td></tr>
+<tr><td><code>--screenshot=only-on-failure</code></td><td>Скриншоты только при падении</td></tr>
+<tr><td><code>--tracing=on</code></td><td>Трассировка</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Параллельный запуск: pytest-xdist</h2>
+<p>Для ускорения тестов используйте плагин <code>pytest-xdist</code>. Playwright поддерживает параллельный запуск на уровне браузера.</p>
+
+<pre><span class="cm"># Установка</span>
+pip install pytest-xdist
+
+<span class="cm"># Запуск с 4 процессами</span>
+pytest -n auto
+
+<span class="cm"># Указать количество воркеров явно</span>
+pytest -n <span class="nm">4</span></pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> При параллельном запуске каждый воркер использует отдельный браузер. Убедитесь, что тесты изолированы и не зависят от общего состояния.</p>
+</div>
+
+<h2>Переиспользование браузера: --reuse</h2>
+<p>Флаг <code>--reuse</code> позволяет переиспользовать один экземпляр браузера между тестами, что ускоряет запуск при параллельном выполнении.</p>
+
+<pre>pytest --reuse --workers <span class="nm">4</span></pre>
+
+<p>При такой конфигурации один браузерный процесс обслуживает несколько воркеров, что снижает накладные расходы на запуск и закрытие браузера для каждого теста.</p>
+
+<h2>Маркеры: skip_browser и only_browser</h2>
+<p>Playwright предоставляет маркеры для управления браузерами, в которых запускаются тесты.</p>
+
+<pre><span class="kw">import</span> pytest
+
+<span class="kw">@pytest.mark.skip_browser</span>(<span class="st">"firefox"</span>)
+<span class="kw">def</span> <span class="fn">test_chromium_only</span>(page):
+    <span class="st">"Тест будет пропущен в Firefox"</span>
+    page.goto(<span class="st">"https://example.com"</span>)
+
+<span class="kw">@pytest.mark.only_browser</span>(<span class="st">"chromium"</span>)
+<span class="kw">def</span> <span class="fn">test_only_chromium</span>(page):
+    <span class="st">"Запускается только в Chromium"</span>
+    page.goto(<span class="st">"https://example.com"</span>)</pre>
+
+<div class="box box-info">
+<p>Маркеры работают только при запуске с <code>--browser=all</code>. Иначе Playwright запускает браузер по умолчанию (chromium) без учёта маркеров.</p>
+</div>
+
+<h2>Sharding — распределение тестов в CI</h2>
+<p>Sharding позволяет разделить тесты на несколько групп (шардов) для параллельного выполнения на разных CI-агентах.</p>
+
+<pre><span class="cm"># CI-задача 1: запускает первую четверть тестов</span>
+pytest --shard=<span class="nm">1</span>/<span class="nm">4</span>
+
+<span class="cm"># CI-задача 2: запускает вторую четверть</span>
+pytest --shard=<span class="nm">2</span>/<span class="nm">4</span>
+
+<span class="cm"># CI-задача 3: третья четверть</span>
+pytest --shard=<span class="nm">3</span>/<span class="nm">4</span>
+
+<span class="cm"># CI-задача 4: четвёртая четверть</span>
+pytest --shard=<span class="nm">4</span>/<span class="nm">4</span></pre>
+
+<p>Sharding особенно полезен при ограниченном времени выполнения CI-пайплайна. Каждый шард выполняется на отдельном агенте, и общее время сокращается пропорционально количеству шардов.</p>
+
+<h2>pytest --max-failures — остановка при первом падении</h2>
+<p>Флаг <code>--max-failures</code> останавливает тестовый прогон после указанного количества упавших тестов.</p>
+
+<pre>pytest --max-failures=<span class="nm">1</span></pre>
+
+<p>Это удобно для быстрой обратной связи: если один тест упал, нет смысла запускать остальные — ошибка уже есть и нужно её исправить.</p>
+
+<h2>HTML-отчёты: pytest-html</h2>
+<p>Плагин <code>pytest-html</code> генерирует детальный HTML-отчёт о результатах тестирования.</p>
+
+<pre><span class="cm"># Установка</span>
+pip install pytest-html
+
+<span class="cm"># Запуск с генерацией отчёта</span>
+pytest --html=report.html --self-contained-html</pre>
+
+<p>Флаг <code>--self-contained-html</code> встраивает все ресурсы (CSS, изображения) прямо в HTML-файл, что удобно для хранения артефактов CI.</p>
+
+<h2>Allure-отчёты</h2>
+<p>Allure Framework предоставляет богатые интерактивные отчёты с историей прогонов, графиками и вложениями.</p>
+
+<pre><span class="cm"># Установка</span>
+pip install allure-pytest
+
+<span class="cm"># Запуск с сохранением результатов Allure</span>
+pytest --alluredir=./allure-results
+
+<span class="cm"># Генерация и открытие отчёта</span>
+allure serve ./allure-results</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Allure поддерживает аннотации для обогащения отчётов: <code>@allure.title</code>, <code>@allure.description</code>, <code>@allure.feature</code>, <code>@allure.story</code> и <code>@allure.step</code>.</p>
+</div>
+
+<pre><span class="kw">import</span> allure
+
+<span class="kw">@allure.feature</span>(<span class="st">"Авторизация"</span>)
+<span class="kw">@allure.story</span>(<span class="st">"Успешный вход"</span>)
+<span class="kw">def</span> <span class="fn">test_login_success</span>(page):
+    <span class="kw">with</span> allure.step(<span class="st">"Открыть страницу логина"</span>):
+        page.goto(<span class="st">"https://example.com/login"</span>)
+    <span class="kw">with</span> allure.step(<span class="st">"Заполнить учётные данные"</span>):
+        page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+        page.get_by_label(<span class="st">"Пароль"</span>).fill(<span class="st">"secret123"</span>)
+    <span class="kw">with</span> allure.step(<span class="st">"Нажать кнопку входа"</span>):
+        page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Войти"</span>).click()
+    <span class="kw">with</span> allure.step(<span class="st">"Проверить успешный вход"</span>):
+        expect(page.get_by_text(<span class="st">"Добро пожаловать"</span>)).to_be_visible()</pre>
+
+<h2>BDD: pytest-bdd с Playwright</h2>
+<p>Playwright отлично интегрируется с <code>pytest-bdd</code> для Behavior-Driven Development. Вы пишете сценарии на Gherkin, а шаги реализуете с использованием Playwright.</p>
+
+<pre><span class="cm"># login.feature</span>
+Feature: Авторизация
+  Scenario: Успешный вход
+    Given пользователь открыл страницу логина
+    When пользователь вводит email "user@example.com"
+    And пользователь вводит пароль "secret123"
+    And пользователь нажимает "Войти"
+    Then пользователь видит приветствие</pre>
+
+<pre><span class="cm"># test_login.py</span>
+<span class="kw">from</span> pytest_bdd <span class="kw">import</span> scenarios, given, when, then
+
+scenarios(<span class="st">"login.feature"</span>)
+
+<span class="kw">@given</span>(<span class="st">"пользователь открыл страницу логина"</span>)
+<span class="kw">def</span> <span class="fn">open_login</span>(page):
+    page.goto(<span class="st">"https://example.com/login"</span>)
+
+<span class="kw">@when</span>(<span class="st">'пользователь вводит email "&lt;email&gt;"'</span>)
+<span class="kw">def</span> <span class="fn">enter_email</span>(page, email):
+    page.get_by_label(<span class="st">"Email"</span>).fill(email)
+
+<span class="kw">@when</span>(<span class="st">'пользователь вводит пароль "&lt;password&gt;"'</span>)
+<span class="kw">def</span> <span class="fn">enter_password</span>(page, password):
+    page.get_by_label(<span class="st">"Пароль"</span>).fill(password)
+
+<span class="kw">@when</span>(<span class="st">'пользователь нажимает "Войти"'</span>)
+<span class="kw">def</span> <span class="fn">click_login</span>(page):
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Войти"</span>).click()
+
+<span class="kw">@then</span>(<span class="st">"пользователь видит приветствие"</span>)
+<span class="kw">def</span> <span class="fn">see_welcome</span>(page):
+    expect(page.get_by_text(<span class="st">"Добро пожаловать"</span>)).to_be_visible()</pre>
+
+<h2>unittest — Playwright как библиотека</h2>
+<p>Playwright можно использовать с классическим <code>unittest</code> без pytest. В этом случае вы управляете жизненным циклом браузера вручную.</p>
+
+<pre><span class="kw">import</span> unittest
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">class</span> <span class="fn">TestLogin</span>(unittest.TestCase):
+
+    <span class="kw">def</span> <span class="fn">setUp</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.playwright <span class="op">=</span> sync_playwright().start()
+        <span class="kw">self</span>.browser <span class="op">=</span> <span class="kw">self</span>.playwright.chromium.launch()
+        <span class="kw">self</span>.context <span class="op">=</span> <span class="kw">self</span>.browser.new_context()
+        <span class="kw">self</span>.page <span class="op">=</span> <span class="kw">self</span>.context.new_page()
+
+    <span class="kw">def</span> <span class="fn">tearDown</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.browser.close()
+        <span class="kw">self</span>.playwright.stop()
+
+    <span class="kw">def</span> <span class="fn">test_login_page</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.page.goto(<span class="st">"https://example.com/login"</span>)
+        <span class="kw">self</span>.page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+        <span class="kw">self</span>.page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Войти"</span>).click()
+        <span class="kw">self</span>.assert_true(
+            <span class="kw">self</span>.page.get_by_text(<span class="st">"Добро пожаловать"</span>).is_visible()
+        )
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="st">"__main__"</span>:
+    unittest.main()</pre>
+
+<div class="box box-warning">
+<p><strong>Недостаток unittest:</strong> Вам нужно вручную управлять браузером, контекстом и страницами. Также отсутствуют встроенные фикстуры, автоматический скриншот при падении и другие удобства pytest-playwright.</p>
+</div>
+
+<h2>Заключение</h2>
+<p>pytest-playwright — самый мощный и удобный способ запуска тестов. Используйте встроенные фикстуры для изоляции тестов, кастомные фикстуры для переиспользования логики, параллельный запуск через xdist для ускорения, а BDD-подход для улучшения читаемости сценариев. Для CI-пайплайнов применяйте шардирование, HTML- или Allure-отчёты.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

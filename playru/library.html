@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Автономная библиотека</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link active" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Автономная библиотека (Library)</h1>
+<p>Использование Playwright как автономной библиотеки без pytest: синхронный и асинхронный API, полный контроль над браузером, скрипты автоматизации, парсинг и генерация PDF.</p>
+</div>
+<div class="card">
+<h2>Синхронный API: sync_playwright</h2>
+<p>Playwright предоставляет синхронный API через модуль <code>sync_api</code>. Это наиболее простой способ использования библиотеки для скриптов и небольших задач. Весь API построен на контекстных менеджерах, что гарантирует корректное освобождение ресурсов.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch(headless=<span class="kw">False</span>)
+    page <span class="op">=</span> browser.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    <span class="kw">print</span>(page.title())
+    browser.close()</pre>
+
+<div class="box box-info">
+<p><strong>Контекстный менеджер <code>with sync_playwright() as p:</code></strong> автоматически запускает Playwright и корректно завершает все процессы браузера при выходе из блока. Это гарантирует, что фоновые процессы браузера не останутся в памяти.</p>
+</div>
+
+<h3>Пошаговый разбор базового примера</h3>
+<pre><span class="cm"># 1. Импорт синхронного API</span>
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="cm"># 2. Запуск Playwright через контекстный менеджер</span>
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    <span class="cm"># 3. Запуск браузера (headless=False — показывать окно)</span>
+    browser <span class="op">=</span> p.chromium.launch(headless=<span class="kw">False</span>)
+
+    <span class="cm"># 4. Создание новой страницы</span>
+    page <span class="op">=</span> browser.new_page()
+
+    <span class="cm"># 5. Навигация на URL</span>
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># 6. Использование локаторов для взаимодействия</span>
+    heading <span class="op">=</span> page.locator(<span class="st">"h1"</span>)
+    <span class="kw">print</span>(heading.text_content())
+
+    <span class="cm"># 7. Закрытие браузера</span>
+    browser.close()</pre>
+
+<h2>Ручной запуск браузера</h2>
+<p>Вы можете запустить любой поддерживаемый браузер с различными опциями.</p>
+
+<pre><span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    <span class="cm"># Chromium</span>
+    chromium <span class="op">=</span> p.chromium.launch(headless=<span class="kw">True</span>)
+
+    <span class="cm"># Firefox</span>
+    firefox <span class="op">=</span> p.firefox.launch()
+
+    <span class="cm"># WebKit (Safari)</span>
+    webkit <span class="op">=</span> p.webkit.launch()
+
+    <span class="cm"># С дополнительными опциями</span>
+    browser <span class="op">=</span> p.chromium.launch(
+        headless=<span class="kw">False</span>,
+        slow_mo=<span class="nm">100</span>,            <span class="cm"># задержка между действиями (мс)</span>
+        args=[<span class="st">"--disable-blink-features=AutomationControlled"</span>],
+        proxy={<span class="st">"server"</span>: <span class="st">"http://proxy:8080"</span>},
+    )
+
+    <span class="cm"># Создание страницы</span>
+    page <span class="op">=</span> browser.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    browser.close()</pre>
+
+<h2>Создание страницы и основные операции</h2>
+<pre><span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    page <span class="op">=</span> browser.new_page()
+
+    <span class="cm"># Навигация</span>
+    page.goto(<span class="st">"https://example.com"</span>, wait_until=<span class="st">"networkidle"</span>)
+
+    <span class="cm"># Поиск элементов через локаторы</span>
+    button <span class="op">=</span> page.locator(<span class="st">"#submit"</span>)
+    button.click()
+
+    <span class="cm"># Семантические локаторы</span>
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).click()
+    page.get_by_text(<span class="st">"Welcome"</span>).click()
+    page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+
+    <span class="cm"># Извлечение данных</span>
+    title <span class="op">=</span> page.title()
+    url <span class="op">=</span> page.url
+    content <span class="op">=</span> page.content()
+    text <span class="op">=</span> page.locator(<span class="st">".content"</span>).text_content()
+
+    browser.close()</pre>
+
+<h2>Закрытие браузера</h2>
+<p>Всегда закрывайте браузер после использования, чтобы освободить системные ресурсы. Если вы используете контекстный менеджер <code>sync_playwright()</code>, браузер всё равно нужно закрывать явно, если только вы не используете <code>browser</code> внутри <code>with</code>.</p>
+
+<pre><span class="cm"># Вариант 1: явное закрытие</span>
+browser <span class="op">=</span> p.chromium.launch()
+<span class="cm"># ... работа с браузером</span>
+browser.close()
+
+<span class="cm"># Вариант 2: контекстный менеджер браузера</span>
+<span class="kw">with</span> p.chromium.launch() <span class="kw">as</span> browser:
+    page <span class="op">=</span> browser.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    <span class="cm"># браузер закроется автоматически</span></pre>
+
+<h2>Асинхронный API: async_playwright</h2>
+<p>Для асинхронных приложений (FastAPI, aiohttp, asyncio) Playwright предоставляет асинхронный API через модуль <code>async_api</code>. Все методы возвращают корутины и требуют <code>await</code>.</p>
+
+<pre><span class="kw">import</span> asyncio
+<span class="kw">from</span> playwright.async_api <span class="kw">import</span> async_playwright
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    <span class="kw">async with</span> async_playwright() <span class="kw">as</span> p:
+        browser <span class="op">=</span> <span class="kw">await</span> p.chromium.launch(headless=<span class="kw">False</span>)
+        page <span class="op">=</span> <span class="kw">await</span> browser.new_page()
+        <span class="kw">await</span> page.goto(<span class="st">"https://example.com"</span>)
+        title <span class="op">=</span> <span class="kw">await</span> page.title()
+        <span class="kw">print</span>(title)
+        <span class="kw">await</span> browser.close()
+
+asyncio.run(main())</pre>
+
+<h3>Асинхронные операции детально</h3>
+<pre><span class="kw">async def</span> <span class="fn">main</span>():
+    <span class="kw">async with</span> async_playwright() <span class="kw">as</span> p:
+        browser <span class="op">=</span> <span class="kw">await</span> p.chromium.launch()
+        page <span class="op">=</span> <span class="kw">await</span> browser.new_page()
+
+        <span class="kw">await</span> page.goto(<span class="st">"https://example.com"</span>)
+        <span class="kw">await</span> page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Start"</span>).click()
+        text <span class="op">=</span> <span class="kw">await</span> page.locator(<span class="st">"#result"</span>).text_content()
+        <span class="kw">print</span>(text)
+
+        <span class="kw">await</span> browser.close()</pre>
+
+<div class="box box-tip">
+<p><strong>Когда использовать async:</strong> Асинхронный API идеально подходит для веб-скрапинга с параллельной обработкой нескольких страниц, интеграции с веб-фреймворками (FastAPI, Sanic) и обработки большого количества URL без блокировки основного потока.</p>
+</div>
+
+<h2>Сравнение sync vs async</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Характеристика</th><th>sync_playwright</th><th>async_playwright</th></tr>
+</thead>
+<tbody>
+<tr><td>Импорт</td><td><code>from playwright.sync_api import sync_playwright</code></td><td><code>from playwright.async_api import async_playwright</code></td></tr>
+<tr><td>Запуск</td><td><code>with sync_playwright() as p:</code></td><td><code>async with async_playwright() as p:</code></td></tr>
+<tr><td>Вызовы</td><td>Синхронные, без await</td><td>Все методы await</td></tr>
+<tr><td>Производительность</td><td>Блокирующий, один поток</td><td>Неблокирующий, event loop</td></tr>
+<tr><td>Когда использовать</td><td>pytest, скрипты, парсинг</td><td>FastAPI, aiohttp, asyncio</td></tr>
+<tr><td>Параллелизм</td><td>Через потоки/процессы</td><td>Через asyncio.gather()</td></tr>
+<tr><td>Сложность</td><td>Ниже, проще отладка</td><td>Выше, требуется понимание asyncio</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Использование без pytest</h2>
+<p>Playwright как автономная библиотека идеально подходит для задач, не связанных с тестированием:</p>
+
+<ul>
+<li><strong>Веб-скрапинг:</strong> извлечение данных с динамических страниц, рендерящих контент через JavaScript</li>
+<li><strong>Парсинг SPA:</strong> одностраничные приложения на React, Vue, Angular, где обычный HTTP-запрос не возвращает готовый HTML</li>
+<li><strong>Генерация PDF:</strong> создание PDF-документов из HTML-страниц с точным рендерингом</li>
+<li><strong>Скриншоты:</strong> автоматическое создание скриншотов страниц для отчётов или мониторинга</li>
+<li><strong>Автоматизация:</strong> заполнение форм, навигация, мониторинг статуса веб-сервисов</li>
+</ul>
+
+<h3>Пример: получение данных со страницы</h3>
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">scrape_products</span>(url):
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser <span class="op">=</span> p.chromium.launch()
+        page <span class="op">=</span> browser.new_page()
+        page.goto(url, wait_until=<span class="st">"networkidle"</span>)
+
+        products <span class="op">=</span> []
+        items <span class="op">=</span> page.locator(<span class="st">".product"</span>).all()
+        <span class="kw">for</span> item <span class="kw">in</span> items:
+            products.append({
+                <span class="st">"name"</span>: item.locator(<span class="st">".name"</span>).text_content(),
+                <span class="st">"price"</span>: item.locator(<span class="st">".price"</span>).text_content(),
+            })
+
+        browser.close()
+        <span class="kw">return</span> products
+
+data <span class="op">=</span> scrape_products(<span class="st">"https://example.com/products"</span>)
+<span class="kw">print</span>(data)</pre>
+
+<h3>Пример: генерация PDF</h3>
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">generate_pdf</span>(url, output_path):
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser <span class="op">=</span> p.chromium.launch()
+        page <span class="op">=</span> browser.new_page()
+        page.goto(url, wait_until=<span class="st">"networkidle"</span>)
+        page.pdf(path=output_path, format=<span class="st">"A4"</span>)
+        browser.close()
+
+generate_pdf(<span class="st">"https://example.com/report"</span>, <span class="st">"report.pdf"</span>)</pre>
+
+<h2>Полный пример скрипта с sync_playwright</h2>
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">main</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        <span class="cm"># Запуск браузера</span>
+        browser <span class="op">=</span> p.chromium.launch(headless=<span class="kw">False</span>)
+        context <span class="op">=</span> browser.new_context(
+            viewport={<span class="st">"width"</span>: <span class="nm">1280</span>, <span class="st">"height"</span>: <span class="nm">720</span>},
+            locale=<span class="st">"ru-RU"</span>
+        )
+        page <span class="op">=</span> context.new_page()
+
+        <span class="cm"># Переход на сайт</span>
+        page.goto(<span class="st">"https://github.com"</span>)
+        <span class="kw">print</span>(<span class="st">f"Заголовок: {page.title()}"</span>)
+
+        <span class="cm"># Поиск</span>
+        page.get_by_role(<span class="st">"combobox"</span>, name=<span class="st">"Search"</span>).click()
+        page.get_by_role(<span class="st">"combobox"</span>, name=<span class="st">"Search"</span>).fill(<span class="st">"playwright"</span>)
+        page.keyboard.press(<span class="st">"Enter"</span>)
+        page.wait_for_load_state(<span class="st">"networkidle"</span>)
+
+        <span class="cm"># Скриншот результатов</span>
+        page.screenshot(path=<span class="st">"search_results.png"</span>)
+
+        <span class="cm"># Закрытие</span>
+        browser.close()
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="st">"__main__"</span>:
+    main()</pre>
+
+<h2>Асинхронный пример с параллельными задачами</h2>
+<pre><span class="kw">import</span> asyncio
+<span class="kw">from</span> playwright.async_api <span class="kw">import</span> async_playwright
+
+<span class="kw">async def</span> <span class="fn">process_url</span>(url, semaphore):
+    <span class="kw">async with</span> semaphore:
+        <span class="kw">async with</span> async_playwright() <span class="kw">as</span> p:
+            browser <span class="op">=</span> <span class="kw">await</span> p.chromium.launch()
+            page <span class="op">=</span> <span class="kw">await</span> browser.new_page()
+            <span class="kw">await</span> page.goto(url, wait_until=<span class="st">"domcontentloaded"</span>)
+            title <span class="op">=</span> <span class="kw">await</span> page.title()
+            <span class="kw">await</span> browser.close()
+            <span class="kw">return</span> {<span class="st">"url"</span>: url, <span class="st">"title"</span>: title}
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    urls <span class="op">=</span> [
+        <span class="st">"https://example.com"</span>,
+        <span class="st">"https://playwright.dev"</span>,
+        <span class="st">"https://github.com"</span>,
+        <span class="st">"https://python.org"</span>,
+    ]
+    semaphore <span class="op">=</span> asyncio.Semaphore(<span class="nm">2</span>)
+    tasks <span class="op">=</span> [process_url(url, semaphore) <span class="kw">for</span> url <span class="kw">in</span> urls]
+    results <span class="op">=</span> <span class="kw">await</span> asyncio.gather(*tasks)
+
+    <span class="kw">for</span> r <span class="kw">in</span> results:
+        <span class="kw">print</span>(<span class="st">f"{r['url']}: {r['title']}"</span>)
+
+asyncio.run(main())</pre>
+
+<div class="box box-warning">
+<p><strong>Внимание:</strong> Каждый вызов <code>async_playwright()</code> и <code>browser.launch()</code> создаёт тяжёлые процессы. В асинхронном режиме используйте семафоры или пул браузеров для контроля параллелизма. Запускать браузер для каждого URL — расточительно; переиспользуйте один браузер с разными страницами.</p>
+</div>
+
+<h2>Заключение</h2>
+<p>Автономная библиотека Playwright даёт полный контроль над браузером без привязки к тестовым раннерам. Используйте синхронный API для простых скриптов и парсинга, асинхронный — для высоконагруженных приложений и интеграции с async-фреймворками. Всегда закрывайте браузер после работы и используйте контекстные менеджеры для безопасного управления ресурсами.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — ElementHandle</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link active" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>ElementHandle</h1>
+<p>Низкоуровневый API для работы с DOM-элементами: query_selector, действия, состояние, скриншоты и выполнение JavaScript на элементе.</p>
+</div>
+<div class="card">
+<h2>Обзор ElementHandle</h2>
+<p><code>ElementHandle</code> — это представление DOM-элемента в Playwright. В отличие от <code>Locator</code>, который использует ленивое вычисление и автоматическое ожидание, ElementHandle даёт прямой доступ к элементу и его методам. Обычно ElementHandle получают через <code>page.query_selector()</code> и <code>page.query_selector_all()</code>.</p>
+
+<div class="box box-info">
+<p><strong>Важно:</strong> Playwright рекомендует использовать <code>Locator</code> вместо <code>ElementHandle</code> в большинстве случаев. Locator автоматически ожидает появления элемента и повторяет действия при неудаче. ElementHandle не имеет такого поведения.</p>
+</div>
+
+<h2>Получение ElementHandle</h2>
+<pre><span class="cm"># Получить первый элемент, соответствующий селектору</span>
+button <span class="op">=</span> page.query_selector(<span class="st">"button.submit"</span>)
+
+<span class="cm"># Получить все элементы</span>
+items <span class="op">=</span> page.query_selector_all(<span class="st">"li"</span>)
+
+<span class="cm"># Внутри фрейма</span>
+frame <span class="op">=</span> page.frame(<span class="st">"main"</span>)
+header <span class="op">=</span> frame.query_selector(<span class="st">"h1"</span>)</pre>
+
+<h2>Основные действия</h2>
+<pre><span class="cm"># Клик по элементу</span>
+button.click()
+
+<span class="cm"># Заполнение текстового поля</span>
+input_element.fill(<span class="st">"Hello, World!"</span>)
+
+<span class="cm"># Получение текстового содержимого</span>
+text <span class="op">=</span> element.text_content()
+inner <span class="op">=</span> element.inner_text()
+html <span class="op">=</span> element.inner_html()
+
+<span class="cm"># Получение атрибута</span>
+href <span class="op">=</span> element.get_attribute(<span class="st">"href"</span>)</pre>
+
+<h2>Проверка состояния</h2>
+<pre><span class="cm"># Проверка видимости</span>
+element.is_visible()
+element.is_hidden()
+
+<span class="cm"># Проверка доступности</span>
+element.is_enabled()
+
+<span class="cm"># Проверка состояния чекбокса/radio</span>
+element.is_checked()</pre>
+
+<h2>Продвинутые взаимодействия</h2>
+<pre><span class="cm"># Наведение мыши</span>
+element.hover()
+
+<span class="cm"># Фокус</span>
+element.focus()
+
+<span class="cm"># Нажатие клавиши</span>
+element.press(<span class="st">"Enter"</span>)
+element.press(<span class="st">"Control+a"</span>)
+
+<span class="cm"># Отправка пользовательского события</span>
+element.dispatch_event(<span class="st">"click"</span>, <span class="st">"{ bubbles: true }"</span>)
+
+<span class="cm"># Скролл до элемента</span>
+element.scroll_into_view_if_needed()
+
+<span class="cm"># Выделение текста</span>
+element.select_text()
+
+<span class="cm"># Загрузка файлов</span>
+element.set_input_files(<span class="st">"file.txt"</span>)
+element.set_input_files([<span class="st">"file1.pdf"</span>, <span class="st">"file2.pdf"</span>])</pre>
+
+<h2>Координаты и размеры</h2>
+<pre><span class="cm"># Получение bounding box (x, y, width, height)</span>
+box <span class="op">=</span> element.bounding_box()
+<span class="kw">if</span> box:
+    <span class="kw">print</span>(<span class="st">f"X: {box['x']}, Y: {box['y']}"</span>)
+    <span class="kw">print</span>(<span class="st">f"Width: {box['width']}, Height: {box['height']}"</span>)</pre>
+
+<h2>Выполнение JavaScript на элементе</h2>
+<p>Метод <code>evaluate()</code> выполняет JS-функцию на переданном элементе, а <code>evaluate_handle()</code> возвращает <code>JSHandle</code>.</p>
+
+<pre><span class="cm"># Выполнение JS — возвращает Python-значение</span>
+text <span class="op">=</span> element.evaluate(<span class="st">"el =&gt; el.textContent"</span>)
+styles <span class="op">=</span> element.evaluate(<span class="st">"el =&gt; window.getComputedStyle(el)"</span>)
+rect <span class="op">=</span> element.evaluate(<span class="st">"el =&gt; el.getBoundingClientRect()"</span>)
+
+<span class="cm"># evaluate_handle — возвращает JSHandle</span>
+js_handle <span class="op">=</span> element.evaluate_handle(<span class="st">"el =&gt; el.style"</span>)
+color <span class="op">=</span> js_handle.get_property(<span class="st">"color"</span>)
+<span class="kw">print</span>(<span class="kw">await</span> color.json_value())</pre>
+
+<h2>Скриншот элемента</h2>
+<pre><span class="cm"># Скриншот конкретного элемента</span>
+element.screenshot(path=<span class="st">"element.png"</span>)
+
+<span class="cm"># Скриншот с кастомными опциями</span>
+element.screenshot(
+    path=<span class="st">"element.png"</span>,
+    type=<span class="st">"jpeg"</span>,
+    quality=<span class="nm">80</span>,
+    omit_background=<span class="kw">True</span>
+)</pre>
+
+<h2>Ожидание состояния элемента</h2>
+<p>Метод <code>wait_for_element_state()</code> ожидает, пока элемент не достигнет указанного состояния. В отличие от автоматического ожидания Locator, здесь ожидание явное.</p>
+
+<pre><span class="cm"># Ожидание видимости</span>
+element.wait_for_element_state(<span class="st">"visible"</span>)
+<span class="cm"># Ожидание скрытия</span>
+element.wait_for_element_state(<span class="st">"hidden"</span>)
+<span class="cm"># Ожидание стабильности (не анимируется)</span>
+element.wait_for_element_state(<span class="st">"stable"</span>)
+<span class="cm"># Ожидание включения</span>
+element.wait_for_element_state(<span class="st">"enabled"</span>)
+<span class="cm"># Ожидание отключения</span>
+element.wait_for_element_state(<span class="st">"disabled"</span>)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Если вам нужно просто подождать появления элемента на странице, используйте <code>page.wait_for_selector(css)</code> — он вернёт ElementHandle, дождавшись появления элемента в DOM.</p>
+</div>
+
+<h2>ElementHandle vs Locator</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Характеристика</th><th>ElementHandle</th><th>Locator</th></tr>
+</thead>
+<tbody>
+<tr><td>Автоожидание</td><td>Нет (кроме wait_for_element_state)</td><td>Автоматическое</td></tr>
+<tr><td>Повтор при неудаче</td><td>Нет</td><td>Есть (retry)</td></tr>
+<tr><td>Ленивое вычисление</td><td>Нет (жёсткая ссылка на элемент)</td><td>Да (поиск при действии)</td></tr>
+<tr><td>Stale-элементы</td><td>Устаревают при изменении DOM</td><td>Автоматически переищет</td></tr>
+<tr><td>Использование</td><td>Низкоуровневые сценарии, JS-интеграция</td><td>Основной API для тестов</td></tr>
+<tr><td>Производительность</td><td>Быстрее для однократных операций</td><td>Небольшие накладные расходы</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Когда использовать ElementHandle</h2>
+<p>Несмотря на рекомендацию использовать Locator, есть сценарии, где ElementHandle удобнее:</p>
+<ul>
+<li><strong>Однократные операции</strong> — нужно быстро прочитать атрибут или текст без повторных попыток</li>
+<li><strong>Выполнение JS на элементе</strong> — <code>evaluate()</code> и <code>evaluate_handle()</code> работают напрямую с ElementHandle</li>
+<li><strong>Работа с фреймами</strong> — некоторые сценарии с iframe требуют ElementHandle</li>
+<li><strong>Кастомные события</strong> — <code>dispatch_event()</code> для нестандартных событий</li>
+<li><strong>Скриншоты конкретных элементов</strong> — быстрый скриншот без автоожидания</li>
+</ul>
+
+<div class="box box-warning">
+<p><strong>Внимание:</strong> ElementHandle может стать "stale" (устаревшим), если DOM изменился после его получения. При каждом изменении страницы нужно запрашивать новый ElementHandle. Locator лишён этого недостатка.</p>
+</div>
+
+<h2>Примеры</h2>
+
+<h3>Чтение данных из таблицы</h3>
+<pre><span class="kw">def</span> <span class="fn">get_table_data</span>(page):
+    rows <span class="op">=</span> page.query_selector_all(<span class="st">"table tr"</span>)
+    data <span class="op">=</span> []
+    <span class="kw">for</span> row <span class="kw">in</span> rows:
+        cells <span class="op">=</span> row.query_selector_all(<span class="st">"td, th"</span>)
+        data.append([cell.inner_text() <span class="kw">for</span> cell <span class="kw">in</span> cells])
+    <span class="kw">return</span> data</pre>
+
+<h3>Проверка CSS-свойств</h3>
+<pre><span class="kw">def</span> <span class="fn">test_button_color</span>(page):
+    page.goto(<span class="st">"https://example.com"</span>)
+    btn <span class="op">=</span> page.query_selector(<span class="st">"button.primary"</span>)
+    color <span class="op">=</span> btn.evaluate(<span class="st">"el =&gt; window.getComputedStyle(el).color"</span>)
+    <span class="kw">assert</span> color <span class="op">==</span> <span class="st">"rgb(255, 0, 0)"</span></pre>
+
+<h3>Скриншот динамического элемента</h3>
+<pre><span class="kw">def</span> <span class="fn">test_captcha_screenshot</span>(page):
+    page.goto(<span class="st">"https://example.com/login"</span>)
+    captcha_img <span class="op">=</span> page.query_selector(<span class="st">"img.captcha"</span>)
+    captcha_img.screenshot(path=<span class="st">"captcha.png"</span>)</pre>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

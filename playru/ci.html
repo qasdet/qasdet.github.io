@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — CI (Непрерывная интеграция)</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link active" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>CI (Непрерывная интеграция)</h1>
+<p>Настройка Playwright в системах непрерывной интеграции: GitHub Actions, Jenkins, GitLab CI, CircleCI, Docker-образы и разделение тестов.</p>
+</div>
+<div class="card">
+<h2>Playwright в CI: общие принципы</h2>
+<p>Для запуска Playwright-тестов в CI необходимо установить браузеры с помощью <code>playwright install</code> и обеспечить окружение с графической подсистемой (XVFB) или использовать headless-режим.</p>
+
+<div class="box box-info">
+<p><strong>Рекомендация:</strong> Используйте headless-режим (<code>headless=True</code>) в CI. Это снижает потребление ресурсов и не требует XVFB. Для отладки сохраняйте трейсы и видео.</p>
+</div>
+
+<h2>GitHub Actions</h2>
+<p>Playwright поддерживает GitHub Actions через официальное действие <code>microsoft/playwright-github-action</code> или напрямую установкой браузеров.</p>
+
+<pre>name<span class="op">:</span> <span class="st">Playwright Tests</span>
+on<span class="op">:</span>
+  push<span class="op">:</span>
+    branches<span class="op">:</span> <span class="st">[main]</span>
+  pull_request<span class="op">:</span>
+    branches<span class="op">:</span> <span class="st">[main]</span>
+jobs<span class="op">:</span>
+  test<span class="op">:</span>
+    runs-on<span class="op">:</span> <span class="st">ubuntu-latest</span>
+    strategy<span class="op">:</span>
+      matrix<span class="op">:</span>
+        shardIndex<span class="op">:</span> <span class="st">[1, 2, 3]</span>
+        shardTotal<span class="op">:</span> <span class="st">[3]</span>
+    steps<span class="op">:</span>
+      <span class="op">-</span> uses<span class="op">:</span> <span class="st">actions/checkout@v4</span>
+      <span class="op">-</span> uses<span class="op">:</span> <span class="st">actions/setup-python@v5</span>
+        with<span class="op">:</span>
+          python-version<span class="op">:</span> <span class="st">"3.12"</span>
+      <span class="op">-</span> run<span class="op">:</span> <span class="st">pip install playwright pytest pytest-playwright</span>
+      <span class="op">-</span> run<span class="op">:</span> <span class="st">playwright install --with-deps</span>
+      <span class="op">-</span> run<span class="op">:</span> <span class="st">pytest --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}</span>
+      <span class="op">-</span> uses<span class="op">:</span> <span class="st">actions/upload-artifact@v4</span>
+        <span class="kw">if</span><span class="op">:</span> <span class="st">failure()</span>
+        with<span class="op">:</span>
+          name<span class="op">:</span> <span class="st">test-results-${{ matrix.shardIndex }}</span>
+          path<span class="op">:</span> <span class="st">test-results/</span>
+          retention-days<span class="op">:</span> <span class="st">7</span></pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте <code>playwright install --with-deps</code> для автоматической установки всех системных зависимостей браузеров (шрифты, библиотеки). Это предпочтительнее, чем отдельная установка.</p>
+</div>
+
+<h2>Jenkins</h2>
+<p>В Jenkins нужно настроить виртуальный дисплей (Xvfb) для браузеров в non-headless режиме.</p>
+
+<pre>pipeline <span class="op">{</span>
+    agent <span class="op">{</span> docker <span class="op">{</span> image <span class="st">'mcr.microsoft.com/playwright/python:v1.61.0-noble'</span> <span class="op">}</span> <span class="op">}</span>
+    stages <span class="op">{</span>
+        stage(<span class="st">'Install'</span>) <span class="op">{</span>
+            steps <span class="op">{</span>
+                sh <span class="st">'pip install pytest pytest-playwright'</span>
+                sh <span class="st">'playwright install --with-deps'</span>
+            <span class="op">}</span>
+        <span class="op">}</span>
+        stage(<span class="st">'Test'</span>) <span class="op">{</span>
+            steps <span class="op">{</span>
+                sh <span class="st">'pytest --junitxml=report.xml'</span>
+            <span class="op">}</span>
+        <span class="op">}</span>
+    <span class="op">}</span>
+    post <span class="op">{</span>
+        always <span class="op">{</span>
+            junit <span class="st">'report.xml'</span>
+        <span class="op">}</span>
+    <span class="op">}</span>
+<span class="op">}</span></pre>
+
+<h2>GitLab CI</h2>
+
+<pre>image<span class="op">:</span> <span class="st">mcr.microsoft.com/playwright/python:v1.61.0-noble</span>
+
+stages<span class="op">:</span>
+  <span class="op">-</span> test
+
+playwright-tests<span class="op">:</span>
+  stage<span class="op">:</span> test
+  script<span class="op">:</span>
+    <span class="op">-</span> pip install pytest pytest-playwright
+    <span class="op">-</span> playwright install --with-deps
+    <span class="op">-</span> pytest --html<span class="op">=</span>report.html
+  artifacts<span class="op">:</span>
+    reports<span class="op">:</span>
+      junit<span class="op">:</span> report.xml
+    paths<span class="op">:</span>
+      <span class="op">-</span> report.html
+    <span class="kw">when</span><span class="op">:</span> <span class="st">always</span></pre>
+
+<h2>CircleCI</h2>
+<p>В CircleCI удобно использовать orb для кэширования браузеров Playwright между запусками.</p>
+
+<pre>version<span class="op">:</span> <span class="st">2.1</span>
+orbs<span class="op">:</span>
+  playwright<span class="op">:</span> <span class="st">microsoft/playwright@1.0.0</span>
+jobs<span class="op">:</span>
+  test<span class="op">:</span>
+    docker<span class="op">:</span>
+      <span class="op">-</span> image<span class="op">:</span> <span class="st">mcr.microsoft.com/playwright/python:v1.61.0-noble</span>
+    steps<span class="op">:</span>
+      <span class="op">-</span> checkout
+      <span class="op">-</span> playwright/install-browsers
+      <span class="op">-</span> run<span class="op">:</span> pip install -r requirements.txt
+      <span class="op">-</span> run<span class="op">:</span> pytest --junitxml=report.xml
+      <span class="op">-</span> store_test_results:
+          path<span class="op">:</span> report.xml</pre>
+
+<h2>Шардирование тестов (--shard)</h2>
+<p>Для ускорения CI-пайплайна тесты можно разделять на шарды и запускать параллельно на разных агентах.</p>
+
+<pre><span class="cm"># Запуск 1-го шарда из 4</span>
+pytest --shard<span class="op">=</span><span class="nm">1</span>/<span class="nm">4</span>
+
+<span class="cm"># Запуск 2-го шарда из 4</span>
+pytest --shard<span class="op">=</span><span class="nm">2</span>/<span class="nm">4</span>
+
+<span class="cm"># В GitHub Actions через matrix</span>
+<span class="cm"># matrix.shardIndex: [1, 2, 3, 4]</span>
+<span class="cm"># matrix.shardTotal: [4]</span>
+pytest --shard<span class="op">=${{</span> matrix.shardIndex <span class="op">}}</span>/<span class="op">${{</span> matrix.shardTotal <span class="op">}}</span></pre>
+
+<h2>Отчёты</h2>
+<p>Playwright поддерживает несколько форматов отчётов, полезных в CI:</p>
+<ul>
+<li><strong>HTML-отчёт</strong> — <code>pytest --html=report.html</code> (требуется <code>pytest-html</code>)</li>
+<li><strong>Allure</strong> — <code>pytest --alluredir=allure-results</code></li>
+<li><strong>JUnit XML</strong> — <code>pytest --junitxml=report.xml</code> (для интеграции с Jenkins, GitLab)</li>
+<li><strong>JSON</strong> — кастомный вывод для дашбордов</li>
+</ul>
+
+<pre><span class="cm"># Установка Allure</span>
+pip install allure-pytest
+
+<span class="cm"># Запуск с Allure</span>
+pytest --alluredir<span class="op">=</span>allure-results
+
+<span class="cm"># Генерация отчёта (локально)</span>
+allure generate allure-results <span class="op">-</span>o allure-report
+
+<span class="cm"># Загрузка артефактов в CI</span>
+<span class="cm"># GitHub Actions: actions/upload-artifact</span>
+<span class="cm"># GitLab: artifacts.paths</span></pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> При использовании <code>pytest-html</code> убедитесь, что путь для отчёта не перезаписывается параллельными шардами. Добавляйте идентификатор шарда в имя файла.</p>
+</div>
+
+<h2>Docker-образы в CI</h2>
+<p>Официальные Docker-образы Playwright уже содержат установленные браузеры и все системные зависимости. Это самый надёжный способ запуска в CI.</p>
+
+<pre><span class="cm"># Использование готового образа</span>
+<span class="cm"># mcr.microsoft.com/playwright/python:v1.61.0-noble</span>
+
+<span class="cm"># Установка зависимостей проекта</span>
+pip install <span class="op">-</span>r requirements.txt
+
+<span class="cm"># Запуск тестов (браузеры уже установлены)</span>
+pytest <span class="op">-</span>v</pre>
+
+<h2>Сохранение артефактов при падении</h2>
+<p>При падении тестов полезно сохранять трейсы, скриншоты и видео для анализа.</p>
+
+<pre><span class="cm"># pytest-playwright: автоматическое сохранение</span>
+<span class="cm"># pytest.ini или pyproject.toml:</span>
+<span class="cm"># [tool.pytest.ini_options]</span>
+<span class="cm"># addopts = "--tracing=retain-on-failure --screenshot=only-on-failure --video=retain-on-failure"</span>
+
+<span class="cm"># В GitHub Actions артефакты загружаются при failure()</span>
+<span class="op">-</span> uses<span class="op">:</span> <span class="st">actions/upload-artifact@v4</span>
+  <span class="kw">if</span><span class="op">:</span> <span class="st">failure()</span>
+  with<span class="op">:</span>
+    name<span class="op">:</span> <span class="st">test-results</span>
+    path<span class="op">:</span> <span class="st">test-results/</span></pre>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

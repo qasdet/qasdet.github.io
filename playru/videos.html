@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Видео</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link active" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Видео (Video Recording)</h1>
+<p>Запись видео прохождения тестов для последующего анализа.</p>
+</div>
+
+<div class="card">
+<h2>Включение записи видео</h2>
+<p>Видео включается при создании контекста через параметр <code>record_video_dir</code>.</p>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser = p.chromium.launch()
+    context = browser.new_context(
+        record_video_dir=<span class="st">"videos/"</span>
+    )
+    page = context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    context.close()
+    browser.close()</code></pre>
+
+<div class="box box-info">
+<strong>Примечание:</strong> Видео сохраняется в формате WebM при закрытии контекста. Каждая страница получает отдельный файл.
+</div>
+
+<h2>Настройка размера видео</h2>
+<pre><code>context = browser.new_context(
+    record_video_dir=<span class="st">"videos/"</span>,
+    record_video_size={<span class="st">"width"</span>: <span class="nm">1280</span>,
+                        <span class="st">"height"</span>: <span class="nm">720</span>}
+)</code></pre>
+
+<p>Размер видео не может превышать 800x800 пикселей. Playwright подгоняет его под ограничение.</p>
+
+<h2>Путь к видео</h2>
+<pre><code>context.close()
+video_path = page.video.path()
+<span class="kw">print</span>(video_path)</code></pre>
+
+<h2>Сохранение копии</h2>
+<pre><code>context.close()
+page.video.save_as(<span class="st">"output.webm"</span>)</code></pre>
+
+<h2>Удаление видео</h2>
+<pre><code>context.close()
+page.video.delete()</code></pre>
+
+<div class="box box-warning">
+<strong>Важно:</strong> Вызов delete() до закрытия контекста не даст эффекта. Видео должно быть сначала сохранено.
+</div>
+</div>
+
+<div class="card">
+<h2>Видео в pytest</h2>
+<pre><code><span class="cm"># Запись видео для каждого теста</span>
+pytest --video on
+
+<span class="cm"># Видео только при падении теста</span>
+pytest --video retain-on-failure</code></pre>
+
+<p>Пример фикстуры с видео:</p>
+<pre><code><span class="kw">import</span> pytest
+
+<span class="nd">@pytest.fixture</span>(scope=<span class="st">"function"</span>)
+<span class="kw">def</span> <span class="fn">context</span>(browser):
+    ctx = browser.new_context(
+        record_video_dir=<span class="st">"videos/"</span>
+    )
+    <span class="kw">yield</span> ctx
+    ctx.close()
+
+<span class="kw">def</span> <span class="fn">test_example</span>(context):
+    page = context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    expect(page).to_have_title(<span class="st">"Example"</span>)</code></pre>
+
+<div class="box box-tip">
+<strong>Совет:</strong> Комбинируйте <code>--video retain-on-failure</code> с <code>--tracing on</code> для максимальной информативности при отладке.
+</div>
+</div>
+
+<div class="footer">
+Playwright Python — полный справочник на русском языке
+</div>
+</main>
+</div>
+</body>
+</html>

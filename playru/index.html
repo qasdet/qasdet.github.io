@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — полный справочник на русском</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+
+<div class="wrapper">
+
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+
+<main class="main">
+
+<div class="page-header">
+<h1>Playwright для Python</h1>
+<p>Полный справочник на русском языке. Все разделы документации с примерами кода.</p>
+</div>
+
+<div class="card">
+<h2>Навигация по разделам</h2>
+<p style="margin-bottom:0;">Выберите интересующую тему слева. Ниже приведено краткое описание каждого раздела.</p>
+</div>
+
+<div class="toc-grid">
+
+<a href="intro.html" class="toc-card">
+<h3>Введение</h3>
+<p>Что такое Playwright, его возможности, поддержка браузеров и языков.</p>
+</a>
+
+<a href="install.html" class="toc-card">
+<h3>Установка</h3>
+<p>Установка Playwright, браузеров и настройка окружения.</p>
+</a>
+
+<a href="writing-tests.html" class="toc-card">
+<h3>Написание тестов</h3>
+<p>Структура тестов, fixtures, page object и базовые паттерны.</p>
+</a>
+
+<a href="running-tests.html" class="toc-card">
+<h3>Запуск тестов</h3>
+<p>Конфигурация pytest, параллельный запуск, отчёты.</p>
+</a>
+
+<a href="test-runners.html" class="toc-card">
+<h3>Тестовые раннеры</h3>
+<p>Интеграция с pytest, unittest, Django, PyTest-BDD.</p>
+</a>
+
+<a href="library.html" class="toc-card">
+<h3>Автономная библиотека</h3>
+<p>Использование Playwright как библиотеки без тестового раннера.</p>
+</a>
+
+<a href="actions.html" class="toc-card">
+<h3>Действия</h3>
+<p>Клик, ввод текста, выбор опций, загрузка файлов и drag-and-drop.</p>
+</a>
+
+<a href="auto-waiting.html" class="toc-card">
+<h3>Автоматическое ожидание</h3>
+<p>Принципы Auto-Waiting и Actionability Checks.</p>
+</a>
+
+<a href="locators.html" class="toc-card">
+<h3>Локаторы</h3>
+<p>get_by_role, get_by_text, get_by_test_id и цепочки локаторов.</p>
+</a>
+
+<a href="other-locators.html" class="toc-card">
+<h3>Другие локаторы</h3>
+<p>CSS с расширениями Playwright, XPath, текстовые и n-ные локаторы.</p>
+</a>
+
+<a href="assertions.html" class="toc-card">
+<h3>Утверждения</h3>
+<p>expect, soft-assertions, проверка видимости, текста, атрибутов.</p>
+</a>
+
+<a href="navigations.html" class="toc-card">
+<h3>Навигации</h3>
+<p>goto, ожидание загрузки, обработка навигации.</p>
+</a>
+
+<a href="evaluating-js.html" class="toc-card">
+<h3>Выполнение JS</h3>
+<p>page.evaluate(), page.evaluate_handle() и изоляция.</p>
+</a>
+
+<a href="events.html" class="toc-card">
+<h3>События</h3>
+<p>Подписка на события браузера, custom-wait и прерывание.</p>
+</a>
+
+<a href="browsers.html" class="toc-card">
+<h3>Браузеры</h3>
+<p>Запуск Chromium, Firefox, WebKit, опции запуска и профили.</p>
+</a>
+
+<a href="browser-contexts.html" class="toc-card">
+<h3>Браузерные контексты</h3>
+<p>Изолированные сессии, настройка размера/языка/геолокации.</p>
+</a>
+
+<a href="pages.html" class="toc-card">
+<h3>Страницы (Page)</h3>
+<p>Управление вкладками, popup-окнами и multi-page сценариями.</p>
+</a>
+
+<a href="frames.html" class="toc-card">
+<h3>Фреймы</h3>
+<p>Работа с iframe, вложенные фреймы, content_frame.</p>
+</a>
+
+<a href="handles.html" class="toc-card">
+<h3>ElementHandle</h3>
+<p>Низкоуровневая работа с DOM-элементами.</p>
+</a>
+
+<a href="api-testing.html" class="toc-card">
+<h3>Тестирование API</h3>
+<p>APIRequestContext, GET/POST, проверка ответов и куки.</p>
+</a>
+
+<a href="mock.html" class="toc-card">
+<h3>Мокирование</h3>
+<p>Перехват и подмена запросов, route, fulfil и abort.</p>
+</a>
+
+<a href="network.html" class="toc-card">
+<h3>Сеть</h3>
+<p>Мониторинг запросов, WebSocket, HTTPS-аутентификация.</p>
+</a>
+
+<a href="debug.html" class="toc-card">
+<h3>Отладка</h3>
+<p>Playwright Inspector, логирование, pause(), пауза в ошибках.</p>
+</a>
+
+<a href="trace-viewer.html" class="toc-card">
+<h3>Просмотрщик трассировок</h3>
+<p>Запись и анализ трассировок, Trace Viewer GUI.</p>
+</a>
+
+<a href="codegen.html" class="toc-card">
+<h3>Генератор тестов</h3>
+<p>codegen, запись действий, автогенерация локаторов.</p>
+</a>
+
+<a href="screenshots.html" class="toc-card">
+<h3>Скриншоты</h3>
+<p>Полностраничные, элементов, в буфер, сравнение с эталоном.</p>
+</a>
+
+<a href="videos.html" class="toc-card">
+<h3>Видео</h3>
+<p>Запись видео прохождения тестов.</p>
+</a>
+
+<a href="aria-snapshots.html" class="toc-card">
+<h3>ARIA-снимки</h3>
+<p>Snapshot-тестирование accessibility-дерева.</p>
+</a>
+
+<a href="emulation.html" class="toc-card">
+<h3>Эмуляция устройств</h3>
+<p>Мобильные устройства, viewport, геолокация, язык.</p>
+</a>
+
+<a href="authentication.html" class="toc-card">
+<h3>Аутентификация</h3>
+<p>Cookies, localStorage, storageState для повторного входа.</p>
+</a>
+
+<a href="chrome-extensions.html" class="toc-card">
+<h3>Расширения Chrome</h3>
+<p>Загрузка и тестирование расширений Chrome.</p>
+</a>
+
+<a href="webview2.html" class="toc-card">
+<h3>WebView2</h3>
+<p>Автоматизация Edge WebView2 в десктопных приложениях.</p>
+</a>
+
+<a href="touch-events.html" class="toc-card">
+<h3>Сенсорные события</h3>
+<p>Эмуляция касаний, pan и pinch жестов.</p>
+</a>
+
+<a href="clock.html" class="toc-card">
+<h3>Clock API</h3>
+<p>Контроль времени, таймеров и дат в тестах.</p>
+</a>
+
+<a href="dialogs.html" class="toc-card">
+<h3>Диалоги</h3>
+<p>alert, confirm, prompt — принятие и отклонение.</p>
+</a>
+
+<a href="downloads.html" class="toc-card">
+<h3>Загрузки</h3>
+<p>Скачивание файлов, указание пути, ожидание завершения.</p>
+</a>
+
+<a href="pom.html" class="toc-card">
+<h3>Page Object Model</h3>
+<p>Паттерн PageObject, описание страниц и переиспользование.</p>
+</a>
+
+<a href="extensibility.html" class="toc-card">
+<h3>Расширяемость</h3>
+<p>Кастомные selectors, плагины, API hooks.</p>
+</a>
+
+<a href="ci.html" class="toc-card">
+<h3>CI</h3>
+<p>Запуск в GitHub Actions, Jenkins, GitLab CI, CircleCI.</p>
+</a>
+
+<a href="docker.html" class="toc-card">
+<h3>Docker</h3>
+<p>Официальные образы, запуск в контейнерах.</p>
+</a>
+
+<a href="languages.html" class="toc-card">
+<h3>Поддерживаемые языки</h3>
+<p>Python, JavaScript, Java, .NET — обзор и различия.</p>
+</a>
+
+<a href="release-notes.html" class="toc-card">
+<h3>Примечания к релизам</h3>
+<p>История версий Playwright для Python.</p>
+</a>
+
+</div>
+
+<div class="footer">
+Playwright Python — полный справочник на русском языке
+</div>
+
+</main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Playwright Python — Фреймы</title><link rel="stylesheet" href="playru-style.css"></head>
+<body>
+<div class="header"><div class="header-inner"><a href="index.html">Playwright Python — справочник</a><a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a></div></div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link active" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header"><h1>Фреймы</h1><p>Работа с iframe, вложенными фреймами и межфреймовым взаимодействием</p></div>
+<div class="card">
+
+<h2>Что такое фреймы в Playwright?</h2>
+<p>Фреймы (iframe) — это встроенные HTML-документы внутри основной страницы. Playwright предоставляет удобные методы для работы с ними. Каждый <span class="fn">Frame</span> имеет собственную DOM-модель, доступную через те же локаторы, что и у <span class="fn">Page</span>.</p>
+
+<h2>Получение фрейма</h2>
+<p>Фрейм можно получить по CSS-селектору, имени или URL:</p>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser = p.chromium.launch()
+    page = browser.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># По CSS-селектору (FrameLocator)</span>
+    frame_locator = page.frame_locator(<span class="st">"iframe#content"</span>)
+
+    <span class="cm"># По имени</span>
+    frame = page.frame(name=<span class="st">"main-frame"</span>)
+
+    <span class="cm"># По URL</span>
+    frame = page.frame(url=<span class="st">"https://example.com/embedded"</span>)</code></pre>
+
+<h2>FrameLocator — поиск внутри фрейма</h2>
+<p><span class="fn">page.frame_locator()</span> возвращает <strong>FrameLocator</strong>, который позволяет искать элементы внутри iframe как в основной странице:</p>
+<pre><code><span class="cm"># Найти кнопку внутри iframe</span>
+frame = page.frame_locator(<span class="st">"iframe#chat"</span>)
+button = frame.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Отправить"</span>)
+button.click()
+
+<span class="cm"># Заполнить поле внутри фрейма</span>
+frame.locator(<span class="st">"#message"</span>).fill(<span class="st">"Привет!"</span>)</code></pre>
+
+<h2>Прямой доступ к фрейму (Frame)</h2>
+<p>Методы <span class="fn">page.frame()</span> возвращают объект <strong>Frame</strong>, который поддерживает все те же методы, что и Page:</p>
+<pre><code>frame = page.frame(name=<span class="st">"content"</span>)
+frame.fill(<span class="st">"#search"</span>, <span class="st">"query"</span>)
+frame.get_by_text(<span class="st">"Найти"</span>).click()
+frame.wait_for_load_state(<span class="st">"networkidle"</span>)</code></pre>
+
+<h2>Выполнение JavaScript во фрейме</h2>
+<pre><code>frame = page.frame(name=<span class="st">"content"</span>)
+title = frame.evaluate(<span class="st">"() => document.title"</span>)
+<span class="kw">print</span>(<span class="st">f"Заголовок фрейма: {title}"</span>)</code></pre>
+
+<h2>Список всех фреймов на странице</h2>
+<pre><code><span class="kw">for</span> frame <span class="kw">in</span> page.frames:
+    <span class="kw">print</span>(<span class="st">f"Имя: {frame.name}, URL: {frame.url}"</span>)</code></pre>
+
+<h2>Вложенные фреймы (child_frames)</h2>
+<p>Фреймы могут содержать вложенные фреймы. Свойство <span class="fn">frame.child_frames</span> возвращает дочерние фреймы:</p>
+<pre><code>def <span class="fn">print_frames</span>(frame, indent=0):
+    <span class="kw">print</span>(<span class="st">" "</span> * indent + <span class="st">f"Frame: {frame.name} ({frame.url})"</span>)
+    <span class="kw">for</span> child <span class="kw">in</span> frame.child_frames:
+        print_frames(child, indent + 2)
+
+print_frames(page)</code></pre>
+
+<h2>Цепочка frame_locator для вложенных фреймов</h2>
+<p>Для глубоко вложенных iframe можно выстраивать цепочки:</p>
+<pre><code><span class="cm"># Внешний iframe -> внутренний iframe -> элемент</span>
+button = page.frame_locator(<span class="st">"iframe#outer"</span>) \
+             .frame_locator(<span class="st">"iframe#inner"</span>) \
+             .get_by_role(<span class="st">"button"</span>, name=<span class="st">"OK"</span>)
+button.click()</code></pre>
+
+<h2>Ожидание селектора во фрейме</h2>
+<pre><code>frame = page.frame(name=<span class="st">"content"</span>)
+frame.wait_for_selector(<span class="st">".loaded"</span>, state=<span class="st">"visible"</span>, timeout=10000)</code></pre>
+
+<h2>Frame.content() и Frame.title()</h2>
+<pre><code>frame = page.frame(name=<span class="st">"main"</span>)
+html = frame.content()
+title = frame.title()
+<span class="kw">print</span>(<span class="st">f"Заголовок: {title}"</span>)</code></pre>
+
+<h2>События фреймов</h2>
+<p>Playwright генерирует события при добавлении, удалении и навигации фреймов:</p>
+<pre><code><span class="kw">def</span> <span class="fn">on_frame_attached</span>(frame):
+    <span class="kw">print</span>(<span class="st">f"Фрейм добавлен: {frame.url}"</span>)
+
+def <span class="fn">on_frame_detached</span>(frame):
+    <span class="kw">print</span>(<span class="st">f"Фрейм удалён: {frame.url}"</span>)
+
+def <span class="fn">on_frame_navigated</span>(frame):
+    <span class="kw">print</span>(<span class="st">f"Фрейм обновлён: {frame.url}"</span>)
+
+page.on(<span class="st">"frameattached"</span>, on_frame_attached)
+page.on(<span class="st">"framedetached"</span>, on_frame_detached)
+page.on(<span class="st">"framenavigated"</span>, on_frame_navigated)</code></pre>
+
+<h2>Полный пример с фреймами</h2>
+<pre><code><span class="kw">import</span> re
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">test_iframe</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.goto(<span class="st">"https://example.com/with-iframe"</span>)
+
+        <span class="cm"># Работа с iframe по селектору</span>
+        frame = page.frame_locator(<span class="st">"iframe#payment"</span>)
+        frame.get_by_placeholder(<span class="st">"Номер карты"</span>).fill(<span class="st">"4111111111111111"</span>)
+        frame.get_by_placeholder(<span class="st">"MM/YY"</span>).fill(<span class="st">"12/28"</span>)
+        frame.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Оплатить"</span>).click()
+
+        <span class="cm"># Проверка основного фрейма</span>
+        main_frame = page.frame(name=<span class="st">"main"</span>)
+        <span class="kw">assert</span> main_frame.get_by_text(<span class="st">"Оплата прошла"</span>).is_visible()
+
+        browser.close()
+
+test_iframe()</code></pre>
+
+<div class="box box-tip">
+<strong>Совет:</strong> Используйте <span class="fn">page.frame_locator()</span> вместо <span class="fn">frame()</span>, когда фрейм может динамически загружаться — FrameLocator автоматически ожидает появления iframe.
+</div>
+
+<div class="box box-warning">
+<strong>Внимание:</strong> События <span class="fn">frameattached</span> и <span class="fn">framedetached</span> не срабатывают для основного фрейма страницы (page.main_frame). Используйте <span class="fn">framenavigated</span> для отслеживания навигации основного фрейма.
+</div>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

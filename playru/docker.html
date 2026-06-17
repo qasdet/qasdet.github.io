@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Docker</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link active" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Docker</h1>
+<p>Официальные Docker-образы Playwright, запуск контейнеров, кастомные сборки, Playwright Server и подключение к удалённым браузерам.</p>
+</div>
+<div class="card">
+<h2>Официальный Docker-образ</h2>
+<p>Microsoft публикует официальные Docker-образы Playwright в реестре <code>mcr.microsoft.com/playwright</code>. Образы включают все браузеры, их системные зависимости и Python.</p>
+
+<pre><span class="cm"># Pull образа с Python</span>
+docker pull mcr.microsoft.com/playwright/python:v1.61.0-noble
+
+<span class="cm"># Просмотр тегов</span>
+docker pull mcr.microsoft.com/playwright/python:latest
+
+<span class="cm"># Запуск интерактивной сессии</span>
+docker run <span class="op">-</span>it <span class="op">--</span>rm <span class="op">--</span>ipc<span class="op">=</span>host \
+  mcr.microsoft.com/playwright/python:v1.61.0-noble /bin/bash</pre>
+
+<div class="box box-info">
+<p><strong>Базовые образы:</strong> Playwright использует Ubuntu Noble (24.04). Образы доступны для Node.js (<code>playwright</code>), Python (<code>playwright/python</code>) и Java (<code>playwright/java</code>).</p>
+</div>
+
+<h2>Запуск контейнера: ключевые флаги</h2>
+<ul>
+<li><strong><code>--ipc=host</code></strong> — отключает изоляцию IPC. Предотвращает нехватку памяти (OOM) в Chromium при множестве открытых страниц.</li>
+<li><strong><code>--init</code></strong> — запускает init-процесс (tini) для корректной обработки zombie-процессов.</li>
+<li><strong><code>--user pwuser</code></strong> — запуск от непривилегированного пользователя (безопасность).</li>
+<li><strong><code>--security-opt seccomp=seccomp_profile.json</code></strong> — кастомный seccomp-профиль для доступа к untrusted-сайтам.</li>
+</ul>
+
+<pre><span class="cm"># Запуск с --ipc=host и --init</span>
+docker run <span class="op">-</span>it <span class="op">--</span>rm <span class="op">--</span>ipc<span class="op">=</span>host <span class="op">--</span>init \
+  mcr.microsoft.com/playwright/python:v1.61.0-noble /bin/bash
+
+<span class="cm"># Запуск от пользователя pwuser</span>
+docker run <span class="op">-</span>it <span class="op">--</span>rm <span class="op">--</span>ipc<span class="op">=</span>host <span class="op">--</span>user pwuser \
+  mcr.microsoft.com/playwright/python:v1.61.0-noble pytest tests/</pre>
+
+<h2>Playwright Server (удалённые браузеры)</h2>
+<p>Playwright может запускаться в режиме сервера, предоставляя доступ к браузерам по WebSocket. Это позволяет отделить тесты от браузеров.</p>
+
+<pre><span class="cm"># Запуск сервера на порту 5555</span>
+npx playwright run<span class="op">-</span>server <span class="op">--</span>port <span class="nm">5555</span>
+
+<span class="cm"># Docker: запуск сервера в контейнере</span>
+docker run <span class="op">-</span>d <span class="op">--</span>rm <span class="op">--</span>ipc<span class="op">=</span>host <span class="op">--</span>name pw<span class="op">-</span>server <span class="op">-</span>p <span class="nm">5555</span>:<span class="nm">5555</span> \
+  mcr.microsoft.com/playwright/python:v1.61.0-noble \
+  npx playwright run<span class="op">-</span>server <span class="op">--</span>port <span class="nm">5555</span>
+
+<span class="cm"># Подключение к серверу из тестов</span>
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> pw:
+    browser <span class="op">=</span> pw.chromium.connect(<span class="st">"ws://localhost:5555/playwright/chromium"</span>)
+    page <span class="op">=</span> browser.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    <span class="kw">print</span>(page.title())
+    browser.close()</pre>
+
+<h2>Кастомный Dockerfile</h2>
+<p>Если вам нужно добавить свои зависимости поверх официального образа:</p>
+
+<pre><span class="kw">FROM</span> mcr.microsoft.com/playwright/python:v1.61.0-noble
+
+<span class="kw">WORKDIR</span> /app
+
+<span class="cm"># Копирование зависимостей и установка</span>
+<span class="kw">COPY</span> requirements.txt .
+<span class="kw">RUN</span> pip install <span class="op">-</span>r requirements.txt
+
+<span class="cm"># Копирование тестов</span>
+<span class="kw">COPY</span> tests/ ./tests/
+
+<span class="cm"># Запуск тестов</span>
+<span class="kw">CMD</span> [<span class="st">"pytest"</span>, <span class="st">"-v"</span>, <span class="st">"--tb=short"</span>]</pre>
+
+<pre><span class="cm"># Сборка образа</span>
+docker build <span class="op">-</span>t my<span class="op">-</span>playwright<span class="op">-</span>tests .
+
+<span class="cm"># Запуск</span>
+docker run <span class="op">--</span>rm <span class="op">--</span>ipc<span class="op">=</span>host my<span class="op">-</span>playwright<span class="op">-</span>tests</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Если вам не нужны все браузеры (например, только Chromium), можно сократить размер образа, установив только нужный браузер: <code>playwright install chromium</code>.</p>
+</div>
+
+<h2>Docker Compose</h2>
+<p>Пример <code>docker-compose.yml</code> с сервером Playwright и тестовым сервисом:</p>
+
+<pre>version<span class="op">:</span> <span class="st">"3.9"</span>
+
+services<span class="op">:</span>
+  playwright<span class="op">-</span>server<span class="op">:</span>
+    image<span class="op">:</span> mcr.microsoft.com/playwright/python:v1.61.0-noble
+    container_name<span class="op">:</span> pw<span class="op">-</span>server
+    ipc<span class="op">:</span> host
+    ports<span class="op">:</span>
+      <span class="op">-</span> <span class="st">"5555:5555"</span>
+    command<span class="op">:</span> npx playwright run<span class="op">-</span>server <span class="op">--</span>port <span class="nm">5555</span>
+
+  tests<span class="op">:</span>
+    build<span class="op">:</span> .
+    container_name<span class="op">:</span> pw<span class="op">-</span>tests
+    ipc<span class="op">:</span> host
+    depends_on<span class="op">:</span>
+      <span class="op">-</span> playwright<span class="op">-</span>server
+    environment<span class="op">:</span>
+      <span class="op">-</span> PLAYWRIGHT_WS_ENDPOINT=ws://playwright-server:5555/playwright/chromium
+    command<span class="op">:</span> pytest <span class="op">-</span>v <span class="op">--</span>base<span class="op">-</span>url=http://web:8000</pre>
+
+<h2>noVNC для GitHub Codespaces</h2>
+<p>Playwright поддерживает noVNC для просмотра браузера в реальном времени из GitHub Codespaces. Это полезно для отладки.</p>
+
+<pre><span class="cm"># В .devcontainer/devcontainer.json или Dockerfile</span>
+<span class="cm"># Включение noVNC и VNC-сервера</span>
+
+docker run <span class="op">-</span>it <span class="op">--</span>rm <span class="op">--</span>ipc<span class="op">=</span>host <span class="op">-</span>p <span class="nm">6080</span>:<span class="nm">6080</span> <span class="op">\</span>
+  <span class="op">-</span>e DISPLAY=:99 <span class="op">\</span>
+  mcr.microsoft.com/playwright/python:v1.61.0-noble <span class="op">\</span>
+  /bin/bash <span class="op">-</span>c <span class="st">"Xvfb :99 &amp;&amp; x11vnc -display :99 -forever &amp;&amp; pytest"</span></pre>
+
+<div class="box box-warning">
+<p><strong>Внимание:</strong> Без флага <code>--ipc=host</code> Chromium может аварийно завершаться с ошибкой <code>Navigation failed because browser has disconnected</code> при открытии множества вкладок. Всегда добавляйте <code>--ipc=host</code> для production-нагрузки.</p>
+</div>
+
+<h2>Seccomp-профиль для untrusted-сайтов</h2>
+<p>Если тесты посещают потенциально опасные (untrusted) сайты, используйте кастомный seccomp-профиль.</p>
+
+<pre><span class="cm"># Скачать профиль</span>
+wget https://raw.githubusercontent.com/microsoft/playwright/main/utils/docker/seccomp_profile.json
+
+<span class="cm"># Запуск с профилем</span>
+docker run <span class="op">--</span>rm <span class="op">--</span>ipc<span class="op">=</span>host \
+  <span class="op">--</span>security<span class="op">-</span>opt seccomp<span class="op">=</span>seccomp_profile.json \
+  mcr.microsoft.com/playwright/python:v1.61.0-noble pytest</pre>
+
+<h2>Запуск тестов внутри контейнера</h2>
+<p>Полный пример команды для запуска тестов с монтированием локальной директории:</p>
+
+<pre>docker run <span class="op">--</span>rm <span class="op">--</span>ipc<span class="op">=</span>host <span class="op">\</span>
+  <span class="op">-</span>v <span class="st">"$(pwd)"</span>:/app <span class="op">\</span>
+  <span class="op">-</span>w /app <span class="op">\</span>
+  mcr.microsoft.com/playwright/python:v1.61.0-noble <span class="op">\</span>
+  bash <span class="op">-</span>c <span class="st">"pip install -r requirements.txt &amp;&amp; pytest --trace=on"</span></pre>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Утверждения</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link active" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Утверждения</h1>
+<p>Полный справочник по утверждениям (assertions) в Playwright Python: expect, мягкие проверки, таймауты, сравнение скриншотов и expect.poll.</p>
+</div>
+<div class="card">
+<h2>Обзор утверждений в Playwright</h2>
+<p>Playwright предоставляет мощную систему утверждений через функцию <code>expect()</code>. Все утверждения автоматически повторяются до достижения таймаута — это означает, что проверка будет успешной, как только условие будет выполнено, без необходимости писать явные ожидания. Это ключевое отличие от традиционных assert-библиотек: Playwright ждёт, пока состояние станет ожидаемым.</p>
+
+<div class="box box-info">
+<p><strong>Важно:</strong> Все утверждения в Playwright являются асинхронными и используют механизм автоматического повторного запроса (auto-retry). По умолчанию таймаут составляет 5 секунд, но его можно изменить глобально или для конкретного утверждения.</p>
+</div>
+
+<h2>Утверждения для страницы (Page)</h2>
+
+<h3>expect(page).to_have_title()</h3>
+<p>Проверяет заголовок страницы (содержимое тега <code>&lt;title&gt;</code>).</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> expect
+
+expect(page).to_have_title(<span class="st">"Главная страница"</span>)
+expect(page).to_have_title(re.compile(<span class="st">r"Страница \d+"</span>))
+expect(page).to_have_title(<span class="st">"Точный заголовок"</span>, exact=<span class="kw">True</span>)
+expect(page).to_have_title(<span class="st">"Медленная загрузка"</span>, timeout=<span class="nm">10000</span>)</pre>
+
+<h3>expect(page).to_have_url()</h3>
+<p>Проверяет текущий URL страницы.</p>
+
+<pre>expect(page).to_have_url(<span class="st">"https://example.com/dashboard"</span>)
+expect(page).to_have_url(re.compile(<span class="st">r"example\.com/\d+"</span>))
+expect(page).to_have_url(<span class="st">"**/dashboard"</span>)   <span class="cm"># glob-паттерн</span>
+expect(page).to_have_url(<span class="st">"https://example.com"</span>, timeout=<span class="nm">5000</span>)</pre>
+
+<h2>Утверждения для локаторов (Locator)</h2>
+
+<h3>to_be_visible() / to_be_hidden()</h3>
+<p>Проверяют видимость элемента на странице.</p>
+
+<pre>expect(page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>)).to_be_visible()
+expect(page.get_by_role(<span class="st">"dialog"</span>)).to_be_hidden()
+expect(page.get_by_text(<span class="st">"Спасибо"</span>)).to_be_visible(timeout=<span class="nm">3000</span>)
+expect(page.locator(<span class="st">".spinner"</span>)).to_be_hidden(timeout=<span class="nm">10000</span>)</pre>
+
+<h3>to_be_enabled() / to_be_disabled()</h3>
+<p>Проверяют, включён или отключён элемент (атрибут <code>disabled</code>).</p>
+
+<pre>expect(page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Отправить"</span>)).to_be_enabled()
+expect(page.get_by_placeholder(<span class="st">"Введите имя"</span>)).to_be_enabled()
+expect(page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Удалить"</span>)).to_be_disabled()
+expect(page.get_by_role(<span class="st">"textbox"</span>, name=<span class="st">"Email"</span>)).to_be_enabled(timeout=<span class="nm">5000</span>)</pre>
+
+<h3>to_be_checked()</h3>
+<p>Проверяет, что чекбокс или радиокнопка отмечены.</p>
+
+<pre>expect(page.get_by_role(<span class="st">"checkbox"</span>, name=<span class="st">"Согласен"</span>)).to_be_checked()
+expect(page.get_by_role(<span class="st">"radio"</span>, name=<span class="st">"Вариант 1"</span>)).to_be_checked()
+expect(page.get_by_role(<span class="st">"checkbox"</span>)).not_.to_be_checked()  <span class="cm"># не отмечен</span></pre>
+
+<h3>to_be_focused()</h3>
+<p>Проверяет, что элемент находится в фокусе.</p>
+
+<pre>expect(page.get_by_label(<span class="st">"Имя"</span>)).to_be_focused()
+page.get_by_label(<span class="st">"Email"</span>).focus()
+expect(page.get_by_label(<span class="st">"Email"</span>)).to_be_focused()</pre>
+
+<h3>to_be_empty()</h3>
+<p>Проверяет, что элемент пуст (не содержит дочерних узлов или текста).</p>
+
+<pre>expect(page.get_by_role(<span class="st">"listitem"</span>).first).to_be_empty()
+expect(page.locator(<span class="st">".notifications"</span>)).to_be_empty()
+expect(page.get_by_role(<span class="st">"textbox"</span>)).to_be_empty()  <span class="cm"># пустое поле ввода</span></pre>
+
+<h2>to_have_text() / to_contain_text()</h2>
+<p><code>to_have_text()</code> проверяет текстовое содержимое элемента. Поддерживает точное совпадение и частичное. <code>to_contain_text()</code> проверяет, что элемент содержит указанный текст где-либо внутри себя.</p>
+
+<pre><span class="cm"># Точное совпадение текста</span>
+expect(page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Добро пожаловать"</span>)).to_have_text(<span class="st">"Добро пожаловать"</span>)
+
+<span class="cm"># Частичное совпадение (по умолчанию)</span>
+expect(page.get_by_role(<span class="st">"button"</span>)).to_have_text(<span class="st">"Отправить"</span>)
+
+<span class="cm"># Совпадение с регулярным выражением</span>
+expect(page.locator(<span class="st">".price"</span>)).to_have_text(re.compile(<span class="st">r"\d+\.\d{2} руб"</span>))
+
+<span class="cm"># Точное совпадение (exact=True игнорирует пробелы по краям)</span>
+expect(page.get_by_role(<span class="st">"heading"</span>)).to_have_text(<span class="st">"Заголовок"</span>, exact=<span class="kw">True</span>)
+
+<span class="cm"># to_contain_text — текст содержится где-то внутри элемента</span>
+expect(page.locator(<span class="st">".card"</span>)).to_contain_text(<span class="st">"специальное предложение"</span>)
+
+<span class="cm"># Проверка нескольких элементов по тексту</span>
+expect(page.get_by_role(<span class="st">"listitem"</span>)).to_have_text([<span class="st">"Пункт 1"</span>, <span class="st">"Пункт 2"</span>, <span class="st">"Пункт 3"</span>])
+
+<span class="cm"># Использование регулярных выражений в списке</span>
+expect(page.get_by_role(<span class="st">"row"</span>)).to_have_text([
+    re.compile(<span class="st">r"ID-\d+"</span>),
+    <span class="st">"Активен"</span>,
+    re.compile(<span class="st">r"\d{2}\.\d{2}\.\d{4}"</span>)
+])</pre>
+
+<h2>to_have_value() / to_have_values()</h2>
+<p>Проверяют значение поля ввода (<code>value</code>) или выбранные опции в <code>&lt;select multiple&gt;</code>.</p>
+
+<pre><span class="cm"># Проверка значения поля ввода</span>
+expect(page.get_by_label(<span class="st">"Email"</span>)).to_have_value(<span class="st">"user@example.com"</span>)
+
+<span class="cm"># Проверка выбранного значения в select</span>
+expect(page.get_by_role(<span class="st">"combobox"</span>, name=<span class="st">"Страна"</span>)).to_have_value(<span class="st">"RU"</span>)
+
+<span class="cm"># Проверка множественного выбора (select multiple)</span>
+expect(page.get_by_role(<span class="st">"listbox"</span>)).to_have_values([<span class="st">"red"</span>, <span class="st">"blue"</span>])
+
+<span class="cm"># С регулярным выражением</span>
+expect(page.get_by_label(<span class="st">"Телефон"</span>)).to_have_value(re.compile(<span class="st">r"^\+7 \d{3}"</span>))</pre>
+
+<h2>to_have_attribute()</h2>
+<p>Проверяет значение атрибута элемента.</p>
+
+<pre>expect(page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Подробнее"</span>)).to_have_attribute(<span class="st">"href"</span>, <span class="st">"/details"</span>)
+expect(page.get_by_role(<span class="st">"img"</span>, name=<span class="st">"Лого"</span>)).to_have_attribute(<span class="st">"src"</span>, re.compile(<span class="st">r"logo.*\.png"</span>))
+expect(page.get_by_test_id(<span class="st">"submit-btn"</span>)).to_have_attribute(<span class="st">"type"</span>, <span class="st">"submit"</span>)
+expect(page.locator(<span class="st">"input"</span>)).to_have_attribute(<span class="st">"placeholder"</span>, <span class="st">"Введите email"</span>)</pre>
+
+<h2>to_have_class()</h2>
+<p>Проверяет CSS-классы элемента.</p>
+
+<pre>expect(page.get_by_role(<span class="st">"button"</span>)).to_have_class(<span class="st">"btn btn-primary"</span>)
+expect(page.get_by_role(<span class="st">"button"</span>)).to_have_class(re.compile(<span class="st">r"btn-.*"</span>))
+expect(page.locator(<span class="st">".nav-item"</span>)).to_have_class([<span class="st">"nav-item"</span>, <span class="st">"active"</span>])</pre>
+
+<h2>to_have_count()</h2>
+<p>Проверяет количество элементов, соответствующих локатору.</p>
+
+<pre>expect(page.get_by_role(<span class="st">"listitem"</span>)).to_have_count(<span class="nm">5</span>)
+expect(page.get_by_role(<span class="st">"row"</span>)).to_have_count(<span class="nm">11</span>)   <span class="cm"># 10 строк + заголовок</span>
+expect(page.get_by_role(<span class="st">"button"</span>)).to_have_count(<span class="nm">3</span>, timeout=<span class="nm">10000</span>)
+expect(page.locator(<span class="st">".error-message"</span>)).to_have_count(<span class="nm">0</span>)  <span class="cm"># нет ошибок</span></pre>
+
+<h2>to_have_css()</h2>
+<p>Проверяет CSS-свойства элемента.</p>
+
+<pre>expect(page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>)).to_have_css(<span class="st">"background-color"</span>, <span class="st">"rgb(0, 123, 255)"</span>)
+expect(page.get_by_role(<span class="st">"heading"</span>)).to_have_css(<span class="st">"font-size"</span>, <span class="st">"24px"</span>)
+expect(page.locator(<span class="st">".error"</span>)).to_have_css(<span class="st">"color"</span>, re.compile(<span class="st">r"^rgb\(255,"</span>))
+expect(page.get_by_test_id(<span class="st">"modal"</span>)).to_have_css(<span class="st">"display"</span>, <span class="st">"none"</span>)</pre>
+
+<h2>to_have_id()</h2>
+<p>Проверяет значение атрибута <code>id</code> элемента.</p>
+
+<pre>expect(page.get_by_role(<span class="st">"button"</span>)).to_have_id(<span class="st">"submit-btn"</span>)
+expect(page.locator(<span class="st">"header"</span>)).to_have_id(<span class="st">"main-header"</span>)
+expect(page.get_by_role(<span class="st">"form"</span>)).to_have_id(re.compile(<span class="st">r"form-\d+"</span>))</pre>
+
+<h2>to_have_js_property()</h2>
+<p>Проверяет JavaScript-свойство DOM-элемента.</p>
+
+<pre>expect(page.get_by_role(<span class="st">"textbox"</span>)).to_have_js_property(<span class="st">"type"</span>, <span class="st">"email"</span>)
+expect(page.locator(<span class="st">"video"</span>)).to_have_js_property(<span class="st">"paused"</span>, <span class="kw">True</span>)
+expect(page.get_by_role(<span class="st">"button"</span>)).to_have_js_property(<span class="st">"disabled"</span>, <span class="kw">False</span>)
+
+<span class="cm"># Проверка сложного свойства</span>
+expect(page.locator(<span class="st">"progress"</span>)).to_have_js_property(<span class="st">"value"</span>, <span class="nm">42</span>)</pre>
+
+<h2>Soft assertions — мягкие утверждения</h2>
+<p>По умолчанию, если утверждение не проходит, тест немедленно завершается ошибкой. Мягкие утверждения (soft assertions) позволяют продолжить выполнение теста и собрать все ошибки, а затем сообщить о них в конце.</p>
+
+<pre><span class="cm"># Мягкое утверждение — тест продолжается даже при ошибке</span>
+expect(page.get_by_role(<span class="st">"heading"</span>)).to_be_visible()
+expect(page.get_by_text(<span class="st">"Добро пожаловать"</span>)).to_be_visible(timeout=<span class="nm">5000</span>)  <span class="cm"># мягкая проверка</span>
+
+<span class="cm"># Использование expect.with_options</span>
+expect.configure(timeout=<span class="nm">10000</span>)
+expect(page.get_by_text(<span class="st">"Загрузка завершена"</span>)).to_be_visible()</pre>
+
+<p>Мягкие утверждения полезны при проверке множества независимых условий на одной странице — вы получите полный список проблем, а не только первую ошибку.</p>
+
+<h2>Таймауты утверждений</h2>
+<p>По умолчанию все утверждения имеют таймаут 5 секунд. Таймаут можно изменить:</p>
+
+<ul>
+<li><strong>Глобально</strong> — в конфигурации тестов Playwright</li>
+<li><strong>Для всех expect</strong> — через <code>expect.set_options(timeout=10000)</code></li>
+<li><strong>Для конкретного утверждения</strong> — параметром <code>timeout</code></li>
+</ul>
+
+<pre><span class="cm"># Глобальная настройка таймаута для всех утверждений</span>
+expect.configure(timeout=<span class="nm">10000</span>)
+
+<span class="cm"># Таймаут для конкретного утверждения (переопределяет глобальный)</span>
+expect(page.get_by_text(<span class="st">"Медленно загружаемый текст"</span>)).to_be_visible(timeout=<span class="nm">15000</span>)
+
+<span class="cm"># Таймаут в конфигурации playwright (playwright.config)</span>
+<span class="cm"># expect: { timeout: 10000 }</span></pre>
+
+<h2>expect.poll() — Повторная проверка с интервалом</h2>
+<p><code>expect.poll()</code> позволяет повторно выполнять функцию или получать значение до тех пор, пока оно не удовлетворит условию. Это полезно для проверок, которые не вписываются в стандартные утверждения.</p>
+
+<pre><span class="kw">import</span> re
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> expect
+
+<span class="cm"># Проверка с интервалом: ждём, пока значение счётчика не станет 100</span>
+expect.poll(
+    <span class="kw">lambda</span>: page.locator(<span class="st">".counter"</span>).text_content(),
+    timeout=<span class="nm">10000</span>,
+    interval=<span class="nm">500</span>
+).to_have_text(<span class="st">"100"</span>)
+
+<span class="cm"># Проверка с регулярным выражением</span>
+expect.poll(
+    <span class="kw">lambda</span>: page.evaluate(<span class="st">"document.title"</span>),
+    timeout=<span class="nm">5000</span>
+).to_have_text(re.compile(<span class="st">r"Готово \d+%"</span>))
+
+<span class="cm"># Проверка JS-свойства с интервалом</span>
+expect.poll(
+    <span class="kw">lambda</span>: page.evaluate(<span class="st">"window.loadingProgress"</span>),
+    interval=<span class="nm">200</span>,
+    timeout=<span class="nm">30000</span>
+).to_have_value(<span class="nm">100</span>)
+
+<span class="cm"># poll с кастомной функцией проверки</span>
+expect.poll(
+    <span class="kw">lambda</span>: page.locator(<span class="st">".status"</span>).get_attribute(<span class="st">"data-state"</span>),
+    timeout=<span class="nm">5000</span>
+).to_be(<span class="st">"loaded"</span>)  <span class="cm"># to_be для произвольных значений</span></pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> <code>expect.poll()</code> принимает параметры <code>timeout</code> (максимальное время ожидания) и <code>interval</code> (интервал между попытками, по умолчанию 100 мс). Функция выполняется повторно, пока не будет достигнут таймаут или условие не будет выполнено.</p>
+</div>
+
+<h2>Сравнение скриншотов</h2>
+<p><code>expect(page).to_have_screenshot()</code> делает скриншот страницы или элемента и сравнивает его с эталонным изображением. Это мощный инструмент для визуального регрессионного тестирования.</p>
+
+<pre><span class="cm"># Сравнение полного скриншота страницы с эталоном</span>
+expect(page).to_have_screenshot()
+
+<span class="cm"># Сравнение скриншота с именованным эталоном</span>
+expect(page).to_have_screenshot(<span class="st">"login-page.png"</span>)
+
+<span class="cm"># Сравнение скриншота конкретного элемента</span>
+expect(page.get_by_role(<span class="st">"form"</span>, name=<span class="st">"Login"</span>)).to_have_screenshot()
+
+<span class="cm"># Скриншот с маскированием динамических областей</span>
+expect(page).to_have_screenshot(mask=[page.locator(<span class="st">".timestamp"</span>)])
+
+<span class="cm"># Скриншот с опциями</span>
+expect(page).to_have_screenshot(
+    <span class="st">"dashboard.png"</span>,
+    full_page=<span class="kw">True</span>,
+    animations=<span class="st">"disabled"</span>,
+    timeout=<span class="nm">15000</span>,
+    max_diff_pixel_ratio=<span class="nm">0.01</span>   <span class="cm"># допускается 1% различий</span>
+)
+
+<span class="cm"># Скриншот с маскированным элементом</span>
+expect(page).to_have_screenshot(mask=[page.locator(<span class="st">".banner"</span>)], mask_color=<span class="st">"#FF0000"</span>)
+
+<span class="cm"># Скриншот элемента с обрезкой (clip)</span>
+expect(page.locator(<span class="st">".chart"</span>)).to_have_screenshot(
+    <span class="st">"chart.png"</span>,
+    max_diff_pixels=<span class="nm">100</span>
+)
+
+<span class="cm"># Обновление эталонов (режим записи)</span>
+<span class="cm"># При запуске с --update-snapshots все скриншоты будут перезаписаны</span>
+expect(page).to_have_screenshot(<span class="st">"new-reference.png"</span>)</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Скриншоты по умолчанию сохраняются в директории <code>test-results</code> или в кастомной папке, указанной в конфигурации. При первом запуске эталонный скриншот создаётся автоматически. При последующих запусках происходит сравнение с эталоном. Для обновления эталонов используйте флаг <code>--update-snapshots</code>.</p>
+</div>
+
+<h3>Параметры to_have_screenshot()</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td><code>name</code></td><td>Имя файла эталонного скриншота</td></tr>
+<tr><td><code>full_page</code></td><td>Скриншот всей страницы (включая прокручиваемую часть)</td></tr>
+<tr><td><code>clip</code></td><td>Обрезка: <code>{"x": 0, "y": 0, "width": 100, "height": 100}</code></td></tr>
+<tr><td><code>mask</code></td><td>Список локаторов для маскирования</td></tr>
+<tr><td><code>mask_color</code></td><td>Цвет маски (по умолчанию #FF00FF)</td></tr>
+<tr><td><code>animations</code></td><td>Обработка анимации: <code>"disabled"</code>, <code>"allow"</code></td></tr>
+<tr><td><code>max_diff_pixel_ratio</code></td><td>Максимальная доля отличающихся пикселей (0.0–1.0)</td></tr>
+<tr><td><code>max_diff_pixels</code></td><td>Максимальное количество отличающихся пикселей</td></tr>
+<tr><td><code>threshold</code></td><td>Порог сравнения пикселей (0–1, по умолчанию 0.2)</td></tr>
+<tr><td><code>timeout</code></td><td>Таймаут ожидания (мс)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Практические примеры</h2>
+
+<h3>Полный набор проверок страницы</h3>
+
+<pre><span class="kw">def</span> <span class="fn">test_page_assertions</span>(page):
+    page.goto(<span class="st">"https://example.com/dashboard"</span>)
+
+    <span class="cm"># Проверки страницы</span>
+    expect(page).to_have_title(<span class="st">"Панель управления"</span>)
+    expect(page).to_have_url(re.compile(<span class="st">r"example\.com/dashboard"</span>))
+
+    <span class="cm"># Проверки видимости элементов</span>
+    expect(page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Добро пожаловать"</span>)).to_be_visible()
+    expect(page.get_by_text(<span class="st">"Загрузка..."</span>)).to_be_hidden()
+
+    <span class="cm"># Проверки состояния</span>
+    expect(page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Сохранить"</span>)).to_be_enabled()
+    expect(page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Удалить"</span>)).to_be_disabled()
+
+    <span class="cm"># Проверка формы</span>
+    expect(page.get_by_label(<span class="st">"Email"</span>)).to_have_value(<span class="st">"admin@example.com"</span>)
+    expect(page.get_by_label(<span class="st">"Email"</span>)).to_be_focused()
+
+    <span class="cm"># Проверка списка</span>
+    expect(page.get_by_role(<span class="st">"listitem"</span>)).to_have_count(<span class="nm">5</span>)
+    expect(page.get_by_role(<span class="st">"listitem"</span>).first).to_have_text(<span class="st">"Задача #1"</span>)</pre>
+
+<h3>Мягкие проверки в одном тесте</h3>
+
+<pre><span class="kw">def</span> <span class="fn">test_multiple_assertions</span>(page: Page):
+    page.goto(<span class="st">"https://example.com/profile"</span>)
+
+    <span class="cm"># Собираем все ошибки, не прерывая тест</span>
+    errors <span class="op">=</span> []
+
+    <span class="kw">try</span>:
+        expect(page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Профиль"</span>)).to_be_visible(timeout=<span class="nm">3000</span>)
+    <span class="kw">except</span> AssertionError <span class="kw">as</span> e:
+        errors.append(<span class="st">f"Заголовок не виден: {e}"</span>)
+
+    <span class="kw">try</span>:
+        expect(page.get_by_label(<span class="st">"Имя"</span>)).to_have_value(<span class="st">"Иван"</span>)
+    <span class="kw">except</span> AssertionError <span class="kw">as</span> e:
+        errors.append(<span class="st">f"Имя не совпадает: {e}"</span>)
+
+    <span class="kw">if</span> errors:
+        raise AssertionError(<span class="st">"</span>\n<span class="st">"</span>.join(errors))</pre>
+
+<h3>Сравнение скриншотов в CI</h3>
+
+<pre><span class="kw">def</span> <span class="fn">test_visual_regression</span>(page):
+    page.goto(<span class="st">"https://example.com/home"</span>)
+
+    <span class="cm"># Маскируем динамические элементы (дата, время, ID сессии)</span>
+    expect(page).to_have_screenshot(
+        <span class="st">"home-page.png"</span>,
+        mask=[
+            page.locator(<span class="st">".session-id"</span>),
+            page.locator(<span class="st">".current-date"</span>),
+            page.locator(<span class="st">".random-banner"</span>)
+        ],
+        max_diff_pixel_ratio=<span class="nm">0.005</span>  <span class="cm"># допускаем 0.5% различий</span>
+    )</pre>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Playwright использует pixelmatch для сравнения скриншотов. При первом запуске тестов со скриншотами эталонные изображения создаются автоматически. Для обновления эталонов запустите тесты с флагом <code>--update-snapshots</code> или <code>-u</code>.</p>
+</div>
+
+<h2>Заключение</h2>
+<p>Утверждения Playwright — это мощная и гибкая система проверок, которая автоматически ожидает выполнения условий. Основные преимущества:</p>
+<ul>
+<li><strong>Автоматический повтор</strong> — утверждения повторяются до достижения таймаута</li>
+<li><strong>Читаемые сообщения об ошибках</strong> — понятные описания, что пошло не так</li>
+<li><strong>Мягкие проверки</strong> — можно собрать все ошибки без остановки теста</li>
+<li><strong>expect.poll()</strong> — для кастомных проверок с интервалом</li>
+<li><strong>Сравнение скриншотов</strong> — визуальное регрессионное тестирование</li>
+<li><strong>Гибкая настройка таймаутов</strong> — глобально, для всех expect или для конкретного утверждения</li>
+</ul>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

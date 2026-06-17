@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Навигации</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link active" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Навигации</h1>
+<p>Полный справочник по навигации в Playwright Python: goto, reload, go_back, go_forward, ожидание загрузки, wait_for_url, wait_for_navigation и обработка ошибок.</p>
+</div>
+<div class="card">
+<h2>Обзор навигации в Playwright</h2>
+<p>Playwright предоставляет полный набор методов для управления навигацией в браузере: переход по URL, перезагрузка, работа с историей браузера и ожидание завершения загрузки. Все методы навигации поддерживают тонкую настройку через параметр <code>wait_until</code>, который определяет, какое событие считать завершением навигации.</p>
+
+<div class="box box-info">
+<p><strong>Важно:</strong> Методы навигации в Playwright автоматически ожидают завершения загрузки страницы. Это значит, что после <code>page.goto()</code> не нужно добавлять дополнительные ожидания — Playwright дождётся стабилизации страницы.</p>
+</div>
+
+<h2>page.goto() — Основной метод навигации</h2>
+<p>Метод <code>page.goto()</code> выполняет переход по указанному URL. Возвращает объект <code>Response</code> или <code>None</code> (если страница загрузилась из кеша или произошла ошибка).</p>
+
+<pre>response <span class="op">=</span> page.goto(<span class="st">"https://example.com"</span>)
+assert response.status <span class="op">==</span> <span class="nm">200</span>
+assert response.ok
+
+<span class="cm"># Переход с таймаутом (30 секунд по умолчанию)</span>
+page.goto(<span class="st">"https://example.com"</span>, timeout=<span class="nm">60000</span>)</pre>
+
+<h3>waitUntil — стратегии ожидания загрузки</h3>
+<p>Параметр <code>wait_until</code> определяет, какое событие считать моментом завершения навигации. Доступны четыре стратегии:</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Значение</th><th>Описание</th><th>Скорость</th></tr>
+</thead>
+<tbody>
+<tr><td><code>"load"</code></td><td>Событие <code>load</code> — вся страница загружена (изображения, стили, скрипты)</td><td>Средняя</td></tr>
+<tr><td><code>"domcontentloaded"</code></td><td>DOM полностью загружен и разобран, без ожидания стилей и изображений</td><td>Быстрая</td></tr>
+<tr><td><code>"networkidle"</code></td><td>Сеть простаивает — нет активных сетевых запросов в течение 500 мс</td><td>Медленная</td></tr>
+<tr><td><code>"commit"</code></td><td>Сервер ответил и началась загрузка документа</td><td>Максимально быстрая</td></tr>
+</tbody>
+</table>
+</div>
+
+<pre><span class="cm"># Стратегия "load" (по умолчанию)</span>
+page.goto(<span class="st">"https://example.com"</span>, wait_until=<span class="st">"load"</span>)
+
+<span class="cm"># Только DOM (быстро, но без изображений и стилей)</span>
+page.goto(<span class="st">"https://example.com"</span>, wait_until=<span class="st">"domcontentloaded"</span>)
+
+<span class="cm"># Ожидание полной стабилизации сети</span>
+page.goto(<span class="st">"https://example.com"</span>, wait_until=<span class="st">"networkidle"</span>)
+
+<span class="cm"># Минимальное ожидание (только начало загрузки)</span>
+page.goto(<span class="st">"https://example.com"</span>, wait_until=<span class="st">"commit"</span>)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Для большинства тестов достаточно стратегии <code>"load"</code> (по умолчанию). Используйте <code>"networkidle"</code>, если страница выполняет много асинхронных запросов после загрузки. <code>"domcontentloaded"</code> ускоряет тесты, когда важна только структура DOM. <code>"commit"</code> используйте, когда нужно как можно быстрее начать взаимодействие.</p>
+</div>
+
+<h3>Дополнительные параметры goto()</h3>
+<pre><span class="cm"># Переход с кастомными заголовками HTTP</span>
+page.goto(<span class="st">"https://example.com"</span>, headers={
+    <span class="st">"Authorization"</span>: <span class="st">"Bearer token123"</span>,
+    <span class="st">"X-Custom"</span>: <span class="st">"value"</span>
+})
+
+<span class="cm"># Переход с указанием реферера</span>
+page.goto(<span class="st">"https://example.com"</span>, referer=<span class="st">"https://google.com"</span>)
+
+<span class="cm"># Переход с кастомным таймаутом</span>
+page.goto(<span class="st">"https://example.com"</span>, timeout=<span class="nm">10000</span>)
+
+<span class="cm"># Переход без ожидания навигации (полезно для скачивания файлов)</span>
+page.goto(<span class="st">"https://example.com/download"</span>, no_wait_after=<span class="kw">True</span>)</pre>
+
+<h2>page.reload() — Перезагрузка страницы</h2>
+<p>Метод <code>page.reload()</code> перезагружает текущую страницу. Поддерживает те же опции, что и <code>goto()</code>.</p>
+
+<pre><span class="cm"># Простая перезагрузка</span>
+page.reload()
+
+<span class="cm"># Перезагрузка с ожиданием стабилизации сети</span>
+page.reload(wait_until=<span class="st">"networkidle"</span>)
+
+<span class="cm"># Перезагрузка с кастомным таймаутом</span>
+page.reload(timeout=<span class="nm">15000</span>)
+
+<span class="cm"># Проверка, что перезагрузка прошла успешно</span>
+response <span class="op">=</span> page.reload()
+assert response.status <span class="op">==</span> <span class="nm">200</span></pre>
+
+<h2>page.go_back() / page.go_forward() — История браузера</h2>
+<p>Методы для навигации по истории браузера (как кнопки «Назад» и «Вперёд»).</p>
+
+<pre><span class="cm"># Навигация назад</span>
+page.go_back()
+
+<span class="cm"># Навигация назад с ожиданием</span>
+response <span class="op">=</span> page.go_back(wait_until=<span class="st">"domcontentloaded"</span>)
+<span class="kw">if</span> response:
+    assert response.ok
+
+<span class="cm"># Навигация вперёд</span>
+page.go_forward()
+
+<span class="cm"># Навигация вперёд с таймаутом</span>
+page.go_forward(timeout=<span class="nm">10000</span>)
+
+<span class="cm"># Полный сценарий: переход туда и обратно</span>
+page.goto(<span class="st">"https://example.com/page1"</span>)
+page.goto(<span class="st">"https://example.com/page2"</span>)
+page.go_back()   <span class="cm"># возврат на page1</span>
+expect(page).to_have_url(re.compile(<span class="st">r".*page1$"</span>))
+page.go_forward()  <span class="cm"># снова на page2</span>
+expect(page).to_have_url(re.compile(<span class="st">r".*page2$"</span>))</pre>
+
+<h2>page.wait_for_url() — Ожидание URL</h2>
+<p>Метод <code>page.wait_for_url()</code> приостанавливает выполнение до тех пор, пока текущий URL не совпадёт с указанным паттерном. Поддерживает строки, регулярные выражения и glob-паттерны.</p>
+
+<pre><span class="cm"># Ожидание точного URL</span>
+page.wait_for_url(<span class="st">"https://example.com/dashboard"</span>)
+
+<span class="cm"># Ожидание по glob-паттерну</span>
+page.wait_for_url(<span class="st">"**/dashboard"</span>)
+page.wait_for_url(<span class="st">"https://example.com/**"</span>)
+
+<span class="cm"># Ожидание по регулярному выражению</span>
+page.wait_for_url(re.compile(<span class="st">r"example\.com/order/\d+"</span>))
+
+<span class="cm"># Ожидание с таймаутом</span>
+page.wait_for_url(<span class="st">"**/success"</span>, timeout=<span class="nm">10000</span>)
+
+<span class="cm"># После клика ждём определённый URL</span>
+page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Оплатить"</span>).click()
+page.wait_for_url(<span class="st">"**/payment/success"</span>)</pre>
+
+<h2>page.wait_for_load_state() — Ожидание состояния загрузки</h2>
+<p>Метод <code>page.wait_for_load_state()</code> ожидает определённого состояния загрузки страницы. Это полезно, когда нужно дождаться, например, полной стабилизации сети после выполнения действий.</p>
+
+<pre><span class="cm"># Ожидание полной загрузки страницы</span>
+page.wait_for_load_state()  <span class="cm"># по умолчанию "load"</span>
+
+<span class="cm"># Ожидание состояния "domcontentloaded"</span>
+page.wait_for_load_state(<span class="st">"domcontentloaded"</span>)
+
+<span class="cm"># Ожидание стабилизации сети (нет запросов в течение 500 мс)</span>
+page.wait_for_load_state(<span class="st">"networkidle"</span>)
+
+<span class="cm"># После клика, который вызывает множество запросов</span>
+page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Загрузить данные"</span>).click()
+page.wait_for_load_state(<span class="st">"networkidle"</span>, timeout=<span class="nm">15000</span>)</pre>
+
+<h2>page.wait_for_navigation() — Ожидание после действия</h2>
+<p>Метод <code>page.wait_for_navigation()</code> используется в паре с действием, которое инициирует навигацию. Это наиболее надёжный способ дождаться завершения перехода. Рекомендуется использовать контекстный менеджер.</p>
+
+<pre><span class="cm"># Контекстный менеджер (рекомендуемый способ)</span>
+<span class="kw">with</span> page.expect_navigation() <span class="kw">as</span> nav_info:
+    page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"О нас"</span>).click()
+response <span class="op">=</span> nav_info.value
+assert response.status <span class="op">==</span> <span class="nm">200</span>
+
+<span class="cm"># Ожидание навигации с указанием URL</span>
+<span class="kw">with</span> page.expect_navigation(url=<span class="st">"https://example.com/about"</span>) <span class="kw">as</span> nav_info:
+    page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"О нас"</span>).click()
+
+<span class="cm"># Ожидание навигации по glob-паттерну</span>
+<span class="kw">with</span> page.expect_navigation(url=re.compile(<span class="st">r"example\.com/profile/\d+"</span>)):
+    page.get_by_test_id(<span class="st">"view-profile"</span>).click()
+
+<span class="cm"># Ожидание навигации с кастомным таймаутом</span>
+<span class="kw">with</span> page.expect_navigation(timeout=<span class="nm">15000</span>):
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Подтвердить"</span>).click()
+
+<span class="cm"># Ожидание навигации для формы</span>
+<span class="kw">with</span> page.expect_navigation():
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Войти"</span>).click()
+expect(page).to_have_url(<span class="st">"https://example.com/dashboard"</span>)</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Используйте <code>expect_navigation()</code> вместо <code>wait_for_load_state()</code> после кликов, которые вызывают переход на другую страницу. <code>expect_navigation()</code> начинает ожидание ДО выполнения действия и точно «ловит» навигацию, в то время как <code>wait_for_load_state()</code> может пропустить момент перехода.</p>
+</div>
+
+<h2>page.wait_for_function() — Ожидание JS-условия</h2>
+<p>Метод <code>page.wait_for_function()</code> ожидает, когда JavaScript-выражение на странице вернёт truthy-значение. Это полезно для ожидания произвольных условий, не покрытых стандартными методами.</p>
+
+<pre><span class="cm"># Ожидание появления элемента через JS</span>
+page.wait_for_function(<span class="st">"window.loadingComplete === true"</span>)
+
+<span class="cm"># Ожидание, пока счётчик не станет больше 100</span>
+page.wait_for_function(<span class="st">"document.querySelector('.counter').textContent >= '100'"</span>)
+
+<span class="cm"># Ожидание с аргументом</span>
+page.wait_for_function(
+    <span class="st">"(max) => document.querySelectorAll('.item').length > max"</span>,
+    arg=<span class="nm">5</span>
+)
+
+<span class="cm"># Ожидание с таймаутом и интервалом проверки</span>
+page.wait_for_function(
+    <span class="st">"typeof window.apiData !== 'undefined'"</span>,
+    timeout=<span class="nm">10000</span>,
+    polling=<span class="nm">200</span>  <span class="cm"># проверка каждые 200 мс</span>
+)
+
+<span class="cm"># Ожидание изменения заголовка страницы</span>
+page.wait_for_function(
+    <span class="st">"document.title.includes('Готово')"</span>,
+    timeout=<span class="nm">5000</span>
+)
+
+<span class="cm"># Ожидание, пока элемент не станет видимым (JS-способ)</span>
+page.wait_for_function(
+    <span class="st">"document.querySelector('.spinner') === null"</span>
+)</pre>
+
+<h2>Обработка ошибочных навигаций: crash, download, popup</h2>
+<p>Playwright позволяет обрабатывать особые случаи навигации: краш страницы, скачивание файлов и открытие новых окон (popup).</p>
+
+<h3>page.on("crash") — Обработка краша страницы</h3>
+<p>Событие <code>crash</code> возникает, когда страница неожиданно завершает работу (например, из-за фатальной ошибки или нехватки памяти).</p>
+
+<pre><span class="kw">def</span> <span class="fn">handle_crash</span>(page):
+    <span class="kw">print</span>(<span class="st">"Страница упала с ошибкой!"</span>)
+
+page.on(<span class="st">"crash"</span>, handle_crash)
+page.goto(<span class="st">"https://example.com"</span>)
+assert <span class="kw">not</span> page.is_closed()
+
+<span class="cm"># Проверка после сложной операции</span>
+<span class="kw">try</span>:
+    page.goto(<span class="st">"https://example.com/heavy-page"</span>, timeout=<span class="nm">30000</span>)
+<span class="kw">except</span> Error <span class="kw">as</span> e:
+    <span class="kw">if</span> <span class="st">"crash"</span> <span class="kw">in</span> str(e).lower():
+        <span class="kw">print</span>(<span class="st">"Страница упала, продолжаем тест"</span>)</pre>
+
+<h3>page.on("download") — Обработка скачивания файлов</h3>
+<p>Событие <code>download</code> возникает при скачивании файла. Позволяет получить доступ к файлу, его имени и пути.</p>
+
+<pre><span class="kw">with</span> page.expect_download() <span class="kw">as</span> download_info:
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Скачать отчёт"</span>).click()
+
+download <span class="op">=</span> download_info.value
+<span class="kw">print</span>(download.suggested_filename)     <span class="cm"># "report.pdf"</span>
+<span class="kw">print</span>(download.url)                    <span class="cm"># URL файла</span>
+
+<span class="cm"># Сохранение файла в нужную директорию</span>
+download.save_as(<span class="st">"./downloads/report.pdf"</span>)
+
+<span class="cm"># Чтение файла как байты (без сохранения)</span>
+content <span class="op">=</span> download.read()
+assert <span class="fn">len</span>(content) <span class="op">&gt;</span> <span class="nm">0</span></pre>
+
+<h3>page.on("popup") — Обработка новых окон</h3>
+<p>Событие <code>popup</code> возникает при открытии новой вкладки или окна (например, при клике на ссылку с <code>target="_blank"</code>).</p>
+
+<pre><span class="cm"># Обработка всплывающего окна через контекстный менеджер</span>
+<span class="kw">with</span> page.expect_popup() <span class="kw">as</span> popup_info:
+    page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Открыть в новом окне"</span>).click()
+
+popup <span class="op">=</span> popup_info.value
+popup.wait_for_load_state()
+expect(popup).to_have_title(<span class="st">"Новое окно"</span>)
+
+<span class="cm"># Работа с popup после открытия</span>
+popup.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Закрыть"</span>).click()
+popup.close()
+
+<span class="cm"># Множественные popup</span>
+<span class="kw">with</span> page.expect_popup() <span class="kw">as</span> popup_info:
+    page.get_by_text(<span class="st">"Открыть все окна"</span>).click()
+
+<span class="cm"># Ожидание нескольких popup за раз</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">3</span>):
+    <span class="kw">with</span> page.expect_popup() <span class="kw">as</span> popup_info:
+        page.get_by_test_id(<span class="st">f"open-window-{i}"</span>).click()
+    popup <span class="op">=</span> popup_info.value
+    <span class="kw">print</span>(popup.title())</pre>
+
+<h2>Таймауты навигации</h2>
+<p>Все методы навигации поддерживают настройку таймаута. По умолчанию таймаут навигации составляет 30 секунд. Его можно изменить глобально, для конкретного метода или через конфигурацию.</p>
+
+<pre><span class="cm"># Таймаут для конкретного перехода</span>
+page.goto(<span class="st">"https://example.com"</span>, timeout=<span class="nm">60000</span>)
+
+<span class="cm"># Глобальная настройка таймаута навигации</span>
+page.set_default_navigation_timeout(<span class="nm">45000</span>)
+
+<span class="cm"># Таймаут для expect_navigation</span>
+<span class="kw">with</span> page.expect_navigation(timeout=<span class="nm">30000</span>):
+    page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Далее"</span>).click()
+
+<span class="cm"># Таймаут для wait_for_url</span>
+page.wait_for_url(<span class="st">"**/success"</span>, timeout=<span class="nm">15000</span>)
+
+<span class="cm"># Таймаут для wait_for_load_state</span>
+page.wait_for_load_state(<span class="st">"networkidle"</span>, timeout=<span class="nm">20000</span>)
+
+<span class="cm"># Обработка превышения таймаута</span>
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> TimeoutError
+
+<span class="kw">try</span>:
+    page.goto(<span class="st">"https://example.com/slow"</span>, timeout=<span class="nm">5000</span>)
+<span class="kw">except</span> TimeoutError:
+    <span class="kw">print</span>(<span class="st">"Страница не загрузилась вовремя"</span>)
+    page.reload()</pre>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Таймауты навигации и таймауты утверждений — это разные настройки. Таймаут навигации (30 с по умолчанию) контролирует, сколько ждать загрузки страницы. Таймаут утверждений (5 с по умолчанию) контролирует, сколько ждать выполнения условия. Настраиваются они независимо.</p>
+</div>
+
+<h2>Практические примеры</h2>
+
+<h3>Пример: Полный сценарий навигации</h3>
+
+<pre><span class="kw">def</span> <span class="fn">test_navigation_scenario</span>(page):
+    <span class="cm"># Шаг 1: переход на главную страницу</span>
+    page.goto(<span class="st">"https://example.com"</span>, wait_until=<span class="st">"networkidle"</span>)
+    expect(page).to_have_title(<span class="st">"Главная"</span>)
+
+    <span class="cm"># Шаг 2: клик по ссылке и ожидание навигации</span>
+    <span class="kw">with</span> page.expect_navigation(url=re.compile(<span class="st">r".*/about$"</span>)):
+        page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"О компании"</span>).click()
+    expect(page).to_have_url(<span class="st">"https://example.com/about"</span>)
+
+    <span class="cm"># Шаг 3: возврат назад</span>
+    page.go_back()
+    expect(page).to_have_url(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Шаг 4: переход вперёд</span>
+    page.go_forward()
+    expect(page).to_have_url(<span class="st">"https://example.com/about"</span>)
+
+    <span class="cm"># Шаг 5: открытие popup</span>
+    <span class="kw">with</span> page.expect_popup() <span class="kw">as</span> popup_info:
+        page.get_by_text(<span class="st">"Чат поддержки"</span>).click()
+    popup <span class="op">=</span> popup_info.value
+    popup.wait_for_load_state()
+    expect(popup).to_have_title(<span class="st">"Чат"</span>)
+
+    <span class="cm"># Шаг 6: перезагрузка</span>
+    page.reload()
+    expect(page).to_have_url(<span class="st">"https://example.com/about"</span>)</pre>
+
+<h3>Пример: Ожидание сложных условий</h3>
+
+<pre><span class="kw">def</span> <span class="fn">test_advanced_waiting</span>(page):
+    page.goto(<span class="st">"https://example.com/data"</span>)
+
+    <span class="cm"># Запуск загрузки данных</span>
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Загрузить данные"</span>).click()
+
+    <span class="cm"># Ожидание стабилизации сети</span>
+    page.wait_for_load_state(<span class="st">"networkidle"</span>)
+
+    <span class="cm"># Ожидание появления индикатора</span>
+    expect(page.get_by_test_id(<span class="st">"data-loaded"</span>)).to_be_visible()
+
+    <span class="cm"># Дополнительное ожидание через JS-условие</span>
+    page.wait_for_function(
+        <span class="st">"window.dataLoaded === true"</span>,
+        timeout=<span class="nm">10000</span>
+    )
+
+    <span class="cm"># Ожидание изменения URL</span>
+    page.wait_for_url(<span class="st">"**/data/complete"</span>)</pre>
+
+<h2>Заключение</h2>
+<p>Навигация в Playwright — это мощный и гибкий инструмент, который покрывает все сценарии: от простого перехода по URL до сложных сценариев с ожиданием асинхронных загрузок. Ключевые возможности:</p>
+<ul>
+<li><strong>page.goto()</strong> — переход с гибкими стратегиями ожидания (load, domcontentloaded, networkidle, commit)</li>
+<li><strong>page.reload()</strong>, <strong>go_back()</strong>, <strong>go_forward()</strong> — управление историей браузера</li>
+<li><strong>wait_for_url()</strong>, <strong>wait_for_load_state()</strong> — ожидание конкретных состояний</li>
+<li><strong>expect_navigation()</strong> — надёжное ожидание навигации после действий</li>
+<li><strong>wait_for_function()</strong> — ожидание произвольных JavaScript-условий</li>
+<li><strong>expect_popup()</strong>, <strong>expect_download()</strong> — обработка popup и скачиваний</li>
+<li><strong>Настройка таймаутов</strong> — гибкое управление временем ожидания</li>
+</ul>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

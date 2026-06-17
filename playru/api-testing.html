@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Тестирование API</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link active" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Тестирование API</h1>
+<p>Полное руководство по тестированию API в Playwright Python: методы запросов, работа с ответами, изолированный контекст API и примеры CRUD-операций.</p>
+</div>
+<div class="card">
+<h2>Введение в тестирование API</h2>
+<p>Playwright предоставляет встроенные возможности для тестирования REST API через объекты <code>APIRequestContext</code>. Вы можете выполнять HTTP-запросы напрямую, без использования браузера, что позволяет тестировать API как отдельно, так и в сочетании с UI-тестами. API-запросы можно выполнять через <code>page.request</code>, <code>context.request</code> или изолированный <code>APIRequestContext</code>.</p>
+
+<div class="box box-info">
+<p><strong>Важно:</strong> API-тесты в Playwright выполняются в том же контексте, что и браузерные тесты, что упрощает передачу кук, заголовков аутентификации и других данных между UI и API.</p>
+</div>
+
+<h2>Способы отправки запросов</h2>
+
+<h3>page.request — запросы от лица страницы</h3>
+<p>Объект <code>page.request</code> автоматически использует куки и заголовки текущей страницы. Это удобно для выполнения API-запросов в контексте авторизованного пользователя.</p>
+
+<pre>response <span class="op">=</span> page.request.get(<span class="st">"https://api.example.com/users"</span>)
+response <span class="op">=</span> page.request.post(<span class="st">"https://api.example.com/users"</span>, json={<span class="st">"name"</span>: <span class="st">"Иван"</span>})</pre>
+
+<h3>context.request — запросы от лица контекста</h3>
+<p>Объект <code>context.request</code> использует куки и настройки конкретного браузерного контекста.</p>
+
+<pre>response <span class="op">=</span> context.request.get(<span class="st">"https://api.example.com/data"</span>)
+response <span class="op">=</span> context.request.post(<span class="st">"https://api.example.com/data"</span>, data=<span class="st">"raw body content"</span>)</pre>
+
+<h3>APIRequestContext — изолированный контекст API</h3>
+<p>Для полной изоляции можно создать отдельный контекст API через <code>request.new_context()</code>. Это полезно, когда нужно отправить запрос без браузерного контекста или с собственными настройками аутентификации.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    api_context <span class="op">=</span> p.request.new_context(
+        base_url=<span class="st">"https://api.example.com"</span>,
+        extra_headers={<span class="st">"X-API-Key"</span>: <span class="st">"my-secret-key"</span>}
+    )
+    response <span class="op">=</span> api_context.get(<span class="st">"/users"</span>)
+    <span class="kw">print</span>(response.json())</pre>
+
+<h2>HTTP-методы</h2>
+
+<h3>request.get() — GET-запрос</h3>
+<pre><span class="cm"># Простой GET-запрос</span>
+response <span class="op">=</span> page.request.get(<span class="st">"https://api.example.com/users"</span>)
+
+<span class="cm"># GET с параметрами запроса</span>
+response <span class="op">=</span> page.request.get(<span class="st">"https://api.example.com/users"</span>, params={
+    <span class="st">"page"</span>: <span class="nm">1</span>,
+    <span class="st">"limit"</span>: <span class="nm">10</span>,
+    <span class="st">"sort"</span>: <span class="st">"name"</span>
+})
+
+<span class="cm"># GET с заголовками</span>
+response <span class="op">=</span> page.request.get(
+    <span class="st">"https://api.example.com/protected"</span>,
+    headers={<span class="st">"Authorization"</span>: <span class="st">"Bearer token123"</span>}
+)</pre>
+
+<h3>request.post() — POST-запрос</h3>
+<pre><span class="cm"># POST с JSON-телом</span>
+response <span class="op">=</span> page.request.post(<span class="st">"https://api.example.com/users"</span>, json={
+    <span class="st">"name"</span>: <span class="st">"Иван Петров"</span>,
+    <span class="st">"email"</span>: <span class="st">"ivan@example.com"</span>,
+    <span class="st">"role"</span>: <span class="st">"admin"</span>
+})
+
+<span class="cm"># POST с form-данными</span>
+response <span class="op">=</span> page.request.post(<span class="st">"https://api.example.com/login"</span>, form={
+    <span class="st">"username"</span>: <span class="st">"admin"</span>,
+    <span class="st">"password"</span>: <span class="st">"secret"</span>
+})
+
+<span class="cm"># POST с multipart/form-data (загрузка файла)</span>
+response <span class="op">=</span> page.request.post(<span class="st">"https://api.example.com/upload"</span>, multipart={
+    <span class="st">"file"</span>: {<span class="st">"name"</span>: <span class="st">"report.pdf"</span>, <span class="st">"mimeType"</span>: <span class="st">"application/pdf"</span>, <span class="st">"buffer"</span>: <span class="st">b"PDF content"</span>}
+})
+
+<span class="cm"># POST с raw-телом</span>
+response <span class="op">=</span> page.request.post(<span class="st">"https://api.example.com/data"</span>, data=<span class="st">"raw string body"</span>)</pre>
+
+<h3>request.put() — PUT-запрос</h3>
+<pre><span class="cm"># Обновление ресурса</span>
+response <span class="op">=</span> page.request.put(<span class="st">"https://api.example.com/users/42"</span>, json={
+    <span class="st">"name"</span>: <span class="st">"Иван Петров (обновлено)"</span>,
+    <span class="st">"email"</span>: <span class="st">"ivan.new@example.com"</span>
+})
+
+<span class="cm"># PUT с заголовками</span>
+response <span class="op">=</span> page.request.put(
+    <span class="st">"https://api.example.com/users/42"</span>,
+    data=<span class="st">'{"name": "Обновление"}'</span>,
+    headers={<span class="st">"Content-Type"</span>: <span class="st">"application/json"</span>}
+)</pre>
+
+<h3>request.patch() — PATCH-запрос</h3>
+<pre><span class="cm"># Частичное обновление ресурса</span>
+response <span class="op">=</span> page.request.patch(<span class="st">"https://api.example.com/users/42"</span>, json={
+    <span class="st">"email"</span>: <span class="st">"updated@example.com"</span>
+})</pre>
+
+<h3>request.delete() — DELETE-запрос</h3>
+<pre><span class="cm"># Удаление ресурса</span>
+response <span class="op">=</span> page.request.delete(<span class="st">"https://api.example.com/users/42"</span>)
+
+<span class="cm"># DELETE с телом запроса</span>
+response <span class="op">=</span> page.request.delete(<span class="st">"https://api.example.com/users/batch"</span>, json={
+    <span class="st">"ids"</span>: [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>]
+})</pre>
+
+<h2>request.fetch() — универсальный метод</h2>
+<p>Метод <code>fetch()</code> позволяет выполнить запрос с полным контролем над всеми параметрами. Это универсальная замена для всех отдельных HTTP-методов.</p>
+
+<pre><span class="cm"># GET-запрос через fetch</span>
+response <span class="op">=</span> page.request.fetch(<span class="st">"https://api.example.com/users"</span>)
+
+<span class="cm"># POST с JSON через fetch</span>
+response <span class="op">=</span> page.request.fetch(
+    <span class="st">"https://api.example.com/users"</span>,
+    method=<span class="st">"POST"</span>,
+    headers={<span class="st">"Content-Type"</span>: <span class="st">"application/json"</span>},
+    json={<span class="st">"name"</span>: <span class="st">"Новый пользователь"</span>}
+)
+
+<span class="cm"># Полный кастомный запрос через fetch</span>
+response <span class="op">=</span> page.request.fetch(
+    <span class="st">"https://api.example.com/data"</span>,
+    method=<span class="st">"PUT"</span>,
+    headers={<span class="st">"Authorization"</span>: <span class="st">"Bearer token"</span>, <span class="st">"X-Custom"</span>: <span class="st">"value"</span>},
+    params={<span class="st">"version"</span>: <span class="st">"2"</span>},
+    data=<span class="st">'{"key": "value"}'</span>,
+    timeout=<span class="nm">30000</span>
+)</pre>
+
+<h2>Работа с ответом (APIResponse)</h2>
+<p>Объект <code>APIResponse</code> предоставляет множество методов для проверки и разбора ответа сервера.</p>
+
+<h3>Статус и заголовки</h3>
+<pre>response <span class="op">=</span> page.request.get(<span class="st">"https://api.example.com/users"</span>)
+
+<span class="cm"># Код статуса</span>
+<span class="kw">print</span>(response.status)       <span class="cm"># 200</span>
+<span class="kw">print</span>(response.ok)           <span class="cm"># True (200-299)</span>
+<span class="kw">print</span>(response.status_text)  <span class="cm"># "OK"</span>
+
+<span class="cm"># Проверка статуса</span>
+assert response.status <span class="op">==</span> <span class="nm">200</span>
+assert response.ok
+assert response.status <span class="op">==</span> <span class="nm">201</span>  <span class="cm"># для создания ресурса</span>
+assert response.status <span class="op">==</span> <span class="nm">204</span>  <span class="cm"># для успешного удаления</span>
+
+<span class="cm"># Заголовки ответа</span>
+<span class="kw">print</span>(response.headers)
+<span class="kw">print</span>(response.headers[<span class="st">"content-type"</span>])
+<span class="kw">print</span>(response.headers.get(<span class="st">"x-request-id"</span>))
+<span class="kw">print</span>(response.headers_array())  <span class="cm"># все заголовки с дубликатами</span></pre>
+
+<h3>Тело ответа</h3>
+<pre><span class="cm"># JSON (автоматический парсинг)</span>
+data <span class="op">=</span> response.json()
+<span class="kw">print</span>(data[<span class="st">"name"</span>])
+<span class="kw">print</span>(data[<span class="st">"items"</span>][<span class="nm">0</span>])
+
+<span class="cm"># Текст</span>
+text <span class="op">=</span> response.text()
+<span class="kw">print</span>(text)
+
+<span class="cm"># Бинарные данные (байты)</span>
+body <span class="op">=</span> response.body()
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"downloaded.pdf"</span>, <span class="st">"wb"</span>) <span class="kw">as</span> f:
+    f.write(body)</pre>
+
+<h3>Дополнительные методы APIResponse</h3>
+<pre><span class="cm"># URL после возможных редиректов</span>
+<span class="kw">print</span>(response.url)
+
+<span class="cm"># Размер тела в байтах</span>
+<span class="kw">print</span>(response.body_size)  <span class="cm"># int</span>
+
+<span class="cm"># Проверка, завершён ли ответ (все данные получены)</span>
+assert response.finished()  <span class="cm"># True после полной загрузки тела</span></pre>
+
+<h2>Безопасность и TLS</h2>
+
+<h3>response.security_details() — информация о TLS</h3>
+<p>Возвращает информацию о TLS-соединении: версия протокола, шифр, сертификат.</p>
+
+<pre>response <span class="op">=</span> page.request.get(<span class="st">"https://api.example.com/users"</span>)
+security <span class="op">=</span> response.security_details()
+
+<span class="kw">if</span> security:
+    <span class="kw">print</span>(security[<span class="st">"protocol"</span>])     <span class="cm"># "TLS 1.3"</span>
+    <span class="kw">print</span>(security[<span class="st">"cipher"</span>])      <span class="cm"># "AES-256-GCM"</span>
+    <span class="kw">print</span>(security[<span class="st">"subjectName"</span>]) <span class="cm"># "api.example.com"</span>
+    <span class="kw">print</span>(security[<span class="st">"issuer"</span>])      <span class="cm"># "Let's Encrypt"</span>
+    <span class="kw">print</span>(security[<span class="st">"validFrom"</span>])   <span class="cm"># timestamp</span>
+    <span class="kw">print</span>(security[<span class="st">"validTo"</span>])     <span class="cm"># timestamp</span></pre>
+
+<h3>response.server_addr() — адрес сервера</h3>
+<p>Возвращает IP-адрес и порт сервера, который обработал запрос.</p>
+
+<pre>response <span class="op">=</span> page.request.get(<span class="st">"https://api.example.com/users"</span>)
+addr <span class="op">=</span> response.server_addr()
+<span class="kw">if</span> addr:
+    <span class="kw">print</span>(addr[<span class="st">"ipAddress"</span>])  <span class="cm"># "93.184.216.34"</span>
+    <span class="kw">print</span>(addr[<span class="st">"port"</span>])       <span class="cm"># 443</span></pre>
+
+<h2>Параметры запроса: заголовки, куки и query-параметры</h2>
+
+<pre><span class="cm"># Отправка кастомных заголовков</span>
+response <span class="op">=</span> page.request.get(
+    <span class="st">"https://api.example.com/users"</span>,
+    headers={
+        <span class="st">"Authorization"</span>: <span class="st">"Bearer eyJhbGciOiJIUzI1Ni..."</span>,
+        <span class="st">"X-Request-ID"</span>: <span class="st">"abc-123"</span>,
+        <span class="st">"Accept-Language"</span>: <span class="st">"ru-RU"</span>
+    }
+)
+
+<span class="cm"># Query-параметры (URL-параметры)</span>
+response <span class="op">=</span> page.request.get(<span class="st">"https://api.example.com/search"</span>, params={
+    <span class="st">"q"</span>: <span class="st">"playwright"</span>,
+    <span class="st">"page"</span>: <span class="nm">2</span>,
+    <span class="st">"sort"</span>: <span class="st">"desc"</span>,
+    <span class="st">"filter"</span>: <span class="st">"active"</span>
+})
+
+<span class="cm"># Отправка кук</span>
+response <span class="op">=</span> page.request.get(
+    <span class="st">"https://api.example.com/profile"</span>,
+    headers={<span class="st">"Cookie"</span>: <span class="st">"session_id=abc123; theme=dark"</span>}
+)</pre>
+
+<h2>request.storage_state() — состояние для аутентификации</h2>
+<p>Позволяет получить куки, localStorage и sessionStorage после выполнения запросов. Это полезно для сохранения состояния аутентификации и повторного использования в других тестах.</p>
+
+<pre><span class="cm"># Выполнение входа и сохранение состояния</span>
+response <span class="op">=</span> page.request.post(<span class="st">"https://example.com/api/login"</span>, json={
+    <span class="st">"username"</span>: <span class="st">"admin"</span>,
+    <span class="st">"password"</span>: <span class="st">"password123"</span>
+})
+assert response.ok
+
+<span class="cm"># Сохранение состояния (куки, токены)</span>
+state <span class="op">=</span> page.request.storage_state()
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"auth-state.json"</span>, <span class="st">"w"</span>) <span class="kw">as</span> f:
+    f.write(<span class="st">"json.dumps(state)"</span>)
+
+<span class="cm"># Использование сохранённого состояния в новом контексте</span>
+context <span class="op">=</span> browser.new_context(storage_state=<span class="st">"auth-state.json"</span>)
+page <span class="op">=</span> context.new_page()
+
+<span class="cm"># Теперь пользователь уже авторизован</span>
+page.goto(<span class="st">"https://example.com/dashboard"</span>)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте <code>storage_state()</code> для ускорения тестов — выполняйте вход один раз через API (это быстрее, чем UI), сохраняйте состояние и переиспользуйте его в последующих тестах. Это также позволяет избежать многократного ввода логина/пароля.</p>
+</div>
+
+<h2>Полный пример CRUD-теста API</h2>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">class</span> <span class="fn">TestUsersAPI</span>:
+
+    base_url <span class="op">=</span> <span class="st">"https://api.example.com"</span>
+    created_user_id <span class="op">=</span> <span class="kw">None</span>
+
+    <span class="kw">def</span> <span class="fn">setup_method</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.playwright <span class="op">=</span> sync_playwright().start()
+        <span class="kw">self</span>.api_context <span class="op">=</span> <span class="kw">self</span>.playwright.request.new_context(
+            base_url=<span class="kw">self</span>.base_url,
+            extra_headers={<span class="st">"Authorization"</span>: <span class="st">"Bearer test-token"</span>}
+        )
+
+    <span class="kw">def</span> <span class="fn">teardown_method</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.api_context.dispose()
+        <span class="kw">self</span>.playwright.stop()
+
+    <span class="kw">def</span> <span class="fn">test_01_create_user</span>(<span class="kw">self</span>):
+        <span class="cm"># CREATE (POST) — создание нового пользователя</span>
+        response <span class="op">=</span> <span class="kw">self</span>.api_context.post(<span class="st">"/users"</span>, json={
+            <span class="st">"name"</span>: <span class="st">"Иван Петров"</span>,
+            <span class="st">"email"</span>: <span class="st">"ivan@example.com"</span>,
+            <span class="st">"role"</span>: <span class="st">"user"</span>
+        })
+
+        assert response.status <span class="op">==</span> <span class="nm">201</span>
+        data <span class="op">=</span> response.json()
+        <span class="kw">self</span>.created_user_id <span class="op">=</span> data[<span class="st">"id"</span>]
+        assert data[<span class="st">"name"</span>] <span class="op">==</span> <span class="st">"Иван Петров"</span>
+        assert data[<span class="st">"email"</span>] <span class="op">==</span> <span class="st">"ivan@example.com"</span>
+
+    <span class="kw">def</span> <span class="fn">test_02_get_user</span>(<span class="kw">self</span>):
+        <span class="cm"># READ (GET) — получение созданного пользователя</span>
+        assert <span class="kw">self</span>.created_user_id <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>
+
+        response <span class="op">=</span> <span class="kw">self</span>.api_context.get(<span class="st">f"/users/{</span><span class="kw">self</span>.created_user_id<span class="st">}"</span>)
+
+        assert response.status <span class="op">==</span> <span class="nm">200</span>
+        assert response.ok
+        data <span class="op">=</span> response.json()
+        assert data[<span class="st">"id"</span>] <span class="op">==</span> <span class="kw">self</span>.created_user_id
+        assert data[<span class="st">"name"</span>] <span class="op">==</span> <span class="st">"Иван Петров"</span>
+
+    <span class="kw">def</span> <span class="fn">test_03_update_user</span>(<span class="kw">self</span>):
+        <span class="cm"># UPDATE (PUT) — обновление пользователя</span>
+        response <span class="op">=</span> <span class="kw">self</span>.api_context.put(<span class="st">f"/users/{</span><span class="kw">self</span>.created_user_id<span class="st">}"</span>, json={
+            <span class="st">"name"</span>: <span class="st">"Иван Петров (обновлено)"</span>,
+            <span class="st">"email"</span>: <span class="st">"ivan.updated@example.com"</span>
+        })
+
+        assert response.status <span class="op">==</span> <span class="nm">200</span>
+        data <span class="op">=</span> response.json()
+        assert data[<span class="st">"email"</span>] <span class="op">==</span> <span class="st">"ivan.updated@example.com"</span>
+
+    <span class="kw">def</span> <span class="fn">test_04_list_users</span>(<span class="kw">self</span>):
+        <span class="cm"># LIST (GET) — получение списка пользователей</span>
+        response <span class="op">=</span> <span class="kw">self</span>.api_context.get(<span class="st">"/users"</span>, params={
+            <span class="st">"page"</span>: <span class="nm">1</span>,
+            <span class="st">"limit"</span>: <span class="nm">10</span>
+        })
+
+        assert response.status <span class="op">==</span> <span class="nm">200</span>
+        data <span class="op">=</span> response.json()
+        assert <span class="st">"items"</span> <span class="kw">in</span> data
+        assert <span class="fn">len</span>(data[<span class="st">"items"</span>]) <span class="op">&gt;</span> <span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">test_05_delete_user</span>(<span class="kw">self</span>):
+        <span class="cm"># DELETE — удаление пользователя</span>
+        response <span class="op">=</span> <span class="kw">self</span>.api_context.delete(<span class="st">f"/users/{</span><span class="kw">self</span>.created_user_id<span class="st">}"</span>)
+
+        assert response.status <span class="op">==</span> <span class="nm">204</span>
+
+        <span class="cm"># Проверка, что пользователь действительно удалён</span>
+        response <span class="op">=</span> <span class="kw">self</span>.api_context.get(<span class="st">f"/users/{</span><span class="kw">self</span>.created_user_id<span class="st">}"</span>)
+        assert response.status <span class="op">==</span> <span class="nm">404</span></pre>
+
+<h2>Тестирование API в сочетании с UI</h2>
+<p>Одна из сильных сторон Playwright — возможность комбинировать API-запросы с UI-тестами. Например, можно подготовить данные через API, а затем проверить их отображение в браузере.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_create_user_via_api_check_ui</span>(page, context):
+    <span class="cm"># Шаг 1: Создание пользователя через API</span>
+    api_context <span class="op">=</span> context.request
+    response <span class="op">=</span> api_context.post(<span class="st">"https://example.com/api/users"</span>, json={
+        <span class="st">"name"</span>: <span class="st">"Тестовый пользователь"</span>,
+        <span class="st">"email"</span>: <span class="st">"test@example.com"</span>
+    })
+    assert response.ok
+    user_id <span class="op">=</span> response.json()[<span class="st">"id"</span>]
+
+    <span class="cm"># Шаг 2: Проверка в UI, что пользователь отображается</span>
+    page.goto(<span class="st">"https://example.com/users"</span>)
+    expect(page.get_by_text(<span class="st">"Тестовый пользователь"</span>)).to_be_visible()
+    expect(page.get_by_text(<span class="st">"test@example.com"</span>)).to_be_visible()
+
+    <span class="cm"># Шаг 3: Очистка — удаление пользователя через API</span>
+    api_context.delete(<span class="st">f"https://example.com/api/users/{user_id}"</span>)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте API для подготовки данных (сев-ап) и очистки (тир-даун) в тестах. Это быстрее и надёжнее, чем создавать данные через UI. Кроме того, API-запросы не зависят от состояния интерфейса.</p>
+</div>
+
+<h2>Заключение</h2>
+<p>Тестирование API в Playwright Python — это полноценный инструмент, который позволяет:</p>
+<ul>
+<li>Выполнять все стандартные HTTP-методы (GET, POST, PUT, PATCH, DELETE)</li>
+<li>Работать с различными форматами тела запроса (JSON, form, multipart, raw)</li>
+<li>Проверять статусы, заголовки и тело ответа</li>
+<li>Получать информацию о TLS-соединении и адресе сервера</li>
+<li>Использовать изолированный API-контекст или контекст страницы/браузера</li>
+<li>Сохранять состояние аутентификации через <code>storage_state()</code></li>
+<li>Комбинировать API-запросы с UI-тестами для эффективного тестирования</li>
+</ul>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

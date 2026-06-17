@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Запуск тестов</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link active" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Запуск тестов</h1>
+<p>Все способы запуска тестов Playwright: базовый, в нескольких браузерах, параллельно, с записью видео и трассировки.</p>
+</div>
+<div class="card">
+<h2>Базовый запуск</h2>
+<p>Самый простой способ запустить все тесты в проекте — просто выполнить команду <code>pytest</code> в корневой директории:</p>
+
+<pre>pytest</pre>
+
+<p>По умолчанию pytest находит все файлы вида <code>test_*.py</code> и запускает функции, начинающиеся с <code>test_</code>. Playwright будет работать в headless-режиме (без видимого окна браузера) с использованием Chromium.</p>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Если вы не указали браузер явно, Playwright использует Chromium. Вы можете изменить браузер по умолчанию через конфигурационный файл.</p>
+</div>
+
+<h3>Запуск одного файла</h3>
+<pre>pytest test_login.py</pre>
+
+<h3>Запуск одного теста по имени</h3>
+<pre>pytest test_login.py::test_successful_login</pre>
+
+<h3>Запуск тестов по марке</h3>
+<pre>pytest -m smoke</pre>
+
+<h2>Запуск с видимым браузером</h2>
+<p>Для отладки полезно видеть, что происходит в браузере. Используйте флаг <code>--headed</code>:</p>
+
+<pre>pytest --headed</pre>
+
+<p>Браузер откроется в обычном окне, и вы сможете наблюдать за выполнением теста в реальном времени. Это особенно полезно на этапе написания и отладки тестов.</p>
+
+<h2>Замедление выполнения</h2>
+<p>Флаг <code>--slowmo</code> добавляет задержку между каждым действием Playwright. Указывается в миллисекундах:</p>
+
+<pre>pytest --slowmo 500</pre>
+
+<p>Это замедлит выполнение на 500 мс между шагами. Полезно для визуального наблюдения за быстрыми тестами или для демонстрации.</p>
+
+<h2>Запуск в нескольких браузерах</h2>
+<p>Playwright позволяет запускать одни и те же тесты в разных браузерах без изменения кода. Просто перечислите нужные браузеры через флаг <code>--browser</code>:</p>
+
+<pre>pytest --browser chromium --browser firefox --browser webkit</pre>
+
+<p>Каждый тест будет выполнен по одному разу для каждого указанного браузера. Если тест падает в одном браузере, но проходит в других — pytest покажет это в отчёте.</p>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Запуск во всех трёх браузерах — лучший способ убедиться, что ваше приложение работает одинаково во всех браузерных движках. Однако это увеличивает общее время прогона примерно в три раза.</p>
+</div>
+
+<h2>Параллельный запуск</h2>
+<p>Для ускорения прогона тестов используйте параллельный запуск. Для этого необходим пакет <code>pytest-xdist</code>:</p>
+
+<pre>pip install pytest-xdist</pre>
+
+<p>Затем запускайте тесты с флагом <code>-n</code>:</p>
+
+<pre><span class="cm"># Запуск на всех доступных ядрах CPU</span>
+pytest -n auto
+
+<span class="cm"># Запуск на 4 рабочих процессах</span>
+pytest -n <span class="nm">4</span></pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> При параллельном запуске каждый рабочий процесс создаёт отдельный экземпляр браузера. Убедитесь, что у вашей системы достаточно ресурсов (ОЗУ, CPU). Для больших проектов рекомендуется выделять по 512 МБ ОЗУ на каждый рабочий процесс.</p>
+</div>
+
+<h2>Переиспользование браузера между тестами</h2>
+<p>По умолчанию Playwright создаёт новый браузер для каждого теста. Это обеспечивает изоляцию, но замедляет выполнение. Вы можете переиспользовать один экземпляр браузера между несколькими тестами с помощью флагов <code>--reuse</code> и <code>--workers</code>:</p>
+
+<pre>pytest --reuse --workers 4</pre>
+
+<p>В этом режиме один браузер переиспользуется между тестами, а несколько воркеров позволяют запускать тесты параллельно внутри одного браузера. Это значительно экономит время на запуск и закрытие браузера.</p>
+
+<h2>Запись трассировки</h2>
+<p>Playwright может записывать трассировку (trace) для каждого теста. Трассировка содержит все действия, скриншоты, сетевые запросы и консольные логи:</p>
+
+<pre>pytest --trace on</pre>
+
+<p>Трассировки сохраняются в формате <code>trace.zip</code> в папке <code>test-results/</code>. Их можно просмотреть в Trace Viewer командой:</p>
+
+<pre>playwright show-trace test-results/trace.zip</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте трассировку для анализа упавших тестов. Trace Viewer позволяет «перематывать» выполнение теста и видеть состояние страницы в каждый момент времени.</p>
+</div>
+
+<h2>Запись видео</h2>
+<p>Флаг <code>--video</code> включает запись видео прохождения каждого теста:</p>
+
+<pre>pytest --video on</pre>
+
+<p>Доступные режимы:</p>
+<ul>
+<li><code>on</code> — запись видео для каждого теста</li>
+<li><code>off</code> — видео не записывается (по умолчанию)</li>
+<li><code>retain-on-failure</code> — запись видео только для упавших тестов</li>
+</ul>
+
+<p>Видео сохраняются в формате WebM в папку <code>test-results/</code>.</p>
+
+<h2>Скриншоты при падении</h2>
+<p>Автоматические скриншоты при падении теста включаются флагом <code>--screenshot</code>:</p>
+
+<pre>pytest --screenshot only-on-failure</pre>
+
+<p>Доступные режимы:</p>
+<ul>
+<li><code>on</code> — скриншот для каждого теста</li>
+<li><code>off</code> — скриншоты не делаются</li>
+<li><code>only-on-failure</code> — скриншот только для упавших тестов (по умолчанию)</li>
+</ul>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Скриншоты сохраняются в папку <code>test-results/</code> вместе с трассировками и видео. Каждый тест получает отдельную подпапку.</p>
+</div>
+
+<h2>HTML-отчёт</h2>
+<p>Для генерации красивых HTML-отчётов используйте <code>pytest-html</code>:</p>
+
+<pre>pip install pytest-html
+pytest --html=report.html</pre>
+
+<p>Отчёт будет содержать полную информацию о прогоне: количество пройденных и упавших тестов, время выполнения, логи ошибок и скриншоты (если они были сделаны).</p>
+
+<h2>Конфигурация через pyproject.toml</h2>
+<p>Вместо длинных команд можно настроить все параметры в файле <code>pyproject.toml</code>:</p>
+
+<pre>[<span class="kw">tool</span>.pytest.ini_options]
+minversion = <span class="st">"8.0"</span>
+testpaths = [<span class="st">"tests"</span>]
+addopts = <span class="st">"""
+    --headed
+    --browser chromium
+    --browser firefox
+    --slowmo 200
+    --trace on
+    --video only-on-failure
+    --screenshot only-on-failure
+    --html=report.html
+    -n auto
+"""</span></pre>
+
+<h2>Конфигурация через pytest.ini</h2>
+<p>Классический способ конфигурации — файл <code>pytest.ini</code> в корне проекта:</p>
+
+<pre>[pytest]
+testpaths = tests
+addopts = --headed --browser chromium --slowmo 300 --trace on --html=report.html</pre>
+
+<h2>Пример: полный запуск для CI/CD</h2>
+<p>Типичная команда для CI-окружения, где нужна максимальная информативность:</p>
+
+<pre>pytest \
+  --browser chromium \
+  --browser firefox \
+  --browser webkit \
+  --trace on \
+  --video on \
+  --screenshot on \
+  --html=report.html \
+  --junitxml=junit.xml \
+  -n auto \
+  --maxfail <span class="nm">5</span></pre>
+
+<p>Эта команда:</p>
+<ul>
+<li>Запускает тесты во всех трёх браузерах</li>
+<li>Записывает трассировки, видео и скриншоты</li>
+<li>Генерирует HTML-отчёт</li>
+<li>Создаёт JUnit XML-отчёт для интеграции с CI</li>
+<li>Выполняет тесты параллельно на всех ядрах</li>
+<li>Останавливается после 5 неудачных тестов</li>
+</ul>
+
+<h2>Комбинирование флагов</h2>
+<p>Все флаги можно комбинировать. Например, для отладки сложного теста:</p>
+
+<pre>pytest test_complex.py::test_feature --headed --slowmo 1000 --trace on</pre>
+
+<p>Это запустит один тест с видимым браузером, замедлением в 1 секунду между действиями и записью трассировки. Идеально для анализа и отладки.</p>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Начните с минимальной конфигурации (<code>pytest --headed --slowmo 300</code>) при разработке тестов. Для регулярного прогона в CI используйте headless-режим с записью трассировки и скриншотов при падении.</p>
+</div>
+
+<h2>Переменные окружения</h2>
+<p>Некоторые настройки можно задать через переменные окружения:</p>
+
+<pre><span class="cm"># Установка браузера по умолчанию</span>
+<span class="kw">export</span> PLAYWRIGHT_BROWSER=firefox
+
+<span class="cm"># Путь к браузерам</span>
+<span class="kw">export</span> PLAYWRIGHT_BROWSERS_PATH=<span class="st">/custom/path</span>
+
+<span class="cm"># Запуск в режиме отладки</span>
+<span class="kw">export</span> PWDEBUG=<span class="nm">1</span></pre>
+
+<p>Переменная <code>PWDEBUG=1</code> автоматически включает режим отладки с Playwright Inspector и отключает таймауты.</p>
+
+<p>Переходите к разделу <a href="test-runners.html">Тестовые раннеры</a>, чтобы узнать об интеграции Playwright с другими фреймворками тестирования.</p>
+</div>
+<div class="footer">
+Playwright Python — полный справочник на русском языке
+</div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Введение</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link active" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Введение в Playwright</h1>
+<p>Что такое Playwright, его архитектура, ключевые возможности и место среди инструментов автоматизации.</p>
+</div>
+<div class="card">
+<h2>Что такое Playwright</h2>
+<p>Playwright — это современный фреймворк с открытым исходным кодом для автоматизации браузеров, разработанный компанией Microsoft. Он предоставляет единый высокоуровневый API для управления Chromium, Firefox и WebKit через один интерфейс. В отличие от Selenium, Playwright не требует WebDriver — он взаимодействует с браузерами напрямую через протокол CDP (Chrome DevTools Protocol) для Chromium и собственные протоколы для Firefox и WebKit.</p>
+
+<div class="box box-info">
+<p><strong>Ключевой факт:</strong> Playwright был создан той же командой, которая ранее работала над Puppeteer в Google. Разработка началась в 2020 году, и с тех пор фреймворк стремительно набрал популярность благодаря своей надёжности и богатому функционалу.</p>
+</div>
+
+<h3>Поддерживаемые браузеры</h3>
+<p>Playwright поддерживает все три основных браузерных движка:</p>
+<ul>
+<li><strong>Chromium</strong> — основа для Google Chrome, Microsoft Edge, Opera и Brave. Использует CDP для управления.</li>
+<li><strong>Firefox</strong> — собственный протокол автоматизации, не требующий установленного браузера — Playwright использует собственные сборки.</li>
+<li><strong>WebKit</strong> — движок Safari. Playwright использует патченную версию WebKit, которая поддерживает все необходимые протоколы автоматизации.</li>
+</ul>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Playwright загружает собственные сборки браузеров при выполнении команды <code>playwright install</code>. Это значит, что вам не нужно устанавливать браузеры отдельно — всё уже включено.</p>
+</div>
+
+<h3>Поддерживаемые языки</h3>
+<p>Playwright доступен для четырёх языков программирования. API идентичен во всех реализациях:</p>
+<ul>
+<li><strong>Python</strong> — синхронный и асинхронный API (pytest-плагин в комплекте)</li>
+<li><strong>JavaScript / TypeScript</strong> — нативный API для Node.js</li>
+<li><strong>Java</strong> — Maven-зависимость с синхронным и асинхронным API</li>
+<li><strong>.NET</strong> — пакет для C# с полной поддержкой async/await</li>
+</ul>
+
+<h2>Архитектура Playwright</h2>
+<p>В отличие от Selenium, где каждый браузер требует отдельный WebDriver (chromedriver, geckodriver, safaridriver), Playwright использует встроенные протоколы:</p>
+<ul>
+<li><strong>Chromium</strong> — Chrome DevTools Protocol (CDP), тот же протокол, который используют инструменты разработчика Chrome.</li>
+<li><strong>Firefox</strong> — собственная реализация протокола автоматизации, основанная на патченной версии Firefox (Firefox for Automation).</li>
+<li><strong>WebKit</strong> — собственная реализация, основанная на патченной версии WebKit (WebKit for Automation).</li>
+</ul>
+<p>Такой подход обеспечивает более высокую скорость работы и избавляет от проблем с версиями драйверов. Браузеры обновляются вместе с Playwright, и вы всегда получаете совместимую версию.</p>
+
+<pre><span class="cm"># Простейший пример запуска браузера через Playwright в Python</span>
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    page <span class="op">=</span> browser.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    <span class="kw">print</span>(page.title())
+    browser.close()</pre>
+
+<h2>Ключевые возможности</h2>
+
+<h3>Auto-Waiting (Автоматическое ожидание)</h3>
+<p>Playwright автоматически ожидает, пока элемент станет видимым, стабильным и активным, прежде чем выполнить действие. Это радикально снижает количество flaky-тестов и избавляет от ручных <code>time.sleep()</code>. Playwright проверяет: элемент видим, не заблокирован, не анимируется и принимает события.</p>
+
+<h3>Trace Viewer (Просмотрщик трассировок)</h3>
+<p>Playwright может записать полную трассировку выполнения теста — все действия, сетевые запросы, скриншоты, консольные логи и DOM-снимки. После прогона вы можете открыть трассировку в специальном GUI-инструменте и буквально «перемотать» выполнение теста назад, чтобы увидеть, что произошло в каждый момент времени.</p>
+
+<h3>Codegen (Генератор тестов)</h3>
+<p>Утилита <code>playwright codegen</code> открывает браузер и записывает все ваши действия в код на Python (или другом языке). Вы просто кликаете и вводите текст — Playwright генерирует готовый тест с правильными локаторами. Это ускоряет написание тестов в разы.</p>
+
+<h3>Network Interception (Перехват сети)</h3>
+<p>Playwright позволяет перехватывать, модифицировать и блокировать любые сетевые запросы на лету. Вы можете подменить ответ API, заблокировать рекламу, эмулировать офлайн-режим или проверить, какие запросы отправляет приложение.</p>
+
+<pre><span class="cm"># Перехват и подмена сетевого запроса</span>
+<span class="kw">def</span> <span class="fn">handle_route</span>(route):
+    <span class="kw">if</span> <span class="st">"analytics"</span> <span class="kw">in</span> route.request.url:
+        route.abort()
+    <span class="kw">else</span>:
+        route.continue_()
+
+page.route(<span class="st">"**/*"</span>, handle_route)</pre>
+
+<h3>Emulation (Эмуляция)</h3>
+<p>Вы можете эмулировать мобильные устройства, разные viewport'ы, геолокацию, часовой пояс, язык, цветовую схему (dark mode), сенсорные события и даже конкретные модели телефонов (iPhone, Pixel). Для этого достаточно передать параметры в <code>browser.new_context()</code>.</p>
+
+<h2>Сравнение с Selenium</h2>
+<p>Playwright и Selenium — два самых популярных инструмента для автоматизации браузеров. Вот ключевые различия:</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Характеристика</th><th>Playwright</th><th>Selenium</th></tr>
+</thead>
+<tbody>
+<tr><td>Архитектура</td><td>Напрямую через протокол браузера (CDP и собственные)</td><td>Через WebDriver (требуется отдельный драйвер для каждого браузера)</td></tr>
+<tr><td>Установка</td><td>Одна команда — и браузеры уже скачаны</td><td>Нужно скачивать WebDriver отдельно, следить за версиями</td></tr>
+<tr><td>Auto-Waiting</td><td>Встроенный, автоматический</td><td>Требует явных ожиданий (WebDriverWait)</td></tr>
+<tr><td>Скорость</td><td>Выше за счёт прямого протокола</td><td>Ниже из-за прослойки WebDriver</td></tr>
+<tr><td>Мультибраузерность</td><td>Единый API для Chromium, Firefox, WebKit</td><td>Разные драйверы с разными возможностями</td></tr>
+<tr><td>API для Python</td><td>Синхронный + асинхронный, pytest-интеграция</td><td>Только синхронный через WebDriver</td></tr>
+<tr><td>Сетевой перехват</td><td>Встроенный (route)</td><td>Требует прокси-серверов (BrowserMob и т.п.)</td></tr>
+<tr><td>Мобильная эмуляция</td><td>Встроенная, с предустановленными устройствами</td><td>Ограниченная, через Appium</td></tr>
+<tr><td>Трассировка</td><td>Встроенная (Trace Viewer)</td><td>Только сторонние решения</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Это не означает, что Selenium устарел. Selenium имеет огромное сообщество, поддержку большего количества языков и интеграцию с большим числом облачных сервисов (Sauce Labs, BrowserStack). Однако для новых проектов на Python Playwright часто является более удобным и производительным выбором.</p>
+</div>
+
+<h3>Преимущества Playwright перед Selenium</h3>
+<ul>
+<li><strong>Единый API</strong> — один и тот же код работает во всех браузерах. Вам не нужно писать разную логику для Chrome и Firefox.</li>
+<li><strong>Нет WebDriver</strong> — не нужно беспокоиться о версиях chromedriver, geckodriver и их совместимости с браузером.</li>
+<li><strong>Собственные сборки браузеров</strong> — Playwright скачивает проверенные версии браузеров, которые гарантированно работают.</li>
+<li><strong>Более быстрые тесты</strong> — за счёт прямого протокола и умных ожиданий.</li>
+<li><strong>Полный контроль над сетью</strong> — мокирование, перехват, блокировка — без дополнительных инструментов.</li>
+<li><strong>Параллельный запуск из коробки</strong> — поддержка запуска в несколько браузеров и контекстов одновременно.</li>
+</ul>
+
+<h2>Версии Playwright</h2>
+<p>Playwright для Python активно развивается. Основные версии:</p>
+<ul>
+<li><strong>v1.0</strong> — первый публичный релиз (2020)</li>
+<li><strong>v1.15–1.20</strong> — добавлены асинхронный API, APIRequestContext, улучшенные локаторы</li>
+<li><strong>v1.30–1.40</strong> — Clock API, ARIA-снимки, улучшенный Trace Viewer</li>
+<li><strong>v1.50–1.61</strong> — новые возможности эмуляции, улучшенная работа с сетью</li>
+<li><strong>Текущая</strong> — последняя стабильная v1.61–1.62 (июнь 2026)</li>
+</ul>
+
+<div class="box box-tip">
+<p><strong>Примечание:</strong> Команда Playwright выпускает новый релиз примерно раз в месяц. Следить за обновлениями можно на <a href="https://github.com/microsoft/playwright-python" style="color:var(--primary);">GitHub-репозитории</a> или на официальном сайте.</p>
+</div>
+
+<h2>Когда стоит использовать Playwright</h2>
+<p>Playwright отлично подходит для:</p>
+<ul>
+<li>E2E-тестирования веб-приложений</li>
+<li>Автоматизации регрессионного тестирования</li>
+<li>Сбора данных (web scraping) с динамических страниц</li>
+<li>Мониторинга работоспособности сайтов</li>
+<li>Тестирования API в связке с браузерными тестами</li>
+<li>Создания скриншотов и PDF документов</li>
+<li>Записи видео прохождения тестов</li>
+</ul>
+
+<p>Если вы пишете новый проект на Python и ищете современный, быстрый и надёжный инструмент для браузерной автоматизации — Playwright будет отличным выбором. Переходите к разделу <a href="install.html">Установка</a>, чтобы начать работу.</p>
+</div>
+<div class="footer">
+Playwright Python — полный справочник на русском языке
+</div>
+</main>
+</div>
+</body>
+</html>

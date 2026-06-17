@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Отладка</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link active" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Отладка (Debug)</h1>
+<p>Инструменты и приёмы отладки тестов Playwright: Playwright Inspector, pause(), логирование, трассировка и визуальный анализ.</p>
+</div>
+<div class="card">
+<h2>Обзор инструментов отладки</h2>
+<p>Playwright предоставляет набор мощных инструментов для отладки тестов: от встроенного Inspector до программных методов логирования и трассировки. Ниже описаны все основные подходы.</p>
+
+<h2>page.pause() — Пауза с открытием Inspector</h2>
+<p>Вызов <code>page.pause()</code> приостанавливает выполнение теста и открывает Playwright Inspector. Это позволяет вручную исследовать состояние страницы, выполнять действия и продолжать выполнение пошагово.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_login</span>(page):
+    page.goto(<span class="st">"https://example.com/login"</span>)
+    page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+
+    <span class="cm"># Пауза: откроется Inspector для ручного исследования</span>
+    page.pause()
+
+    <span class="cm"># Выполнение продолжится после нажатия "Resume"</span>
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).click()
+    page.get_by_text(<span class="st">"Dashboard"</span>).is_visible()</pre>
+
+<div class="box box-info">
+<p><strong>Важно:</strong> <code>page.pause()</code> предназначен только для отладки. Удалите его из финальной версии теста. Оставленный pause() заблокирует выполнение в CI.</p>
+</div>
+
+<h2>pytest — headed и slowmo</h2>
+
+<h3>Видимый браузер (headed)</h3>
+<p>По умолчанию Playwright запускает браузер в headless-режиме. Для отладки удобно видеть, что происходит в браузере:</p>
+
+<pre><span class="cm"># Запуск с видимым браузером и выводом stdout</span>
+pytest --headed -s
+
+<span class="cm"># -s включает вывод print() в консоль</span>
+<span class="cm"># --headed показывает окно браузера</span></pre>
+
+<h3>Замедление выполнения (slowmo)</h3>
+<p>Замедление каждого действия на заданное количество миллисекунд. Полезно для наблюдения за последовательностью действий:</p>
+
+<pre><span class="cm"># Замедление всех действий на 1000 мс (1 секунда)</span>
+pytest --slowmo 1000
+
+<span class="cm"># Замедление на 500 мс с видимым браузером</span>
+pytest --headed --slowmo 500</pre>
+
+<h2>Логирование событий</h2>
+<p>Playwright позволяет подписаться на события браузера и страницы для получения отладочной информации.</p>
+
+<h3>Консоль браузера</h3>
+<p>Перехват всех сообщений из <code>console.log()</code> и других методов консоли JavaScript:</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_console_log</span>(page):
+    <span class="kw">def</span> <span class="fn">on_console</span>(msg):
+        <span class="kw">print</span>(<span class="st">f"Console: {msg.type}: {msg.text}"</span>)
+
+    page.on(<span class="st">"console"</span>, on_console)
+
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Все console.log из браузера будут выведены в терминал</span></pre>
+
+<h3>Ошибки JavaScript на странице</h3>
+<p>Перехват необработанных ошибок JavaScript:</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_js_errors</span>(page):
+    errors <span class="op">=</span> []
+
+    <span class="kw">def</span> <span class="fn">on_page_error</span>(err):
+        errors.append(err)
+        <span class="kw">print</span>(<span class="st">f"Page error: {err}"</span>)
+
+    page.on(<span class="st">"pageerror"</span>, on_page_error)
+
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="kw">assert</span> <span class="kw">len</span>(errors) <span class="op">==</span> <span class="nm">0</span>, <span class="st">f"Найдены ошибки: {errors}"</span></pre>
+
+<h3>Сетевые запросы</h3>
+<p>Мониторинг всех HTTP-запросов и ответов:</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_network_log</span>(page):
+    <span class="kw">def</span> <span class="fn">on_request</span>(request):
+        <span class="kw">print</span>(<span class="st">f"Request: {request.method} {request.url}"</span>)
+
+    <span class="kw">def</span> <span class="fn">on_response</span>(response):
+        <span class="kw">print</span>(<span class="st">f"Response: {response.status} {response.url}"</span>)
+
+    page.on(<span class="st">"request"</span>, on_request)
+    page.on(<span class="st">"response"</span>, on_response)
+
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Вывод:</span>
+    <span class="cm"># Request: GET https://example.com</span>
+    <span class="cm"># Response: 200 https://example.com</span>
+    <span class="cm"># Request: GET https://example.com/style.css</span>
+    <span class="cm"># Response: 200 https://example.com/style.css</span></pre>
+
+<h2>Настройка браузера для отладки</h2>
+<p>Параметры запуска браузера для отладки:</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">run</span>(playwright):
+    <span class="cm"># Видимый браузер с замедлением 500 мс</span>
+    browser <span class="op">=</span> playwright.chromium.launch(
+        headless=<span class="kw">False</span>,
+        slow_mo=<span class="nm">500</span>
+    )
+
+    context <span class="op">=</span> browser.new_context(viewport={ <span class="st">"width"</span>: <span class="nm">1280</span>, <span class="st">"height"</span>: <span class="nm">720</span> })
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Действия будут выполняться медленно, с задержкой 500 мс</span>
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).click()
+
+    browser.close()
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> playwright:
+    run(playwright)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Комбинируйте <code>headless=False</code> и <code>slow_mo</code> для наглядной отладки. Значение 300–500 мс обычно достаточно для наблюдения за потоком выполнения.</p>
+</div>
+
+<h2>Playwright Inspector</h2>
+<p>Playwright Inspector — это графический интерфейс для отладки и записи тестов. Он предоставляет следующие возможности:</p>
+
+<ul>
+<li><strong>Пошаговое выполнение</strong> — кнопка "Resume" для продолжения выполнения до следующей точки останова (page.pause())</li>
+<li><strong>Просмотр состояния</strong> — DOM-дерево, скриншоты, консоль</li>
+<li><strong>Pick Locator</strong> — выбор элемента на странице для получения оптимального локатора</li>
+<li><strong>Редактирование локаторов</strong> — тестирование различных селекторов в реальном времени</li>
+</ul>
+
+<h3>Кнопка "Resume"</h3>
+<p>Когда выполнение доходит до <code>page.pause()</code>, Inspector приостанавливает тест и ждёт нажатия "Resume". При каждом нажатии выполняется одно действие, после чего Inspector снова приостанавливается. Это позволяет пройти тест пошагово.</p>
+
+<h3>Pick Locator в Inspector</h3>
+<p>В Inspector есть режим "Pick Locator", который позволяет навести курсор на любой элемент страницы и мгновенно получить рекомендуемый Playwright локатор для него. Это упрощает поиск правильных селекторов при отладке.</p>
+
+<pre><span class="cm"># Использование Pick Locator:</span>
+<span class="cm"># 1. Откройте Inspector (page.pause() или PWDEBUG=1)</span>
+<span class="cm"># 2. Нажмите кнопку "Pick Locator" (значок прицела)</span>
+<span class="cm"># 3. Наведитесь на элемент на странице</span>
+<span class="cm"># 4. Inspector покажет лучший локатор</span></pre>
+
+<h2>Трассировка для отладки падений</h2>
+<p>Трассировка — это полная запись выполнения теста. При падении теста она бесценна для анализа.</p>
+
+<pre><span class="cm"># Запуск с трассировкой при падениях</span>
+pytest --tracing retain-on-failure
+
+<span class="cm"># Просмотр трассировки после падения</span>
+playwright show-trace test-results/trace.zip</pre>
+
+<div class="box box-info">
+<p><strong>Рекомендация:</strong> Всегда используйте <code>--tracing retain-on-failure</code> в CI. При падении теста вы получите полный архив с действиями, скриншотами, DOM-снэпшотами и сетевыми запросами для анализа.</p>
+</div>
+
+<h2>page.screenshot() — Скриншоты для отладки</h2>
+<p>Скриншоты — простой и эффективный способ увидеть состояние страницы в любой момент выполнения теста.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_screenshot_debug</span>(page):
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Скриншот всей страницы</span>
+    page.screenshot(path=<span class="st">"debug_fullpage.png"</span>, full_page=<span class="kw">True</span>)
+
+    <span class="cm"># Скриншот конкретного элемента</span>
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).screenshot(path=<span class="st">"debug_button.png"</span>)
+
+    <span class="cm"># Скриншот с маской (скрыть конфиденциальные данные)</span>
+    page.screenshot(
+        path=<span class="st">"debug_masked.png"</span>,
+        mask=[page.get_by_label(<span class="st">"Password"</span>)]
+    )</pre>
+
+<h2>page.content() — Просмотр DOM</h2>
+<p>Метод <code>page.content()</code> возвращает полный HTML-код страницы. Полезно для проверки, какие элементы присутствуют в DOM после выполнения действий.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_dom_content</span>(page):
+    page.goto(<span class="st">"https://example.com"</span>)
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Load more"</span>).click()
+
+    <span class="cm"># Получить полный HTML после клика</span>
+    html <span class="op">=</span> page.content()
+    <span class="kw">print</span>(html[:<span class="nm">500</span>])  <span class="cm"># Вывести первые 500 символов</span>
+
+    <span class="cm"># Проверить наличие элемента в DOM</span>
+    <span class="kw">assert</span> <span class="st">"Новый контент"</span> <span class="kw">in</span> html</pre>
+
+<h2>page.evaluate() — Проверка JavaScript</h2>
+<p>Исполнение произвольного JavaScript на странице для проверки состояния, которое недоступно через стандартные методы Playwright.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_evaluate_debug</span>(page):
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Получение заголовка страницы</span>
+    title <span class="op">=</span> page.evaluate(<span class="st">"document.title"</span>)
+    <span class="kw">print</span>(<span class="st">f"Title: {title}"</span>)
+
+    <span class="cm"># Проверка состояния localStorage</span>
+    token <span class="op">=</span> page.evaluate(<span class="st">"localStorage.getItem('auth_token')"</span>)
+    <span class="kw">print</span>(<span class="st">f"Token: {token}"</span>)
+
+    <span class="cm"># Проверка visibility состояния</span>
+    is_visible <span class="op">=</span> page.evaluate(<span class="st">"document.querySelector('.spinner').style.display"</span>)
+    <span class="kw">print</span>(<span class="st">f"Spinner display: {is_visible}"</span>)
+
+    <span class="cm"># Выполнение сложной JS-проверки</span>
+    result <span class="op">=</span> page.evaluate(<span class="st">"""() => {
+        const el = document.querySelector('.status');
+        return {
+            text: el.textContent,
+            class: el.className,
+            visible: el.offsetParent !== null
+        };
+    }"""</span>)
+    <span class="kw">print</span>(result)</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> <code>page.evaluate()</code> выполняется в контексте браузера, не путайте его с Python-кодом. Внутри строки используется JavaScript, а не Python.</p>
+</div>
+
+<h2>PWDEBUG=1 — Автоматическое включение Inspector</h2>
+<p>Установка переменной окружения <code>PWDEBUG=1</code> заставляет Playwright автоматически открывать Inspector при запуске любого теста. Это эквивалентно вставке <code>page.pause()</code> в начало каждого теста.</p>
+
+<pre><span class="cm"># Windows (CMD)</span>
+<span class="kw">set</span> <span class="op">PWDEBUG=1</span>
+pytest test_example.py
+
+<span class="cm"># Windows (PowerShell)</span>
+<span class="op">$env:</span>PWDEBUG <span class="op">=</span> <span class="st">"1"</span>
+pytest test_example.py
+
+<span class="cm"># Linux / macOS</span>
+PWDEBUG=1 pytest test_example.py</pre>
+
+<p>При установке PWDEBUG=1 Playwright также автоматически включает:</p>
+<ul>
+<li><code>headless=False</code> — видимый браузер</li>
+<li><code>slow_mo</code> — замедление для наблюдения</li>
+</ul>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> PWDEBUG=1 — самый быстрый способ начать отладку. Не нужно менять код теста, просто установите переменную окружения перед запуском.</p>
+</div>
+
+<h2>Практический пример: комплексная отладка</h2>
+
+<pre><span class="kw">def</span> <span class="fn">test_debug_complex</span>(page):
+    <span class="cm"># 1. Логирование всех консольных сообщений</span>
+    page.on(<span class="st">"console"</span>, <span class="kw">lambda</span> msg: <span class="kw">print</span>(<span class="st">f"[CONSOLE] {msg.type}: {msg.text}"</span>))
+
+    <span class="cm"># 2. Логирование всех ошибок</span>
+    page.on(<span class="st">"pageerror"</span>, <span class="kw">lambda</span> err: <span class="kw">print</span>(<span class="st">f"[ERROR] {err}"</span>))
+
+    <span class="cm"># 3. Логирование сетевых запросов</span>
+    page.on(<span class="st">"request"</span>, <span class="kw">lambda</span> req: <span class="kw">print</span>(<span class="st">f"[REQ] {req.method} {req.url}"</span>))
+
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># 4. Скриншот начального состояния</span>
+    page.screenshot(path=<span class="st">"step1_initial.png"</span>)
+
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).click()
+
+    <span class="cm"># 5. Проверка DOM после клика</span>
+    <span class="kw">print</span>(<span class="st">"Title after click:"</span>, page.evaluate(<span class="st">"document.title"</span>))
+
+    <span class="cm"># 6. Скриншот после действия</span>
+    page.screenshot(path=<span class="st">"step2_after_click.png"</span>)
+
+    <span class="cm"># 7. Полный HTML для проверки</span>
+    html <span class="op">=</span> page.content()
+    <span class="kw">print</span>(<span class="st">"Page HTML (500 chars):"</span>, html[:<span class="nm">500</span>])</pre>
+
+<h2>Сводка инструментов отладки</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Инструмент</th><th>Команда / API</th><th>Когда использовать</th></tr>
+</thead>
+<tbody>
+<tr><td>Inspector + pause</td><td><code>page.pause()</code></td><td>Пошаговая отладка конкретного теста</td></tr>
+<tr><td>Headless off</td><td><code>--headed</code></td><td>Визуальное наблюдение за тестом</td></tr>
+<tr><td>Замедление</td><td><code>--slowmo 500</code></td><td>Замедление для визуального анализа</td></tr>
+<tr><td>Логи console</td><td><code>page.on("console")</code></td><td>Отслеживание JS-логов из браузера</td></tr>
+<tr><td>Логи ошибок</td><td><code>page.on("pageerror")</code></td><td>Перехват JS-ошибок на странице</td></tr>
+<tr><td>Логи сети</td><td><code>page.on("request")</code></td><td>Мониторинг HTTP-запросов</td></tr>
+<tr><td>Трассировка</td><td><code>--tracing retain-on-failure</code></td><td>Полный анализ падений</td></tr>
+<tr><td>Скриншоты</td><td><code>page.screenshot()</code></td><td>Визуальный снимок состояния</td></tr>
+<tr><td>DOM content</td><td><code>page.content()</code></td><td>Проверка HTML после действий</td></tr>
+<tr><td>Evaluate</td><td><code>page.evaluate()</code></td><td>Произвольный JS-код на странице</td></tr>
+<tr><td>PWDEBUG</td><td><code>PWDEBUG=1</code></td><td>Быстрое включение Inspector без изменения кода</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Заключение</h2>
+<p>Playwright предлагает одни из лучших инструментов отладки среди всех фреймворков для автоматизации тестирования. Комбинируйте разные подходы в зависимости от ситуации: <code>page.pause()</code> для пошагового анализа, <code>--tracing</code> для детальной записи падений, и <code>page.evaluate()</code> для быстрой проверки JavaScript-состояния.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

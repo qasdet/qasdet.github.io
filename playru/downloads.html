@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Загрузки — Playwright Python</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link active" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Загрузки</h1>
+<p>Перехват, мониторинг и сохранение загружаемых файлов в Playwright.</p>
+</div>
+<div class="card">
+<h2>Основные методы работы с загрузками</h2>
+
+<h3>page.on("download", handler)</h3>
+<p>Событие <span class="fn">download</span> срабатывает при начале загрузки файла. Обработчик получает объект <span class="fn">Download</span>.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">handle_download</span>(download):
+    <span class="kw">print</span>(<span class="st">f"Файл: {download.suggested_filename}"</span>)
+    download.save_as(<span class="st">"downloaded_file.pdf"</span>)
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    page <span class="op">=</span> browser.new_page()
+    page.on(<span class="st">"download"</span>, handle_download)
+    page.get_by_text(<span class="st">"Скачать PDF"</span>).click()
+    page.wait_for_timeout(<span class="nm">5000</span>)
+    browser.close()</pre>
+
+<h3>download.path() — путь к временному файлу</h3>
+<p>Возвращает путь к временному файлу на диске. Доступен только после завершения загрузки.</p>
+
+<pre><span class="kw">def</span> <span class="fn">on_download</span>(download):
+    <span class="cm"># Ждём завершения загрузки</span>
+    file_path <span class="op">=</span> download.path()
+    <span class="kw">print</span>(<span class="st">f"Временный файл: {file_path}"</span>)
+
+page.on(<span class="st">"download"</span>, on_download)</pre>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Временный файл существует только во время сессии. Используйте <span class="fn">download.save_as()</span> для постоянного сохранения.</p>
+</div>
+
+<h3>download.save_as(path) — сохранение</h3>
+<p>Копирует загруженный файл в указанное место. Можно вызывать только после завершения загрузки.</p>
+
+<pre><span class="kw">def</span> <span class="fn">save_report</span>(download):
+    download.save_as(<span class="st">"reports/report.pdf"</span>)
+
+page.on(<span class="st">"download"</span>, save_report)</pre>
+
+<h3>download.failure() — ошибка загрузки</h3>
+<p>Возвращает текст ошибки или <span class="kw">None</span>, если загрузка прошла успешно.</p>
+
+<pre><span class="kw">def</span> <span class="fn">check_download</span>(download):
+    error <span class="op">=</span> download.failure()
+    <span class="kw">if</span> error:
+        <span class="kw">print</span>(<span class="st">f"Ошибка загрузки: {error}"</span>)
+    <span class="kw">else</span>:
+        <span class="kw">print</span>(<span class="st">"Загрузка успешна"</span>)
+
+page.on(<span class="st">"download"</span>, check_download)</pre>
+
+<h3>download.url и download.suggested_filename</h3>
+<p>Свойства <span class="fn">Download</span>:</p>
+<ul>
+<li><strong>download.url</strong> — URL, с которого загружается файл</li>
+<li><strong>download.suggested_filename</strong> — имя файла, предложенное сервером</li>
+</ul>
+
+<pre><span class="kw">def</span> <span class="fn">log_download_info</span>(download):
+    <span class="kw">print</span>(<span class="st">f"URL: {download.url}"</span>)
+    <span class="kw">print</span>(<span class="st">f"Имя: {download.suggested_filename}"</span>)
+
+page.on(<span class="st">"download"</span>, log_download_info)</pre>
+
+<h3>download.cancel() — отмена</h3>
+<p>Отменяет активную загрузку (до её завершения).</p>
+
+<pre><span class="kw">def</span> <span class="fn">cancel_large_file</span>(download):
+    <span class="kw">if</span> <span class="st">"large"</span> <span class="kw">in</span> download.suggested_filename:
+        download.cancel()
+
+page.on(<span class="st">"download"</span>, cancel_large_file)</pre>
+
+<h3>download.delete() — удаление временного файла</h3>
+<p>Удаляет временный файл с диска.</p>
+
+<pre>download.delete()</pre>
+
+<h2>Ожидание загрузки</h2>
+
+<h3>expect(download).to_be_resolved()</h3>
+<p>Используется с Playwright Pytest для ожидания завершения загрузки.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> expect
+
+<span class="kw">def</span> <span class="fn">test_download</span>(page):
+    <span class="kw">with</span> page.expect_event(<span class="st">"download"</span>) <span class="kw">as</span> dl_info:
+        page.get_by_text(<span class="st">"Скачать"</span>).click()
+    download <span class="op">=</span> dl_info.value
+    expect(download).to_be_resolved()
+    download.save_as(<span class="st">"test.pdf"</span>)</pre>
+
+<h3>context.expect_event("download")</h3>
+<p>Контекстный менеджер для ожидания загрузки на уровне контекста.</p>
+
+<pre><span class="kw">with</span> context.expect_event(<span class="st">"download"</span>) <span class="kw">as</span> dl_info:
+    page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Скачать архив"</span>).click()
+download <span class="op">=</span> dl_info.value
+<span class="kw">print</span>(download.suggested_filename)</pre>
+
+<h2>Время загрузки и прогресс</h2>
+<p>Можно отслеживать прогресс загрузки через события объекта <span class="fn">Download</span>.</p>
+
+<pre><span class="kw">import</span> time
+
+<span class="kw">def</span> <span class="fn">monitor_download</span>(download):
+    start <span class="op">=</span> time.time()
+    <span class="kw">while</span> <span class="kw">not</span> download.failure() <span class="kw">and</span> download.url:
+        elapsed <span class="op">=</span> time.time() <span class="op">-</span> start
+        <span class="kw">if</span> download.path():
+            <span class="kw">print</span>(<span class="st">f"Загрузка завершена за {elapsed:.2f} сек"</span>)
+            <span class="kw">break</span>
+        time.sleep(<span class="nm">0.1</span>)
+
+page.on(<span class="st">"download"</span>, monitor_download)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте <span class="fn">page.expect_event("download")</span> или <span class="fn">context.expect_event("download")</span> для надёжного ожидания загрузки. Это гарантирует перехват события, даже если загрузка началась до вызова основной операции.</p>
+</div>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Метод <span class="fn">download.path()</span> выбрасывает исключение, если загрузка ещё не завершилась или произошла ошибка. Всегда проверяйте <span class="fn">download.failure()</span> перед вызовом.</p>
+</div>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Playwright Python — Аутентификация</title><link rel="stylesheet" href="playru-style.css"></head>
+<body>
+<div class="header"><div class="header-inner"><a href="index.html">Playwright Python — справочник</a><a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a></div></div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link active" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header"><h1>Аутентификация</h1><p>Сохранение и восстановление сессии, куки, HTTP Basic Auth, localStorage</p></div>
+<div class="card">
+
+<h2>Обзор</h2>
+<p>Playwright позволяет сохранять состояние аутентификации между тестами. Это избавляет от необходимости повторного входа в систему в каждом тесте. Состояние включает cookies, localStorage и sessionStorage.</p>
+
+<h2>Сохранение состояния — <span class="fn">storage_state()</span></h2>
+<p>Метод <span class="fn">context.storage_state()</span> возвращает объект с куками и localStorage. Можно сохранить результат в файл для последующего использования:</p>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">save_auth</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser = p.chromium.launch(headless=<span class="kw">False</span>)
+        context = browser.new_context()
+        page = context.new_page()
+        page.goto(<span class="st">"https://example.com/login"</span>)
+        page.fill(<span class="st">"#username"</span>, <span class="st">"admin"</span>)
+        page.fill(<span class="st">"#password"</span>, <span class="st">"secret"</span>)
+        page.click(<span class="st">"button[type='submit']"</span>)
+        page.wait_for_url(<span class="st">"**/dashboard"</span>)
+        <span class="cm"># Сохраняем состояние в файл</span>
+        context.storage_state(path=<span class="st">"auth.json"</span>)
+        browser.close()</code></pre>
+
+<div class="box box-info">
+<strong>Важно:</strong> Файл <code>auth.json</code> содержит сериализованные cookies и localStorage. Храните его в безопасности — он даёт доступ к аутентифицированной сессии.
+</div>
+
+<h2>Восстановление сессии — <span class="fn">storage_state</span> в <span class="fn">new_context()</span></h2>
+<p>Передайте путь к сохранённому файлу в параметр <span class="fn">storage_state</span> при создании нового контекста:</p>
+<pre><code><span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser = p.chromium.launch()
+    context = browser.new_context(storage_state=<span class="st">"auth.json"</span>)
+    page = context.new_page()
+    page.goto(<span class="st">"https://example.com/dashboard"</span>)
+    <span class="cm"># Уже аутентифицирован — страница загрузится без редиректа на логин</span></code></pre>
+
+<h2>Получение состояния как dict</h2>
+<p><span class="fn">context.storage_state()</span> без аргументов возвращает Python-словарь:</p>
+<pre><code>state = context.storage_state()
+<span class="kw">print</span>(state[<span class="st">"cookies"</span>])       <span class="cm"># список кук</span>
+<span class="kw">print</span>(state[<span class="st">"origins"</span>])      <span class="cm"># localStorage по доменам</span></code></pre>
+<p>Словарь можно передать напрямую в <span class="fn">new_context(storage_state=state)</span> без сохранения в файл.</p>
+
+<h2>Экспорт в файл</h2>
+<pre><code><span class="cm"># Прямое сохранение</span>
+context.storage_state(path=<span class="st">"auth.json"</span>)
+
+<span class="cm"># Через страницу</span>
+page.context.storage_state(path=<span class="st">"auth.json"</span>)</code></pre>
+
+<h2>Аутентификация через UI — полный цикл</h2>
+<p>Типичный сценарий: один раз выполнить логин, сохранить состояние, затем использовать его во всех тестах.</p>
+<pre><code><span class="cm"># conftest.py</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+AUTH_FILE = <span class="st">"auth.json"</span>
+
+<span class="nd">@pytest.fixture</span>(scope=<span class="st">"session"</span>)
+<span class="kw">def</span> <span class="fn">browser_context</span>(playwright):
+    browser = playwright.chromium.launch()
+    context = browser.new_context(storage_state=AUTH_FILE)
+    <span class="kw">yield</span> context
+    browser.close()
+
+<span class="nd">@pytest.fixture</span>(scope=<span class="st">"session"</span>)
+<span class="kw">def</span> <span class="fn">auth_state</span>(playwright):
+    <span class="cm"># Одноразовый логин</span>
+    browser = playwright.chromium.launch(headless=<span class="kw">False</span>)
+    context = browser.new_context()
+    page = context.new_page()
+    page.goto(<span class="st">"https://example.com/login"</span>)
+    page.fill(<span class="st">"#username"</span>, <span class="st">"admin"</span>)
+    page.fill(<span class="st">"#password"</span>, <span class="st">"secret"</span>)
+    page.click(<span class="st">"button[type='submit']"</span>)
+    page.wait_for_url(<span class="st">"**/dashboard"</span>)
+    context.storage_state(path=AUTH_FILE)
+    browser.close()
+    <span class="kw">return</span> AUTH_FILE</code></pre>
+
+<div class="box box-tip">
+<strong>Совет:</strong> Используйте <code>scope="session"</code> для фикстуры аутентификации. Состояние сохраняется один раз и используется во всех тестах. При необходимости перелогиниться — удалите файл <code>auth.json</code>.
+</div>
+
+<h2>Cookies — ручная установка</h2>
+<p>Метод <span class="fn">context.add_cookies()</span> добавляет куки в контекст:</p>
+<pre><code>context.add_cookies([{
+    <span class="st">"name"</span>: <span class="st">"session_id"</span>,
+    <span class="st">"value"</span>: <span class="st">"abc123"</span>,
+    <span class="st">"domain"</span>: <span class="st">"example.com"</span>,
+    <span class="st">"path"</span>: <span class="st">"/"</span>
+}])</code></pre>
+
+<h2>Получение кук</h2>
+<pre><code>cookies = context.cookies()
+<span class="kw">for</span> cookie <span class="kw">in</span> cookies:
+    <span class="kw">print</span>(cookie[<span class="st">"name"</span>], cookie[<span class="st">"value"</span>])</code></pre>
+
+<h2>localStorage и токены через <span class="fn">page.evaluate()</span></h2>
+<p>Установка:</p>
+<pre><code>page.evaluate(<span class="st">"""() => {
+    localStorage.setItem('token', 'my-jwt-token');
+    localStorage.setItem('user', JSON.stringify({id: 1, role: 'admin'}));
+}"""</span>)</code></pre>
+<p>Чтение:</p>
+<pre><code>token = page.evaluate(<span class="st">"localStorage.getItem('token')"</span>)
+user = page.evaluate(<span class="st">"JSON.parse(localStorage.getItem('user'))"</span>)</code></pre>
+
+<h2>HTTP Basic Auth</h2>
+<p>Playwright поддерживает HTTP Basic Authentication через параметр <span class="fn">http_credentials</span>:</p>
+<pre><code>context = browser.new_context(
+    http_credentials={
+        <span class="st">"username"</span>: <span class="st">"admin"</span>,
+        <span class="st">"password"</span>: <span class="st">"password123"</span>
+    }
+)</code></pre>
+<p>Теперь все запросы в этом контексте будут содержать заголовок <code>Authorization: Basic ...</code>.</p>
+
+<div class="box box-warning">
+<strong>Внимание:</strong> HTTP Basic Auth передаёт учётные данные в открытом виде (base64). Используйте только через HTTPS в production.
+</div>
+
+<h2>Полный пример аутентификации</h2>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+<span class="kw">import</span> json
+
+<span class="kw">def</span> <span class="fn">auth_flow</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        <span class="cm"># Шаг 1: Логин через UI</span>
+        browser = p.chromium.launch(headless=<span class="kw">False</span>)
+        context = browser.new_context()
+        page = context.new_page()
+        page.goto(<span class="st">"https://example.com/login"</span>)
+        page.fill(<span class="st">"input[name='login']"</span>, <span class="st">"user"</span>)
+        page.fill(<span class="st">"input[name='password']"</span>, <span class="st">"pass"</span>)
+        page.click(<span class="st">"button[type='submit']"</span>)
+        page.wait_for_selector(<span class="st">".avatar"</span>)
+
+        <span class="cm"># Шаг 2: Сохраняем состояние</span>
+        state = context.storage_state()
+        <span class="kw">with</span> open(<span class="st">"auth.json"</span>, <span class="st">"w"</span>) <span class="kw">as</span> f:
+            json.dump(state, f, indent=2)
+        browser.close()
+
+        <span class="cm"># Шаг 3: Используем состояние в новом контексте</span>
+        browser2 = p.chromium.launch()
+        context2 = browser2.new_context(storage_state=<span class="st">"auth.json"</span>)
+        page2 = context2.new_page()
+        page2.goto(<span class="st">"https://example.com/dashboard"</span>)
+        <span class="kw">assert</span> page2.locator(<span class="st">".avatar"</span>).is_visible()
+        browser2.close()
+
+<span class="fn">auth_flow</span>()</code></pre>
+
+<h2>Хранение state между тестами — pytest фикстура</h2>
+<pre><code><span class="cm"># conftest.py</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="nd">@pytest.fixture</span>(scope=<span class="st">"session"</span>)
+<span class="kw">def</span> <span class="fn">authenticated_context</span>(playwright):
+    <span class="cm"># Восстанавливаем сохранённое состояние</span>
+    browser = playwright.chromium.launch()
+    context = browser.new_context(storage_state=<span class="st">"auth.json"</span>)
+    <span class="kw">yield</span> context
+    browser.close()
+
+<span class="cm"># test_dashboard.py</span>
+<span class="kw">def</span> <span class="fn">test_dashboard</span>(authenticated_context):
+    page = authenticated_context.new_page()
+    page.goto(<span class="st">"https://example.com/dashboard"</span>)
+    <span class="kw">assert</span> page.locator(<span class="st">"h1"</span>).text_content() == <span class="st">"Dashboard"</span></code></pre>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

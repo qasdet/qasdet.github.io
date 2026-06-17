@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Локаторы</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link active" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Локаторы (Locators)</h1>
+<p>Полное руководство по локаторам Playwright: get_by_role, get_by_text, get_by_label, get_by_test_id, фильтрация, цепочки и комбинации локаторов.</p>
+</div>
+<div class="card">
+<h2>Философия локаторов Playwright</h2>
+<p>Локаторы в Playwright — это центральная концепция для поиска элементов на странице. В отличие от Selenium, где используются «сырые» CSS/XPath селекторы, Playwright предлагает высокоуровневый API на основе семантических и атрибутивных методов. Такой подход делает тесты более читаемыми, устойчивыми к изменениям вёрстки и соответствующими лучшим практикам тестирования.</p>
+
+<div class="box box-info">
+<p><strong>Ключевой принцип:</strong> Локатор в Playwright — это не просто строка-селектор, а объект <code>Locator</code>, который обладает собственным набором методов для действий, ожиданий и фильтрации. Локаторы вычисляются лениво (lazy evaluation) — реальный поиск по DOM происходит только при выполнении действия.</p>
+</div>
+
+<p>Playwright рекомендует использовать локаторы в следующем порядке приоритета:</p>
+<ol>
+<li><strong>get_by_role()</strong> — по ARIA-роли (самый предпочтительный)</li>
+<li><strong>get_by_label()</strong> — по label для полей ввода</li>
+<li><strong>get_by_placeholder()</strong> — по placeholder</li>
+<li><strong>get_by_text()</strong> — по текстовому содержимому</li>
+<li><strong>get_by_test_id()</strong> — по тестовому идентификатору</li>
+<li><strong>get_by_alt_text()</strong> — по alt-тексту для изображений</li>
+<li><strong>get_by_title()</strong> — по атрибуту title</li>
+</ol>
+
+<h2>page.get_by_role() — Поиск по ARIA-роли</h2>
+<p>Метод <code>get_by_role()</code> находит элементы по их ARIA-роли. Это самый рекомендуемый способ поиска, так как он опирается на семантику страницы, а не на её вёрстку. Playwright поддерживает все стандартные ARIA-роли.</p>
+
+<pre><span class="cm"># Поиск по роли button</span>
+page.get_by_role(<span class="st">"button"</span>).click()
+
+<span class="cm"># Поиск по роли button с фильтром по имени (accessible name)</span>
+page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).click()
+
+<span class="cm"># Поиск текстового поля</span>
+page.get_by_role(<span class="st">"textbox"</span>, name=<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+
+<span class="cm"># Поиск ссылки</span>
+page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Подробнее"</span>).click()
+
+<span class="cm"># Поиск заголовка</span>
+heading <span class="op">=</span> page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Добро пожаловать"</span>)
+
+<span class="cm"># Поиск изображения</span>
+page.get_by_role(<span class="st">"img"</span>, name=<span class="st">"Логотип"</span>)
+
+<span class="cm"># Поиск элемента списка</span>
+items <span class="op">=</span> page.get_by_role(<span class="st">"listitem"</span>)
+
+<span class="cm"># Поиск выпадающего списка</span>
+page.get_by_role(<span class="st">"combobox"</span>, name=<span class="st">"Страна"</span>).select_option(<span class="st">"RU"</span>)</pre>
+
+<h3>Основные ARIA-роли</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Роль</th><th>HTML-элементы</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td><code>button</code></td><td><code>&lt;button&gt;</code>, <code>&lt;input type="button"&gt;</code>, <code>role="button"</code></td><td>Кнопки</td></tr>
+<tr><td><code>textbox</code></td><td><code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code></td><td>Поля ввода текста</td></tr>
+<tr><td><code>link</code></td><td><code>&lt;a&gt;</code>, <code>role="link"</code></td><td>Ссылки</td></tr>
+<tr><td><code>heading</code></td><td><code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code>, <code>role="heading"</code></td><td>Заголовки</td></tr>
+<tr><td><code>img</code></td><td><code>&lt;img&gt;</code>, <code>role="img"</code></td><td>Изображения</td></tr>
+<tr><td><code>checkbox</code></td><td><code>&lt;input type="checkbox"&gt;</code>, <code>role="checkbox"</code></td><td>Чекбоксы</td></tr>
+<tr><td><code>radio</code></td><td><code>&lt;input type="radio"&gt;</code>, <code>role="radio"</code></td><td>Радиокнопки</td></tr>
+<tr><td><code>combobox</code></td><td><code>&lt;select&gt;</code>, <code>role="combobox"</code></td><td>Выпадающие списки</td></tr>
+<tr><td><code>listitem</code></td><td><code>&lt;li&gt;</code>, <code>role="listitem"</code></td><td>Элементы списка</td></tr>
+<tr><td><code>list</code></td><td><code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>, <code>role="list"</code></td><td>Списки</td></tr>
+<tr><td><code>table</code></td><td><code>&lt;table&gt;</code>, <code>role="table"</code></td><td>Таблицы</td></tr>
+<tr><td><code>dialog</code></td><td><code>&lt;dialog&gt;</code>, <code>role="dialog"</code></td><td>Диалоговые окна</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Фильтр по имени (name)</h3>
+<p>Параметр <code>name</code> позволяет отфильтровать элементы по их доступному имени (accessible name), которое формируется из:</p>
+<ul>
+<li>Текстового содержимого элемента (для кнопок, ссылок, заголовков)</li>
+<li>Атрибута <code>aria-label</code></li>
+<li>Атрибута <code>aria-labelledby</code></li>
+<li>Связанного <code>&lt;label&gt;</code> для полей ввода</li>
+<li>Атрибута <code>alt</code> для изображений</li>
+<li>Атрибута <code>title</code></li>
+</ul>
+
+<pre><span class="cm"># Точное совпадение по имени (по умолчанию — подстрока)</span>
+page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>, exact=<span class="kw">True</span>)</pre>
+
+<h2>page.get_by_text() — Поиск по тексту</h2>
+<p>Метод для поиска элементов по их текстовому содержимому. По умолчанию ищет как подстроку (текст элемента содержит указанный текст).</p>
+
+<pre><span class="cm"># Поиск по тексту (подстрока)</span>
+page.get_by_text(<span class="st">"Welcome"</span>)
+
+<span class="cm"># Поиск по тексту внутри кнопки</span>
+page.get_by_text(<span class="st">"Submit form"</span>).click()
+
+<span class="cm"># Точное совпадение текста</span>
+page.get_by_text(<span class="st">"Submit"</span>, exact=<span class="kw">True</span>)
+
+<span class="cm"># Поиск по регулярному выражению</span>
+page.get_by_text(re.compile(<span class="st">r"Цена:\s*\d+ руб"</span>))
+
+<span class="cm"># Поиск всех элементов, содержащих текст "Item"</span>
+items <span class="op">=</span> page.get_by_text(<span class="st">"Item"</span>).all()</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> <code>get_by_text()</code> часто используется в цепочках с другими локаторами для фильтрации. Например: <code>page.get_by_role("listitem").get_by_text("Важный")</code> найдёт элемент списка, содержащий текст «Важный».</p>
+</div>
+
+<h2>page.get_by_label() — Поиск по label</h2>
+<p>Находит элементы по тексту связанного <code>&lt;label&gt;</code>. Идеально подходит для полей ввода в формах.</p>
+
+<pre><span class="cm"># Поиск поля ввода по тексту label</span>
+page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+
+<span class="cm"># Поиск поля по label с точным совпадением</span>
+page.get_by_label(<span class="st">"Имя пользователя"</span>, exact=<span class="kw">True</span>)
+
+<span class="cm"># Поиск чекбокса по label</span>
+page.get_by_label(<span class="st">"Я согласен с условиями"</span>).check()
+
+<span class="cm"># Поиск radio по label</span>
+page.get_by_label(<span class="st">"Вариант 1"</span>).check()</pre>
+
+<h2>page.get_by_placeholder() — Поиск по placeholder</h2>
+<pre><span class="cm"># Поиск поля по placeholder</span>
+page.get_by_placeholder(<span class="st">"Введите email"</span>).fill(<span class="st">"email@example.com"</span>)
+
+<span class="cm"># Точное совпадение placeholder</span>
+page.get_by_placeholder(<span class="st">"Поиск..."</span>, exact=<span class="kw">True</span>)</pre>
+
+<h2>page.get_by_alt_text() — Поиск по alt-тексту</h2>
+<pre><span class="cm"># Поиск изображения по alt-тексту</span>
+page.get_by_alt_text(<span class="st">"Логотип компании"</span>).click()
+
+<span class="cm"># Поиск с точным совпадением</span>
+page.get_by_alt_text(<span class="st">"Фото профиля"</span>, exact=<span class="kw">True</span>)</pre>
+
+<h2>page.get_by_title() — Поиск по атрибуту title</h2>
+<pre><span class="cm"># Поиск элемента по атрибуту title</span>
+page.get_by_title(<span class="st">"Закрыть"</span>).click()
+
+<span class="cm"># Поиск с точным совпадением</span>
+page.get_by_title(<span class="st">"Настройки аккаунта"</span>, exact=<span class="kw">True</span>)</pre>
+
+<h2>page.get_by_test_id() — Поиск по data-testid</h2>
+<p>Метод для поиска элементов по тестовому идентификатору. По умолчанию ищет по атрибуту <code>data-testid</code>, но атрибут можно настроить через <code>BrowserContext</code> или тестовую конфигурацию.</p>
+
+<pre><span class="cm"># Поиск по data-testid</span>
+page.get_by_test_id(<span class="st">"submit-button"</span>).click()
+
+<span class="cm"># Поиск по кастомному атрибуту (если настроено)</span>
+<span class="cm"># В конфигурации: set_default_test_id_attribute("data-cy")</span>
+page.get_by_test_id(<span class="st">"login-form"</span>)
+
+<span class="cm"># Пример с кастомным атрибутом через контекст</span>
+context <span class="op">=</span> browser.new_context()
+context.set_default_test_id_attribute(<span class="st">"data-qa"</span>)
+page <span class="op">=</span> context.new_page()
+page.get_by_test_id(<span class="st">"header"</span>)  <span class="cm"># Ищет по data-qa="header"</span></pre>
+
+<h2>Позиционирование: first, last, nth()</h2>
+<p>Когда несколько элементов соответствуют локатору, можно выбрать конкретный элемент по позиции.</p>
+
+<pre><span class="cm"># Первый элемент</span>
+page.get_by_role(<span class="st">"listitem"</span>).first.click()
+
+<span class="cm"># Последний элемент</span>
+page.get_by_role(<span class="st">"listitem"</span>).last.click()
+
+<span class="cm"># N-ный элемент (0-based)</span>
+page.get_by_role(<span class="st">"listitem"</span>).nth(<span class="nm">2</span>).click()  <span class="cm"># Третий элемент</span>
+
+<span class="cm"># Первый элемент в коллекции</span>
+page.get_by_role(<span class="st">"button"</span>).first.click()</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Использование <code>first</code>, <code>last</code> и <code>nth()</code> может сделать тест хрупким, если порядок элементов изменится. Предпочитайте более специфичные локаторы с фильтрацией.</p>
+</div>
+
+<h2>Фильтрация: filter(has_text) и filter(has)</h2>
+<p>Метод <code>filter()</code> позволяет уточнить локатор, отфильтровав элементы по тексту или вложенным локаторам.</p>
+
+<pre><span class="cm"># Фильтрация по тексту (подстрока)</span>
+page.get_by_role(<span class="st">"listitem"</span>).filter(has_text=<span class="st">"Важный"</span>)
+
+<span class="cm"># Фильтрация по тексту с точным совпадением</span>
+page.get_by_role(<span class="st">"listitem"</span>).filter(has_text=<span class="st">"Важный элемент"</span>, exact=<span class="kw">True</span>)
+
+<span class="cm"># Фильтрация по вложенному локатору</span>
+page.get_by_role(<span class="st">"row"</span>).filter(
+    has=page.get_by_role(<span class="st">"cell"</span>, name=<span class="st">"Активен"</span>)
+)
+
+<span class="cm"># Комбинация фильтрации</span>
+page.get_by_role(<span class="st">"listitem"</span>).filter(
+    has_text=<span class="st">"2024"</span>,
+    has=page.get_by_role(<span class="st">"checkbox"</span>)
+)</pre>
+
+<h2>Логические комбинации: and_() и or_()</h2>
+<p>Позволяют комбинировать несколько локаторов с логическими операциями И и ИЛИ.</p>
+
+<pre><span class="cm"># Локатор И (элемент должен соответствовать обоим условиям)</span>
+page.get_by_role(<span class="st">"button"</span>).and_(page.get_by_title(<span class="st">"Отправить"</span>))
+
+<span class="cm"># Локатор ИЛИ (элемент может соответствовать любому из условий)</span>
+page.get_by_role(<span class="st">"button"</span>).or_(page.get_by_role(<span class="st">"link"</span>))
+
+<span class="cm"># Сложная комбинация: кнопка с текстом "Save" ИЛИ "Submit"</span>
+(page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Save"</span>)
+    .or_(page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>))
+    .click())</pre>
+
+<h2>locator.all() — Все совпадения</h2>
+<p>Возвращает список всех элементов, соответствующих локатору. Полезно для проверки количества элементов или итерации.</p>
+
+<pre><span class="cm"># Получение всех элементов списка</span>
+items <span class="op">=</span> page.get_by_role(<span class="st">"listitem"</span>).all()
+<span class="kw">print</span>(<span class="st">f"Найдено {</span><span class="fn">len</span>(items)<span class="st">} элементов"</span>)
+
+<span class="cm"># Проверка количества элементов</span>
+expect(page.get_by_role(<span class="st">"listitem"</span>)).to_have_count(<span class="nm">5</span>)
+
+<span class="cm"># Итерация по элементам</span>
+<span class="kw">for</span> item <span class="kw">in</span> page.get_by_role(<span class="st">"listitem"</span>).all():
+    <span class="kw">print</span>(item.text_content())
+
+<span class="cm"># all() с фильтрацией</span>
+active_items <span class="op">=</span> page.get_by_role(<span class="st">"listitem"</span>).filter(
+    has=page.get_by_role(<span class="st">"checkbox"</span>, name=<span class="st">"Активен"</span>)
+).all()</pre>
+
+<h2>Цепочки локаторов</h2>
+<p>Локаторы можно объединять в цепочки для более точного поиска. Каждый последующий метод уточняет выборку в контексте предыдущего локатора.</p>
+
+<pre><span class="cm"># Цепочка: элемент списка, содержащий определённый текст</span>
+page.get_by_role(<span class="st">"listitem"</span>).filter(has_text=<span class="st">"Проект Alpha"</span>)
+
+<span class="cm"># Цепочка: внутри определённого раздела</span>
+sidebar <span class="op">=</span> page.get_by_role(<span class="st">"region"</span>, name=<span class="st">"Навигация"</span>)
+sidebar.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Настройки"</span>).click()
+
+<span class="cm"># Цепочка: строка таблицы с определённым значением, затем ячейка</span>
+row <span class="op">=</span> page.get_by_role(<span class="st">"row"</span>).filter(has_text=<span class="st">"Заказ #42"</span>)
+row.get_by_role(<span class="st">"cell"</span>, name=<span class="st">"Статус"</span>)
+
+<span class="cm"># Глубокая вложенность</span>
+modal <span class="op">=</span> page.get_by_role(<span class="st">"dialog"</span>, name=<span class="st">"Подтверждение"</span>)
+modal.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Да"</span>).click()</pre>
+
+<h2>Практические примеры</h2>
+
+<h3>Пример: работа со списком задач</h3>
+<pre><span class="kw">def</span> <span class="fn">test_todo_list</span>(page):
+    page.goto(<span class="st">"https://example.com/todos"</span>)
+
+    <span class="cm"># Найти задачу "Купить продукты" и отметить её</span>
+    todo_item <span class="op">=</span> page.get_by_role(<span class="st">"listitem"</span>).filter(has_text=<span class="st">"Купить продукты"</span>)
+    todo_item.get_by_role(<span class="st">"checkbox"</span>).check()
+
+    <span class="cm"># Проверить, что задача отмечена</span>
+    expect(todo_item.get_by_role(<span class="st">"checkbox"</span>)).to_be_checked()
+
+    <span class="cm"># Найти все активные (невыполненные) задачи</span>
+    active_items <span class="op">=</span> page.get_by_role(<span class="st">"listitem"</span>).filter(
+        has=page.get_by_role(<span class="st">"checkbox"</span>).and_(page.locator(<span class="st">":not(:checked)"</span>))
+    )
+    expect(active_items).to_have_count(<span class="nm">3</span>)</pre>
+
+<h3>Пример: форма регистрации</h3>
+<pre><span class="kw">def</span> <span class="fn">test_registration_form</span>(page):
+    page.goto(<span class="st">"https://example.com/register"</span>)
+
+    <span class="cm"># Заполнение формы с использованием разных локаторов</span>
+    page.get_by_label(<span class="st">"Имя"</span>).fill(<span class="st">"Иван"</span>)
+    page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"ivan@example.com"</span>)
+    page.get_by_label(<span class="st">"Пароль"</span>).fill(<span class="st">"StrongPass1!"</span>)
+    page.get_by_placeholder(<span class="st">"Повторите пароль"</span>).fill(<span class="st">"StrongPass1!"</span>)
+    page.get_by_label(<span class="st">"Страна"</span>).select_option(<span class="st">"RU"</span>)
+    page.get_by_role(<span class="st">"checkbox"</span>, name=<span class="st">"Согласен"</span>).check()
+
+    <span class="cm"># Отправка</span>
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Зарегистрироваться"</span>).click()
+
+    <span class="cm"># Проверка успешной регистрации</span>
+    expect(page.get_by_text(<span class="st">"Регистрация завершена"</span>)).to_be_visible()</pre>
+
+<h3>Пример: проверка таблицы</h3>
+<pre><span class="kw">def</span> <span class="fn">test_data_table</span>(page):
+    page.goto(<span class="st">"https://example.com/data"</span>)
+
+    <span class="cm"># Найти строку с определённым ID</span>
+    target_row <span class="op">=</span> page.get_by_role(<span class="st">"row"</span>).filter(has_text=<span class="st">"ORD-0042"</span>)
+
+    <span class="cm"># Получить значение ячейки в этой строке</span>
+    status_cell <span class="op">=</span> target_row.get_by_role(<span class="st">"cell"</span>, name=<span class="st">"Статус"</span>)
+    expect(status_cell).to_have_text(<span class="st">"Доставлено"</span>)
+
+    <span class="cm"># Проверить количество строк в таблице</span>
+    rows <span class="op">=</span> page.get_by_role(<span class="st">"row"</span>).all()
+    <span class="kw">assert</span> <span class="fn">len</span>(rows) <span class="op">==</span> <span class="nm">11</span>  <span class="cm"># 10 строк данных + заголовок</span></pre>
+
+<h2>Заключение</h2>
+<p>Локаторы Playwright — это мощный и гибкий инструмент для поиска элементов. Используйте семантические методы (<code>get_by_role</code>, <code>get_by_label</code>, <code>get_by_text</code>) как основной способ поиска, а CSS/XPath — только когда семантические методы не подходят. Комбинируйте локаторы через фильтрацию и логические операторы для точного выбора элементов.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

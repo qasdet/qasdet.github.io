@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Выполнение JavaScript — Playwright Python</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link active" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Выполнение JavaScript</h1>
+<p>Выполнение произвольного JavaScript-кода в контексте браузера: evaluate, evaluate_handle, add_init_script, аргументы и возвращаемые значения.</p>
+</div>
+<div class="card">
+<h2>Основы evaluate</h2>
+
+<h3>page.evaluate("document.title")</h3>
+<p>Выполняет JavaScript-код на странице и возвращает результат как Python-объект.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    page <span class="op">=</span> browser.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+    title <span class="op">=</span> page.evaluate(<span class="st">"document.title"</span>)
+    <span class="kw">print</span>(title)  <span class="cm"># "Example Domain"</span>
+    browser.close()</pre>
+
+<h3>page.evaluate("(a, b) => a + b", 1, 2) — аргументы</h3>
+<p>Можно передавать аргументы в JavaScript-функцию. Они сериализуются в JSON.</p>
+
+<pre>result <span class="op">=</span> page.evaluate(<span class="st">"(a, b) => a + b"</span>, <span class="nm">1</span>, <span class="nm">2</span>)
+<span class="kw">print</span>(result)  <span class="cm"># 3</span></pre>
+
+<h3>page.evaluate("({name}) => name", {"name": "test"}) — объекты</h3>
+<p>При передаче объектов можно использовать деструктуризацию в JavaScript.</p>
+
+<pre>result <span class="op">=</span> page.evaluate(
+    <span class="st">"({name}) => name"</span>,
+    {<span class="st">"name"</span>: <span class="st">"test"</span>}
+)
+<span class="kw">print</span>(result)  <span class="cm"># "test"</span></pre>
+
+<h2>JSHandle</h2>
+
+<h3>page.evaluate_handle("() => document.body")</h3>
+<p>Возвращает <span class="fn">JSHandle</span> — ссылку на JavaScript-объект, которая позволяет взаимодействовать с ним без сериализации. Полезно для работы с DOM-элементами и глобальными объектами.</p>
+
+<pre>body_handle <span class="op">=</span> page.evaluate_handle(<span class="st">"() => document.body"</span>)
+tag <span class="op">=</span> body_handle.evaluate(<span class="st">"el => el.tagName"</span>)
+<span class="kw">print</span>(tag)  <span class="cm"># "BODY"</span>
+body_handle.dispose()</pre>
+
+<h3>page.evaluate_handle("window")</h3>
+<p>Получение ссылки на глобальный объект <span class="fn">window</span>.</p>
+
+<pre>window_handle <span class="op">=</span> page.evaluate_handle(<span class="st">"window"</span>)
+location <span class="op">=</span> window_handle.evaluate(<span class="st">"win => win.location.href"</span>)</pre>
+
+<h2>Методы evaluate в разных контекстах</h2>
+
+<h3>frame.evaluate()</h3>
+<p>Выполнение JS в конкретном фрейме.</p>
+
+<pre>frame <span class="op">=</span> page.frame(<span class="st">"iframe-name"</span>)
+result <span class="op">=</span> frame.evaluate(<span class="st">"document.title"</span>)</pre>
+
+<h3>locator.evaluate()</h3>
+<p>Выполнение JS для конкретного элемента, найденного через локатор.</p>
+
+<pre>text <span class="op">=</span> page.get_by_role(<span class="st">"button"</span>).evaluate(
+    <span class="st">"el => el.textContent"</span>
+)</pre>
+
+<h3>element_handle.evaluate()</h3>
+<p>Выполнение JS для конкретного <span class="fn">ElementHandle</span>.</p>
+
+<pre>handle <span class="op">=</span> page.query_selector(<span class="st">"button"</span>)
+text <span class="op">=</span> handle.evaluate(<span class="st">"el => el.innerText"</span>)</pre>
+
+<h2>Асинхронные вызовы</h2>
+
+<h3>page.evaluate("async () => await fetch('/api')")</h3>
+<p>Поддерживаются асинхронные функции. Playwright ожидает разрешения промиса.</p>
+
+<pre>data <span class="op">=</span> page.evaluate(<span class="st">"""
+    async () => {
+        const res = await fetch('/api/data');
+        return res.json();
+    }
+"""</span>)</pre>
+
+<h3>page.evaluate(() => localStorage.getItem('token'))</h3>
+<p>Чтение данных из хранилищ браузера.</p>
+
+<pre>token <span class="op">=</span> page.evaluate(<span class="st">"() => JSON.parse(localStorage.getItem('token'))"</span>)</pre>
+
+<h3>page.evaluate(() => new Promise(...))</h3>
+<p>Работа с промисами — Playwright автоматически ожидает их разрешения.</p>
+
+<pre>result <span class="op">=</span> page.evaluate(<span class="st">"""
+    () => new Promise(resolve => {
+        setTimeout(() => resolve('Готово!'), 1000)
+    })
+"""</span>)
+<span class="kw">print</span>(result)  <span class="cm"># "Готово!" (через 1 секунду)</span></pre>
+
+<h2>add_init_script — скрипты до загрузки</h2>
+
+<h3>page.add_init_script("() => { window.__TEST__ = true }")</h3>
+<p>Регистрирует скрипт, который выполняется перед каждым navigational загрузкой страницы. Полезно для установки глобальных переменных, моков или переопределений.</p>
+
+<pre>page.add_init_script(<span class="st">"""
+() => {
+    window.__TEST__ = true;
+    window.__ENV = 'testing';
+    Date.now = () => 1700000000000;
+}
+"""</span>)
+page.goto(<span class="st">"https://example.com"</span>)
+is_test <span class="op">=</span> page.evaluate(<span class="st">"window.__TEST__"</span>)  <span class="cm"># True</span></pre>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Скрипты, добавленные через <span class="fn">add_init_script</span>, выполняются до загрузки любых других скриптов на странице, включая встроенные. Это идеальный способ для подмены глобальных объектов.</p>
+</div>
+
+<h2>Изоляция контекста</h2>
+<p><span class="fn">page.evaluate()</span> выполняется в контексте браузера, но имеет доступ к DOM и JavaScript-окружению страницы. Python-объекты, переданные как аргументы, сериализуются в JSON.</p>
+
+<pre><span class="cm"># Все типы, сериализуемые в JSON, поддерживаются</span>
+page.evaluate(<span class="st">"data => console.log(data)"</span>, {
+    <span class="st">"string"</span>: <span class="st">"текст"</span>,
+    <span class="st">"number"</span>: <span class="nm">42</span>,
+    <span class="st">"bool"</span>: <span class="kw">True</span>,
+    <span class="st">"list"</span>: [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>],
+    <span class="st">"nested"</span>: {<span class="st">"key"</span>: <span class="st">"value"</span>}
+})
+
+<span class="cm"># Функции и циклические ссылки НЕ поддерживаются</span>
+<span class="cm"># Для передачи функций используйте expose_function</span></pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> <span class="fn">page.evaluate()</span> не может вернуть функции, символы или объекты с циклическими ссылками. Если нужно сохранить ссылку на JS-объект, используйте <span class="fn">page.evaluate_handle()</span>.</p>
+</div>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

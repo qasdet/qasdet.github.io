@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Сеть — Playwright Python</title><link rel="stylesheet" href="playru-style.css"></head>
+<body>
+<div class="header"><div class="header-inner"><a href="index.html">Playwright Python — справочник</a><a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a></div></div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link active" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header"><h1>Сеть (Network)</h1><p>Мониторинг запросов, перехват и подмена трафика, WebSocket, прокси и аутентификация</p></div>
+<div class="card">
+
+<h2>Мониторинг запросов и ответов</h2>
+<p>Playwright позволяет подписываться на все сетевые события страницы или контекста. Это полезно для логирования, проверки заголовков и отладки.</p>
+
+<h3>page.on("request")</h3>
+<pre><code><span class="kw">def</span> <span class="fn">on_request</span>(request):
+    <span class="kw">print</span>(<span class="st">f"Отправлен: {request.method} {request.url}"</span>)
+
+page.on(<span class="st">"request"</span>, on_request)
+page.goto(<span class="st">"https://example.com"</span>)</code></pre>
+
+<h3>page.on("response")</h3>
+<pre><code><span class="kw">def</span> <span class="fn">on_response</span>(response):
+    <span class="kw">print</span>(<span class="st">f"Получен: {response.status} {response.url}"</span>)
+    <span class="kw">print</span>(<span class="st">f"  Заголовки: {response.headers}"</span>)
+
+page.on(<span class="st">"response"</span>, on_response)</code></pre>
+
+<h3>page.on("requestfailed")</h3>
+<pre><code><span class="kw">def</span> <span class="fn">on_failed</span>(request):
+    <span class="kw">print</span>(<span class="st">f"Ошибка: {request.url} — {request.failure}"</span>)
+
+page.on(<span class="st">"requestfailed"</span>, on_failed)</code></pre>
+
+<h3>page.on("requestfinished")</h3>
+<pre><code><span class="kw">def</span> <span class="fn">on_finished</span>(request):
+    <span class="kw">print</span>(<span class="st">f"Завершён: {request.url}"</span>)
+
+page.on(<span class="st">"requestfinished"</span>, on_finished)</code></pre>
+
+<h2>Перехват и маршрутизация (Route)</h2>
+<p>Метод <span class="fn">page.route()</span> перехватывает запросы, соответствующие glob-паттерну, и передаёт управление в обработчик. В обработчике можно продолжить запрос, изменить его, подменить ответ или заблокировать.</p>
+
+<h3>Блокировка CSS</h3>
+<pre><code>page.route(<span class="st">"**/*.css"</span>, <span class="kw">lambda</span> route: route.abort())</code></pre>
+
+<h3>Блокировка изображений</h3>
+<pre><code>page.route(<span class="st">"**/*.{png,jpg,jpeg}"</span>, <span class="kw">lambda</span> route: route.abort())</code></pre>
+
+<div class="box box-tip">
+<strong>Совет:</strong> Блокировка ресурсов ускоряет загрузку страницы при тестировании, когда изображения и стили не важны для проверяемой функциональности.
+</div>
+
+<h3>Подмена API-ответа</h3>
+<pre><code><span class="kw">def</span> <span class="fn">handle_api</span>(route):
+    route.fulfill(
+        status=<span class="dv">200</span>,
+        content_type=<span class="st">"application/json"</span>,
+        body=<span class="st">'{"users": [{"id": 1, "name": "Анна"}]}'</span>
+    )
+
+page.route(<span class="st">"**/api/**"</span>, handle_api)</code></pre>
+
+<h3>Ответ из файла</h3>
+<pre><code><span class="kw">import</span> json
+
+<span class="kw">with</span> <span class="st">"mock.json"</span> <span class="kw">as</span> f:
+    mock_data = json.load(f)
+
+<span class="kw">def</span> <span class="fn">mock_with_file</span>(route):
+    route.fulfill(
+        status=<span class="dv">200</span>,
+        path=<span class="st">"mock.json"</span>,
+        headers={<span class="st">"Content-Type"</span>: <span class="st">"application/json"</span>}
+    )
+
+page.route(<span class="st">"**/api/data"</span>, mock_with_file)</code></pre>
+
+<div class="box box-info">
+<strong>Примечание:</strong> Параметр <code>path</code> в <span class="fn">route.fulfill()</span> принимает путь к файлу относительно рабочей директории теста. Файл должен существовать на момент вызова.
+</div>
+
+<h2>Модификация запроса (route.continue_)</h2>
+<p><span class="fn">route.continue_()</span> позволяет изменить запрос перед отправкой: URL, метод, заголовки и тело.</p>
+<pre><code><span class="kw">def</span> <span class="fn">modify_request</span>(route):
+    route.continue_(
+        headers={
+            <span class="st">"Authorization"</span>: <span class="st">"Bearer test-token"</span>,
+            <span class="st">"X-Custom"</span>: <span class="st">"true"</span>
+        }
+    )
+
+page.route(<span class="st">"**/api/**"</span>, modify_request)
+
+<span class="cm"># Изменение URL и метода</span>
+page.route(<span class="st">"**/old-endpoint"</span>, <span class="kw">lambda</span> r: r.continue_(
+    url=<span class="st">"https://new-api.example.com/v2/data"</span>,
+    method=<span class="st">"POST"</span>,
+    post_data=<span class="st">'{"key": "value"}'</span>
+))</code></pre>
+
+<h2>route.abort() — причины отклонения</h2>
+<p>Метод <span class="fn">route.abort(error_code)</span> отклоняет запрос с указанием причины. Доступные коды ошибок:</p>
+<table>
+<tr><th>Код</th><th>Описание</th></tr>
+<tr><td><code>"aborted"</code></td><td>Операция отменена</td></tr>
+<tr><td><code>"accessdenied"</code></td><td>Доступ запрещён</td></tr>
+<tr><td><code>"addressunreachable"</code></td><td>Адрес недоступен</td></tr>
+<tr><td><code>"blockedlyresource"</code></td><td>Ресурс заблокирован расширением</td></tr>
+<tr><td><code>"connectionrefused"</code></td><td>Соединение отклонено</td></tr>
+<tr><td><code>"connectionreset"</code></td><td>Соединение сброшено</td></tr>
+<tr><td><code>"internetdisconnected"</code></td><td>Интернет отключён</td></tr>
+<tr><td><code>"namenotresolved"</code></td><td>DNS не найден</td></tr>
+<tr><td><code>"timedout"</code></td><td>Тайм-аут</td></tr>
+</table>
+
+<pre><code><span class="cm"># Блокировка с разными причинами</span>
+page.route(<span class="st">"**/analytics.js"</span>,
+           <span class="kw">lambda</span> r: r.abort(<span class="st">"connectionrefused"</span>))
+page.route(<span class="st">"**/tracking.gif"</span>,
+           <span class="kw">lambda</span> r: r.abort(<span class="st">"aborted"</span>))</code></pre>
+
+<h2>route.fetch — выполнение реального запроса</h2>
+<p>Метод <span class="fn">route.fetch()</span> выполняет настоящий HTTP-запрос из обработчика и возвращает ответ. Это позволяет перехватить запрос, проверить реальный ответ и при необходимости изменить его.</p>
+<pre><code><span class="kw">def</span> <span class="fn">intercept_and_check</span>(route):
+    response = route.fetch()  <span class="cm"># реальный запрос</span>
+    body = response.text()
+    <span class="cm"># Модифицируем ответ на лету</span>
+    modified = body.replace(<span class="st">"старое"</span>, <span class="st">"новое"</span>)
+    route.fulfill(
+        status=response.status,
+        headers=response.headers,
+        body=modified
+    )
+
+page.route(<span class="st">"**/*.html"</span>, intercept_and_check)</code></pre>
+
+<h2>Glob-паттерны для route</h2>
+<p>Playwright использует glob-паттерны для фильтрации URL в <span class="fn">page.route()</span>:</p>
+<table>
+<tr><th>Паттерн</th><th>Значение</th><th>Пример</th></tr>
+<tr><td><code>**</code></td><td>Любая последовательность символов, включая слеши</td><td><code>**/api/**</code></td></tr>
+<tr><td><code>*</code></td><td>Любая последовательность, кроме слеша</td><td><code>*.css</code></td></tr>
+<tr><td><code>?</code></td><td>Ровно один любой символ</td><td><code>file?.html</code></td></tr>
+<tr><td><code>{a,b}</code></td><td>Альтернативы (или)</td><td><code>*.{png,jpg}</code></td></tr>
+</table>
+
+<pre><code><span class="cm"># Примеры паттернов</span>
+page.route(<span class="st">"**"</span>, handler)                     <span class="cm"># все запросы</span>
+page.route(<span class="st">"**/*.css"</span>, handler)              <span class="cm"># только CSS</span>
+page.route(<span class="st">"https://api.example.com/**"</span>, handler)
+page.route(<span class="st">"**/*.{png,jpg,jpeg,gif,svg}"</span>, handler)
+page.route(<span class="st">"**/data?v=?"</span>, handler)            <span class="cm"># data?v=1, data?v=2</span></code></pre>
+
+<h2>page.unroute() — удаление route</h2>
+<p>Метод <span class="fn">page.unroute(pattern)</span> удаляет ранее установленный перехватчик. Если паттерн не указан, удаляются все.</p>
+<pre><code><span class="cm"># Удаление конкретного route</span>
+page.unroute(<span class="st">"**/*.css"</span>)
+
+<span class="cm"># Удаление всех route</span>
+page.unroute()</code></pre>
+
+<h2>HTTPS-аутентификация</h2>
+<p>Playwright поддерживает базовую HTTP-аутентификацию через параметр <span class="fn">http_credentials</span> в контексте.</p>
+<pre><code>context = browser.new_context(
+    http_credentials={
+        <span class="st">"username"</span>: <span class="st">"admin"</span>,
+        <span class="st">"password"</span>: <span class="st">"secret"</span>
+    }
+)
+page = context.new_page()
+page.goto(<span class="st">"https://protected.example.com"</span>)</code></pre>
+
+<div class="box box-info">
+<strong>Примечание:</strong> Учётные данные базовой аутентификации отправляются автоматически для всех запросов в рамках контекста. Playwright ожидает 401-ответ и повторяет запрос с заголовком <code>Authorization</code>.
+</div>
+
+<h2>HTTP-прокси</h2>
+<p>Прокси-сервер настраивается при запуске браузера через параметр <span class="fn">proxy</span>.</p>
+<pre><code>browser = p.chromium.launch(
+    proxy={
+        <span class="st">"server"</span>: <span class="st">"http://proxy.example.com:8080"</span>,
+        <span class="st">"username"</span>: <span class="st">"user"</span>,    <span class="cm"># опционально</span>
+        <span class="st">"password"</span>: <span class="st">"pass"</span>     <span class="cm"># опционально</span>
+    }
+)</code></pre>
+<p>Поддерживаемые схемы прокси: <code>http</code>, <code>https</code>, <code>socks5</code>, <code>socks5h</code>.</p>
+
+<h2>WebSocket</h2>
+<p>Playwright отслеживает WebSocket-соединения через событие <span class="fn">"websocket"</span> на странице или контексте.</p>
+<pre><code><span class="kw">def</span> <span class="fn">on_websocket</span>(ws):
+    <span class="kw">print</span>(<span class="st">f"WebSocket: {ws.url}"</span>)
+
+    <span class="kw">def</span> <span class="fn">on_frame_sent</span>(data):
+        <span class="kw">print</span>(<span class="st">f"Отправлено: {data}"</span>)
+
+    <span class="kw">def</span> <span class="fn">on_frame_received</span>(data):
+        <span class="kw">print</span>(<span class="st">f"Получено: {data}"</span>)
+
+    ws.on(<span class="st">"framesent"</span>, on_frame_sent)
+    ws.on(<span class="st">"framereceived"</span>, on_frame_received)
+
+page.on(<span class="st">"websocket"</span>, on_websocket)
+page.goto(<span class="st">"https://example.com/chat"</span>)</code></pre>
+
+<h2>Сервис-воркеры</h2>
+<p>Можно заблокировать регистрацию сервис-воркеров при создании контекста:</p>
+<pre><code>context = browser.new_context(
+    service_workers=<span class="st">'block'</span>
+)</code></pre>
+<p>Это полезно, когда сервис-воркеры кешируют ресурсы и мешают воспроизводимости тестов.</p>
+
+<h2>Полный пример: перехват и подмена API</h2>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+<span class="kw">import</span> json
+
+MOCK_USERS = {
+    <span class="st">"users"</span>: [
+        {<span class="st">"id"</span>: <span class="dv">1</span>, <span class="st">"name"</span>: <span class="st">"Иван"</span>, <span class="st">"role"</span>: <span class="st">"admin"</span>},
+        {<span class="st">"id"</span>: <span class="dv">2</span>, <span class="st">"name"</span>: <span class="st">"Мария"</span>, <span class="st">"role"</span>: <span class="st">"user"</span>}
+    ]
+}
+
+<span class="kw">def</span> <span class="fn">test_network_interception</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+
+        <span class="cm"># Логируем все запросы</span>
+        page.on(<span class="st">"request"</span>, <span class="kw">lambda</span> req:
+                <span class="kw">print</span>(<span class="st">f"  Запрос: {req.method} {req.url}"</span>))
+
+        <span class="cm"># Блокируем аналитику</span>
+        page.route(<span class="st">"**/analytics.js"</span>,
+                   <span class="kw">lambda</span> r: r.abort(<span class="st">"blockedlyresource"</span>))
+
+        <span class="cm"># Подменяем API пользователей</span>
+        page.route(<span class="st">"**/api/users"</span>, <span class="kw">lambda</span> r: r.fulfill(
+            status=<span class="dv">200</span>,
+            content_type=<span class="st">"application/json"</span>,
+            body=json.dumps(MOCK_USERS)
+        ))
+
+        <span class="cm"># Блокируем изображения</span>
+        page.route(<span class="st">"**/*.{png,jpg,jpeg,gif}"</span>,
+                   <span class="kw">lambda</span> r: r.abort())
+
+        page.goto(<span class="st">"https://test.example.com/dashboard"</span>)
+
+        <span class="cm">// Проверяем, что подмена сработала</span>
+        users_text = page.text_content(<span class="st">"#users-list"</span>)
+        <span class="kw">assert</span> <span class="st">"Иван"</span> <span class="kw">in</span> users_text
+        <span class="kw">assert</span> <span class="st">"Мария"</span> <span class="kw">in</span> users_text
+
+        browser.close()
+
+<span class="fn">test_network_interception</span>()</code></pre>
+
+<h2>Полный пример: мониторинг трафика</h2>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">collect_network_logs</span>(url):
+    logs = []
+
+    <span class="kw">def</span> <span class="fn">on_request</span>(req):
+        logs.append({
+            <span class="st">"type"</span>: <span class="st">"request"</span>,
+            <span class="st">"method"</span>: req.method,
+            <span class="st">"url"</span>: req.url,
+            <span class="st">"headers"</span>: <span class="kw">dict</span>(req.headers)
+        })
+
+    <span class="kw">def</span> <span class="fn">on_response</span>(resp):
+        logs.append({
+            <span class="st">"type"</span>: <span class="st">"response"</span>,
+            <span class="st">"status"</span>: resp.status,
+            <span class="st">"url"</span>: resp.url
+        })
+
+    <span class="kw">def</span> <span class="fn">on_failed</span>(req):
+        logs.append({
+            <span class="st">"type"</span>: <span class="st">"failed"</span>,
+            <span class="st">"url"</span>: req.url,
+            <span class="st">"error"</span>: str(req.failure)
+        })
+
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.on(<span class="st">"request"</span>, on_request)
+        page.on(<span class="st">"response"</span>, on_response)
+        page.on(<span class="st">"requestfailed"</span>, on_failed)
+        page.goto(url, wait_until=<span class="st">"networkidle"</span>)
+        browser.close()
+
+    <span class="kw">return</span> logs
+
+<span class="cm"># Сбор логов и сохранение</span>
+network_logs = <span class="fn">collect_network_logs</span>(<span class="st">"https://example.com"</span>)
+<span class="kw">with</span> <span class="st">"network_report.json"</span>, <span class="st">"w"</span> <span class="kw">as</span> f:
+    json.dump(network_logs, f, indent=<span class="dv">2</span>, ensure_ascii=<span class="kw">False</span>)</code></pre>
+
+<div class="box box-warning">
+<strong>Важно:</strong> Обработчики <code>route</code> выполняются синхронно. Если внутри обработчика требуется асинхронная операция, используйте <code>async</code>-версию <span class="fn">page.route_async()</span> и <span class="fn">await route.continue_async()</span>.
+</div>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

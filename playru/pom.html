@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Page Object Model</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link active" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Page Object Model (POM)</h1>
+<p>Паттерн Page Object Model для организации тестов Playwright: инкапсуляция селекторов, переиспользование кода и упрощение поддержки.</p>
+</div>
+<div class="card">
+<h2>Что такое Page Object Model?</h2>
+<p>Page Object Model (POM) — это паттерн проектирования тестовой автоматизации, при котором каждая страница или значимый компонент веб-приложения представляется отдельным классом. Класс страницы инкапсулирует селекторы (локаторы) и методы взаимодействия с этой страницей. Тесты используют эти классы, оставаясь независимыми от деталей разметки.</p>
+
+<div class="box box-info">
+<p><strong>Основная идея:</strong> при изменении вёрстки страницы достаточно обновить только класс страницы, а не все тесты, которые с ней работают.</p>
+</div>
+
+<h2>Структура класса страницы</h2>
+<p>Каждый класс POM содержит:</p>
+<ul>
+<li><strong>Конструктор</strong> <code>__init__(self, page: Page)</code> — принимает объект страницы Playwright</li>
+<li><strong>Локаторы</strong> — объявляются как атрибуты через <code>page.get_by_role()</code>, <code>page.locator()</code> и другие методы</li>
+<li><strong>Методы действий</strong> — <code>navigate()</code>, <code>search()</code>, <code>get_result()</code> и т.д.</li>
+<li><strong>Методы проверок</strong> — возвращают состояние элементов для assert/expect</li>
+</ul>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> Page
+
+
+<span class="kw">class</span> <span class="fn">SearchPage</span>:
+    <span class="st">"""Page Object для страницы поиска."""</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, page: Page):
+        <span class="kw">self</span>.page <span class="op">=</span> page
+        <span class="kw">self</span>.search_input <span class="op">=</span> page.get_by_role(<span class="st">"textbox"</span>, name=<span class="st">"Поиск"</span>)
+        <span class="kw">self</span>.search_button <span class="op">=</span> page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Найти"</span>)
+        <span class="kw">self</span>.results <span class="op">=</span> page.get_by_role(<span class="st">"listitem"</span>)
+        <span class="kw">self</span>.no_results_msg <span class="op">=</span> page.get_by_text(<span class="st">"Ничего не найдено"</span>)
+
+    <span class="kw">def</span> <span class="fn">navigate</span>(<span class="kw">self</span>) <span class="op">-&gt;</span> <span class="kw">None</span>:
+        <span class="kw">self</span>.page.goto(<span class="st">"https://example.com/search"</span>)
+
+    <span class="kw">def</span> <span class="fn">search</span>(<span class="kw">self</span>, query: <span class="kw">str</span>) <span class="op">-&gt;</span> <span class="kw">None</span>:
+        <span class="kw">self</span>.search_input.fill(query)
+        <span class="kw">self</span>.search_button.click()
+        <span class="kw">self</span>.page.wait_for_load_state(<span class="st">"networkidle"</span>)
+
+    <span class="kw">def</span> <span class="fn">get_result</span>(<span class="kw">self</span>, index: <span class="kw">int</span> <span class="op">=</span> <span class="nm">0</span>):
+        <span class="kw">return</span> <span class="kw">self</span>.results.nth(index)
+
+    <span class="kw">def</span> <span class="fn">has_results</span>(<span class="kw">self</span>) <span class="op">-&gt;</span> <span class="kw">bool</span>:
+        <span class="kw">return</span> <span class="kw">self</span>.results.count() <span class="op">&gt;</span> <span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">no_results_message_visible</span>(<span class="kw">self</span>) <span class="op">-&gt;</span> <span class="kw">bool</span>:
+        <span class="kw">return</span> <span class="kw">self</span>.no_results_msg.is_visible()</pre>
+
+<h2>Использование POM в тестах pytest</h2>
+<p>В pytest класс POM удобно использовать через фикстуру <code>page</code>, которую предоставляет плагин <code>pytest-playwright</code>.</p>
+
+<pre><span class="kw">from</span> search_page <span class="kw">import</span> SearchPage
+
+
+<span class="kw">def</span> <span class="fn">test_search_finds_results</span>(page):
+    search_page <span class="op">=</span> SearchPage(page)
+    search_page.navigate()
+    search_page.search(<span class="st">"Playwright Python"</span>)
+    result <span class="op">=</span> search_page.get_result(<span class="nm">0</span>)
+    expect(result).to_be_visible()
+    expect(result).to_contain_text(<span class="st">"Playwright"</span>)
+
+
+<span class="kw">def</span> <span class="fn">test_search_empty_query</span>(page):
+    search_page <span class="op">=</span> SearchPage(page)
+    search_page.navigate()
+    search_page.search(<span class="st">""</span>)
+    expect(search_page.no_results_msg).to_be_visible()</pre>
+
+<h2>Продвинутый POM: композиция и фрагменты</h2>
+<p>Для сложных страниц можно выделять повторяющиеся компоненты в отдельные классы-фрагменты.</p>
+
+<pre><span class="kw">class</span> <span class="fn">HeaderFragment</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, page: Page):
+        <span class="kw">self</span>.logo <span class="op">=</span> page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Главная"</span>)
+        <span class="kw">self</span>.login_btn <span class="op">=</span> page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Войти"</span>)
+        <span class="kw">self</span>.cart_link <span class="op">=</span> page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Корзина"</span>)
+
+    <span class="kw">def</span> <span class="fn">go_to_cart</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.cart_link.click()
+
+    <span class="kw">def</span> <span class="fn">is_logged_in</span>(<span class="kw">self</span>) <span class="op">-&gt;</span> <span class="kw">bool</span>:
+        <span class="kw">return</span> <span class="kw">not</span> <span class="kw">self</span>.login_btn.is_visible()
+
+
+<span class="kw">class</span> <span class="fn">MainPage</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, page: Page):
+        <span class="kw">self</span>.page <span class="op">=</span> page
+        <span class="kw">self</span>.header <span class="op">=</span> HeaderFragment(page)
+
+    <span class="kw">def</span> <span class="fn">navigate</span>(<span class="kw">self</span>):
+        <span class="kw">self</span>.page.goto(<span class="st">"https://example.com"</span>)</pre>
+
+<h2>Асинхронный POM (async/await)</h2>
+<p>Playwright поддерживает как синхронный, так и асинхронный API. Для async-проектов классы POM пишутся с <code>async/await</code>.</p>
+
+<pre><span class="kw">from</span> playwright.async_api <span class="kw">import</span> Page <span class="kw">as</span> AsyncPage
+
+
+<span class="kw">class</span> <span class="fn">AsyncSearchPage</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, page: AsyncPage):
+        <span class="kw">self</span>.page <span class="op">=</span> page
+        <span class="kw">self</span>.search_input <span class="op">=</span> page.get_by_role(<span class="st">"textbox"</span>, name=<span class="st">"Поиск"</span>)
+        <span class="kw">self</span>.search_button <span class="op">=</span> page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Найти"</span>)
+
+    <span class="kw">async</span> <span class="kw">def</span> <span class="fn">navigate</span>(<span class="kw">self</span>):
+        <span class="kw">await</span> <span class="kw">self</span>.page.goto(<span class="st">"https://example.com/search"</span>)
+
+    <span class="kw">async</span> <span class="kw">def</span> <span class="fn">search</span>(<span class="kw">self</span>, query: <span class="kw">str</span>):
+        <span class="kw">await</span> <span class="kw">self</span>.search_input.fill(query)
+        <span class="kw">await</span> <span class="kw">self</span>.search_button.click()
+        <span class="kw">await</span> <span class="kw">self</span>.page.wait_for_load_state(<span class="st">"networkidle"</span>)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Выбор между синхронным и асинхронным POM зависит от проекта. Для большинства тестов достаточно синхронного подхода. Асинхронный вариант полезен при параллельных операциях или интеграции с асинхронными фреймворками.</p>
+</div>
+
+<h2>Преимущества POM</h2>
+<ul>
+<li><strong>Переиспользование кода</strong> — методы страницы используются во всех тестах</li>
+<li><strong>Лёгкость поддержки</strong> — изменение селектора в одном месте, а не во всех тестах</li>
+<li><strong>Читаемость</strong> — тесты читаются как сценарии на естественном языке</li>
+<li><strong>Модульность</strong> — каждый класс отвечает за свою страницу или компонент</li>
+<li><strong>Снижение дублирования</strong> — общие проверки выносятся в методы класса</li>
+</ul>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Не злоупотребляйте наследованием в POM. Предпочитайте композицию (вложение фрагментов) или делегирование. Глубокие иерархии наследования усложняют поддержку.</p>
+</div>
+
+<h2>Рекомендации по организации</h2>
+<ul>
+<li>Храните каждый класс POM в отдельном файле</li>
+<li>Используйте осмысленные имена методов: <code>login()</code>, <code>add_to_cart()</code>, <code>get_total_price()</code></li>
+<li>Возвращайте из методов другие Page Object для организации fluent-интерфейса</li>
+<li>Не смешивайте бизнес-логику с техническими деталями</li>
+<li>Для утверждений используйте <code>expect()</code> из Playwright</li>
+</ul>
+
+<pre><span class="kw">def</span> <span class="fn">test_checkout_flow</span>(page):
+    main_page <span class="op">=</span> MainPage(page)
+    main_page.navigate()
+    main_page.header.go_to_cart()
+
+    cart_page <span class="op">=</span> CartPage(page)
+    cart_page.proceed_to_checkout()
+
+    checkout_page <span class="op">=</span> CheckoutPage(page)
+    checkout_page.fill_shipping_info(<span class="st">"Иван"</span>, <span class="st">"ул. Ленина, 1"</span>)
+    checkout_page.place_order()
+
+    confirmation <span class="op">=</span> OrderConfirmationPage(page)
+    expect(confirmation.order_number).to_be_visible()</pre>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

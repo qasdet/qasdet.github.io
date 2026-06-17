@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Действия</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link active" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Действия (Actions)</h1>
+<p>Полный справочник по всем действиям над элементами: клики, ввод текста, выбор опций, перетаскивание, загрузка файлов и многое другое.</p>
+</div>
+<div class="card">
+<h2>Обзор действий в Playwright</h2>
+<p>Playwright предоставляет богатый набор методов для взаимодействия с элементами на странице. Все действия автоматически ожидают, что элемент станет доступным (Auto-Waiting), прежде чем выполнить команду. Это избавляет от необходимости писать явные ожидания в большинстве случаев.</p>
+
+<p>Все действия выполняются через объект <code>Locator</code>, который можно получить методами <code>page.get_by_*()</code> или другими способами поиска элементов.</p>
+
+<div class="box box-info">
+<p><strong>Важно:</strong> Перед каждым действием Playwright проверяет, что элемент привязан к DOM, видим, стабилен (не анимируется), не заблокирован и включён. Если элемент не соответствует этим критериям в течение таймаута (по умолчанию 30 секунд), действие завершится ошибкой.</p>
+</div>
+
+<h2>locator.click() — Клик по элементу</h2>
+<p>Основной метод для клика. Поддерживает множество опций для точной настройки:</p>
+
+<pre><span class="cm"># Простой клик</span>
+page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).click()
+
+<span class="cm"># Клик с зажатым Ctrl (для множественного выбора)</span>
+page.get_by_text(<span class="st">"Item 1"</span>).click(modifiers=[<span class="st">"Control"</span>])
+
+<span class="cm"># Клик в определённой позиции внутри элемента</span>
+page.get_by_role(<span class="st">"button"</span>).click(position={ <span class="st">"x"</span>: <span class="nm">10</span>, <span class="st">"y"</span>: <span class="nm">20</span> })
+
+<span class="cm"># Клик с задержкой (mousedown и mouseup разделены 500 мс)</span>
+page.get_by_text(<span class="st">"Slow"</span>).click(delay=<span class="nm">500</span>)
+
+<span class="cm"># Принудительный клик (без проверок actionability)</span>
+page.get_by_role(<span class="st">"button"</span>).click(force=<span class="kw">True</span>)
+
+<span class="cm"># Клик и не ждать навигации (noWaitAfter)</span>
+page.get_by_text(<span class="st">"Download"</span>).click(no_wait_after=<span class="kw">True</span>)
+
+<span class="cm"># Клик с кастомным таймаутом</span>
+page.get_by_role(<span class="st">"link"</span>).click(timeout=<span class="nm">10000</span>)
+
+<span class="cm"># Пробный клик (trial) — выполняет проверки, но не кликает</span>
+page.get_by_role(<span class="st">"button"</span>).click(trial=<span class="kw">True</span>)
+
+<span class="cm"># Клик правой кнопкой мыши</span>
+page.get_by_role(<span class="st">"button"</span>).click(button=<span class="st">"right"</span>)</pre>
+
+<h3>Параметры click()</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td><code>modifiers</code></td><td>list[str]</td><td>Клавиши-модификаторы: <code>"Alt"</code>, <code>"Control"</code>, <code>"Meta"</code>, <code>"Shift"</code></td></tr>
+<tr><td><code>position</code></td><td>dict</td><td>Координаты внутри элемента <code>{"x": 10, "y": 20}</code></td></tr>
+<tr><td><code>delay</code></td><td>int</td><td>Задержка между mousedown и mouseup в мс</td></tr>
+<tr><td><code>button</code></td><td>str</td><td><code>"left"</code>, <code>"right"</code>, <code>"middle"</code></td></tr>
+<tr><td><code>click_count</code></td><td>int</td><td>Количество кликов (1, 2, 3...)</td></tr>
+<tr><td><code>force</code></td><td>bool</td><td>Пропустить проверки actionability (по умолчанию <code>False</code>)</td></tr>
+<tr><td><code>no_wait_after</code></td><td>bool</td><td>Не ждать завершения навигации после клика</td></tr>
+<tr><td><code>timeout</code></td><td>int</td><td>Таймаут ожидания в мс (по умолчанию 30000)</td></tr>
+<tr><td><code>trial</code></td><td>bool</td><td>Пробный запуск — проверить, но не кликать</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>locator.dblclick() и click(count=2) — Двойной клик</h2>
+
+<pre><span class="cm"># Двойной клик через специализированный метод</span>
+page.get_by_text(<span class="st">"Word"</span>).dblclick()
+
+<span class="cm"># Двойной клик через параметр click_count</span>
+page.get_by_role(<span class="st">"button"</span>).click(click_count=<span class="nm">2</span>)
+
+<span class="cm"># Двойной клик с опциями</span>
+page.get_by_text(<span class="st">"Word"</span>).dblclick(delay=<span class="nm">300</span>, modifiers=[<span class="st">"Shift"</span>])</pre>
+
+<h2>locator.fill() — Очистка и ввод текста</h2>
+<p>Метод <code>fill()</code> очищает поле и вводит текст. Это самый быстрый способ заполнить поле ввода, так как Playwright использует внутренние механизмы, а не эмулирует нажатия клавиш.</p>
+
+<pre><span class="cm"># Очистка поля и ввод текста</span>
+page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>)
+
+<span class="cm"># Передача пустой строки очищает поле</span>
+page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">""</span>)
+
+<span class="cm"># Ввод с кастомным таймаутом</span>
+page.get_by_placeholder(<span class="st">"Введите имя"</span>).fill(<span class="st">"Анна"</span>, timeout=<span class="nm">5000</span>)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте <code>fill()</code> для полей ввода, текстовых областей и contenteditable элементов. Для эмуляции реального ввода с клавиатуры (когда важны события нажатия каждой клавиши) используйте <code>type()</code> или <code>press_sequentially()</code>.</p>
+</div>
+
+<h2>locator.type() — Поэтапный ввод текста</h2>
+<p>Метод <code>type()</code> вводит текст посимвольно, эмулируя реальную печать на клавиатуре. Полезен для тестирования автодополнения и других сценариев, где важны события ввода каждого символа.</p>
+
+<pre><span class="cm"># Ввод текста посимвольно (без задержки)</span>
+page.get_by_label(<span class="st">"Search"</span>).type(<span class="st">"playwright"</span>)
+
+<span class="cm"># Ввод с задержкой между символами (100 мс)</span>
+page.get_by_label(<span class="st">"Slow search"</span>).type(<span class="st">"playwright"</span>, delay=<span class="nm">100</span>)</pre>
+
+<h2>locator.clear() — Очистка поля</h2>
+
+<pre><span class="cm"># Очистка поля ввода</span>
+page.get_by_role(<span class="st">"textbox"</span>).clear()
+
+<span class="cm"># Очистка с опциями</span>
+page.get_by_label(<span class="st">"Name"</span>).clear(timeout=<span class="nm">5000</span>, force=<span class="kw">True</span>)</pre>
+
+<h2>locator.check(), locator.uncheck(), locator.set_checked() — Чекбоксы и радиокнопки</h2>
+
+<pre><span class="cm"># Отметить чекбокс</span>
+page.get_by_role(<span class="st">"checkbox"</span>).check()
+
+<span class="cm"># Снять отметку</span>
+page.get_by_role(<span class="st">"checkbox"</span>).uncheck()
+
+<span class="cm"># Установить состояние (True / False)</span>
+page.get_by_role(<span class="st">"checkbox"</span>).set_checked(<span class="kw">True</span>)
+
+<span class="cm"># Радиокнопка (выбор через check)</span>
+page.get_by_role(<span class="st">"radio"</span>, name=<span class="st">"Option A"</span>).check()
+
+<span class="cm"># Принудительная отметка без проверок</span>
+page.get_by_label(<span class="st">"Agree"</span>).check(force=<span class="kw">True</span>)</pre>
+
+<h2>locator.select_option() — Выбор опций из select</h2>
+<p>Метод для работы с HTML-элементом <code>&lt;select&gt;</code>. Поддерживает выбор по value, по видимому тексту (label) и по индексу.</p>
+
+<pre><span class="cm"># Выбор по value</span>
+page.get_by_role(<span class="st">"combobox"</span>).select_option(<span class="st">"option-1"</span>)
+
+<span class="cm"># Выбор по видимому тексту</span>
+page.get_by_label(<span class="st">"Country"</span>).select_option(label=<span class="st">"Russia"</span>)
+
+<span class="cm"># Выбор по индексу (0-based)</span>
+page.get_by_role(<span class="st">"combobox"</span>).select_option(index=<span class="nm">2</span>)
+
+<span class="cm"># Множественный выбор (для select с multiple)</span>
+page.get_by_role(<span class="st">"listbox"</span>).select_option([<span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"blue"</span>])
+
+<span class="cm"># Смешанный выбор</span>
+page.get_by_label(<span class="st">"Items"</span>).select_option(value=<span class="st">"a"</span>, label=<span class="st">"Item B"</span>, index=<span class="nm">3</span>)</pre>
+
+<h2>locator.hover(), locator.focus(), locator.tab() — Ховер, фокус, табуляция</h2>
+
+<pre><span class="cm"># Наведение мыши на элемент</span>
+page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Dropdown"</span>).hover()
+
+<span class="cm"># Установка фокуса на элементе</span>
+page.get_by_role(<span class="st">"textbox"</span>).focus()
+
+<span class="cm"># Табуляция (переход к следующему фокусируемому элементу)</span>
+page.get_by_role(<span class="st">"textbox"</span>).press(<span class="st">"Tab"</span>)
+
+<span class="cm"># Hover с модификатором</span>
+page.get_by_text(<span class="st">"Tooltip"</span>).hover(modifiers=[<span class="st">"Shift"</span>])</pre>
+
+<h2>locator.press() — Нажатие клавиш</h2>
+<p>Метод для эмуляции нажатия отдельных клавиш или комбинаций. Поддерживает все стандартные клавиатурные сокращения.</p>
+
+<pre><span class="cm"># Нажатие Enter</span>
+page.get_by_role(<span class="st">"textbox"</span>).press(<span class="st">"Enter"</span>)
+
+<span class="cm"># Переход на следующий элемент (Tab)</span>
+page.get_by_label(<span class="st">"Name"</span>).press(<span class="st">"Tab"</span>)
+
+<span class="cm"># Комбинация Ctrl+A (выделить всё)</span>
+page.get_by_role(<span class="st">"textbox"</span>).press(<span class="st">"Control+A"</span>)
+
+<span class="cm"># Комбинация Ctrl+C (копировать)</span>
+page.get_by_role(<span class="st">"textbox"</span>).press(<span class="st">"Control+C"</span>)
+
+<span class="cm"># Escape для закрытия модального окна</span>
+page.get_by_role(<span class="st">"dialog"</span>).press(<span class="st">"Escape"</span>)
+
+<span class="cm"># Стрелка вниз (для открытия выпадающего списка)</span>
+page.get_by_role(<span class="st">"combobox"</span>).press(<span class="st">"ArrowDown"</span>)
+
+<span class="cm"># Функциональные клавиши</span>
+page.get_by_role(<span class="st">"textbox"</span>).press(<span class="st">"F5"</span>)</pre>
+
+<h2>locator.press_sequentially() — Последовательное нажатие клавиш</h2>
+<p>Вводит текст по одному символу, эмулируя реальный ввод с клавиатуры. В отличие от <code>type()</code>, этот метод работает через события клавиатуры, а не через вставку текста.</p>
+
+<pre><span class="cm"># Последовательный ввод текста с задержкой</span>
+page.get_by_label(<span class="st">"Search"</span>).press_sequentially(<span class="st">"playwright"</span>, delay=<span class="nm">50</span>)
+
+<span class="cm"># Быстрый последовательный ввод (без задержки)</span>
+page.get_by_placeholder(<span class="st">"Введите запрос"</span>).press_sequentially(<span class="st">"тестовый запрос"</span>)</pre>
+
+<h2>locator.dispatch_event() — Низкоуровневая отправка событий</h2>
+<p>Позволяет вручную отправить DOM-событие на элемент. Полезно для тестирования обработчиков событий, когда не требуется полная эмуляция пользовательского ввода.</p>
+
+<pre><span class="cm"># Отправка кастомного события</span>
+page.get_by_role(<span class="st">"button"</span>).dispatch_event(<span class="st">"click"</span>)
+
+<span class="cm"># Отправка события с произвольными данными</span>
+page.get_by_role(<span class="st">"button"</span>).dispatch_event(<span class="st">"custom-event"</span>, detail={ <span class="st">"key"</span>: <span class="st">"value"</span> })
+
+<span class="cm"># Событие change на select</span>
+page.get_by_role(<span class="st">"combobox"</span>).dispatch_event(<span class="st">"change"</span>)</pre>
+
+<h2>locator.scroll_into_view_if_needed() — Скролл до элемента</h2>
+<p>Прокручивает страницу (или родительский контейнер) до тех пор, пока элемент не окажется в видимой области. Полезно для элементов, которые находятся за пределами видимой части страницы.</p>
+
+<pre><span class="cm"># Скролл элемента в видимую область</span>
+page.get_by_text(<span class="st">"Footer content"</span>).scroll_into_view_if_needed()
+
+<span class="cm"># Скролл с таймаутом</span>
+page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Section 10"</span>).scroll_into_view_if_needed(timeout=<span class="nm">10000</span>)</pre>
+
+<h2>locator.triple_click() — Тройной клик</h2>
+<p>Тройной клик обычно используется для выделения текста в редакторах и текстовых полях.</p>
+
+<pre><span class="cm"># Тройной клик</span>
+page.get_by_role(<span class="st">"textbox"</span>).triple_click()
+
+<span class="cm"># Тройной клик с опциями</span>
+page.get_by_label(<span class="st">"Editor"</span>).triple_click(delay=<span class="nm">100</span>, timeout=<span class="nm">5000</span>)</pre>
+
+<h2>Drag-and-Drop — Перетаскивание</h2>
+<p>Playwright поддерживает drag-and-drop как на высоком уровне (через <code>drag_to()</code>), так и на низком уровне (через события мыши).</p>
+
+<h3>locator.drag_to()</h3>
+<pre><span class="cm"># Высокоуровневый drag-and-drop</span>
+source <span class="op">=</span> page.get_by_text(<span class="st">"Drag me"</span>)
+target <span class="op">=</span> page.get_by_text(<span class="st">"Drop here"</span>)
+source.drag_to(target)
+
+<span class="cm"># Drag-and-drop с координатами смещения</span>
+source.drag_to(target, source_position={ <span class="st">"x"</span>: <span class="nm">0</span>, <span class="st">"y"</span>: <span class="nm">0</span> },
+              target_position={ <span class="st">"x"</span>: <span class="nm">10</span>, <span class="st">"y"</span>: <span class="nm">10</span> })</pre>
+
+<h3>Низкоуровневый drag-and-drop</h3>
+<pre><span class="cm"># Ручное управление мышью для сложных сценариев drag-and-drop</span>
+page.mouse.move(<span class="nm">100</span>, <span class="nm">200</span>)
+page.mouse.down()
+page.mouse.move(<span class="nm">300</span>, <span class="nm">400</span>, steps=<span class="nm">10</span>)  <span class="cm"># 10 шагов для плавного перемещения</span>
+page.mouse.up()
+
+<span class="cm"># Пример с локатором</span>
+box <span class="op">=</span> page.get_by_text(<span class="st">"Draggable"</span>).bounding_box()
+page.mouse.move(box[<span class="st">"x"</span>] <span class="op">+</span> box[<span class="st">"width"</span>] <span class="op">/</span> <span class="nm">2</span>, box[<span class="st">"y"</span>] <span class="op">+</span> box[<span class="st">"height"</span>] <span class="op">/</span> <span class="nm">2</span>)
+page.mouse.down()
+page.mouse.move(box[<span class="st">"x"</span>] <span class="op">+</span> <span class="nm">200</span>, box[<span class="st">"y"</span>] <span class="op">+</span> <span class="nm">200</span>, steps=<span class="nm">20</span>)
+page.mouse.up()</pre>
+
+<h2>Загрузка файлов</h2>
+<p>Playwright предлагает несколько способов загрузки файлов — от простого указания пути до перехвата диалога выбора файла.</p>
+
+<h3>locator.set_input_files() — Загрузка через input</h3>
+<pre><span class="cm"># Загрузка одного файла</span>
+page.get_by_label(<span class="st">"Upload file"</span>).set_input_files(<span class="st">"document.pdf"</span>)
+
+<span class="cm"># Загрузка нескольких файлов</span>
+page.get_by_label(<span class="st">"Upload files"</span>).set_input_files([<span class="st">"file1.pdf"</span>, <span class="st">"file2.jpg"</span>])
+
+<span class="cm"># Очистка выбранных файлов (пустой массив)</span>
+page.get_by_label(<span class="st">"Upload"</span>).set_input_files([])</pre>
+
+<h3>Загрузка с FilePayload</h3>
+<p>Можно передать файл программно, указав имя, MIME-тип и содержимое в виде байтов:</p>
+
+<pre><span class="cm"># Создание файла программно (FilePayload)</span>
+page.get_by_label(<span class="st">"Upload"</span>).set_input_files({
+    <span class="st">"name"</span>: <span class="st">"test.txt"</span>,
+    <span class="st">"mimeType"</span>: <span class="st">"text/plain"</span>,
+    <span class="st">"buffer"</span>: <span class="st">b"Hello, Playwright!"</span>
+})
+
+<span class="cm"># Несколько программных файлов</span>
+page.get_by_label(<span class="st">"Upload"</span>).set_input_files([
+    { <span class="st">"name"</span>: <span class="st">"file1.txt"</span>, <span class="st">"mimeType"</span>: <span class="st">"text/plain"</span>, <span class="st">"buffer"</span>: <span class="st">b"Content 1"</span> },
+    { <span class="st">"name"</span>: <span class="st">"file2.csv"</span>, <span class="st">"mimeType"</span>: <span class="st">"text/csv"</span>, <span class="st">"buffer"</span>: <span class="st">b"a,b,c"</span> },
+])</pre>
+
+<h3>Загрузка через page.on("filechooser")</h3>
+<p>Этот способ используется, когда элемент <code>&lt;input type="file"&gt;</code> скрыт или когда нужно перехватить диалог выбора файла в ответ на клик по произвольному элементу.</p>
+
+<pre><span class="cm"># Перехват события filechooser в контекстном менеджере</span>
+<span class="kw">with</span> page.expect_file_chooser() <span class="kw">as</span> fc_info:
+    page.get_by_label(<span class="st">"Upload area"</span>).click()
+file_chooser <span class="op">=</span> fc_info.value
+file_chooser.set_files(<span class="st">"image.png"</span>)
+
+<span class="cm"># Загрузка нескольких файлов через filechooser</span>
+<span class="kw">with</span> page.expect_file_chooser() <span class="kw">as</span> fc_info:
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Upload"</span>).click()
+file_chooser <span class="op">=</span> fc_info.value
+file_chooser.set_files([<span class="st">"photo1.jpg"</span>, <span class="st">"photo2.jpg"</span>])
+
+<span class="cm"># FileChooser с программными файлами</span>
+<span class="kw">with</span> page.expect_file_chooser() <span class="kw">as</span> fc_info:
+    page.locator(<span class="st">".upload-btn"</span>).click()
+file_chooser <span class="op">=</span> fc_info.value
+file_chooser.set_files([
+    { <span class="st">"name"</span>: <span class="st">"report.pdf"</span>, <span class="st">"mimeType"</span>: <span class="st">"application/pdf"</span>, <span class="st">"buffer"</span>: <span class="st">b"PDF content"</span> }
+])</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Метод <code>set_input_files()</code> работает только с элементами <code>&lt;input type="file"&gt;</code>. Если загрузка файла инициируется кликом по произвольному элементу (не input), используйте подход с <code>page.expect_file_chooser()</code>.</p>
+</div>
+
+<h2>Дополнительные методы действий</h2>
+
+<h3>Keyboard API</h3>
+<pre><span class="cm"># Глобальные нажатия клавиш через page.keyboard</span>
+page.keyboard.press(<span class="st">"Control+A"</span>)
+page.keyboard.type(<span class="st">"Hello, World!"</span>, delay=<span class="nm">50</span>)
+page.keyboard.down(<span class="st">"Shift"</span>)
+page.keyboard.press(<span class="st">"End"</span>)
+page.keyboard.up(<span class="st">"Shift"</span>)
+
+<span class="cm"># Вставка текста (аналог fill, но через page)</span>
+page.keyboard.insert_text(<span class="st">"Вставленный текст"</span>)</pre>
+
+<h3>Mouse API</h3>
+<pre><span class="cm"># Клик через глобальный Mouse API</span>
+page.mouse.click(<span class="nm">150</span>, <span class="nm">300</span>)
+page.mouse.dblclick(<span class="nm">150</span>, <span class="nm">300</span>)
+page.mouse.down()
+page.mouse.move(<span class="nm">500</span>, <span class="nm">600</span>)
+page.mouse.up()
+page.mouse.wheel(<span class="nm">0</span>, <span class="nm">500</span>)  <span class="cm"># Скролл колёсиком вниз на 500 пикселей</span></pre>
+
+<h2>Практические примеры</h2>
+
+<h3>Полный сценарий регистрации</h3>
+<pre><span class="kw">def</span> <span class="fn">test_user_registration</span>(page):
+    page.goto(<span class="st">"https://example.com/register"</span>)
+
+    <span class="cm"># Заполнение формы</span>
+    page.get_by_label(<span class="st">"Имя"</span>).fill(<span class="st">"Анна"</span>)
+    page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"anna@example.com"</span>)
+    page.get_by_label(<span class="st">"Пароль"</span>).fill(<span class="st">"SecurePass123!"</span>)
+
+    <span class="cm"># Выбор страны из выпадающего списка</span>
+    page.get_by_role(<span class="st">"combobox"</span>, name=<span class="st">"Страна"</span>).select_option(label=<span class="st">"Россия"</span>)
+
+    <span class="cm"># Отметка чекбокса согласия</span>
+    page.get_by_role(<span class="st">"checkbox"</span>, name=<span class="st">"Согласен с условиями"</span>).check()
+
+    <span class="cm"># Отправка формы</span>
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Зарегистрироваться"</span>).click()
+
+    <span class="cm"># Ожидание перенаправления</span>
+    page.wait_for_url(<span class="st">"**/dashboard"</span>)</pre>
+
+<h3>Drag-and-drop в интерфейсе канбан-доски</h3>
+<pre><span class="kw">def</span> <span class="fn">test_drag_task</span>(page):
+    page.goto(<span class="st">"https://example.com/board"</span>)
+
+    task <span class="op">=</span> page.get_by_text(<span class="st">"Задача #42"</span>)
+    target_column <span class="op">=</span> page.get_by_role(<span class="st">"column"</span>, name=<span class="st">"Готово"</span>)
+
+    <span class="cm"># Перетаскивание задачи в колонку "Готово"</span>
+    task.drag_to(target_column)
+
+    <span class="cm"># Проверка, что задача теперь в колонке "Готово"</span>
+    <span class="kw">assert</span> target_column.get_by_text(<span class="st">"Задача #42"</span>).is_visible()</pre>
+
+<h3>Загрузка аватара</h3>
+<pre><span class="kw">def</span> <span class="fn">test_upload_avatar</span>(page):
+    page.goto(<span class="st">"https://example.com/profile"</span>)
+
+    <span class="cm"># Способ 1: прямая загрузка через input</span>
+    page.get_by_label(<span class="st">"Аватар"</span>).set_input_files(<span class="st">"avatar.jpg"</span>)
+
+    <span class="cm"># Способ 2: через filechooser (если input скрыт)</span>
+    <span class="kw">with</span> page.expect_file_chooser() <span class="kw">as</span> fc_info:
+        page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Загрузить фото"</span>).click()
+    file_chooser <span class="op">=</span> fc_info.value
+    file_chooser.set_files(<span class="st">"avatar.jpg"</span>)
+
+    <span class="cm"># Проверка, что аватар отображается</span>
+    <span class="kw">assert</span> page.get_by_role(<span class="st">"img"</span>, name=<span class="st">"Аватар пользователя"</span>).is_visible()</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> При написании тестов используйте <code>fill()</code> вместо <code>type()</code> или <code>press_sequentially()</code> для полей ввода — это быстрее и надёжнее. <code>type()</code> и <code>press_sequentially()</code> используйте только когда важно протестировать поведение, зависящее от событий нажатия клавиш (например, автодополнение).</p>
+</div>
+
+<h2>Заключение</h2>
+<p>Playwright предоставляет исчерпывающий набор методов для взаимодействия с веб-страницами. Все методы автоматически ожидают готовности элемента, что значительно упрощает написание стабильных тестов. При возникновении необычных ситуаций всегда можно использовать <code>force=True</code> для обхода проверок или <code>dispatch_event()</code> для низкоуровневой отправки событий.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

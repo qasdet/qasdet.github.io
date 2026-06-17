@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Playwright Python — Страницы (Page)</title><link rel="stylesheet" href="playru-style.css"></head>
+<body>
+<div class="header"><div class="header-inner"><a href="index.html">Playwright Python — справочник</a><a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a></div></div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link active" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header"><h1>Страницы (Page)</h1><p>Управление вкладками, навигация и multi-page сценарии</p></div>
+<div class="card">
+
+<h2>Что такое Page?</h2>
+<p><strong>Page</strong> — это отдельная вкладка браузера. Вся работа с элементами, навигацией и событиями происходит через объект <span class="fn">Page</span>. Страница всегда принадлежит конкретному <span class="fn">BrowserContext</span>.</p>
+
+<h2>Создание страницы</h2>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser = p.chromium.launch()
+    context = browser.new_context()
+
+    <span class="cm"># Через контекст</span>
+    page = context.new_page()
+
+    <span class="cm"># Напрямую от браузера (создаётся новый контекст)</span>
+    page2 = browser.new_page()</code></pre>
+
+<h2>Основные методы навигации</h2>
+<pre><code>page.goto(<span class="st">"https://example.com"</span>)
+html = page.content()           <span class="cm"># весь HTML страницы</span>
+title = page.title()            <span class="cm"># заголовок страницы</span>
+url = page.url()                <span class="cm"># текущий URL</span></code></pre>
+
+<h2>Работа с контентом</h2>
+<p>Метод <span class="fn">page.set_content()</span> позволяет установить HTML напрямую:</p>
+<pre><code>page.set_content(<span class="st">"&lt;h1&gt;Привет, мир!&lt;/h1&gt;&lt;p&gt;Это тест&lt;/p&gt;"</span>)
+<span class="kw">print</span>(page.textContent(<span class="st">"h1"</span>))  <span class="cm"># "Привет, мир!"</span></code></pre>
+
+<h2>Поиск элементов и локаторы</h2>
+<pre><code>locator = page.locator(<span class="st">".my-class"</span>)
+button = page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Отправить"</span>)
+frame = page.frame_locator(<span class="st">"iframe#content"</span>)</code></pre>
+
+<h2>Выполнение JavaScript</h2>
+<pre><code>result = page.evaluate(<span class="st">"() => document.title"</span>)
+<span class="kw">print</span>(result)
+
+handle = page.evaluate_handle(<span class="st">"() => window"</span>)</code></pre>
+
+<h2>Popup-окна</h2>
+<p>При клике, открывающем новое окно, используйте <span class="fn">expect_popup()</span>:</p>
+<pre><code><span class="kw">with</span> page.expect_popup() <span class="kw">as</span> popup_info:
+    page.get_by_text(<span class="st">"Открыть в новом окне"</span>).click()
+
+new_page = popup_info.value
+new_page.wait_for_load_state()
+<span class="kw">print</span>(new_page.title())</code></pre>
+
+<h2>Событие popup через page.on</h2>
+<pre><code><span class="kw">def</span> <span class="fn">on_popup</span>(popup):
+    popup.wait_for_load_state()
+    <span class="kw">print</span>(<span class="st">f"Popup URL: {popup.url}"</span>)
+
+page.on(<span class="st">"popup"</span>, on_popup)</code></pre>
+
+<h2>Ожидание новой страницы в контексте</h2>
+<pre><code><span class="kw">with</span> context.expect_page() <span class="kw">as</span> page_info:
+    <span class="cm"># действие, которое открывает новую вкладку</span>
+    page.click(<span class="st">"a[target=_blank]"</span>)
+
+new_page = page_info.value</code></pre>
+
+<h2>Переключение между вкладками</h2>
+<pre><code><span class="cm"># Перевести фокус на вкладку</span>
+page.bring_to_front()
+
+<span class="cm"># Список всех страниц в контексте</span>
+<span class="kw">for</span> p <span class="kw">in</span> context.pages:
+    <span class="kw">print</span>(p.title())</code></pre>
+
+<h2>Закрытие страницы</h2>
+<pre><code>page.close()</code></pre>
+
+<h2>Автозакрытие модалок (locator handler)</h2>
+<p><span class="fn">page.add_locator_handler()</span> автоматически закрывает всплывающие окна или модальные диалоги при их появлении:</p>
+<pre><code><span class="cm"># Автоматически закрывать cookie-баннер</span>
+page.add_locator_handler(
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Принять"</span>),
+    handler=<span class="kw">lambda</span> btn: btn.click()
+)</code></pre>
+
+<h2>Multi-page сценарии</h2>
+<pre><code><span class="kw">def</span> <span class="fn">test_multi_page</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> pw:
+        browser = pw.chromium.launch()
+        page1 = browser.new_page()
+        page2 = browser.new_page()
+
+        page1.goto(<span class="st">"https://example.com"</span>)
+        page2.goto(<span class="st">"https://playwright.dev"</span>)
+
+        <span class="kw">print</span>(page1.title())
+        <span class="kw">print</span>(page2.title())
+
+        page1.close()
+        page2.close()</code></pre>
+
+<h2>page.pause() — пауза для отладки</h2>
+<p>Открывает инспектор Playwright для пошаговой отладки:</p>
+<pre><code>page.pause()</code></pre>
+
+<h2>page.opener()</h2>
+<p>Возвращает страницу, которая открыла текущую (если она была открыта как popup):</p>
+<pre><code><span class="kw">with</span> page.expect_popup() <span class="kw">as</span> popup_info:
+    page.click(<span class="st">"#open"</span>)
+
+popup = popup_info.value
+opener = popup.opener()
+<span class="kw">assert</span> opener <span class="kw">is</span> page</code></pre>
+
+<h2>Полный пример</h2>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">main</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser = p.chromium.launch(headless=<span class="kw">False</span>)
+        page = browser.new_page()
+        page.goto(<span class="st">"https://example.com"</span>)
+        page.fill(<span class="st">"#search"</span>, <span class="st">"Playwright"</span>)
+        page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Поиск"</span>).click()
+        page.wait_for_load_state(<span class="st">"networkidle"</span>)
+        <span class="kw">print</span>(<span class="st">f"Результаты: {page.title()}"</span>)
+        page.close()
+        browser.close()
+
+main()</code></pre>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

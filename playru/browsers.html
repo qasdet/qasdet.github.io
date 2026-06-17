@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Playwright Python — Браузеры</title><link rel="stylesheet" href="playru-style.css"></head>
+<body>
+<div class="header"><div class="header-inner"><a href="index.html">Playwright Python — справочник</a><a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a></div></div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link active" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header"><h1>Браузеры</h1><p>Запуск, настройка и управление браузерами в Playwright Python</p></div>
+<div class="card">
+
+<h2>Обзор</h2>
+<p>Playwright поддерживает три движка браузеров: <strong>Chromium</strong>, <strong>Firefox</strong> и <strong>WebKit</strong>. Каждый из них запускается через соответствующий метод объекта <span class="fn">playwright</span>.</p>
+
+<h2>Запуск браузера</h2>
+<p>Для запуска браузера используется метод <span class="fn">launch()</span>:</p>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser = p.chromium.launch()
+    <span class="cm"># Firefox: p.firefox.launch()</span>
+    <span class="cm"># WebKit:  p.webkit.launch()</span></code></pre>
+
+<div class="box box-info">
+<strong>Важно:</strong> Playwright автоматически загружает браузеры при первом запуске. Убедитесь, что выполнена команда <code>playwright install</code>.
+</div>
+
+<h2>Опции launch()</h2>
+<table>
+<tr><th>Параметр</th><th>Описание</th></tr>
+<tr><td><code>headless</code></td><td>Запуск в фоновом режиме (по умолчанию <span class="kw">True</span>). Установите <span class="kw">False</span> для видимого окна.</td></tr>
+<tr><td><code>channel</code></td><td>Канал браузера: <span class="st">"chrome"</span>, <span class="st">"msedge"</span>, <span class="st">"chrome-beta"</span> и т.д.</td></tr>
+<tr><td><code>args</code></td><td>Список дополнительных аргументов командной строки.</td></tr>
+<tr><td><code>executable_path</code></td><td>Путь к исполняемому файлу браузера.</td></tr>
+<tr><td><code>downloads_path</code></td><td>Папка для сохранения загруженных файлов.</td></tr>
+<tr><td><code>proxy</code></td><td>Настройки прокси-сервера.</td></tr>
+<tr><td><code>slow_mo</code></td><td>Задержка (в мс) между действиями — полезна для отладки.</td></tr>
+<tr><td><code>timeout</code></td><td>Тайм-аут ожидания (мс).</td></tr>
+</table>
+
+<h3>Пример с headless = False</h3>
+<pre><code>browser = p.chromium.launch(
+    headless=<span class="kw">False</span>,
+    slow_mo=500
+)</code></pre>
+
+<h2>Канал браузера (channel)</h2>
+<p>Позволяет запускать системный браузер вместо встроенного:</p>
+<pre><code><span class="cm"># Запуск системного Chrome или Edge</span>
+browser = p.chromium.launch(channel=<span class="st">"chrome"</span>)
+<span class="cm"># или</span>
+browser = p.chromium.launch(channel=<span class="st">"msedge"</span>)</code></pre>
+
+<h2>Browser.new_context() и Browser.new_page()</h2>
+<p>После запуска браузера создаётся <strong>браузерный контекст</strong> — изолированная сессия:</p>
+<pre><code>context = browser.new_context(
+    viewport={<span class="st">"width"</span>: 1920, <span class="st">"height"</span>: 1080},
+    locale=<span class="st">"ru-RU"</span>
+)
+page = context.new_page()</code></pre>
+<p>Метод <span class="fn">browser.new_page()</span> создаёт страницу в новом контексте за один шаг:</p>
+<pre><code>page = browser.new_page()</code></pre>
+
+<h2>Browser.version и Browser.browser_type</h2>
+<pre><code><span class="kw">print</span>(browser.version)       <span class="cm"># "130.0.6723.58"</span>
+<span class="kw">print</span>(browser.browser_type)  <span class="cm"># BrowserType: chromium</span></code></pre>
+
+<h2>Кастомные аргументы (args)</h2>
+<pre><code>browser = p.chromium.launch(
+    args=[
+        <span class="st">"--disable-blink-features=AutomationControlled"</span>,
+        <span class="st">"--disable-web-security"</span>,
+        <span class="st">"--window-size=1920,1080"</span>
+    ]
+)</code></pre>
+
+<h2>Подключение к существующему браузеру (CDP)</h2>
+<p>Метод <span class="fn">connect_over_cdp()</span> подключается к уже запущенному браузеру через протокол DevTools:</p>
+<pre><code>browser = p.chromium.connect_over_cdp(<span class="st">"http://localhost:9222"</span>)
+context = browser.contexts[0]    <span class="cm"># используем существующий контекст</span>
+page = context.pages[0]</code></pre>
+
+<h2>Browser.close() — закрытие браузера</h2>
+<p>Всегда закрывайте браузер после завершения работы:</p>
+<pre><code>browser.close()</code></pre>
+<p>Внутри <span class="kw">with</span> блока Playwright закрывает браузер автоматически.</p>
+
+<h2>Обработка закрытия браузера</h2>
+<p>Событие <span class="fn">on("disconnected")</span> срабатывает при отключении браузера:</p>
+<pre><code>def on_disconnected(browser):
+    <span class="kw">print</span>(<span class="st">"Браузер отключён"</span>)
+
+browser.on(<span class="st">"disconnected"</span>, on_disconnected)</code></pre>
+
+<h2>Полный пример</h2>
+<pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">run</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser = p.chromium.launch(
+            headless=<span class="kw">False</span>,
+            args=[<span class="st">"--window-size=1280,720"</span>]
+        )
+        page = browser.new_page()
+        page.goto(<span class="st">"https://example.com"</span>)
+        <span class="kw">print</span>(<span class="st">f"Версия: {browser.version}"</span>)
+        browser.close()
+
+run()</code></pre>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

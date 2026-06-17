@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Расширяемость</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link active" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Расширяемость (Extensibility)</h1>
+<p>Кастомные селекторы, скрипты инициализации, перехват запросов, API-hooks, плагины для pytest-playwright и расширение стандартного поведения Playwright.</p>
+</div>
+<div class="card">
+<h2>Кастомные селекторы</h2>
+<p>Playwright позволяет регистрировать собственные обработчики селекторов через <code>playwright.selectors.register()</code>. Это полезно, когда стандартные локаторы не подходят для вашей специфической разметки.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">data_qa_selector</span>(attribute, value):
+    <span class="st">"""Кастомный селектор для data-qa атрибутов"""</span>
+    <span class="kw">return</span> <span class="st">f'[data-qa="{value}"]'</span>
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    <span class="cm"># Регистрация кастомного селектора</span>
+    p.selectors.register(<span class="st">"qa"</span>, data_qa_selector)
+
+    browser <span class="op">=</span> p.chromium.launch()
+    page <span class="op">=</span> browser.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Использование: page.locator("qa=submit-btn")</span>
+    page.locator(<span class="st">"qa=submit-btn"</span>).click()</pre>
+
+<div class="box box-info">
+<p><strong>Механизм работы:</strong> Функция-обработчик принимает три параметра: <code>(attribute, value, selector)</code>. Она должна вернуть строку с CSS-селектором или <code>None</code>, если селектор не подходит. Зарегистрированный селектор доступен во всех браузерах и контекстах.</p>
+</div>
+
+<h3>Регистрация на основе get_by_text</h3>
+<pre><span class="cm"># Кастомный селектор для элементов, содержащих иконку</span>
+<span class="kw">def</span> <span class="fn">icon_selector</span>(attribute, value):
+    <span class="kw">return</span> <span class="st">f'[class*="icon-{value}"]'</span>
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    p.selectors.register(<span class="st">"icon"</span>, icon_selector)
+    page <span class="op">=</span> p.chromium.launch().new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Используем кастомный селектор в цепочке с get_by_text</span>
+    <span class="cm"># page.get_by_text("Настройки").locator("icon=settings")</span>
+    page.get_by_text(<span class="st">"Настройки"</span>).click()</pre>
+
+<h2>Кастомные скрипты инициализации</h2>
+<p>Методы <code>context.add_init_script()</code> и <code>page.add_init_script()</code> позволяют внедрить JavaScript-код на страницу до загрузки любых скриптов приложения. Это идеально для настройки тестового окружения, мокирования API, изменения времени или переопределения глобальных объектов.</p>
+
+<h3>context.add_init_script()</h3>
+<p>Скрипт выполняется на каждой странице внутри контекста перед загрузкой контента.</p>
+
+<pre><span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    context <span class="op">=</span> browser.new_context()
+
+    <span class="cm"># Внедрение скрипта для мокирования геолокации</span>
+    context.add_init_script(<span class="st">"""
+        navigator.geolocation.getCurrentPosition = (success) => {
+            success({ coords: { latitude: 55.7558, longitude: 37.6173 } });
+        };
+    """</span>)
+
+    <span class="cm"># Мокирование времени</span>
+    context.add_init_script(<span class="st">"""
+        Date.now = () => 1700000000000;
+    """</span>)
+
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)</pre>
+
+<h3>page.add_init_script() с файлом</h3>
+<p>Вы также можете загрузить скрипт из внешнего файла.</p>
+
+<pre><span class="cm"># inject.js — содержимое файла</span>
+<span class="cm">// Переопределение консольных методов для сбора логов</span>
+<span class="kw">const</span> originalLog <span class="op">=</span> console.log;
+console.log <span class="op">=</span> <span class="kw">function</span>(...args) {
+    window.__testLogs <span class="op">=</span> window.__testLogs <span class="op">||</span> [];
+    window.__testLogs.push(args);
+    originalLog.apply(console, args);
+};</pre>
+
+<pre><span class="cm"># В тесте</span>
+page.add_init_script(path=<span class="st">"inject.js"</span>)
+page.goto(<span class="st">"https://example.com"</span>)
+page.evaluate(<span class="st">"console.log('тестовое сообщение')"</span>)
+logs <span class="op">=</span> page.evaluate(<span class="st">"window.__testLogs"</span>)
+<span class="kw">print</span>(logs)  <span class="cm"># [['тестовое сообщение']]</span></pre>
+
+<div class="box box-tip">
+<p><strong>Применения:</strong> add_init_script часто используется для мокирования сторонних сервисов (аналитика, реклама, виджеты), подмены API-эндпоинтов, эмуляции определённого состояния приложения и сбора метрик.</p>
+</div>
+
+<h2>Кастомная обработка запросов: page.route()</h2>
+<p>Метод <code>page.route()</code> позволяет перехватывать и модифицировать HTTP-запросы. Это мощный инструмент для мокирования API, блокировки нежелательных ресурсов и тестирования边缘-кейсов.</p>
+
+<pre><span class="kw">def</span> <span class="fn">handle_request</span>(route):
+    <span class="cm">"""Обработчик запросов: блокируем аналитику, мокаем API"""</span>
+    url <span class="op">=</span> route.request.url
+    <span class="kw">if</span> <span class="st">"analytics"</span> <span class="kw">in</span> url:
+        route.abort()
+    <span class="kw">elif</span> <span class="st">"/api/users"</span> <span class="kw">in</span> url:
+        route.fulfill(
+            status=<span class="nm">200</span>,
+            content_type=<span class="st">"application/json"</span>,
+            body=<span class="st">'{"users": [{"id": 1, "name": "Тестовый"}]}'</span>
+        )
+    <span class="kw">else</span>:
+        route.continue_()
+
+page.route(<span class="st">"**/*"</span>, handle_request)</pre>
+
+<h3>Пример: блокировка изображений для ускорения тестов</h3>
+<pre>page.route(<span class="st">"**/*.{png,jpg,jpeg,gif,svg,webp}"</span>, <span class="kw">lambda</span> route: route.abort())</pre>
+
+<h3>Пример: эмуляция сетевых ошибок</h3>
+<pre><span class="kw">import</span> asyncio
+
+<span class="kw">async def</span> <span class="fn">timeout_handler</span>(route):
+    <span class="kw">await</span> asyncio.sleep(<span class="nm">30</span>)  <span class="cm"># Имитация таймаута</span>
+    route.abort()
+
+<span class="cm"># Для 1% запросов имитируем network error</span>
+<span class="kw">def</span> <span class="fn">error_handler</span>(route):
+    route.abort(<span class="st">"connectionrefused"</span>)</pre>
+
+<h2>API hooks: playwright.on("browser", handler)</h2>
+<p>Playwright предоставляет события для отслеживания создания браузеров, контекстов и страниц. Это позволяет внедрять кастомную логику на каждом этапе жизненного цикла.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">on_browser</span>(browser):
+    <span class="kw">print</span>(<span class="st">f"Браузер запущен: {browser.browser_type.name}"</span>)
+
+<span class="kw">def</span> <span class="fn">on_context</span>(context):
+    <span class="kw">print</span>(<span class="st">"Новый контекст создан"</span>)
+    <span class="cm"># Автоматически добавляем init script в каждый контекст</span>
+    context.add_init_script(<span class="st">"console.log('init')"</span>)
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    p.on(<span class="st">"browser"</span>, on_browser)
+    p.on(<span class="st">"context"</span>, on_context)
+
+    browser <span class="op">=</span> p.chromium.launch()
+    context <span class="op">=</span> browser.new_context()</pre>
+
+<h2>Создание плагинов для pytest-playwright</h2>
+<p>pytest-playwright основан на системе хуков pytest. Вы можете создавать плагины, которые расширяют его функциональность, используя стандартный механизм pytest-плагинов.</p>
+
+<pre><span class="cm"># plugin.py — простой плагин для логирования</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+<span class="kw">@pytest.hookimpl</span>(tryfirst=<span class="kw">True</span>)
+<span class="kw">def</span> <span class="fn">pytest_runtest_protocol</span>(item, nextitem):
+    <span class="kw">print</span>(<span class="st">f"[{datetime.now()}] Запуск: {item.name}"</span>)
+
+<span class="kw">@pytest.hookimpl</span>
+<span class="kw">def</span> <span class="fn">pytest_runtest_makereport</span>(item, call):
+    <span class="kw">if</span> call.when <span class="op">==</span> <span class="st">"call"</span> <span class="kw">and</span> call.excinfo <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:
+        <span class="kw">print</span>(<span class="st">f"[{datetime.now()}] ПАДЕНИЕ: {item.name}"</span>)
+        <span class="cm"># Получаем page из теста</span>
+        page <span class="op">=</span> item.funcargs.get(<span class="st">"page"</span>)
+        <span class="kw">if</span> page:
+            page.screenshot(path=<span class="st">f"screenshots/{item.name}_failed.png"</span>)</pre>
+
+<pre><span class="cm"># conftest.py — регистрация плагина</span>
+pytest_plugins = [<span class="st">"plugin"</span>]</pre>
+
+<div class="box box-info">
+<p>Плагины pytest и pytest-playwright могут переопределять фикстуры, добавлять новые CLI-опции, обрабатывать события тестового прогона и интегрироваться с отчётами. Это основа для создания корпоративных фреймворков тестирования.</p>
+</div>
+
+<h2>Расширение фикстур pytest</h2>
+<p>Вы можете создавать свои фикстуры, расширяющие или оборачивающие стандартные фикстуры pytest-playwright.</p>
+
+<pre><span class="cm"># conftest.py</span>
+<span class="kw">import</span> pytest
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> BrowserContext
+
+<span class="kw">@pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">authenticated_context</span>(context: BrowserContext):
+    <span class="st">"Фикстура с предустановленной авторизацией"</span>
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com/login"</span>)
+    page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"admin@example.com"</span>)
+    page.get_by_label(<span class="st">"Пароль"</span>).fill(<span class="st">"admin123"</span>)
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Войти"</span>).click()
+
+    <span class="cm"># Сохраняем состояние аутентификации</span>
+    context.storage_state(path=<span class="st">"auth.json"</span>)
+    page.close()
+
+    <span class="cm"># Создаём новый контекст с сохранённым состоянием</span>
+    <span class="kw">with</span> context.browser.new_context(storage_state=<span class="st">"auth.json"</span>) <span class="kw">as</span> new_context:
+        <span class="kw">yield</span> new_context
+
+<span class="kw">@pytest.fixture</span>
+<span class="kw">def</span> <span class="fn">tracking_page</span>(page):
+    <span class="st">"Фикстура с блокировкой трекеров"</span>
+    page.route(<span class="st">"**/*.google-analytics.com/**"</span>, <span class="kw">lambda</span> route: route.abort())
+    <span class="kw">yield</span> page</pre>
+
+<h2>Кастомные таймауты и retry-логика</h2>
+<p>Playwright позволяет настраивать таймауты глобально, на уровне контекста или для отдельных действий. Вы также можете реализовать свою retry-логику для неустойчивых элементов.</p>
+
+<pre><span class="kw">import</span> functools
+<span class="kw">import</span> time
+
+<span class="kw">def</span> <span class="fn">retry</span>(max_attempts=<span class="nm">3</span>, delay=<span class="nm">1.0</span>):
+    <span class="st">"Декоратор для повторных попыток"</span>
+    <span class="kw">def</span> <span class="fn">decorator</span>(func):
+        <span class="kw">@functools.wraps</span>(func)
+        <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+            last_exc <span class="op">=</span> <span class="kw">None</span>
+            <span class="kw">for</span> attempt <span class="kw">in</span> <span class="fn">range</span>(max_attempts):
+                <span class="kw">try</span>:
+                    <span class="kw">return</span> func(*args, **kwargs)
+                <span class="kw">except</span> Exception <span class="kw">as</span> e:
+                    last_exc <span class="op">=</span> e
+                    <span class="kw">if</span> attempt <span class="op">&lt;</span> max_attempts <span class="op">-</span> <span class="nm">1</span>:
+                        time.sleep(delay)
+            <span class="kw">raise</span> last_exc
+        <span class="kw">return</span> wrapper
+    <span class="kw">return</span> decorator
+
+<span class="cm"># Использование</span>
+<span class="kw">@retry</span>(max_attempts=<span class="nm">5</span>, delay=<span class="nm">0.5</span>)
+<span class="kw">def</span> <span class="fn">click_with_retry</span>(locator):
+    locator.click()
+
+<span class="cm"># Глобальная настройка таймаутов</span>
+page.set_default_timeout(<span class="nm">15000</span>)  <span class="cm"># 15 секунд для всех действий</span>
+
+<span class="cm"># Таймаут для конкретного действия</span>
+page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).click(timeout=<span class="nm">30000</span>)  <span class="cm"># 30 секунд</span></pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Использование собственной retry-логики может маскировать реальные проблемы с тестами. Playwright уже имеет встроенное автоматическое ожидание (auto-waiting) для большинства действий. Применяйте retry только когда стандартного ожидания недостаточно (например, при анимациях перехода между страницами).</p>
+</div>
+
+<h2>Переопределение поведения по умолчанию</h2>
+<p>Playwright позволяет переопределить практически любое поведение по умолчанию через фикстуры pytest-playwright.</p>
+
+<pre><span class="cm"># conftest.py — переопределение browser_context_args</span>
+<span class="kw">@pytest.fixture</span>(scope=<span class="st">"session"</span>)
+<span class="kw">def</span> <span class="fn">browser_context_args</span>(browser_context_args):
+    <span class="kw">return</span> {
+        **browser_context_args,
+        <span class="st">"viewport"</span>: {<span class="st">"width"</span>: <span class="nm">1440</span>, <span class="st">"height"</span>: <span class="nm">900</span>},
+        <span class="st">"locale"</span>: <span class="st">"de-DE"</span>,
+        <span class="st">"timezone_id"</span>: <span class="st">"Europe/Berlin"</span>,
+        <span class="st">"permissions"</span>: [<span class="st">"geolocation"</span>],
+        <span class="st">"geolocation"</span>: {<span class="st">"latitude"</span>: <span class="nm">52.52</span>, <span class="st">"longitude"</span>: <span class="nm">13.405</span>},
+    }
+
+<span class="cm"># Переопределение контекста для всех тестов</span>
+<span class="kw">@pytest.fixture</span>(scope=<span class="st">"session"</span>)
+<span class="kw">def</span> <span class="fn">browser_context_args</span>(browser_context_args):
+    <span class="kw">return</span> {
+        <span class="st">"ignore_https_errors"</span>: <span class="kw">True</span>,
+        <span class="st">"user_agent"</span>: <span class="st">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) Custom/1.0"</span>,
+        <span class="st">"extra_http_headers"</span>: {<span class="st">"X-Test-Run"</span>: <span class="st">"true"</span>},
+    }
+
+<span class="cm"># Переопределение браузера</span>
+<span class="kw">@pytest.fixture</span>(scope=<span class="st">"session"</span>)
+<span class="kw">def</span> <span class="fn">browser</span>(playwright):
+    <span class="kw">return</span> playwright.chromium.launch(
+        headless=<span class="kw">True</span>,
+        args=[<span class="st">"--disable-gpu"</span>, <span class="st">"--no-sandbox"</span>],
+    )</pre>
+
+<h2>Заключение</h2>
+<p>Playwright предоставляет множество точек расширения: от кастомных селекторов и скриптов инициализации до полноценных плагинов для pytest. Используйте эти возможности для адаптации инструмента под специфические требования вашего проекта: мокирование внешних сервисов, блокировка нежелательных ресурсов, автоматическая авторизация и кастомная обработка ошибок.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

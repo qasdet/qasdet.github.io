@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Установка</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link active" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Установка Playwright</h1>
+<p>Полное руководство по установке Playwright для Python: библиотека, браузеры, системные зависимости и проверка.</p>
+</div>
+<div class="card">
+<h2>Системные требования</h2>
+<p>Playwright для Python работает на всех основных операционных системах:</p>
+<ul>
+<li><strong>Windows</strong> — Windows 10/11, Windows Server 2019+</li>
+<li><strong>macOS</strong> — macOS 12 (Monterey) и новее</li>
+<li><strong>Linux</strong> — Ubuntu 20.04+, Debian 11+, Fedora 37+, Alpine 3.16+</li>
+</ul>
+<p><strong>Требования к Python:</strong> версия 3.8 или выше. Рекомендуется использовать Python 3.11+ для лучшей производительности.</p>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Playwright не поддерживает Python 2.x. Убедитесь, что у вас установлена актуальная версия Python 3.</p>
+</div>
+
+<h2>Установка пакета pytest-playwright</h2>
+<p>Самый удобный способ начать работу с Playwright в Python — установить пакет <code>pytest-playwright</code>, который включает саму библиотеку Playwright и плагин для интеграции с pytest:</p>
+
+<pre><span class="cm"># Установка через pip</span>
+pip install pytest-playwright</pre>
+
+<p>Если вам не нужна интеграция с pytest (например, вы используете unittest или хотите использовать Playwright как библиотеку), установите только ядро:</p>
+
+<pre><span class="cm"># Установка только библиотеки Playwright</span>
+pip install playwright</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Всегда устанавливайте пакеты в виртуальное окружение. Это изолирует зависимости вашего проекта и предотвращает конфликты версий.</p>
+</div>
+
+<h2>Установка браузеров</h2>
+<p>После установки Python-пакета необходимо скачать браузеры. Playwright использует собственные сборки Chromium, Firefox и WebKit, которые не зависят от установленных в системе браузеров:</p>
+
+<pre><span class="cm"># Установка всех браузеров (Chromium, Firefox, WebKit)</span>
+playwright install</pre>
+
+<p>Эта команда скачает браузеры в системную папку (обычно <code>~/.cache/ms-playwright</code> на Linux/macOS или <code>%USERPROFILE%\AppData\Local\ms-playwright</code> на Windows). Общий размер загрузки — около 400–500 МБ для всех трёх браузеров.</p>
+
+<h3>Установка конкретного браузера</h3>
+<p>Если вам нужен только один браузер (например, только Chromium для CI-среды), вы можете установить его отдельно:</p>
+
+<pre>playwright install chromium
+playwright install firefox
+playwright install webkit</pre>
+
+<h3>Системные зависимости для Linux</h3>
+<p>На Linux для корректной работы браузеров требуются дополнительные системные библиотеки. Playwright может установить их автоматически:</p>
+
+<pre>playwright install-deps</pre>
+
+<div class="box box-warning">
+<p><strong>Внимание:</strong> Команда <code>install-deps</code> требует прав суперпользователя (sudo), так как устанавливает пакеты через системный пакетный менеджер (apt, yum, apk). В контейнерах Docker это обычно не требуется, так как зависимости уже включены в образ.</p>
+</div>
+
+<p>На Windows и macOS системные зависимости устанавливать не нужно — все необходимые библиотеки либо уже присутствуют в системе, либо включены в сборку браузера.</p>
+
+<h2>Установка в виртуальном окружении</h2>
+<p>Рекомендуемый способ организации проекта с Playwright:</p>
+
+<pre><span class="cm"># Создание виртуального окружения</span>
+python -m venv .venv
+
+<span class="cm"># Активация (Windows)</span>
+.venv\Scripts\activate
+
+<span class="cm"># Активация (macOS / Linux)</span>
+<span class="cm"># source .venv/bin/activate</span>
+
+<span class="cm"># Установка Playwright</span>
+pip install pytest-playwright
+
+<span class="cm"># Установка браузеров</span>
+playwright install</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Добавьте папку <code>.venv</code> в файл <code>.gitignore</code>, чтобы не коммитить виртуальное окружение в репозиторий. Папку с браузерами (<code>~/.cache/ms-playwright</code>) также не нужно коммитить — её содержимое воспроизводится командой <code>playwright install</code>.</p>
+</div>
+
+<h2>Проверка установки</h2>
+<p>Чтобы убедиться, что всё установлено корректно, выполните:</p>
+
+<pre>playwright --version</pre>
+
+<p>Вы должны увидеть номер версии, например:</p>
+
+<pre>Version 1.61.0</pre>
+
+<p>Также можно запустить простой скрипт, который открывает браузер и проверяет его работу:</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    page <span class="op">=</span> browser.new_page()
+    page.goto(<span class="st">"https://playwright.dev"</span>)
+    <span class="kw">print</span>(page.title())
+    browser.close()</pre>
+
+<p>Если скрипт выполнился без ошибок и вывел заголовок страницы — установка прошла успешно.</p>
+
+<h2>Установка через Docker</h2>
+<p>Microsoft предоставляет официальные Docker-образы с предустановленным Playwright и всеми необходимыми зависимостями:</p>
+
+<pre><span class="cm"># Базовый образ с Playwright и Python</span>
+docker pull mcr.microsoft.com/playwright/python:v1.61.0
+
+<span class="cm"># Запуск тестов в контейнере</span>
+docker run -it --rm -v <span class="st">$(pwd)</span>:/tests mcr.microsoft.com/playwright/python:v1.61.0 pytest /tests</pre>
+
+<p>Доступны образы для разных версий Python и Playwright. Список тегов можно найти на <a href="https://mcr.microsoft.com/en-us/product/playwright/python/about" style="color:var(--primary);">Microsoft Container Registry</a>.</p>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Docker-образы включают все три браузера (Chromium, Firefox, WebKit) и их системные зависимости. Это идеальный вариант для CI/CD-пайплайнов.</p>
+</div>
+
+<h2>Установка в CI (GitHub Actions)</h2>
+<p>Пример настройки для GitHub Actions:</p>
+
+<pre>name: Playwright Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        <span class="kw">with</span>:
+          python-version: <span class="st">"3.12"</span>
+      - run: pip install pytest-playwright
+      - run: playwright install
+      - run: playwright install-deps
+      - run: pytest</pre>
+
+<h2>Установка на Alpine Linux</h2>
+<p>На Alpine Linux (часто используется в минимальных Docker-образах) установка требует дополнительных шагов:</p>
+
+<pre>apk add --no-cache python3 py3-pip
+pip install playwright
+playwright install chromium
+playwright install-deps</pre>
+
+<h2>Часто задаваемые вопросы</h2>
+<h3>Можно ли использовать установленный в системе браузер?</h3>
+<p>По умолчанию Playwright использует собственные сборки браузеров. Однако вы можете указать путь к системному браузеру через параметр <code>executable_path</code> при запуске. Это может быть полезно, если у вас ограничено дисковое пространство или вы хотите тестировать конкретную версию браузера.</p>
+
+<h3>Как обновить Playwright и браузеры?</h3>
+<pre>pip install --upgrade playwright pytest-playwright
+playwright install</pre>
+
+<h3>Можно ли установить Playwright глобально?</h3>
+<p>Технически — да, но крайне не рекомендуется. Всегда используйте виртуальное окружение. Глобальная установка может привести к конфликтам зависимостей между разными проектами.</p>
+
+<h3>Ошибка «playwright: command not found»</h3>
+<p>Это означает, что утилита командной строки не добавлена в PATH. Убедитесь, что виртуальное окружение активировано. Если проблема остаётся, запустите <code>python -m playwright install</code> вместо <code>playwright install</code>.</p>
+
+<pre>python -m playwright install</pre>
+
+<h3>Ошибка «BrowserType.launch: Executable doesn't exist»</h3>
+<p>Браузеры не установлены. Выполните <code>playwright install</code> (или <code>python -m playwright install</code>), чтобы скачать сборки браузеров.</p>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> После установки всех компонентов переходите к разделу <a href="writing-tests.html">Написание тестов</a>, чтобы изучить основы создания тестов с Playwright.</p>
+</div>
+</div>
+<div class="footer">
+Playwright Python — полный справочник на русском языке
+</div>
+</main>
+</div>
+</body>
+</html>

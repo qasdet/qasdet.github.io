@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Просмотрщик трассировок (Trace Viewer)</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link active" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Просмотрщик трассировок (Trace Viewer)</h1>
+<p>Запись и анализ трассировок выполнения тестов. Пошаговый просмотр действий, DOM-состояний, сетевых запросов и консольных логов.</p>
+</div>
+<div class="card">
+<h2>Что такое трассировка</h2>
+<p>Трассировка (trace) — это полная запись выполнения теста: каждое действие, состояние DOM, все сетевые запросы, консольные сообщения, скриншоты и снимки экрана. Trace Viewer — это встроенный инструмент Playwright для визуального анализа этих данных. Он незаменим при отладке упавших тестов и изучении поведения приложения.</p>
+
+<div class="box box-info">
+<p><strong>Важно:</strong> Трассировка не влияет на скорость выполнения теста в продакшене. Включайте её только при необходимости отладки или в CI при падениях.</p>
+</div>
+
+<h2>Запись трассировки в тестах</h2>
+
+<h3>Через pytest (рекомендовано)</h3>
+<p>Самый простой способ — использовать встроенную фикстуру <code>--tracing</code> при запуске тестов:</p>
+
+<pre><span class="cm"># Запись трассировки для всех тестов</span>
+pytest --tracing on
+
+<span class="cm"># Трассировка только при падении теста</span>
+pytest --tracing retain-on-failure
+
+<span class="cm"># Отключение трассировки (по умолчанию)</span>
+pytest --tracing off</pre>
+
+<p>Файлы трассировки сохраняются в директорию <code>test-results/</code> вместе с отчётами.</p>
+
+<h3>Программная запись через API</h3>
+<p>Вы можете вручную управлять записью трассировки через объект <code>BrowserContext</code>:</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">run</span>(playwright):
+    browser <span class="op">=</span> playwright.chromium.launch()
+    context <span class="op">=</span> browser.new_context()
+
+    <span class="cm"># Начать запись трассировки</span>
+    context.tracing.start(screenshots=<span class="kw">True</span>, snapshots=<span class="kw">True</span>)
+
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://playwright.dev"</span>)
+    page.get_by_role(<span class="st">"link"</span>, name=<span class="st">"Get started"</span>).click()
+
+    <span class="cm"># Остановить запись и сохранить в файл</span>
+    context.tracing.stop(path=<span class="st">"trace.zip"</span>)
+
+    context.close()
+    browser.close()
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> playwright:
+    run(playwright)</pre>
+
+<h3>Параметры tracing.start()</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td><code>screenshots</code></td><td>bool</td><td>Запись скриншотов на каждом шаге (по умолч. <code>False</code>)</td></tr>
+<tr><td><code>snapshots</code></td><td>bool</td><td>Сохранение DOM-снэпшотов до/после каждого действия (по умолч. <code>False</code>)</td></tr>
+<tr><td><code>sources</code></td><td>bool</td><td>Включение исходного кода теста в трассировку (по умолч. <code>False</code>)</td></tr>
+<tr><td><code>title</code></td><td>str</td><td>Название трассировки для идентификации</td></tr>
+</tbody>
+</table>
+</div>
+
+<pre><span class="cm"># Полная запись: скриншоты, DOM-снэпшоты и исходники</span>
+context.tracing.start(screenshots=<span class="kw">True</span>, snapshots=<span class="kw">True</span>, sources=<span class="kw">True</span>)
+
+<span class="cm"># Минимальная запись (только действия)</span>
+context.tracing.start()
+
+<span class="cm"># Только скриншоты и снэпшоты, без исходников</span>
+context.tracing.start(screenshots=<span class="kw">True</span>, snapshots=<span class="kw">True</span>)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Для максимальной информативности включайте <code>screenshots=True</code> и <code>snapshots=True</code>. Это позволит видеть состояние страницы на каждом шаге. <code>sources=True</code> полезно при командной отладке, когда нужно видеть, какая строка кода вызвала действие.</p>
+</div>
+
+<h2>Просмотр трассировки</h2>
+
+<h3>Локальный просмотр</h3>
+<p>Для просмотра сохранённой трассировки используйте команду:</p>
+
+<pre><span class="cm"># Открыть локальную трассировку</span>
+playwright show-trace trace.zip
+
+<span class="cm"># С указанием полного пути</span>
+playwright show-trace test-results/trace.zip</pre>
+
+<h3>Онлайн-просмотр</h3>
+<p>Playwright предоставляет бесплатный онлайн-просмотрщик по адресу <code>trace.playwright.dev</code>. Просто перетащите файл <code>.zip</code> в окно браузера.</p>
+
+<div class="box box-info">
+<p><strong>Конфиденциальность:</strong> Все данные обрабатываются локально в вашем браузере. Файлы трассировки не загружаются на сервер. Вы можете безопасно использовать онлайн-просмотрщик даже для конфиденциальных проектов.</p>
+</div>
+
+<h3>Удалённые трассировки</h3>
+<p>Trace Viewer поддерживает загрузку трассировок по URL:</p>
+
+<pre><span class="cm"># Просмотр трассировки по URL</span>
+playwright show-trace https://example.com/traces/trace.zip
+
+<span class="cm"># Можно также открыть URL в онлайн-просмотрщике</span></pre>
+
+<h2>Вкладки Trace Viewer</h2>
+<p>Trace Viewer предоставляет множество вкладок для детального анализа каждого аспекта выполнения теста.</p>
+
+<h3>Actions (Действия)</h3>
+<p>Основная вкладка, отображающая список всех выполненных действий с таймингом. Каждое действие можно развернуть для просмотра:</p>
+<ul>
+<li>Время начала и окончания</li>
+<li>Параметры вызова</li>
+<li>DOM-снэпшот до и после действия</li>
+<li>Скриншот на момент действия</li>
+</ul>
+
+<p>При наведении на действие подсвечивается соответствующий элемент на DOM-снэпшоте. Это позволяет точно понять, с каким элементом работал тест.</p>
+
+<h3>Screenshots (Скриншоты)</h3>
+<p>Лента скриншотов, сделанных на каждом шаге выполнения. Позволяет быстро визуально оценить, как менялась страница. Ползунок времени даёт возможность пройтись по всей последовательности состояний.</p>
+
+<h3>Snapshots (Снэпшоты)</h3>
+<p>DOM-состояние страницы на каждом шаге выполнения. Доступно два режима:</p>
+<ul>
+<li><strong>Before</strong> — DOM до выполнения действия</li>
+<li><strong>After</strong> — DOM после выполнения действия</li>
+</ul>
+<p>Можно просматривать HTML-код и визуальное представление. Снэпшоты интерактивны — элементы можно инспектировать.</p>
+
+<h3>Source (Исходный код)</h3>
+<p>Исходный код теста с подсветкой строк, соответствующих каждому действию. Позволяет сопоставить действие в трассировке с конкретной строкой кода. Особенно полезно при включении <code>sources=True</code>.</p>
+
+<h3>Call (Детали вызова)</h3>
+<p>Подробная информация о каждом вызове API Playwright: переданные параметры, возвращаемое значение, длительность. Параметры отображаются в форматированном виде для удобства анализа.</p>
+
+<pre><span class="cm"># Пример информации вкладки Call:</span>
+<span class="cm"># - Метод: locator.click()</span>
+<span class="cm"># - Параметры: {selector: "button", position: {x: 10, y: 20}}</span>
+<span class="cm"># - Длительность: 245ms</span>
+<span class="cm"># - Результат: OK</span></pre>
+
+<h3>Log (Логи)</h3>
+<p>Внутренние логи Playwright — технические сообщения от движка браузера и протокола CDP. Полезно для диагностики проблем с соединением, таймаутами и внутренними ошибками Playwright.</p>
+
+<h3>Errors (Ошибки)</h3>
+<p>Все ошибки, возникшие во время выполнения теста. Включает как ошибки Playwright (например, TimeoutError), так и ошибки JavaScript на странице. Отображается полный stack trace.</p>
+
+<h3>Console (Консоль)</h3>
+<p>Все сообщения из <code>console.log()</code> и других методов консоли браузера. Поддерживает фильтрацию по типам:</p>
+<ul>
+<li><code>log</code> — обычные сообщения</li>
+<li><code>info</code> — информационные сообщения</li>
+<li><code>warn</code> — предупреждения</li>
+<li><code>error</code> — ошибки</li>
+<li><code>debug</code> — отладочные сообщения</li>
+</ul>
+<p>Можно отфильтровать только нужные типы сообщений для фокуса на важном.</p>
+
+<h3>Network (Сеть)</h3>
+<p>Полный список всех HTTP-запросов, выполненных во время теста. Для каждого запроса доступны:</p>
+<ul>
+<li>URL и метод (GET, POST, PUT, DELETE и т.д.)</li>
+<li>Заголовки запроса и ответа</li>
+<li>Тело запроса и ответа (если доступно)</li>
+<li>HTTP-статус код</li>
+<li>Тип содержимого</li>
+<li>Длительность и размер</li>
+<li>Тайминг: DNS, TCP, TLS, запрос, ожидание, получение</li>
+</ul>
+<p>Сетевые запросы можно сортировать по времени, типу, статусу и URL.</p>
+
+<h3>Metadata (Метаданные)</h3>
+<p>Общая информация о тестовом запуске:</p>
+<ul>
+<li>Браузер (Chromium, Firefox, WebKit)</li>
+<li>Версия браузера и движка</li>
+<li>Размер окна просмотра (viewport)</li>
+<li>Общая длительность теста</li>
+<li>Операционная система</li>
+<li>Время запуска</li>
+<li>Параметры контекста и браузера</li>
+</ul>
+
+<h2>Включение и исключение источников</h2>
+<p>Иногда нужно исключить определённые действия из трассировки, чтобы уменьшить размер файла:</p>
+
+<pre><span class="cm"># Трассировка только для определённого контекста</span>
+context.tracing.start(screenshots=<span class="kw">True</span>)
+
+<span class="cm"># Можно создать отдельный контекст для трассировки</span>
+main_context <span class="op">=</span> browser.new_context()
+debug_context <span class="op">=</span> browser.new_context()
+
+<span class="cm"># Трассировка только для debug-контекста</span>
+debug_context.tracing.start(screenshots=<span class="kw">True</span>, snapshots=<span class="kw">True</span>)
+
+<span class="cm"># Основной контекст без трассировки (экономия места)</span>
+main_page <span class="op">=</span> main_context.new_page()
+main_page.goto(<span class="st">"https://example.com"</span>)</pre>
+
+<h2>Практический пример: отладка упавшего теста</h2>
+<p>Полный сценарий отладки с использованием трассировки:</p>
+
+<pre><span class="cm"># Шаг 1: Запуск тестов с трассировкой при падениях</span>
+pytest --tracing retain-on-failure
+
+<span class="cm"># Шаг 2: После падения в test-results/ появится файл trace.zip</span>
+<span class="cm"># Шаг 3: Открыть трассировку</span>
+playwright show-trace test-results/trace.zip
+
+<span class="cm"># Шаг 4: В Trace Viewer:</span>
+<span class="cm"># - Вкладка Actions: найти последнее успешное действие</span>
+<span class="cm"># - Snapshot After: увидеть состояние страницы перед падением</span>
+<span class="cm"># - Errors: прочитать текст ошибки</span>
+<span class="cm"># - Network: проверить, какие запросы были в момент ошибки</span>
+<span class="cm"># - Console: нет ли ошибок JavaScript</span></pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте <code>--tracing retain-on-failure</code> в CI. Это позволит получить полную информацию о падении без замедления успешных тестов. Вы можете загружать архивы трассировок как артефакты CI и просматривать их позже.</p>
+</div>
+
+<h2>Программный пример с assert</h2>
+
+<pre><span class="kw">import</span> pathlib
+<span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright, expect
+
+<span class="kw">def</span> <span class="fn">test_with_trace</span>(playwright):
+    browser <span class="op">=</span> playwright.chromium.launch()
+    context <span class="op">=</span> browser.new_context()
+
+    <span class="cm"># Включаем трассировку со всеми опциями</span>
+    context.tracing.start(screenshots=<span class="kw">True</span>, snapshots=<span class="kw">True</span>, sources=<span class="kw">True</span>)
+
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Действие, которое может упасть</span>
+    heading <span class="op">=</span> page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Example Domain"</span>)
+
+    <span class="kw">try</span>:
+        expect(heading).to_be_visible()
+        <span class="kw">print</span>(<span class="st">"Тест пройден!"</span>)
+    <span class="kw">except</span> AssertionError <span class="kw">as</span> e:
+        <span class="cm"># Сохраняем трассировку при ошибке</span>
+        context.tracing.stop(path=<span class="st">"failure_trace.zip"</span>)
+        <span class="kw">raise</span> e
+    <span class="kw">else</span>:
+        context.tracing.stop(path=<span class="st">"success_trace.zip"</span>)
+
+    context.close()
+    browser.close()
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> playwright:
+    test_with_trace(playwright)</pre>
+
+<h2>Сравнение трассировок</h2>
+<p>Trace Viewer позволяет загружать несколько трассировок и сравнивать их. Особенно полезно для A/B-тестирования или сравнения поведения на разных браузерах.</p>
+
+<pre><span class="cm"># Загрузка нескольких трассировок в один просмотрщик</span>
+playwright show-trace trace_chromium.zip trace_firefox.zip
+
+<span class="cm"># Переключение между трассировками через выпадающий список</span></pre>
+
+<h2>Заключение</h2>
+<p>Trace Viewer — один из самых мощных инструментов отладки в Playwright. Он предоставляет полную картину выполнения теста: от сетевых запросов до DOM-состояний. Используйте его при каждом падении теста для быстрого выявления причин.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

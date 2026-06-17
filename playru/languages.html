@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Поддерживаемые языки</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link active" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Поддерживаемые языки</h1>
+<p>Playwright доступен для четырёх языков программирования. Все версии имеют единое ядро и одинаковые возможности, различия — только в синтаксисе и экосистеме.</p>
+</div>
+<div class="card">
+<h2>Обзор языков</h2>
+<p>Playwright поддерживает 4 языка программирования: <strong>Python</strong>, <strong>JavaScript / TypeScript</strong>, <strong>Java</strong> и <strong>.NET (C#)</strong>. API идентичен во всех реализациях — если вы знаете один язык, вы легко перейдёте на другой.</p>
+
+<div class="box box-info">
+<p><strong>Общее ядро:</strong> Все версии Playwright имеют одинаковые возможности — поддержка браузеров (Chromium, Firefox, WebKit), API-тестирование, сетевой перехват, трассировка, видео, скриншоты, эмуляция устройств, генерация кода через <code>codegen</code> и многое другое.</p>
+</div>
+
+<h3>Python</h3>
+<p>Основной язык этого справочника. Playwright для Python поддерживает синхронный и асинхронный API. Тесты пишутся с помощью плагина <strong>pytest-playwright</strong>, который предоставляет фикстуры <code>page</code>, <code>context</code>, <code>browser</code>.</p>
+
+<pre><span class="kw">import</span> asyncio
+<span class="kw">from</span> playwright.async_api <span class="kw">import</span> async_playwright
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    async <span class="kw">with</span> async_playwright() <span class="kw">as</span> p:
+        browser <span class="op">=</span> <span class="kw">await</span> p.chromium.launch()
+        page <span class="op">=</span> <span class="kw">await</span> browser.new_page()
+        <span class="kw">await</span> page.goto(<span class="st">"https://example.com"</span>)
+        <span class="kw">print</span>(<span class="kw">await</span> page.title())
+        <span class="kw">await</span> browser.close()
+
+asyncio.run(main())</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Для повседневного использования рекомендуется pytest-плагин с синхронным API — он проще и читается естественнее. Асинхронный API пригодится, если вы работаете с asyncio-кодом.</p>
+</div>
+
+<h3>JavaScript / TypeScript</h3>
+<p>Родной язык Playwright. Имеет собственный тест-раннер <strong>@playwright/test</strong> с конфигурацией <code>playwright.config.ts</code>, встроенным параллельным запуском, отчётами и ретраями. Полностью асинхронный API.</p>
+
+<pre><span class="kw">const</span> { chromium } <span class="kw">=</span> <span class="kw">require</span>(<span class="st">'playwright'</span>);
+
+(<span class="kw">async</span> () <span class="kw">=></span> {
+    <span class="kw">const</span> browser <span class="kw">=</span> <span class="kw">await</span> <span class="fn">chromium</span>.<span class="fn">launch</span>();
+    <span class="kw">const</span> page <span class="kw">=</span> <span class="kw">await</span> <span class="fn">browser</span>.<span class="fn">newPage</span>();
+    <span class="kw">await</span> <span class="fn">page</span>.<span class="fn">goto</span>(<span class="st">'https://example.com'</span>);
+    <span class="kw">console</span>.<span class="fn">log</span>(<span class="kw">await</span> <span class="fn">page</span>.<span class="fn">title</span>());
+    <span class="kw">await</span> <span class="fn">browser</span>.<span class="fn">close</span>();
+})();</pre>
+
+<div class="box box-info">
+<p><strong>TypeScript:</strong> TypeScript имеет статическую типизацию, что даёт лучшую поддержку IDE (автодополнение, проверка типов на лету). Все примеры в официальной документации Playwright даются на TypeScript.</p>
+</div>
+
+<h3>Java</h3>
+<p>Playwright для Java интегрируется с JUnit 5 и TestNG. Поддерживает Page Object Model через аннотации и стандартные Java-паттерны. Доступен синхронный и асинхронный API.</p>
+
+<pre><span class="kw">import</span> com.microsoft.playwright.*;
+
+<span class="kw">public class</span> <span class="nm">Example</span> {
+    <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {
+        <span class="kw">try</span> (Playwright playwright <span class="op">=</span> Playwright.<span class="fn">create</span>()) {
+            Browser browser <span class="op">=</span> <span class="fn">playwright</span>.<span class="fn">chromium</span>().<span class="fn">launch</span>();
+            Page page <span class="op">=</span> <span class="fn">browser</span>.<span class="fn">newPage</span>();
+            <span class="fn">page</span>.<span class="fn">goto</span>(<span class="st">"https://example.com"</span>);
+            System.<span class="kw">out</span>.<span class="fn">println</span>(<span class="fn">page</span>.<span class="fn">title</span>());
+            <span class="fn">browser</span>.<span class="fn">close</span>();
+        }
+    }
+}</pre>
+
+<h3>.NET (C#)</h3>
+<p>Playwright для .NET поддерживает MSTest, NUnit и xUnit. Полностью асинхронный API на базе <code>async</code>/<code>await</code>. Установка через NuGet-пакет <code>Microsoft.Playwright</code>.</p>
+
+<pre><span class="kw">using</span> Microsoft.Playwright;
+
+<span class="kw">await using</span> <span class="kw">var</span> playwright <span class="op">=</span> <span class="kw">await</span> Playwright.<span class="fn">CreateAsync</span>();
+<span class="kw">await using</span> <span class="kw">var</span> browser <span class="op">=</span> <span class="kw">await</span> <span class="fn">playwright</span>.<span class="fn">Chromium</span>.<span class="fn">LaunchAsync</span>();
+<span class="kw">var</span> page <span class="op">=</span> <span class="kw">await</span> <span class="fn">browser</span>.<span class="fn">NewPageAsync</span>();
+<span class="kw">await</span> <span class="fn">page</span>.<span class="fn">GotoAsync</span>(<span class="st">"https://example.com"</span>);
+Console.<span class="fn">WriteLine</span>(<span class="kw">await</span> <span class="fn">page</span>.<span class="fn">TitleAsync</span>());</pre>
+
+<h2>Различия между языками</h2>
+<p>Несмотря на единое ядро, между реализациями есть различия:</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Аспект</th><th>Python</th><th>JavaScript/TS</th><th>Java</th><th>.NET</th></tr>
+</thead>
+<tbody>
+<tr><td>Синтаксис</td><td>Синхронный + async/await</td><td>Только async/await</td><td>Синхронный + async</td><td>Только async/await</td></tr>
+<tr><td>Типизация</td><td>Динамическая (опционально type hints)</td><td>TypeScript — статическая</td><td>Статическая</td><td>Статическая</td></tr>
+<tr><td>Тестовый раннер</td><td>pytest + pytest-playwright</td><td>@playwright/test (встроенный)</td><td>JUnit 5, TestNG</td><td>MSTest, NUnit, xUnit</td></tr>
+<tr><td>Page Object</td><td>Через классы Python</td><td>Через классы/функции</td><td>Аннотации + классы</td><td>Классы C#</td></tr>
+<tr><td>Экосистема</td><td>pytest-плагины, asyncio</td><td>npm, ESLint, Prettier</td><td>Maven, Gradle</td><td>NuGet, MSBuild</td></tr>
+<tr><td>codegen</td><td>Генерирует Python-код</td><td>Генерирует JS/TS-код</td><td>Генерирует Java-код</td><td>Генерирует C#-код</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Общие возможности</h2>
+<p>Все языковые версии Playwright предоставляют:</p>
+<ul>
+<li>Поддержка Chromium, Firefox, WebKit</li>
+<li>Автоматическое ожидание (Auto-Waiting)</li>
+<li>Сетевой перехват и мокирование (route)</li>
+<li>API-тестирование (APIRequestContext)</li>
+<li>Трассировка (Trace Viewer) с записью и просмотром</li>
+<li>Запись видео прохождения тестов</li>
+<li>Скриншоты (страницы, элементов, полностраничные)</li>
+<li>ARIA-снимки для snapshot-тестирования</li>
+<li>Эмуляция устройств, геолокации, часового пояса</li>
+<li>Clock API для контроля времени</li>
+<li>WebSocket-маршрутизация</li>
+<li>Генерация кода через <code>playwright codegen</code></li>
+<li>Докер-образы и CI-интеграция</li>
+</ul>
+
+<div class="box box-tip">
+<p><strong>Выбор языка:</strong> Если вы работаете в Python-экосистеме — используйте Python. Для Node.js-проектов выбирайте JavaScript/TypeScript. Java и .NET — отличный выбор для корпоративных проектов на соответствующих стеках.</p>
+</div>
+
+<h2>Когда какой язык выбрать</h2>
+<ul>
+<li><strong>Python</strong> — data-science, ML, Django, FastAPI, автоматизация ETL-процессов. Простой синтаксис, огромное сообщество.</li>
+<li><strong>JavaScript / TypeScript</strong> — фронтенд-проекты, Next.js, React, Vue, Angular. Нативный тест-раннер, лучшая интеграция с фронтенд-инструментами.</li>
+<li><strong>Java</strong> — корпоративные приложения, Spring Boot, Android-совместимость. Статическая типизация, зрелая экосистема.</li>
+<li><strong>.NET</strong> — Windows-экосистема, ASP.NET, Azure. Полная интеграция с Visual Studio и Azure DevOps.</li>
+</ul>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Независимо от выбранного языка, возможности Playwright идентичны. Команда Microsoft поддерживает все четыре версии синхронно — новые функции появляются одновременно во всех языках.</p>
+</div>
+</div>
+<div class="footer">
+Playwright Python — полный справочник на русском языке
+</div>
+</main>
+</div>
+</body>
+</html>

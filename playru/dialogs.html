@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Диалоги — Playwright Python</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link active" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Диалоги</h1>
+<p>Перехват и управление браузерными диалогами: alert, confirm, prompt, beforeunload.</p>
+</div>
+<div class="card">
+<h2>Основные методы</h2>
+
+<h3>page.on("dialog", handler)</h3>
+<p>Событие <span class="fn">dialog</span> срабатывает при появлении любого браузерного диалога — <span class="fn">alert()</span>, <span class="fn">confirm()</span>, <span class="fn">prompt()</span> или <span class="fn">beforeunload</span>. Обработчик получает объект <span class="fn">Dialog</span>.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">def</span> <span class="fn">handle_dialog</span>(dialog):
+    <span class="kw">print</span>(<span class="st">f"Тип: {dialog.type}, сообщение: {dialog.message}"</span>)
+    dialog.accept()
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    page <span class="op">=</span> browser.new_page()
+    page.on(<span class="st">"dialog"</span>, handle_dialog)
+    page.evaluate(<span class="st">"alert('Привет!')"</span>)
+    browser.close()</pre>
+
+<h3>dialog.accept() — OK</h3>
+<p>Принимает диалог. Для <span class="fn">prompt</span> можно передать текст ввода.</p>
+
+<pre>dialog.accept()                    <span class="cm"># просто OK</span>
+dialog.accept(<span class="st">"Введённый текст"</span>)  <span class="cm"># prompt с вводом</span></pre>
+
+<h3>dialog.dismiss() — Отмена</h3>
+<p>Отклоняет диалог (аналог нажатия «Отмена» или <span class="fn">Escape</span>).</p>
+
+<pre>dialog.dismiss()</pre>
+
+<h3>dialog.message, dialog.type, dialog.default_value</h3>
+<p>Свойства объекта <span class="fn">Dialog</span>:</p>
+<ul>
+<li><strong>dialog.message</strong> — текст сообщения диалога</li>
+<li><strong>dialog.type</strong> — тип: <span class="st">"alert"</span>, <span class="st">"confirm"</span>, <span class="st">"prompt"</span>, <span class="st">"beforeunload"</span></li>
+<li><strong>dialog.default_value</strong> — значение по умолчанию в поле ввода (для prompt)</li>
+</ul>
+
+<pre><span class="kw">def</span> <span class="fn">show_dialog_info</span>(dialog):
+    <span class="kw">print</span>(<span class="st">f"Сообщение: {dialog.message}"</span>)
+    <span class="kw">print</span>(<span class="st">f"Тип: {dialog.type}"</span>)
+    <span class="kw">print</span>(<span class="st">f"Значение по умолчанию: {dialog.default_value}"</span>)
+    dialog.accept()
+
+page.on(<span class="st">"dialog"</span>, show_dialog_info)</pre>
+
+<h3>page.once("dialog") — одноразовый обработчик</h3>
+<p>Срабатывает только для первого диалога, после чего автоматически удаляется.</p>
+
+<pre>page.once(<span class="st">"dialog"</span>, <span class="kw">lambda</span> d: d.accept())</pre>
+
+<h2>Примеры</h2>
+
+<h3>Обработка confirm с проверкой отмены</h3>
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+results <span class="op">=</span> []
+
+<span class="kw">def</span> <span class="fn">handle_confirm</span>(dialog):
+    <span class="kw">if</span> dialog.type <span class="op">==</span> <span class="st">"confirm"</span>:
+        results.append({<span class="st">"message"</span>: dialog.message, <span class="st">"accepted"</span>: <span class="kw">True</span>})
+        dialog.accept()
+    <span class="kw">else</span>:
+        dialog.dismiss()
+
+page.on(<span class="st">"dialog"</span>, handle_confirm)
+page.evaluate(<span class="st">"confirm('Удалить запись?')"</span>)
+<span class="kw">print</span>(results)  <span class="cm"># [{'message': 'Удалить запись?', 'accepted': True}]</span></pre>
+
+<h3>Проверка отмены диалога</h3>
+<pre><span class="kw">def</span> <span class="fn">test_cancel_confirm</span>(page):
+    result <span class="op">=</span> {<span class="st">"dismissed"</span>: <span class="kw">False</span>}
+
+    <span class="kw">def</span> <span class="fn">on_dialog</span>(dialog):
+        dialog.dismiss()
+        result[<span class="st">"dismissed"</span>] <span class="op">=</span> <span class="kw">True</span>
+
+    page.on(<span class="st">"dialog"</span>, on_dialog)
+    page.evaluate(<span class="st">"confirm('Продолжить?')"</span>)
+    <span class="kw">assert</span> result[<span class="st">"dismissed"</span>] <span class="op">==</span> <span class="kw">True</span></pre>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Если не зарегистрировать обработчик <span class="fn">dialog</span>, Playwright автоматически отклоняет все диалоги. Это поведение можно изменить с помощью <span class="fn">page.add_locator_handler()</span>.</p>
+</div>
+
+<h2>Автозакрытие диалогов</h2>
+<p>Метод <span class="fn">page.add_locator_handler()</span> позволяет автоматически закрывать диалоги при появлении определённого элемента на странице.</p>
+
+<pre>page.add_locator_handler(
+    page.get_by_role(<span class="st">"alertdialog"</span>),
+    <span class="kw">lambda</span>: page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"OK"</span>).click()
+)</pre>
+
+<h2>beforeunload</h2>
+<p>Диалог <span class="st">"beforeunload"</span> требует особой обработки — его нужно явно принять.</p>
+
+<pre><span class="kw">def</span> <span class="fn">handle_beforeunload</span>(dialog):
+    <span class="kw">print</span>(<span class="st">"Попытка закрытия страницы"</span>)
+    dialog.accept()
+
+page.on(<span class="st">"dialog"</span>, handle_beforeunload)
+page.evaluate(<span class="st">"window.addEventListener('beforeunload', e => e.preventDefault())"</span>)</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Диалог <span class="fn">beforeunload</span> нельзя отклонить — только принять. Событие срабатывает при закрытии вкладки, навигации или вызове <span class="fn">page.close()</span>.</p>
+</div>
+
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

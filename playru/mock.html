@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Мокирование</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link active" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Мокирование</h1>
+<p>Полное руководство по перехвату и модификации сетевых запросов в Playwright Python: route, fulfill, abort, continue, HAR-файлы и практические примеры.</p>
+</div>
+<div class="card">
+<h2>Основы мокирования в Playwright</h2>
+<p>Мокирование (перехват сетевых запросов) — одна из ключевых возможностей Playwright. Она позволяет перехватывать HTTP-запросы, которые делает страница, и подменять ответы, блокировать запросы или модифицировать их на лету. Это незаменимо для тестирования сценариев с недоступными API, для ускорения тестов и для проверки поведения страницы в особых условиях.</p>
+
+<div class="box box-info">
+<p><strong>Важно:</strong> Перехват работает на уровне протокола CDP (Chrome DevTools Protocol), что даёт полный контроль над сетевыми запросами. В отличие от сервис-воркеров или прокси, перехват в Playwright прозрачен для приложения и работает на любом сайте.</p>
+</div>
+
+<h2>page.route() — базовый перехват запросов</h2>
+<p>Метод <code>page.route()</code> регистрирует обработчик для запросов, соответствующих указанному URL-паттерну. Паттерн может быть строкой (с glob-символами) или регулярным выражением.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    page <span class="op">=</span> browser.new_page()
+
+    <span class="cm"># Перехват всех запросов к API</span>
+    page.route(<span class="st">"https://api.example.com/**"</span>, <span class="kw">lambda</span> route: route.fulfill(
+        status=<span class="nm">200</span>,
+        content_type=<span class="st">"application/json"</span>,
+        body=<span class="st">'{"status": "ok"}'</span>
+    ))
+
+    page.goto(<span class="st">"https://example.com"</span>)</pre>
+
+<h3>Glob-паттерны для URL</h3>
+<p>Playwright поддерживает glob-паттерны для фильтрации URL. Это удобный способ перехватить группу запросов без написания сложных регулярных выражений.</p>
+
+<pre><span class="cm"># Все CSS-файлы</span>
+page.route(<span class="st">"**/*.css"</span>, <span class="kw">lambda</span> route: route.abort())
+
+<span class="cm"># Все изображения</span>
+page.route(<span class="st">"**/*.{png,jpg,jpeg,gif,svg}"</span>, <span class="kw">lambda</span> route: route.abort())
+
+<span class="cm"># Все запросы к определённому поддомену</span>
+page.route(<span class="st">"https://analytics.example.com/**"</span>, <span class="kw">lambda</span> route: route.abort())
+
+<span class="cm"># Все POST-запросы к API</span>
+page.route(<span class="st">"**/api/**"</span>, <span class="kw">lambda</span> route: route.fulfill(...))
+
+<span class="cm"># Комбинация: все шрифты и иконки</span>
+page.route(<span class="st">"**/*.{woff,woff2,ttf,eot,ico}"</span>, <span class="kw">lambda</span> route: route.abort())
+
+<span class="cm"># Все запросы, кроме основного документа</span>
+page.route(<span class="st">"**/*"</span>, <span class="kw">lambda</span> route: route.continue_() <span class="kw">if</span> route.request.resource_type <span class="op">==</span> <span class="st">"document"</span> <span class="kw">else</span> route.abort())</pre>
+
+<h2>route.fulfill() — подмена ответа</h2>
+<p>Метод <code>route.fulfill()</code> позволяет вернуть произвольный ответ вместо реального запроса к серверу. Можно указать статус, заголовки, тело (строкой, байтами, JSON или из файла).</p>
+
+<pre><span class="cm"># Простая подмена с JSON-ответом</span>
+page.route(<span class="st">"**/api/users"</span>, <span class="kw">lambda</span> route: route.fulfill(
+    status=<span class="nm">200</span>,
+    content_type=<span class="st">"application/json"</span>,
+    body=<span class="st">'[{"id": 1, "name": "Иван"}, {"id": 2, "name": "Мария"}]'</span>
+))
+
+<span class="cm"># Подмена с использованием json-параметра</span>
+page.route(<span class="st">"**/api/user"</span>, <span class="kw">lambda</span> route: route.fulfill(
+    status=<span class="nm">200</span>,
+    content_type=<span class="st">"application/json"</span>,
+    json={<span class="st">"id"</span>: <span class="nm">1</span>, <span class="st">"name"</span>: <span class="st">"Тестовый пользователь"</span>, <span class="st">"role"</span>: <span class="st">"admin"</span>}
+))
+
+<span class="cm"># Подмена с ответом из файла</span>
+page.route(<span class="st">"**/api/data"</span>, <span class="kw">lambda</span> route: route.fulfill(
+    status=<span class="nm">200</span>,
+    path=<span class="st">"mocks/response.json"</span>
+))
+
+<span class="cm"># Подмена с кастомными заголовками</span>
+page.route(<span class="st">"**/api/users"</span>, <span class="kw">lambda</span> route: route.fulfill(
+    status=<span class="nm">200</span>,
+    headers={<span class="st">"X-Custom-Header"</span>: <span class="st">"mock-value"</span>, <span class="st">"Access-Control-Allow-Origin"</span>: <span class="st">"*"</span>},
+    body=<span class="st">'[]'</span>
+))
+
+<span class="cm"># Имитация ошибки сервера (500)</span>
+page.route(<span class="st">"**/api/error"</span>, <span class="kw">lambda</span> route: route.fulfill(
+    status=<span class="nm">500</span>,
+    content_type=<span class="st">"application/json"</span>,
+    body=<span class="st">'{"error": "Internal Server Error", "code": "SERVER_ERROR"}'</span>
+))
+
+<span class="cm"># Имитация таймаута (медленный ответ)</span>
+<span class="kw">import</span> time
+page.route(<span class="st">"**/api/slow"</span>, <span class="kw">lambda</span> route: (
+    time.sleep(<span class="nm">10</span>),
+    route.fulfill(status=<span class="nm">200</span>, body=<span class="st">'"slow response"'</span>)
+))</pre>
+
+<h2>route.abort() — блокировка запроса</h2>
+<p>Метод <code>route.abort()</code> отменяет запрос с указанной причиной ошибки. Это полезно для блокировки нежелательных ресурсов (реклама, аналитика, шрифты).</p>
+
+<pre><span class="cm"># Блокировка с причиной "aborted" (по умолчанию)</span>
+page.route(<span class="st">"**/*.css"</span>, <span class="kw">lambda</span> route: route.abort())
+
+<span class="cm"># Различные причины ошибки</span>
+page.route(<span class="st">"https://ads.example.com/**"</span>, <span class="kw">lambda</span> route: route.abort(<span class="st">"connectionrefused"</span>))
+page.route(<span class="st">"https://tracker.example.com/**"</span>, <span class="kw">lambda</span> route: route.abort(<span class="st">"accessdenied"</span>))
+page.route(<span class="st">"https://cdn.example.com/**"</span>, <span class="kw">lambda</span> route: route.abort(<span class="st">"internetdisconnected"</span>))
+
+<span class="cm"># Блокировка только скриптов</span>
+page.route(<span class="st">"**/*.js"</span>, <span class="kw">lambda</span> route: route.abort(<span class="st">"aborted"</span>))
+
+<span class="cm"># Блокировка изображений для ускорения тестов</span>
+page.route(<span class="st">"**/*.{png,jpg,jpeg,gif,svg,webp}"</span>, <span class="kw">lambda</span> route: route.abort())
+
+<span class="cm"># Блокировка внешних ресурсов, но разрешение локальных</span>
+page.route(<span class="st">"**/*"</span>, <span class="kw">lambda</span> route: route.continue_()
+    <span class="kw">if</span> route.request.url.startswith(<span class="st">"http://localhost"</span>)
+    <span class="kw">else</span> route.abort())</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Причины ошибок для abort: <code>"aborted"</code>, <code>"accessdenied"</code>, <code>"addressunreachable"</code>, <code>"blockedbyclient"</code>, <code>"blockedbyresponse"</code>, <code>"connectionaborted"</code>, <code>"connectionclosed"</code>, <code>"connectionfailed"</code>, <code>"connectionrefused"</code>, <code>"connectionreset"</code>, <code>"internetdisconnected"</code>, <code>"namenotresolved"</code>, <code>"timedout"</code>, <code>"failed"</code>.</p>
+</div>
+
+<h2>route.continue_() — модификация запроса</h2>
+<p>Метод <code>route.continue_()</code> позволяет пропустить запрос, изменив его параметры: URL, метод, заголовки или тело. Запрос будет отправлен на сервер с изменениями.</p>
+
+<pre><span class="cm"># Продолжить запрос без изменений</span>
+page.route(<span class="st">"**/api/**"</span>, <span class="kw">lambda</span> route: route.continue_())
+
+<span class="cm"># Изменить заголовки запроса</span>
+page.route(<span class="st">"**/api/**"</span>, <span class="kw">lambda</span> route: route.continue_(
+    headers={
+        <span class="st">"Authorization"</span>: <span class="st">"Bearer mock-token"</span>,
+        <span class="st">"X-Test"</span>: <span class="st">"true"</span>
+    }
+))
+
+<span class="cm"># Изменить URL запроса (перенаправление)</span>
+page.route(<span class="st">"**/api/v1/**"</span>, <span class="kw">lambda</span> route: route.continue_(
+    url=route.request.url.replace(<span class="st">"/api/v1/"</span>, <span class="st">"/api/v2/"</span>)
+))
+
+<span class="cm"># Изменить метод запроса</span>
+page.route(<span class="st">"**/api/delete/**"</span>, <span class="kw">lambda</span> route: route.continue_(
+    method=<span class="st">"GET"</span>
+))
+
+<span class="cm"># Изменить тело POST-запроса</span>
+page.route(<span class="st">"**/api/users"</span>, <span class="kw">lambda</span> route: route.continue_(
+    post_data=<span class="st">'{"name": "Мокированный", "role": "admin"}'</span>
+))
+
+<span class="cm"># Комбинация: изменить заголовки и добавить параметр в URL</span>
+page.route(<span class="st">"**/api/search"</span>, <span class="kw">lambda</span> route: route.continue_(
+    url=route.request.url <span class="op">+</span> <span class="st">"&mock=true"</span>,
+    headers={<span class="st">"X-Mock"</span>: <span class="st">"true"</span>}
+))</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте <code>route.continue_()</code>, когда нужно изменить запрос, но не подменять ответ полностью. Например, для добавления тестовых заголовков, подмены URL или изменения тела запроса.</p>
+</div>
+
+<h2>route.fetch() — выполнение реального запроса из обработчика</h2>
+<p>Метод <code>route.fetch()</code> выполняет реальный HTTP-запрос к серверу (как если бы перехвата не было). Это полезно, когда нужно выполнить реальный запрос, но при необходимости изменить его результат.</p>
+
+<pre><span class="kw">import</span> json
+
+<span class="kw">def</span> <span class="fn">handle_route</span>(route):
+    <span class="cm"># Выполнить реальный запрос к серверу</span>
+    response <span class="op">=</span> route.fetch()
+
+    <span class="cm"># Модифицировать ответ</span>
+    data <span class="op">=</span> response.json()
+    data[<span class="st">"mocked"</span>] <span class="op">=</span> <span class="kw">True</span>
+    data[<span class="st">"original_length"</span>] <span class="op">=</span> <span class="fn">len</span>(data)
+
+    <span class="cm"># Вернуть модифицированный ответ</span>
+    route.fulfill(
+        status=response.status,
+        headers=response.headers,
+        body=json.dumps(data)
+    )
+
+page.route(<span class="st">"**/api/users"</span>, handle_route)
+
+
+<span class="cm"># Пример: добавить элемент в список ответа</span>
+<span class="kw">def</span> <span class="fn">add_item_to_response</span>(route):
+    response <span class="op">=</span> route.fetch()
+    data <span class="op">=</span> response.json()
+    data[<span class="st">"items"</span>].append({<span class="st">"id"</span>: <span class="nm">999</span>, <span class="st">"name"</span>: <span class="st">"Подставной элемент"</span>})
+    route.fulfill(status=response.status, json=data)
+
+page.route(<span class="st">"**/api/items"</span>, add_item_to_response)</pre>
+
+<h2>page.unroute() — удаление обработчика</h2>
+<p>Метод <code>page.unroute()</code> удаляет зарегистрированный обработчик для указанного паттерна. Если обработчик не был указан, удаляются все обработчики для данного паттерна.</p>
+
+<pre><span class="cm"># Удаление конкретного обработчика</span>
+<span class="kw">def</span> <span class="fn">handler</span>(route):
+    route.fulfill(status=<span class="nm">200</span>, body=<span class="st">"mock"</span>)
+
+page.route(<span class="st">"**/api/data"</span>, handler)
+<span class="cm"># ... тест с моком ...</span>
+page.unroute(<span class="st">"**/api/data"</span>, handler)
+
+<span class="cm"># Удаление всех обработчиков для паттерна</span>
+page.unroute(<span class="st">"**/api/**"</span>)
+
+<span class="cm"># Удаление всех обработчиков вообще</span>
+page.unroute(<span class="st">"**/*"</span>)
+
+<span class="cm"># Контекстный менеджер для временного мока</span>
+page.route(<span class="st">"**/api/test"</span>, <span class="kw">lambda</span> route: route.fulfill(body=<span class="st">"temp"</span>))
+<span class="cm"># ... выполнение теста с моком ...</span>
+page.unroute(<span class="st">"**/api/test"</span>)
+<span class="cm"># Теперь запросы снова идут на реальный сервер</span></pre>
+
+<h2>context.route() — перехват для всего контекста</h2>
+<p>Метод <code>context.route()</code> работает аналогично <code>page.route()</code>, но перехватывает запросы во всех страницах данного браузерного контекста. Это полезно для установки глобальных моков.</p>
+
+<pre><span class="cm"># Перехват на уровне контекста (работает для всех страниц)</span>
+context.route(<span class="st">"**/analytics/**"</span>, <span class="kw">lambda</span> route: route.abort())
+
+<span class="cm"># Глобальная подмена API для всех страниц контекста</span>
+context.route(<span class="st">"**/api/config"</span>, <span class="kw">lambda</span> route: route.fulfill(
+    json={<span class="st">"feature_enabled"</span>: <span class="kw">True</span>, <span class="st">"max_items"</span>: <span class="nm">50</span>}
+))
+
+<span class="cm"># Удаление обработчика контекста</span>
+context.unroute(<span class="st">"**/analytics/**"</span>)
+
+<span class="cm"># Все страницы в этом контексте не загружают шрифты</span>
+context.route(<span class="st">"**/*.woff2"</span>, <span class="kw">lambda</span> route: route.abort())</pre>
+
+<h2>page.route_from_har() — ответы из HAR-файла</h2>
+<p>Playwright может перехватывать запросы и возвращать ответы, сохранённые в HAR-файле (HTTP Archive). Это мощный инструмент для воспроизведения тестов с заранее записанными данными.</p>
+
+<pre><span class="cm"># Использование HAR-файла для мокирования</span>
+page.route_from_har(<span class="st">"test-data/har/api-response.har"</span>)
+
+<span class="cm"># Использование с фильтрацией URL</span>
+page.route_from_har(
+    <span class="st">"test-data/har/example.har"</span>,
+    url=<span class="st">"**/api/**"</span>  <span class="cm"># только API-запросы из HAR</span>
+)
+
+<span class="cm"># Обновление HAR-файла (update = True)</span>
+page.route_from_har(
+    <span class="st">"test-data/har/example.har"</span>,
+    update=<span class="kw">True</span>  <span class="cm"># перезаписать HAR новыми данными</span>
+)
+
+<span class="cm"># Запись HAR-файла при первом запуске</span>
+context <span class="op">=</span> browser.new_context(record_har_path=<span class="st">"test-data/har/example.har"</span>)
+page <span class="op">=</span> context.new_page()
+page.goto(<span class="st">"https://example.com"</span>)
+<span class="cm"># После завершения HAR-файл будет содержать все запросы</span>
+context.close()
+
+<span class="cm"># Использование записанного HAR в тестах</span>
+page.route_from_har(<span class="st">"test-data/har/example.har"</span>)
+page.goto(<span class="st">"https://example.com"</span>)
+<span class="cm"># Все запросы будут взяты из HAR, а не выполнены реально</span></pre>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> HAR-файлы (HTTP Archive) содержат полную информацию о запросах и ответах. Playwright может как записывать HAR (через опцию <code>record_har_path</code> в контексте), так и воспроизводить из него ответы. Это идеально для тестов, которые должны работать офлайн или с фиксированными данными.</p>
+</div>
+
+<h2>Практические примеры</h2>
+
+<h3>Пример 1: Мок API для тестирования</h3>
+<p>Полный пример теста, который мокирует API и проверяет отображение данных на странице.</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright, expect
+<span class="kw">import</span> json
+
+<span class="kw">def</span> <span class="fn">test_user_list_with_mock_api</span>():
+
+    mock_users <span class="op">=</span> [
+        {<span class="st">"id"</span>: <span class="nm">1</span>, <span class="st">"name"</span>: <span class="st">"Анна"</span>, <span class="st">"status"</span>: <span class="st">"active"</span>},
+        {<span class="st">"id"</span>: <span class="nm">2</span>, <span class="st">"name"</span>: <span class="st">"Борис"</span>, <span class="st">"status"</span>: <span class="st">"inactive"</span>},
+        {<span class="st">"id"</span>: <span class="nm">3</span>, <span class="st">"name"</span>: <span class="st">"Виктория"</span>, <span class="st">"status"</span>: <span class="st">"active"</span>}
+    ]
+
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser <span class="op">=</span> p.chromium.launch()
+        page <span class="op">=</span> browser.new_page()
+
+        <span class="cm"># Перехват запроса к API и возврат мок-данных</span>
+        page.route(<span class="st">"**/api/users"</span>, <span class="kw">lambda</span> route: route.fulfill(
+            status=<span class="nm">200</span>,
+            content_type=<span class="st">"application/json"</span>,
+            body=json.dumps(mock_users)
+        ))
+
+        page.goto(<span class="st">"https://example.com/users"</span>)
+
+        <span class="cm"># Проверка, что данные отображаются</span>
+        expect(page.get_by_text(<span class="st">"Анна"</span>)).to_be_visible()
+        expect(page.get_by_text(<span class="st">"Борис"</span>)).to_be_visible()
+        expect(page.get_by_text(<span class="st">"Виктория"</span>)).to_be_visible()
+
+        browser.close()</pre>
+
+<h3>Пример 2: Блокировка рекламы и аналитики</h3>
+<p>Блокировка нежелательных запросов для ускорения тестов и устранения внешних зависимостей.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_page_without_ads</span>(page):
+    <span class="cm"># Блокировка рекламы и аналитики</span>
+    page.route(<span class="st">"**/ads/**"</span>, <span class="kw">lambda</span> route: route.abort())
+    page.route(<span class="st">"**/analytics/**"</span>, <span class="kw">lambda</span> route: route.abort())
+    page.route(<span class="st">"**/tracker/**"</span>, <span class="kw">lambda</span> route: route.abort())
+
+    <span class="cm"># Блокировка изображений (для ускорения)</span>
+    page.route(<span class="st">"**/*.{png,jpg,jpeg,gif}"</span>, <span class="kw">lambda</span> route: route.abort())
+
+    <span class="cm"># Навигация на страницу</span>
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Проверка основного контента</span>
+    expect(page.get_by_role(<span class="st">"heading"</span>, name=<span class="st">"Добро пожаловать"</span>)).to_be_visible()</pre>
+
+<h3>Пример 3: Подмена изображения на тестовое</h3>
+<p>Замена изображений на тестовые заглушки для изоляции тестов.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_image_mock</span>(page):
+    <span class="cm"># Подмена всех изображений на тестовую заглушку</span>
+    page.route(<span class="st">"**/*.{png,jpg,jpeg,gif,webp}"</span>, <span class="kw">lambda</span> route: route.fulfill(
+        status=<span class="nm">200</span>,
+        content_type=<span class="st">"image/png"</span>,
+        path=<span class="st">"mocks/test-image.png"</span>  <span class="cm"># файл-заглушка 1x1 пиксель</span>
+    ))
+
+    page.goto(<span class="st">"https://example.com/gallery"</span>)
+
+    <span class="cm"># Все изображения загружены (заглушки)</span>
+    images <span class="op">=</span> page.get_by_role(<span class="st">"img"</span>).all()
+    assert <span class="fn">len</span>(images) <span class="op">==</span> <span class="nm">10</span></pre>
+
+<h3>Пример 4: Мокирование ошибок сети</h3>
+<p>Тестирование поведения страницы при различных сетевых ошибках.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_error_scenarios</span>(page):
+    <span class="cm"># Тест 1: ошибка 500 от API</span>
+    page.route(<span class="st">"**/api/data"</span>, <span class="kw">lambda</span> route: route.fulfill(
+        status=<span class="nm">500</span>,
+        content_type=<span class="st">"application/json"</span>,
+        body=<span class="st">'{"error": "Server Error"}'</span>
+    ))
+    page.goto(<span class="st">"https://example.com/data"</span>)
+    expect(page.get_by_text(<span class="st">"Ошибка загрузки данных"</span>)).to_be_visible()
+
+    <span class="cm"># Тест 2: таймаут запроса (очень медленный ответ)</span>
+    page.route(<span class="st">"**/api/data"</span>, <span class="kw">lambda</span> route: (
+        time.sleep(<span class="nm">60</span>),  <span class="cm"># долгий ответ</span>
+        route.fulfill(status=<span class="nm">200</span>, body=<span class="st">'"ok"'</span>)
+    ))
+    page.goto(<span class="st">"https://example.com/data"</span>)
+    expect(page.get_by_text(<span class="st">"Таймаут соединения"</span>)).to_be_visible()
+
+    <span class="cm"># Тест 3: блокировка запроса</span>
+    page.route(<span class="st">"**/api/data"</span>, <span class="kw">lambda</span> route: route.abort(<span class="st">"connectionrefused"</span>))
+    page.goto(<span class="st">"https://example.com/data"</span>)
+    expect(page.get_by_text(<span class="st">"Сервер недоступен"</span>)).to_be_visible()</pre>
+
+<h3>Пример 5: Динамическая модификация ответа</h3>
+<p>Перехват реального ответа и добавление в него тестовых данных.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_inject_test_data</span>(page):
+    <span class="kw">def</span> <span class="fn">modify_response</span>(route):
+        <span class="cm"># Выполняем реальный запрос</span>
+        response <span class="op">=</span> route.fetch()
+
+        <span class="cm"># Модифицируем JSON-ответ</span>
+        data <span class="op">=</span> response.json()
+        data[<span class="st">"test_mode"</span>] <span class="op">=</span> <span class="kw">True</span>
+        data[<span class="st">"notification"</span>] = <span class="st">"Это тестовое окружение"</span>
+
+        <span class="cm"># Добавляем элемент в массив</span>
+        <span class="kw">if</span> <span class="st">"items"</span> <span class="kw">in</span> data:
+            data[<span class="st">"items"</span>].insert(<span class="nm">0</span>, {<span class="st">"id"</span>: <span class="st">"test-001"</span>, <span class="st">"name"</span>: <span class="st">"Тестовый элемент"</span>})
+
+        route.fulfill(
+            status=response.status,
+            headers=response.headers,
+            body=json.dumps(data)
+        )
+
+    page.route(<span class="st">"**/api/config"</span>, modify_response)
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Проверка, что тестовые данные отображаются</span>
+    expect(page.get_by_text(<span class="st">"Это тестовое окружение"</span>)).to_be_visible()</pre>
+
+<h2>Заключение</h2>
+<p>Мокирование в Playwright — мощный механизм для контроля над сетевыми запросами в тестах. Основные возможности:</p>
+<ul>
+<li><strong>page.route()</strong> и <strong>context.route()</strong> — перехват запросов по glob-паттернам или регулярным выражениям</li>
+<li><strong>route.fulfill()</strong> — подмена ответа с полным контролем над статусом, заголовками и телом</li>
+<li><strong>route.abort()</strong> — блокировка нежелательных запросов (реклама, аналитика, внешние ресурсы)</li>
+<li><strong>route.continue_()</strong> — модификация запроса перед отправкой на сервер</li>
+<li><strong>route.fetch()</strong> — выполнение реального запроса из обработчика с возможностью модификации ответа</li>
+<li><strong>page.route_from_har()</strong> — воспроизведение ответов из HAR-файла</li>
+<li><strong>page.unroute()</strong> — удаление обработчиков</li>
+</ul>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

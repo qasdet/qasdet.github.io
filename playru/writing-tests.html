@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Написание тестов</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link active" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Написание тестов</h1>
+<p>Структура тестов Playwright, использование фикстур pytest, базовые паттерны и примеры кода.</p>
+</div>
+<div class="card">
+<h2>Структура теста с pytest</h2>
+<p>Playwright предоставляет плагин для pytest, который автоматически управляет браузером, контекстом и страницей. Вам не нужно вручную создавать и закрывать браузер — всё делается через фикстуры. Базовый тест выглядит так:</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_page_title</span>(page):
+    page.goto(<span class="st">"https://example.com"</span>)
+    <span class="kw">assert</span> page.title() <span class="op">==</span> <span class="st">"Example Domain"</span></pre>
+
+<p>В этом примере <code>page</code> — это фикстура, предоставленная плагином <code>pytest-playwright</code>. Она автоматически создаёт новый браузерный контекст и страницу для каждого теста, а после завершения теста закрывает их.</p>
+
+<div class="box box-info">
+<p><strong>Как это работает:</strong> Плагин pytest-playwright регистрирует несколько фикстур — <code>browser</code>, <code>context</code> и <code>page</code>. Они создаются заново для каждого теста, что обеспечивает полную изоляцию. Если тест завершается неудачей, браузер всё равно будет закрыт.</p>
+</div>
+
+<h2>Фикстуры pytest-playwright</h2>
+<p>Плагин предоставляет три основные фикстуры:</p>
+
+<h3>Фикстура <code>browser</code></h3>
+<p>Запускает экземпляр браузера. По умолчанию используется Chromium в headless-режиме. Фикстура живёт на протяжении всего теста и автоматически закрывается после его завершения.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_with_browser</span>(browser):
+    page <span class="op">=</span> browser.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)</pre>
+
+<h3>Фикстура <code>context</code></h3>
+<p>Создаёт новый браузерный контекст — изолированную сессию с собственными куками, localStorage и кэшем. Контекст используется для симуляции разных пользователей или разных устройств.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_with_context</span>(context):
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)</pre>
+
+<h3>Фикстура <code>page</code></h3>
+<p>Самая часто используемая фикстура. Она создаёт новый контекст и одну страницу в нём. Именно эту фикстуру вы будете использовать в большинстве тестов.</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_title</span>(page):
+    page.goto(<span class="st">"https://example.com"</span>)
+    <span class="kw">assert</span> page.title() <span class="op">==</span> <span class="st">"Example Domain"</span></pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Все три фикстуры автоматически управляют временем жизни объектов. Вам не нужно вызывать <code>browser.close()</code> или <code>page.close()</code> — pytest сделает это за вас. Это предотвращает утечки ресурсов в тестах.</p>
+</div>
+
+<h2>Правила именования тестов</h2>
+<p>pytest обнаруживает тесты по следующим правилам:</p>
+<ul>
+<li>Файлы должны называться <code>test_*.py</code> или <code>*_test.py</code></li>
+<li>Функции должны начинаться с <code>test_</code></li>
+<li>Классы с тестами должны начинаться с <code>Test</code> и не иметь метода <code>__init__</code></li>
+</ul>
+
+<pre><span class="cm"># test_example.py</span>
+<span class="kw">def</span> <span class="fn">test_checkbox</span>(page):
+    page.goto(<span class="st">"https://example.com"</span>)
+    page.locator(<span class="st">"#checkbox"</span>).check()
+    <span class="kw">assert</span> page.locator(<span class="st">"#checkbox"</span>).is_checked()</pre>
+
+<h2>Паттерн AAA (Arrange, Act, Assert)</h2>
+<p>Рекомендуется структурировать тесты по паттерну AAA:</p>
+<ul>
+<li><strong>Arrange (Подготовка)</strong> — настройка начального состояния: переход на страницу, заполнение форм, установка данных</li>
+<li><strong>Act (Действие)</strong> — выполнение тестируемого действия: клик, отправка формы, ввод текста</li>
+<li><strong>Assert (Проверка)</strong> — проверка ожидаемого результата: текст на странице, видимость элемента, URL</li>
+</ul>
+
+<pre><span class="kw">def</span> <span class="fn">test_search</span>(page):
+    <span class="cm"># Arrange</span>
+    page.goto(<span class="st">"https://example.com/search"</span>)
+
+    <span class="cm"># Act</span>
+    page.locator(<span class="st">"#search-input"</span>).fill(<span class="st">"Playwright"</span>)
+    page.locator(<span class="st">"#search-button"</span>).click()
+
+    <span class="cm"># Assert</span>
+    results <span class="op">=</span> page.locator(<span class="st">".result-item"</span>)
+    <span class="kw">assert</span> results.count() <span class="op">></span> <span class="nm">0</span>
+    <span class="kw">expect</span>(results.first).to_contain_text(<span class="st">"Playwright"</span>)</pre>
+
+<h2>Полный пример теста</h2>
+<p>Ниже приведён полноценный тест для формы входа:</p>
+
+<pre><span class="kw">def</span> <span class="fn">test_login</span>(page):
+    page.goto(<span class="st">"https://example.com/login"</span>)
+
+    <span class="cm"># Заполнение полей</span>
+    page.locator(<span class="st">"#username"</span>).fill(<span class="st">"testuser"</span>)
+    page.locator(<span class="st">"#password"</span>).fill(<span class="st">"testpass123"</span>)
+
+    <span class="cm"># Отправка формы</span>
+    page.locator(<span class="st">"button[type='submit']"</span>).click()
+
+    <span class="cm"># Проверка успешного входа</span>
+    <span class="kw">expect</span>(page).to_have_url(<span class="st">"https://example.com/dashboard"</span>)
+    <span class="kw">expect</span>(page.locator(<span class="st">".welcome-message"</span>)).to_be_visible()
+    <span class="kw">expect</span>(page.locator(<span class="st">".welcome-message"</span>)).to_contain_text(<span class="st">"Добро пожаловать"</span>)</pre>
+
+<h2>Асинхронные тесты</h2>
+<p>Playwright поддерживает как синхронный, так и асинхронный API. Для асинхронных тестов используйте фикстуру <code>async_page</code> и определяйте тестовые функции через <code>async def</code>:</p>
+
+<pre><span class="kw">import</span> pytest
+
+
+<span class="kw">async</span> <span class="kw">def</span> <span class="fn">test_async_title</span>(async_page):
+    <span class="kw">await</span> async_page.goto(<span class="st">"https://example.com"</span>)
+    title <span class="op">=</span> <span class="kw">await</span> async_page.title()
+    <span class="kw">assert</span> title <span class="op">==</span> <span class="st">"Example Domain"</span></pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Для асинхронных тестов убедитесь, что у вас установлен <code>pytest-asyncio</code>. Добавьте его в зависимости проекта: <code>pip install pytest-asyncio</code>. Затем настройте pytest для использования asyncio-режима в <code>pyproject.toml</code>.</p>
+</div>
+
+<h2>Использование Playwright как библиотеки (без pytest)</h2>
+<p>Если вы не используете pytest, вы можете работать с Playwright через контекстный менеджер <code>sync_playwright()</code>. Этот подход часто используется в скриптах для веб-скрапинга или в интеграционных тестах с другими фреймворками:</p>
+
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+
+<span class="kw">def</span> <span class="fn">run</span>():
+    <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+        browser <span class="op">=</span> p.chromium.launch(headless=<span class="kw">False</span>)
+        context <span class="op">=</span> browser.new_context(
+            viewport={<span class="st">"width"</span>: <span class="nm">1280</span>, <span class="st">"height"</span>: <span class="nm">720</span>}
+        )
+        page <span class="op">=</span> context.new_page()
+        page.goto(<span class="st">"https://example.com"</span>)
+        <span class="kw">print</span>(page.title())
+        browser.close()
+
+
+<span class="kw">if</span> __name__ <span class="op">==</span> <span class="st">"__main__"</span>:
+    run()</pre>
+
+<p>Контекстный менеджер гарантирует, что все ресурсы (процессы браузера, сокеты) будут корректно освобождены после завершения работы.</p>
+
+<h2>Распространённые действия в тестах</h2>
+<p>Playwright поддерживает все основные действия пользователя:</p>
+<ul>
+<li><strong>Навигация:</strong> <code>page.goto(url)</code> — переход по URL</li>
+<li><strong>Клик:</strong> <code>page.locator(selector).click()</code> — клик по элементу</li>
+<li><strong>Ввод текста:</strong> <code>page.locator(selector).fill(text)</code> — заполнение поля</li>
+<li><strong>Чекбоксы:</strong> <code>page.locator(selector).check()</code> / <code>.uncheck()</code></li>
+<li><strong>Селекты:</strong> <code>page.locator(selector).select_option(value)</code></li>
+<li><strong>Скриншоты:</strong> <code>page.screenshot(path="screenshot.png")</code></li>
+<li><strong>Ожидание:</strong> <code>page.wait_for_selector(selector)</code> — ожидание появления элемента</li>
+</ul>
+
+<pre><span class="kw">def</span> <span class="fn">test_user_flow</span>(page):
+    page.goto(<span class="st">"https://example.com/signup"</span>)
+
+    <span class="cm"># Заполнение формы регистрации</span>
+    page.locator(<span class="st">"#name"</span>).fill(<span class="st">"Иван Петров"</span>)
+    page.locator(<span class="st">"#email"</span>).fill(<span class="st">"ivan@example.com"</span>)
+    page.locator(<span class="st">"#country"</span>).select_option(<span class="st">"RU"</span>)
+    page.locator(<span class="st">"#agree-terms"</span>).check()
+
+    <span class="cm"># Отправка</span>
+    page.locator(<span class="st">"button[type='submit']"</span>).click()
+
+    <span class="cm"># Проверка успешной регистрации</span>
+    <span class="kw">expect</span>(page.locator(<span class="st">".success-message"</span>)).to_be_visible()</pre>
+
+<h2>Группировка тестов в классах</h2>
+<p>Для организации связанных тестов можно использовать классы:</p>
+
+<pre><span class="kw">class</span> <span class="fn">TestUserProfile</span>:
+
+    <span class="kw">def</span> <span class="fn">test_view_profile</span>(self, page):
+        page.goto(<span class="st">"https://example.com/profile"</span>)
+        <span class="kw">expect</span>(page.locator(<span class="st">".user-name"</span>)).to_have_text(<span class="st">"Иван Петров"</span>)
+
+    <span class="kw">def</span> <span class="fn">test_edit_profile</span>(self, page):
+        page.goto(<span class="st">"https://example.com/profile/edit"</span>)
+        page.locator(<span class="st">"#bio"</span>).fill(<span class="st">"QA Engineer"</span>)
+        page.locator(<span class="st">"#save"</span>).click()
+        <span class="kw">expect</span>(page.locator(<span class="st">".toast"</span>)).to_contain_text(<span class="st">"Сохранено"</span>)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте фикстуру <code>page</code> как аргумент метода класса — pytest автоматически прокидывает её. Вы также можете определить фикстуры уровня класса с помощью <code>@pytest.fixture(scope="class")</code> для переиспользования контекста.</p>
+</div>
+
+<h2>Лучшие практики</h2>
+<ul>
+<li><strong>Избегайте <code>time.sleep()</code>:</strong> Playwright имеет встроенное Auto-Waiting. Используйте <code>expect()</code> вместо произвольных задержек.</li>
+<li><strong>Используйте семантические локаторы:</strong> Предпочитайте <code>get_by_role()</code> и <code>get_by_test_id()</code> вместо CSS-селекторов.</li>
+<li><strong>Один тест — одна проверка:</strong> Каждый тест должен проверять одно поведение. Это упрощает отладку.</li>
+<li><strong>Не смешивайте синхронный и асинхронный API:</strong> Выберите один стиль и придерживайтесь его во всём проекте.</li>
+<li><strong>Используйте фикстуру <code>page</code>:</strong> Она автоматически управляет ресурсами. Не создавайте браузер вручную в тестах.</li>
+</ul>
+
+<p>Переходите к разделу <a href="running-tests.html">Запуск тестов</a>, чтобы узнать, как запускать, конфигурировать и получать отчёты о выполнении тестов.</p>
+</div>
+<div class="footer">
+Playwright Python — полный справочник на русском языке
+</div>
+</main>
+</div>
+</body>
+</html>

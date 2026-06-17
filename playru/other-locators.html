@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Другие локаторы</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link active" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Другие локаторы</h1>
+<p>CSS-локаторы с расширениями Playwright, XPath, текстовые селекторы, псевдоклассы, позиционные селекторы и низкоуровневые строковые локаторы.</p>
+</div>
+<div class="card">
+<h2>Обзор</h2>
+<p>Помимо высокоуровневых семантических локаторов (<code>get_by_role</code>, <code>get_by_text</code> и т.д.), Playwright поддерживает традиционные CSS-селекторы, XPath и текстовые селекторы, дополненные собственными мощными расширениями. Эти локаторы удобно использовать как строку в методе <code>page.locator()</code>.</p>
+
+<div class="box box-info">
+<p><strong>Рекомендация:</strong> Отдавайте предпочтение семантическим локаторам из раздела <a href="locators.html" style="color:var(--primary);">Локаторы</a> (get_by_role и т.д.). CSS/XPath используйте, когда семантические методы недостаточно выразительны или когда вы работаете со сложными структурами DOM.</p>
+</div>
+
+<h2>CSS-локаторы со встроенными расширениями Playwright</h2>
+<p>Playwright расширяет стандартные CSS-селекторы мощными псевдоклассами, которые значительно упрощают поиск элементов.</p>
+
+<h3>page.locator() — Базовый CSS-селектор</h3>
+<pre><span class="cm"># Поиск по CSS-классу</span>
+page.locator(<span class="st">".button-primary"</span>).click()
+
+<span class="cm"># Поиск по ID</span>
+page.locator(<span class="st">"#submit-btn"</span>).click()
+
+<span class="cm"># Поиск по атрибуту</span>
+page.locator(<span class="st">"[data-testid='login']"</span>).click()
+
+<span class="cm"># Вложенные селекторы</span>
+page.locator(<span class="st">"div.container > form .field input"</span>).fill(<span class="st">"test"</span>)</pre>
+
+<h2>Псевдокласс :visible</h2>
+<p>Находит только видимые элементы. Исключает элементы с <code>display: none</code>, <code>visibility: hidden</code>, нулевыми размерами и <code>opacity: 0</code>.</p>
+
+<pre><span class="cm"># Только видимые кнопки</span>
+page.locator(<span class="st">"button:visible"</span>).click()
+
+<span class="cm"># Видимые поля ввода</span>
+visible_inputs <span class="op">=</span> page.locator(<span class="st">"input:visible"</span>).all()
+
+<span class="cm"># Комбинация с другими селекторами</span>
+page.locator(<span class="st">".dropdown-item:visible"</span>).first.click()</pre>
+
+<h2>Псевдокласс :has-text()</h2>
+<p>Находит элементы, чей текст содержит указанную подстроку. Регистр не имеет значения.</p>
+
+<pre><span class="cm"># Кнопка, содержащая текст "Submit"</span>
+page.locator(<span class="st">"button:has-text('Submit')"</span>).click()
+
+<span class="cm"># Любой элемент, содержащий "Total:"</span>
+page.locator(<span class="st">":has-text('Total:')"</span>)
+
+<span class="cm"># Пункт списка, содержащий "Важный"</span>
+page.locator(<span class="st">"li:has-text('Важный')"</span>)</pre>
+
+<h2>Псевдокласс :text()</h2>
+<p>Находит элементы с точным текстовым содержимым. Поддерживает строки и регулярные выражения.</p>
+
+<pre><span class="cm"># Точное совпадение текста (регистр имеет значение)</span>
+page.locator(<span class="st">"button:text('Submit')"</span>).click()
+
+<span class="cm"># Текст с регулярным выражением</span>
+page.locator(<span class="st">"div:text('Цена: \\d+ руб')"</span>)
+
+<span class="cm"># Поиск по тексту с учётом пробелов</span>
+page.locator(<span class="st">"a:text('На главную')"</span>)
+
+<span class="cm"># Элемент с точным текстом "Готово"</span>
+page.locator(<span class="st">"button:text('Готово')"</span>)</pre>
+
+<h2>Псевдоклассы :text-is() и :text-matches()</h2>
+<p><code>:text-is()</code> — точное совпадение текста (аналог <code>:text()</code>). <code>:text-matches()</code> — поиск по регулярному выражению.</p>
+
+<pre><span class="cm"># Точный текст (полное совпадение всего текстового содержимого)</span>
+page.locator(<span class="st">":text-is('Полный текст элемента')"</span>)
+
+<span class="cm"># Регулярное выражение (более гибкий синтаксис)</span>
+page.locator(<span class="st">":text-matches('^Привет, \\w+$')"</span>)
+
+<span class="cm"># Регекс с флагами</span>
+page.locator(<span class="st">":text-matches('цена', 'i')"</span>)  <span class="cm"># i — ignore case</span></pre>
+
+<h2>Псевдокласс :has()</h2>
+<p>Находит элементы, которые содержат определённых потомков. Аналог CSS-функции <code>:has()</code>.</p>
+
+<pre><span class="cm"># Строка таблицы, содержащая ячейку с текстом "Активен"</span>
+page.locator(<span class="st">"tr:has(td:text('Активен'))"</span>)
+
+<span class="cm"># Раздел, содержащий кнопку "Удалить"</span>
+page.locator(<span class="st">"div.card:has(button:text('Удалить'))"</span>)
+
+<span class="cm"># Форма, содержащая поле с placeholder "Email"</span>
+page.locator(<span class="st">"form:has(input[placeholder='Email'])"</span>)</pre>
+
+<h2>Псевдокласс :is()</h2>
+<p>Логическое ИЛИ для селекторов. Позволяет объединить несколько селекторов в один.</p>
+
+<pre><span class="cm"># Кнопка ИЛИ ссылка</span>
+page.locator(<span class="st">":is(button, a[role='button'])"</span>)
+
+<span class="cm"># Заголовки h1, h2, h3</span>
+page.locator(<span class="st">":is(h1, h2, h3):text('Введение')"</span>)
+
+<span class="cm"># Поля разных типов</span>
+page.locator(<span class="st">":is(input[type='email'], input[type='text'])"</span>)</pre>
+
+<h2>Псевдокласс :nth-match()</h2>
+<p>Выбирает n-ное совпадение среди всех элементов, соответствующих селектору. Отличие от <code>nth-child</code> в том, что <code>:nth-match()</code> считает среди всех совпадений, а не среди siblings.</p>
+
+<pre><span class="cm"># Второй элемент с классом .item (среди всех .item на странице)</span>
+page.locator(<span class="st">":nth-match(.item, 2)"</span>).click()
+
+<span class="cm"># Четвёртая кнопка на странице</span>
+page.locator(<span class="st">":nth-match(button, 4)"</span>)
+
+<span class="cm"># Первый видимый элемент</span>
+page.locator(<span class="st">":nth-match(:visible, 1)"</span>)</pre>
+
+<h2>Позиционные псевдоклассы</h2>
+<p>Playwright предоставляет уникальные псевдоклассы для поиска элементов по их положению относительно других элементов на странице.</p>
+
+<h3>:right-of() и :left-of()</h3>
+<pre><span class="cm"># Элемент справа от указанного</span>
+page.locator(<span class="st">"input:right-of(label:text('Имя'))"</span>)
+
+<span class="cm"># Элемент слева от указанного</span>
+page.locator(<span class="st">"label:left-of(input[name='email'])"</span>)</pre>
+
+<h3>:above() и :below()</h3>
+<pre><span class="cm"># Элемент выше указанного</span>
+page.locator(<span class="st">"div:above(button:text('Submit'))"</span>)
+
+<span class="cm"># Элемент ниже указанного</span>
+page.locator(<span class="st">"p:below(h1)"</span>)</pre>
+
+<h3>:near()</h3>
+<pre><span class="cm"># Элемент рядом (в радиусе 50 пикселей по умолчанию)</span>
+page.locator(<span class="st">"input:near(label:text('Email'))"</span>)
+
+<span class="cm"># С кастомным радиусом</span>
+page.locator(<span class="st">"input:near(label:text('Email'), 100)"</span>)</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Позиционные селекторы удобны для тестирования форм и макетов, где элементы расположены рядом друг с другом. Однако они могут быть медленнее обычных селекторов, так как Playwright вычисляет позиции всех элементов на странице.</p>
+</div>
+
+<h2>XPath-локаторы</h2>
+<p>Playwright автоматически определяет XPath, если селектор начинается с <code>//</code> или <code>..</code>. Поддерживается полный синтаксис XPath.</p>
+
+<pre><span class="cm"># Базовый XPath (автоопределение по //)</span>
+page.locator(<span class="st">"//button[@id='submit']"</span>).click()
+
+<span class="cm"># XPath с текстом</span>
+page.locator(<span class="st">"//button[text()='Submit']"</span>).click()
+
+<span class="cm"># XPath с contains</span>
+page.locator(<span class="st">"//a[contains(@href, '/dashboard')]"</span>).click()
+
+<span class="cm"># XPath по ancestors</span>
+page.locator(<span class="st">"..//div[@class='card']"</span>)
+
+<span class="cm"># XPath с индексом</span>
+page.locator(<span class="st">"(//input[@type='text'])[2]"</span>).fill(<span class="st">"test"</span>)
+
+<span class="cm"># XPath с логическими операциями</span>
+page.locator(<span class="st">"//button[@type='submit' and @disabled]"</span>)
+
+<span class="cm"># XPath с осью following-sibling</span>
+page.locator(<span class="st">"//label[text()='Email']/following-sibling::input"</span>)</pre>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> XPath-селекторы работают во всех браузерах, но они менее устойчивы к изменениям DOM, чем семантические локаторы. Предпочитайте <code>get_by_role</code> или CSS с псевдоклассами Playwright.</p>
+</div>
+
+<h2>Текстовые локаторы с префиксом text=</h2>
+<p>Playwright поддерживает текстовые селекторы через префикс <code>text=</code>. По умолчанию ищет подстроку.</p>
+
+<pre><span class="cm"># Поиск по тексту (подстрока)</span>
+page.locator(<span class="st">"text=Submit"</span>).click()
+
+<span class="cm"># Точное совпадение текста</span>
+page.locator(<span class="st">"text=Submit"</span>, exact=<span class="kw">True</span>).click()
+
+<span class="cm"># Поиск по тексту в конкретном элементе</span>
+page.locator(<span class="st">"button:has-text('Submit')"</span>).click()
+
+<span class="cm"># text= с CSS-селектором</span>
+page.locator(<span class="st">"button.text='Нажми меня'"</span>)</pre>
+
+<h2>Локаторы по атрибутам</h2>
+<pre><span class="cm"># По data-testid (как get_by_test_id, но через CSS)</span>
+page.locator(<span class="st">"[data-testid='submit-button']"</span>).click()
+
+<span class="cm"># По id (атрибут id)</span>
+page.locator(<span class="st">"id=submit-btn"</span>).click()
+
+<span class="cm"># По data-test-id</span>
+page.locator(<span class="st">"[data-test-id='header']"</span>)
+
+<span class="cm"># По data-test</span>
+page.locator(<span class="st">"[data-test='login-form']"</span>)
+
+<span class="cm"># По произвольному атрибуту</span>
+page.locator(<span class="st">"[aria-label='Закрыть']"</span>).click()
+
+<span class="cm"># По нескольким атрибутам</span>
+page.locator(<span class="st">"input[type='email'][required]"</span>)</pre>
+
+<h2>nth= — n-ный элемент</h2>
+<pre><span class="cm"># Третий элемент с классом .item (0-based)</span>
+page.locator(<span class="st">".item >> nth=2"</span>).click()
+
+<span class="cm"># Первый элемент (можно nth=0)</span>
+page.locator(<span class="st">".item >> nth=0"</span>)
+
+<span class="cm"># Последний элемент</span>
+page.locator(<span class="st">".item >> nth=-1"</span>)</pre>
+
+<h2>Цепочки селекторов через &gt;&gt; (legacy)</h2>
+<p>Синтаксис <code>&gt;&gt;</code> позволяет объединять селекторы в цепочку, где каждый последующий селектор ищется в контексте предыдущего. Этот синтаксис считается устаревшим — используйте метод <code>locator.filter()</code> или цепочки вызовов.</p>
+
+<pre><span class="cm"># Legacy-цепочка: найти div.card, внутри него кнопку (устаревший синтаксис)</span>
+page.locator(<span class="st">"div.card >> button:text('Подробнее')"</span>).click()
+
+<span class="cm"># Более сложная цепочка</span>
+page.locator(<span class="st">"#sidebar >> .nav-item >> :text('Настройки')"</span>)
+
+<span class="cm"># Современная альтернатива (рекомендуемая)</span>
+page.locator(<span class="st">"#sidebar"</span>).locator(<span class="st">".nav-item"</span>).filter(has_text=<span class="st">"Настройки"</span>)</pre>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Синтаксис <code>&gt;&gt;</code> всё ещё работает, но рекомендуется использовать вложенные локаторы через метод <code>locator()</code> или цепочки методов для лучшей читаемости.</p>
+</div>
+
+<h2>Комбинирование подходов</h2>
+<p>Playwright позволяет гибко комбинировать разные типы локаторов в одном запросе.</p>
+
+<pre><span class="cm"># CSS + текст (псевдокласс :has-text)</span>
+page.locator(<span class="st">".card:has-text('Регистрация')"</span>)
+
+<span class="cm"># XPath + CSS (через .locator)</span>
+card <span class="op">=</span> page.locator(<span class="st">"//div[@class='card']"</span>)
+card.locator(<span class="st">"button.primary"</span>).click()
+
+<span class="cm"># get_by_role + CSS-фильтр</span>
+page.get_by_role(<span class="st">"row"</span>).filter(
+    has=page.locator(<span class="st">"td.status-active"</span>)
+)
+
+<span class="cm"># get_by_test_id + текстовый фильтр</span>
+page.get_by_test_id(<span class="st">"user-list"</span>).filter(has_text=<span class="st">"Администратор"</span>)</pre>
+
+<h2>Практические примеры</h2>
+
+<h3>Пример: поиск строки в сложной таблице</h3>
+<pre><span class="kw">def</span> <span class="fn">test_table_row</span>(page):
+    page.goto(<span class="st">"https://example.com/orders"</span>)
+
+    <span class="cm"># CSS + has: найти строку, содержащую определённый статус</span>
+    row <span class="op">=</span> page.locator(<span class="st">"tr:has(td:has-text('ORD-0042'))"</span>)
+
+    <span class="cm"># Проверить статус заказа</span>
+    status <span class="op">=</span> row.locator(<span class="st">"td:nth-child(3)"</span>)
+    expect(status).to_have_text(<span class="st">"Доставлено"</span>)
+
+    <span class="cm"># Кликнуть по кнопке в найденной строке</span>
+    row.locator(<span class="st">"button:has-text('Детали')"</span>).click()</pre>
+
+<h3>Пример: сложная форма с XPath</h3>
+<pre><span class="kw">def</span> <span class="fn">test_complex_form</span>(page):
+    page.goto(<span class="st">"https://example.com/complex-form"</span>)
+
+    <span class="cm"># XPath: найти input после label с текстом "Email"</span>
+    page.locator(<span class="st">"//label[text()='Email']/following-sibling::input"</span>).fill(<span class="st">"test@test.com"</span>)
+
+    <span class="cm"># Позиционный CSS: поле справа от label "Телефон"</span>
+    page.locator(<span class="st">"input:right-of(label:text('Телефон'))"</span>).fill(<span class="st">"+7-999-123-45-67"</span>)
+
+    <span class="cm"># :has() с :visible для поиска активного элемента</span>
+    page.locator(<span class="st">"div.field:has(input:visible)"</span>).first.locator(<span class="st">"input"</span>).fill(<span class="st">"test"</span>)</pre>
+
+<h3>Пример: фильтрация по видимости</h3>
+<pre><span class="kw">def</span> <span class="fn">test_visible_items</span>(page):
+    page.goto(<span class="st">"https://example.com/catalog"</span>)
+
+    <span class="cm"># Только видимые товары на странице</span>
+    visible_products <span class="op">=</span> page.locator(<span class="st">".product-card:visible"</span>).all()
+
+    <span class="cm"># Проверить, что определённый товар видим</span>
+    target <span class="op">=</span> page.locator(<span class="st">".product-card:visible:has-text('Товар #5')"</span>)
+    expect(target).to_be_visible()
+
+    <span class="cm"># Кликнуть по первой видимой кнопке "Купить"</span>
+    page.locator(<span class="st">"button:visible:has-text('Купить')"</span>).first.click()</pre>
+
+<h2>Сравнение методов поиска элементов</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Метод / Селектор</th><th>Пример</th><th>Когда использовать</th></tr>
+</thead>
+<tbody>
+<tr><td><code>get_by_role()</code></td><td><code>get_by_role("button", name="Submit")</code></td><td>Всегда в первую очередь</td></tr>
+<tr><td><code>get_by_text()</code></td><td><code>get_by_text("Submit")</code></td><td>Поиск по тексту элемента</td></tr>
+<tr><td><code>get_by_label()</code></td><td><code>get_by_label("Email")</code></td><td>Поля ввода с label</td></tr>
+<tr><td><code>get_by_test_id()</code></td><td><code>get_by_test_id("submit")</code></td><td>Тестовые идентификаторы</td></tr>
+<tr><td>CSS</td><td><code>locator(".btn")</code></td><td>Сложные DOM-структуры</td></tr>
+<tr><td>CSS + :has-text</td><td><code>locator("button:has-text('Submit')")</code></td><td>CSS + фильтр по тексту</td></tr>
+<tr><td>CSS + :visible</td><td><code>locator("button:visible")</code></td><td>Только видимые элементы</td></tr>
+<tr><td>CSS + :near()</td><td><code>locator("input:near(label)")</code></td><td>Поиск по расположению</td></tr>
+<tr><td>XPath</td><td><code>locator("//button")</code></td><td>Сложные обходы DOM</td></tr>
+<tr><td>text=</td><td><code>locator("text=Submit")</code></td><td>Простой поиск по тексту</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Заключение</h2>
+<p>Playwright предоставляет богатый арсенал низкоуровневых селекторов: от расширенных CSS с уникальными псевдоклассами до полноценного XPath. Используйте их в паре с семантическими локаторами для максимальной гибкости и точности поиска элементов. Помните о приоритете: сначала <code>get_by_role</code> и <code>get_by_text</code>, затем CSS с псевдоклассами, и только потом XPath.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

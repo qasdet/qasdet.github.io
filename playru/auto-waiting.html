@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Автоматическое ожидание</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link active" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Автоматическое ожидание (Auto-Waiting)</h1>
+<p>Полное руководство по встроенному механизму автоматических ожиданий в Playwright: принципы работы, настройка таймаутов, явные ожидания и стратегии для стабильных тестов.</p>
+</div>
+<div class="card">
+<h2>Что такое Auto-Waiting</h2>
+<p>Auto-Waiting (автоматическое ожидание) — ключевая особенность Playwright, которая кардинально повышает стабильность тестов. Перед тем как выполнить любое действие над элементом (клик, ввод текста, выбор опции и т.д.), Playwright автоматически ожидает, что элемент станет готов к взаимодействию. Вам не нужно писать <code>time.sleep()</code>, <code>WebDriverWait</code> или другие явные ожидания — Playwright делает это за вас.</p>
+
+<div class="box box-info">
+<p><strong>Ключевое преимущество:</strong> Auto-Waiting — одна из главных причин, почему тесты на Playwright реже «flaky» (нестабильны) по сравнению с тестами на Selenium. Playwright ждёт не просто появления элемента, а его полной готовности к взаимодействию.</p>
+</div>
+
+<h2>Actionability Checks (Проверки готовности)</h2>
+<p>Перед выполнением действия Playwright проверяет пять условий. Элемент должен соответствовать <strong>всем</strong> этим требованиям:</p>
+
+<h3>1. Привязан к DOM (Attached to DOM)</h3>
+<p>Элемент должен быть частью DOM-дерева. Если элемент был удалён из DOM (например, после динамической перерисовки), Playwright будет ждать, пока он снова появится.</p>
+
+<h3>2. Видим (Visible)</h3>
+<p>Элемент должен быть видимым на странице. Проверяются CSS-свойства: <code>display</code> не равен <code>none</code>, <code>visibility</code> не равен <code>hidden</code>, <code>opacity</code> не равен <code>0</code>, элемент имеет ненулевые размеры (<code>width</code> и <code>height</code> больше нуля).</p>
+
+<h3>3. Стабилен (Stable) — проверка стабильности</h3>
+<p>Playwright проверяет, что элемент не анимируется и не меняет своё положение. Для этого фреймворк дважды замеряет позицию элемента с интервалом в 500 мс. Если координаты совпали — элемент стабилен. Это критически важно для элементов с анимацией появления, CSS-переходами или динамическим контентом.</p>
+
+<h3>4. Не заблокирован (Not obstructed)</h3>
+<p>Playwright проверяет, что поверх целевого элемента не находится другой элемент, который может перехватить событие клика. Например, модальное окно, всплывающая подсказка или overlay. Если другой элемент перекрывает целевой, Playwright ждёт, пока он исчезнет.</p>
+
+<h3>5. Включён (Enabled)</h3>
+<p>Элемент не должен быть отключён (disabled). Проверяется атрибут <code>disabled</code> и CSS-свойство <code>pointer-events: none</code>. Отключённые поля ввода, кнопки и другие элементы не могут принимать взаимодействие.</p>
+
+<div class="box box-warning">
+<p><strong>Важно:</strong> Каждое из этих условий должно выполниться в течение таймаута (по умолчанию 30 секунд). Если хотя бы одно условие не выполнилось за отведённое время, Playwright выбрасывает исключение с подробным описанием, какая именно проверка не прошла и каково было состояние элемента.</p>
+</div>
+
+<h2>Таймауты по умолчанию</h2>
+<p>Playwright использует следующие таймауты по умолчанию:</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr><th>Таймаут</th><th>Значение по умолчанию</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td><code>timeout</code> (глобальный)</td><td>30000 мс (30 с)</td><td>Таймаут для всех действий и утверждений</td></tr>
+<tr><td><code>assertions_timeout</code></td><td>10000 мс (10 с)</td><td>Таймаут для утверждений (expect)</td></tr>
+<tr><td><code>navigation_timeout</code></td><td>30000 мс (30 с)</td><td>Таймаут для навигаций (page.goto, page.reload)</td></tr>
+<tr><td><code>global_timeout</code></td><td>нет (0)</td><td>Максимальное время выполнения всего теста</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Настройка таймаутов</h2>
+
+<h3>Глобальная настройка через set_default_timeout()</h3>
+<pre><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
+
+<span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
+    browser <span class="op">=</span> p.chromium.launch()
+    context <span class="op">=</span> browser.new_context()
+
+    <span class="cm"># Установка глобального таймаута для всех действий (60 секунд)</span>
+    context.set_default_timeout(<span class="nm">60000</span>)
+
+    page <span class="op">=</span> context.new_page()
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Для одной страницы</span>
+    page.set_default_timeout(<span class="nm">45000</span>)</pre>
+
+<h3>Настройка через pytest-playwright</h3>
+<pre><span class="cm"># conftest.py — настройка таймаутов для всех тестов</span>
+<span class="kw">import</span> pytest
+
+<span class="kw">def</span> <span class="fn">pytest_collection_modifyitems</span>(items):
+    <span class="cm"># Можно настроить таймаут через маркер</span>
+    <span class="kw">for</span> item <span class="kw">in</span> items:
+        item.add_marker(pytest.mark.timeout(<span class="nm">120</span>))
+
+<span class="cm"># pytest.ini или pyproject.toml:</span>
+<span class="cm"># [tool.pytest.ini_options]</span>
+<span class="cm"># timeout = 120</span></pre>
+
+<pre><span class="cm"># Настройка через конфигурацию playwright в pytest</span>
+<span class="cm"># pytest.ini</span>
+<span class="cm"># [pytest]</span>
+<span class="cm"># playwright_default_timeout = 60000</span></pre>
+
+<h3>Таймаут для конкретного действия</h3>
+<pre><span class="cm"># Таймаут только для этого клика (10 секунд вместо 30)</span>
+page.get_by_role(<span class="st">"button"</span>).click(timeout=<span class="nm">10000</span>)
+
+<span class="cm"># Таймаут для fill</span>
+page.get_by_label(<span class="st">"Email"</span>).fill(<span class="st">"user@example.com"</span>, timeout=<span class="nm">5000</span>)</pre>
+
+<h3>Настройка таймаутов для утверждений</h3>
+<pre><span class="cm"># Установка таймаута утверждений для теста</span>
+page.set_default_timeout(<span class="nm">15000</span>)
+
+<span class="cm"># Или для конкретного expect</span>
+expect(page.get_by_text(<span class="st">"Success"</span>)).to_be_visible(timeout=<span class="nm">5000</span>)
+
+<span class="cm"># Ожидание определённого URL с таймаутом</span>
+expect(page).to_have_url(<span class="st">"https://example.com/dashboard"</span>, timeout=<span class="nm">20000</span>)</pre>
+
+<h2>Явные ожидания (Explicit Waits)</h2>
+<p>Несмотря на Auto-Waiting, иногда требуются явные ожидания — когда нужно дождаться определённого состояния страницы или элемента.</p>
+
+<h3>locator.wait_for() — Ожидание состояния элемента</h3>
+<pre><span class="cm"># Ожидание появления элемента (по умолчанию visible)</span>
+page.get_by_text(<span class="st">"Loading complete"</span>).wait_for()
+
+<span class="cm"># Ожидание определённого состояния</span>
+page.get_by_role(<span class="st">"button"</span>).wait_for(state=<span class="st">"visible"</span>)
+page.get_by_role(<span class="st">"button"</span>).wait_for(state=<span class="st">"attached"</span>)
+page.get_by_role(<span class="st">"button"</span>).wait_for(state=<span class="st">"hidden"</span>)
+page.get_by_role(<span class="st">"button"</span>).wait_for(state=<span class="st">"detached"</span>)
+
+<span class="cm"># С кастомным таймаутом</span>
+page.get_by_text(<span class="st">"Completed"</span>).wait_for(timeout=<span class="nm">15000</span>)</pre>
+
+<h3>page.wait_for_load_state() — Ожидание состояния загрузки</h3>
+<pre><span class="cm"># Ожидание полной загрузки страницы</span>
+page.wait_for_load_state()
+page.wait_for_load_state(<span class="st">"load"</span>)
+page.wait_for_load_state(<span class="st">"domcontentloaded"</span>)
+page.wait_for_load_state(<span class="st">"networkidle"</span>)  <span class="cm"># Нет сетевых запросов более 500 мс</span>
+
+<span class="cm"># Ожидание после клика, который вызывает навигацию</span>
+page.get_by_text(<span class="st">"Go to dashboard"</span>).click()
+page.wait_for_load_state(<span class="st">"networkidle"</span>)</pre>
+
+<h3>page.wait_for_url() — Ожидание URL</h3>
+<pre><span class="cm"># Ожидание конкретного URL</span>
+page.wait_for_url(<span class="st">"https://example.com/dashboard"</span>)
+
+<span class="cm"># Ожидание URL по паттерну (glob)</span>
+page.wait_for_url(<span class="st">"**/dashboard"</span>)
+
+<span class="cm"># Ожидание URL по регулярному выражению</span>
+page.wait_for_url(re.compile(<span class="st">r"/dashboard/\d+"</span>))
+
+<span class="cm"># С таймаутом</span>
+page.wait_for_url(<span class="st">"**/success"</span>, timeout=<span class="nm">10000</span>)</pre>
+
+<h3>page.wait_for_selector() — Ожидание селектора</h3>
+<pre><span class="cm"># Ожидание появления элемента по CSS-селектору</span>
+page.wait_for_selector(<span class="st">".loading-spinner"</span>)
+
+<span class="cm"># Ожидание исчезновения</span>
+page.wait_for_selector(<span class="st">".loading-spinner"</span>, state=<span class="st">"hidden"</span>)
+
+<span class="cm"># С таймаутом</span>
+page.wait_for_selector(<span class="st">".success-message"</span>, timeout=<span class="nm">20000</span>)</pre>
+
+<h3>page.wait_for_function() — Ожидание JS-выражения</h3>
+<pre><span class="cm"># Ожидание выполнения JavaScript-условия</span>
+page.wait_for_function(<span class="st">"window.app.ready === true"</span>)
+
+<span class="cm"># С аргументами</span>
+page.wait_for_function(
+    <span class="st">"(selector) => document.querySelector(selector) !== null"</span>,
+    arg=<span class="st">"#my-element"</span>
+)
+
+<span class="cm"># С таймаутом</span>
+page.wait_for_function(<span class="st">"document.title === 'Dashboard'"</span>, timeout=<span class="nm">5000</span>)</pre>
+
+<h3>page.wait_for_event() — Ожидание события</h3>
+<pre><span class="cm"># Ожидание определённого события</span>
+<span class="kw">with</span> page.expect_event(<span class="st">"download"</span>) <span class="kw">as</span> event_info:
+    page.get_by_text(<span class="st">"Download report"</span>).click()
+download <span class="op">=</span> event_info.value
+
+<span class="cm"># Ожидание появления диалога</span>
+<span class="kw">with</span> page.expect_event(<span class="st">"dialog"</span>) <span class="kw">as</span> dialog_info:
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Delete"</span>).click()
+dialog <span class="op">=</span> dialog_info.value
+dialog.accept()</pre>
+
+<h2>Ожидание нескольких событий</h2>
+<pre><span class="cm"># Ожидание двух параллельных событий</span>
+<span class="kw">with</span> page.expect_event(<span class="st">"requestfinished"</span>) <span class="kw">as</span> req_info:
+    <span class="kw">with</span> page.expect_event(<span class="st">"download"</span>) <span class="kw">as</span> dl_info:
+        page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Export"</span>).click()
+request <span class="op">=</span> req_info.value
+download <span class="op">=</span> dl_info.value</pre>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Используйте <code>page.wait_for_load_state("networkidle")</code> с осторожностью. Некоторые современные SPA-приложения могут поддерживать постоянные WebSocket-соединения, из-за чего <code>networkidle</code> никогда не наступит. В таких случаях лучше использовать <code>locator.wait_for()</code> с конкретным элементом.</p>
+</div>
+
+<h2>Как обойти Auto-Waiting: force=True</h2>
+<p>В некоторых ситуациях вам может потребоваться выполнить действие без проверок готовности. Для этого используется параметр <code>force=True</code>. Он полностью отключает все пять проверок actionability.</p>
+
+<pre><span class="cm"># Принудительный клик без ожиданий</span>
+page.get_by_role(<span class="st">"button"</span>).click(force=<span class="kw">True</span>)
+
+<span class="cm"># Принудительная отметка чекбокса</span>
+page.get_by_role(<span class="st">"checkbox"</span>).check(force=<span class="kw">True</span>)
+
+<span class="cm"># Принудительная очистка поля</span>
+page.get_by_label(<span class="st">"Name"</span>).fill(<span class="st">"test"</span>, force=<span class="kw">True</span>)</pre>
+
+<div class="box box-warning">
+<p><strong>Внимание:</strong> Используйте <code>force=True</code> только когда вы точно понимаете, почему элемент не проходит проверки actionability. Чаще всего проблема решается корректным ожиданием, а не принудительным действием. Злоупотребление <code>force=True</code> может привести к flaky-тестам.</p>
+</div>
+
+<h2>Проверка стабильности элемента (Stability Checks)</h2>
+<p>Playwright проверяет стабильность элемента, дважды замеряя его положение с интервалом 500 мс. Если координаты совпадают — элемент считается стабильным. Это особенно важно для:</p>
+<ul>
+<li><strong>Анимированных элементов</strong> — элементы, которые появляются с CSS-анимацией (fadeIn, slideDown и т.д.)</li>
+<li><strong>Динамического контента</strong> — контент, который подгружается и меняет размеры/положение элементов на странице</li>
+<li><strong>Элементов с CSS-переходами</strong> — transition на transform, top, left и другие позиционирующие свойства</li>
+</ul>
+
+<p>Пример проблемы, которую решает проверка стабильности:</p>
+<pre><span class="cm"># Без Auto-Waiting этот тест мог бы упасть, если бы</span>
+<span class="cm"># меню появлялось с анимацией slideDown</span>
+page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Меню"</span>).click()
+
+<span class="cm"># Playwright подождёт, пока анимация закончится и пункт меню</span>
+<span class="cm"># займёт своё финальное положение</span>
+page.get_by_role(<span class="st">"menuitem"</span>, name=<span class="st">"Настройки"</span>).click()</pre>
+
+<h2>Стратегии ожидания в сложных сценариях</h2>
+
+<h3>Комбинирование явных ожиданий</h3>
+<pre><span class="kw">def</span> <span class="fn">test_complex_form</span>(page):
+    page.goto(<span class="st">"https://example.com/form"</span>)
+
+    <span class="cm"># Ждём загрузки формы</span>
+    page.wait_for_load_state(<span class="st">"networkidle"</span>)
+
+    <span class="cm"># Ждём появления поля ввода</span>
+    page.get_by_label(<span class="st">"Username"</span>).wait_for(state=<span class="st">"visible"</span>)
+    page.get_by_label(<span class="st">"Username"</span>).fill(<span class="st">"test_user"</span>)
+
+    <span class="cm"># Отправляем форму и ждём URL</span>
+    page.get_by_role(<span class="st">"button"</span>, name=<span class="st">"Submit"</span>).click()
+    page.wait_for_url(<span class="st">"**/success"</span>, timeout=<span class="nm">15000</span>)
+
+    <span class="cm"># Ждём появления сообщения об успехе</span>
+    success_message <span class="op">=</span> page.get_by_text(<span class="st">"Форма успешно отправлена"</span>)
+    success_message.wait_for(timeout=<span class="nm">5000</span>)
+
+    <span class="cm"># Утверждение с ожиданием</span>
+    expect(success_message).to_be_visible()</pre>
+
+<h3>Ожидание с пользовательским условием</h3>
+<pre><span class="kw">def</span> <span class="fn">test_wait_for_custom_condition</span>(page):
+    page.goto(<span class="st">"https://example.com"</span>)
+
+    <span class="cm"># Ожидание, когда определённый элемент получит конкретный текст</span>
+    page.wait_for_function(
+        <span class="st">"() => document.querySelector('.status').textContent === 'Готово'"</span>
+    )
+
+    <span class="cm"># Ожидание, когда счётчик достигнет определённого значения</span>
+    page.wait_for_function(
+        <span class="st">"() => window.counter >= 100"</span>,
+        timeout=<span class="nm">30000</span>
+    )</pre>
+
+<h2>Auto-Waiting и асинхронный API</h2>
+<pre><span class="kw">import</span> asyncio
+<span class="kw">from</span> playwright.async_api <span class="kw">import</span> async_playwright
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    <span class="kw">async with</span> async_playwright() <span class="kw">as</span> p:
+        browser <span class="op">=</span> <span class="kw">await</span> p.chromium.launch()
+        page <span class="op">=</span> <span class="kw">await</span> browser.new_page()
+
+        <span class="kw">await</span> page.goto(<span class="st">"https://example.com"</span>)
+
+        <span class="cm"># Auto-Waiting работает и в асинхронном режиме</span>
+        <span class="kw">await</span> page.get_by_role(<span class="st">"button"</span>).click()
+
+        <span class="cm"># Явные ожидания</span>
+        <span class="kw">await</span> page.wait_for_load_state(<span class="st">"networkidle"</span>)
+        <span class="kw">await</span> page.get_by_text(<span class="st">"Success"</span>).wait_for()
+
+        <span class="kw">await</span> browser.close()
+
+asyncio.run(main())</pre>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Playwright использует концепцию «умных» ожиданий. Он не ждёт фиксированное время, а постоянно опрашивает состояние элемента с короткими интервалами. Как только элемент становится готовым, действие выполняется немедленно. Это делает тесты одновременно и стабильными, и быстрыми.</p>
+</div>
+
+<h2>Заключение</h2>
+<p>Auto-Waiting — это не просто удобная функция, а фундаментальная часть философии Playwright. В сочетании с явными ожиданиями (<code>wait_for()</code>, <code>wait_for_load_state()</code>, <code>wait_for_url()</code>) и гибкой настройкой таймаутов, вы получаете полный контроль над синхронизацией тестов. Используйте <code>force=True</code> только в крайних случаях, и ваши тесты будут стабильными, быстрыми и надёжными.</p>
+</div>
+<div class="footer">Playwright Python — полный справочник на русском языке</div>
+</main>
+</div>
+</body>
+</html>

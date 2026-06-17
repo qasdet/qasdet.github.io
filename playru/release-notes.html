@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Playwright Python — Примечания к релизам</title>
+<link rel="stylesheet" href="playru-style.css">
+</head>
+<body>
+<div class="header">
+<div class="header-inner">
+<a href="index.html">Playwright Python — справочник</a>
+<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
+</div>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<div class="sidebar-section">
+<div class="sidebar-title">Основы</div>
+<a class="sidebar-link" href="intro.html">Введение</a>
+<a class="sidebar-link" href="install.html">Установка</a>
+<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
+<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
+<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
+<a class="sidebar-link" href="library.html">Автономная библиотека</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Взаимодействие</div>
+<a class="sidebar-link" href="actions.html">Действия</a>
+<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
+<a class="sidebar-link" href="locators.html">Локаторы</a>
+<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
+<a class="sidebar-link" href="assertions.html">Утверждения</a>
+<a class="sidebar-link" href="navigations.html">Навигации</a>
+<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
+<a class="sidebar-link" href="events.html">События</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Контекст и страницы</div>
+<a class="sidebar-link" href="browsers.html">Браузеры</a>
+<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
+<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
+<a class="sidebar-link" href="frames.html">Фреймы</a>
+<a class="sidebar-link" href="handles.html">ElementHandle</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">API и данные</div>
+<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
+<a class="sidebar-link" href="mock.html">Мокирование</a>
+<a class="sidebar-link" href="network.html">Сеть</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Тестирование</div>
+<a class="sidebar-link" href="debug.html">Отладка</a>
+<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
+<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
+<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
+<a class="sidebar-link" href="videos.html">Видео</a>
+<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Эмуляция</div>
+<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
+<a class="sidebar-link" href="authentication.html">Аутентификация</a>
+<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
+<a class="sidebar-link" href="webview2.html">WebView2</a>
+<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
+<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
+<a class="sidebar-link" href="dialogs.html">Диалоги</a>
+<a class="sidebar-link" href="downloads.html">Загрузки</a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-title">Архитектура</div>
+<a class="sidebar-link" href="pom.html">Page Object Model</a>
+<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
+<a class="sidebar-link" href="ci.html">CI</a>
+<a class="sidebar-link" href="docker.html">Docker</a>
+<a class="sidebar-link" href="languages.html">Языки</a>
+<a class="sidebar-link active" href="release-notes.html">Релизы</a>
+</div>
+</nav>
+<main class="main">
+<div class="page-header">
+<h1>Примечания к релизам</h1>
+<p>История версий Playwright для Python. Новые возможности, улучшения и изменения в каждом релизе.</p>
+</div>
+<div class="card">
+<h2>v1.61</h2>
+<ul>
+<li><strong>WebAuthn passkeys</strong> — новый Credentials API для тестирования аутентификации с помощью passkeys (WebAuthn). Позволяет создавать и использовать виртуальные учётные данные.</li>
+<li><strong>WebStorage API</strong> — методы <code>local_storage</code> и <code>session_storage</code> для прямого чтения/записи localStorage и sessionStorage на странице.</li>
+<li><code>api_response.security_details()</code> — получение деталей безопасности ответа (сертификат, протокол, шифр).</li>
+<li><code>server_addr()</code> — информация о сервере, обработавшем запрос.</li>
+</ul>
+
+<h2>v1.60</h2>
+<ul>
+<li><strong>HAR-запись на трассировке</strong> — методы <code>start_har</code> / <code>stop_har</code> для записи HAR-файлов прямо в трассировке.</li>
+<li><code>locator.drop()</code> — симуляция drop файлов на элемент (drag-and-drop для файлов).</li>
+<li><strong>ARIA snapshot</strong> — метод <code>page.aria_snapshot()</code> для создания снимков accessibility-дерева.</li>
+<li><strong>BrowserContext lifecycle events</strong> — новые события для отслеживания жизненного цикла контекста.</li>
+</ul>
+
+<h2>v1.59</h2>
+<ul>
+<li><strong>Screencast API</strong> — <code>page.screencast()</code> для записи экрана с аннотациями, оверлеями и захватом отдельных кадров.</li>
+<li><code>browser.bind()</code> — новый механизм интероперабельности между браузерами.</li>
+<li><strong>Dashboard CLI</strong> — инструмент командной строки для визуализации результатов тестового прогона.</li>
+</ul>
+
+<h2>v1.58</h2>
+<ul>
+<li><strong>UI Mode / Trace Viewer</strong> — значительные улучшения интерфейса: тёмная и светлая тема, улучшенная навигация по трассировкам.</li>
+<li>Улучшена производительность Trace Viewer при работе с большими трассировками.</li>
+</ul>
+
+<h2>v1.57</h2>
+<ul>
+<li><strong>Chrome for Testing</strong> — Playwright перешёл на использование Chrome for Testing (CfT) вместо обычного Chrome. Это обеспечивает детерминированные версии браузера.</li>
+<li><strong>Удалён <code>page.accessibility</code></strong> — устаревший API accessibility удалён из библиотеки.</li>
+</ul>
+
+<h2>v1.56</h2>
+<ul>
+<li><code>page.console_messages()</code> — получение всех консольных сообщений страницы в виде списка.</li>
+<li><code>page.page_errors()</code> — получение всех ошибок страницы.</li>
+<li>Улучшена обработка исключений в асинхронном API.</li>
+</ul>
+
+<h2>v1.55</h2>
+<ul>
+<li><strong>Codegen with auto-visibility assertions</strong> — генератор тестов теперь автоматически добавляет проверки видимости элементов.</li>
+<li><strong>Сборка мусора в трассировке</strong> — оптимизация размера трассировок за счёт удаления неиспользуемых данных.</li>
+</ul>
+
+<h2>v1.54</h2>
+<ul>
+<li><strong>WebSocket routing</strong> — <code>route_web_socket()</code> для перехвата и модификации WebSocket-соединений.</li>
+<li>Новые методы <code>locator</code>: <code>locator.clear()</code>, <code>locator.is_visible()</code> с дополнительными опциями.</li>
+</ul>
+
+<h2>v1.53</h2>
+<ul>
+<li><strong>Clock API</strong> — управление временем в тестах: <code>page.clock.fast_forward()</code>, <code>page.clock.set_fixed_time()</code> и другие методы.</li>
+<li><strong>Строгие локаторы по умолчанию</strong> — если локатор находит более одного элемента, Playwright выбрасывает ошибку. Поведение настраивается.</li>
+</ul>
+
+<h2>v1.52</h2>
+<ul>
+<li><strong>TLS client certificates</strong> — поддержка клиентских TLS-сертификатов для аутентификации.</li>
+<li>Новые события контекста: <code>on_page</code>, <code>on_close</code>, <code>on_error</code>.</li>
+</ul>
+
+<h2>v1.51</h2>
+<ul>
+<li><strong>Locator highlights</strong> — подсветка локаторов в браузере при использовании Codegen.</li>
+<li>Утверждение <code>to_have_values</code> для проверки значений в select-элементах.</li>
+</ul>
+
+<h2>v1.50</h2>
+<ul>
+<li><strong>Accessibility assertions</strong> — <code>to_match_aria_snapshot()</code> для сравнения accessibility-дерева с эталоном.</li>
+<li>Улучшена производительность при работе с большим количеством фреймов.</li>
+</ul>
+
+<h2>v1.49</h2>
+<ul>
+<li><strong>ARIA snapshot</strong> — улучшения: поддержка вложенных элементов, более точное соответствие спецификации ARIA.</li>
+</ul>
+
+<h2>v1.48</h2>
+<ul>
+<li>Новые возможности Trace Viewer: фильтрация по типу события, поиск по локаторам, экспорт в JSON.</li>
+<li>Codegen: поддержка записи действий в iframe.</li>
+</ul>
+
+<h2>v1.47</h2>
+<ul>
+<li><strong>UI Mode Preview</strong> — предварительная версия графического интерфейса для запуска и отладки тестов.</li>
+<li>Улучшена стабильность при параллельном запуске.</li>
+</ul>
+
+<h2>v1.46</h2>
+<ul>
+<li>Улучшения API тестирования: новые методы APIRequestContext, поддержка multipart-форм.</li>
+<li>Оптимизация памяти при работе с большими страницами.</li>
+</ul>
+
+<h2>v1.45</h2>
+<ul>
+<li><strong>Тестирование мобильных устройств</strong> — новая система эмуляции устройств с предустановленными профилями (iPhone, iPad, Pixel).</li>
+<li>Поддержка сенсорных событий и жестов.</li>
+</ul>
+
+<h2>v1.44</h2>
+<ul>
+<li><strong>Новые локаторы</strong> — <code>get_by_placeholder</code>, <code>get_by_alt_text</code>, улучшенный <code>get_by_role</code>.</li>
+<li>Новые методы assert: <code>to_be_in_viewport</code>, <code>to_contain_text</code> с регулярными выражениями.</li>
+</ul>
+
+<h2>v1.43</h2>
+<ul>
+<li><strong>Network mocking</strong> — полноценное мокирование сетевых запросов через <code>browser_context.route()</code> и <code>page.route()</code>.</li>
+<li><strong>Эмуляция устройств</strong> — поддержка предустановленных устройств (iPhone 13, Pixel 6 и др.).</li>
+</ul>
+
+<div class="box box-info">
+<p><strong>Примечание:</strong> Команда Playwright выпускает новый стабильный релиз примерно раз в месяц. Актуальная версия всегда доступна на <a href="https://pypi.org/project/playwright/" style="color:var(--primary);">PyPI</a> и в официальном <a href="https://github.com/microsoft/playwright-python/releases" style="color:var(--primary);">GitHub-репозитории</a>.</p>
+</div>
+
+<div class="box box-tip">
+<p><strong>Совет:</strong> Для обновления Playwright до последней версии выполните <code>pip install --upgrade playwright</code> и затем <code>playwright install</code> для обновления браузеров.</p>
+</div>
+</div>
+<div class="footer">
+Playwright Python — полный справочник на русском языке
+</div>
+</main>
+</div>
+</body>
+</html>
