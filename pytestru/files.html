@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Работа с файлами — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html" class="active">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Работа с файлами</h2>
+<h3>Открытие файлов</h3>
+<pre><code># Режимы: r (чтение), w (запись), a (добавление)
+# r+ (чтение+запись), w+ (чтение+запись с очисткой)
+
+# Явное закрытие (старый стиль)
+file = open("data.txt", "r", encoding="utf-8")  # открытие файла
+data = file.read()  # присваивание
+file.close()
+
+# Контекстный менеджер (рекомендуется)
+with open("data.txt", "r", encoding="utf-8") as f:  # контекстный менеджер
+    data = f.read()  # присваивание</code></pre>
+
+<h3>Чтение файлов</h3>
+<pre><code>with open("data.txt", encoding="utf-8") as f:  # контекстный менеджер
+    content = f.read()  # присваивание
+    lines = f.readlines()  # присваивание
+    line = f.readline()  # присваивание
+
+# Итерация по строкам (эффективно для больших файлов)
+with open("data.txt", encoding="utf-8") as f:  # контекстный менеджер
+    for line in f:  # цикл по элементам
+        print(line.strip())  # вывод в консоль</code></pre>
+
+<h3>Запись файлов</h3>
+<pre><code>with open("output.txt", "w", encoding="utf-8") as f:  # контекстный менеджер
+    f.write("Строка 1\n")
+    f.write("Строка 2\n")
+
+# Дозапись
+with open("output.txt", "a", encoding="utf-8") as f:  # контекстный менеджер
+    f.write("Строка 3\n")
+
+# Список строк
+lines = ["a", "b", "c"]  # инициализация списка
+with open("output.txt", "w") as f:  # контекстный менеджер
+    f.writelines(line + "\n" for line in lines)</code></pre>
+
+<h3>pathlib — современный подход</h3>
+<pre><code>from pathlib import Path  # импорт модуля
+
+path = Path("data") / "subdir" / "file.txt"  # создание объекта пути
+
+# Создание/проверка
+path.exists()         # True/False
+path.is_file()        # True/False
+path.is_dir()         # True/False
+path.mkdir(parents=True, exist_ok=True)  # создание директории
+
+# Чтение/запись
+content = path.read_text(encoding="utf-8")  # чтение текстового файла
+path.write_text("Новый текст", encoding="utf-8")  # запись текстового файла
+data = path.read_bytes()  # присваивание
+
+# Работа с путями
+path.name              # 'file.txt'
+path.stem              # 'file'
+path.suffix            # '.txt'
+path.parent            # Path('data/subdir')
+path.absolute()  # полный путь
+
+# Список файлов
+for f in Path(".").iterdir():  # цикл по элементам
+    print(f.name)  # вывод в консоль
+
+for py in Path(".").glob("*.py"):  # цикл по элементам
+    print(py)  # вывод в консоль
+
+for all_py in Path(".").rglob("*.py"):  # цикл по элементам
+    print(all_py)  # вывод в консоль</code></pre>
+
+<h3>CSV</h3>
+<pre><code>import csv  # импорт модуля для работы с CSV
+
+# Чтение
+with open("data.csv", newline="", encoding="utf-8") as f:  # контекстный менеджер
+    reader = csv.reader(f)  # чтение CSV
+    for row in reader:  # цикл по элементам
+        print(row)  # вывод в консоль
+
+# Чтение в словари
+with open("data.csv", newline="", encoding="utf-8") as f:  # контекстный менеджер
+    reader = csv.DictReader(f)  # чтение CSV в словари
+    for row in reader:  # цикл по элементам
+        print(row["name"], row["age"])  # вывод в консоль
+
+# Запись
+with open("output.csv", "w", newline="", encoding="utf-8") as f:  # контекстный менеджер
+    writer = csv.writer(f)  # запись CSV
+    writer.writerow(["name", "age"])
+    writer.writerow(["Анна", 30])
+
+# Запись словарей
+with open("output.csv", "w", newline="", encoding="utf-8") as f:  # контекстный менеджер
+    writer = csv.DictWriter(f, fieldnames=["name", "age"])  # запись CSV из словарей
+    writer.writeheader()
+    writer.writerow({"name": "Анна", "age": 30})</code></pre>
+
+<h3>JSON</h3>
+<pre><code>import json  # импорт модуля для работы с JSON
+
+data = {"name": "Анна", "age": 30, "hobbies": ["чтение", "бег"]}  # инициализация словаря
+
+# Запись
+with open("data.json", "w", encoding="utf-8") as f:  # контекстный менеджер
+    json.dump(data, f, ensure_ascii=False, indent=2)  # запись JSON в файл
+
+# Чтение
+with open("data.json", encoding="utf-8") as f:  # контекстный менеджер
+    loaded = json.load(f)  # чтение JSON из файла
+
+# В строку
+json_str = json.dumps(data, ensure_ascii=False, indent=2)  # сериализация в JSON-строку
+data_again = json.loads(json_str)  # десериализация из JSON-строки</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

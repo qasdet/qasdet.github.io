@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Условные операторы — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html" class="active">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Условные операторы</h2>
+<h3>if / elif / else</h3>
+<pre><code>age = 18  # числовое значение
+
+if age >= 18:  # условие
+    print("Совершеннолетний")  # вывод в консоль
+elif age >= 14:  # иначе если
+    print("Подросток")  # вывод в консоль
+else:  # иначе
+    print("Ребёнок")  # вывод в консоль</code></pre>
+
+<h3>Логические операторы</h3>
+<pre><code># and — оба истинны
+if age >= 18 and has_document:  # условие
+    print("Доступ разрешён")  # вывод в консоль
+
+# or — хотя бы один истинен
+if is_admin or is_owner:  # условие
+    print("Есть права")  # вывод в консоль
+
+# not — отрицание
+if not is_banned:  # условие
+    print("Пользователь активен")  # вывод в консоль
+
+# Сравнения можно цепочкой
+if 0 <= score <= 100:  # условие
+    print("Корректный балл")  # вывод в консоль
+
+# Проверка на None / пустоту
+if value is None: ...  # условие
+if not value: ...  # 0, "", [], None, False → True</code></pre>
+
+<h3>Тернарный оператор</h3>
+<pre><code>age = 20  # числовое значение
+status = "совершеннолетний" if age >= 18 else "несовершеннолетний"  # строковое значение
+
+# Вложенный тернарник (не злоупотребляйте)
+category = "ребёнок" if age < 14 else "подросток" if age < 18 else "взрослый"  # строковое значение</code></pre>
+
+<h3>match / case (Python 3.10+)</h3>
+<pre><code>def http_status(code):
+    match code:  # сопоставление с образцом
+        case 200:  # вариант сопоставления
+            return "OK"  # возврат значения
+        case 201:  # вариант сопоставления
+            return "Created"  # возврат значения
+        case 400:  # вариант сопоставления
+            return "Bad Request"  # возврат значения
+        case 404:  # вариант сопоставления
+            return "Not Found"  # возврат значения
+        case 500:  # вариант сопоставления
+            return "Server Error"  # возврат значения
+        case _:  # вариант сопоставления
+            return "Unknown"  # возврат значения
+
+# Связывание переменных
+def process(point):
+    match point:  # сопоставление с образцом
+        case (0, 0):  # вариант сопоставления
+            print("Начало координат")  # вывод в консоль
+        case (x, 0):  # вариант сопоставления
+            print(f"На оси X: {x}")  # вывод в консоль
+        case (0, y):  # вариант сопоставления
+            print(f"На оси Y: {y}")  # вывод в консоль
+        case (x, y):  # вариант сопоставления
+            print(f"Точка: ({x}, {y})")  # вывод в консоль
+
+# С условиями (guard)
+def classify(value):
+    match value:  # сопоставление с образцом
+        case x if x < 0:  # условие
+            return "Отрицательное"  # возврат значения
+        case x if x == 0:  # условие
+            return "Ноль"  # возврат значения
+        case x if x > 0:  # условие
+            return "Положительное"  # возврат значения</code></pre>
+
+<h3>Короткое замыкание (short-circuit)</h3>
+<pre><code># Python вычисляет and/or слева направо
+# and: если первое False — второе не вычисляется
+# or:  если первое True — второе не вычисляется
+
+# Часто используется для значений по умолчанию
+name = input_name or "Гость"  # присваивание
+</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

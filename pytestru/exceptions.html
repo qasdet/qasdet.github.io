@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Обработка исключений — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html" class="active">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Обработка исключений</h2>
+<h3>Базовый try/except</h3>
+<pre><code>try:  # начало блока с обработкой исключений
+    result = 10 / 0
+except ZeroDivisionError:  # обработка исключения
+    print("Деление на ноль!")  # вывод в консоль
+
+try:  # начало блока с обработкой исключений
+    num = int(input("Введите число: "))  # преобразование в целое
+except ValueError:  # обработка исключения
+    print("Это не число!")  # вывод в консоль</code></pre>
+
+<h3>Несколько except</h3>
+<pre><code>try:  # начало блока с обработкой исключений
+    value = risky_operation()  # присваивание
+except ValueError:  # обработка исключения
+    print("Неверное значение")  # вывод в консоль
+except (TypeError, KeyError):
+    print("Ошибка типа или ключа")  # вывод в консоль
+except Exception as e:  # обработка исключения
+    print(f"Неизвестная ошибка: {e}")  # вывод в консоль
+else:  # иначе
+    print(f"Всё ок: {value}")  # вывод в консоль
+finally:  # выполняется в любом случае
+    print("Выполняется всегда")  # вывод в консоль</code></pre>
+
+<h3>raise — выброс исключения</h3>
+<pre><code>def divide(a, b):
+    if b == 0:  # условие
+        raise ValueError("Деление на ноль")  # выброс исключения
+    return a / b  # возврат значения
+
+# Переброс
+try:  # начало блока с обработкой исключений
+    divide(10, 0)
+except ValueError:  # обработка исключения
+    print("Ошибка")  # вывод в консоль
+    raise</code></pre>
+
+<h3>Пользовательские исключения</h3>
+<pre><code>class CustomError(Exception):
+    """Базовое исключение приложения."""
+    pass  # пустая заглушка
+
+class ValidationError(CustomError):
+    def __init__(self, field: str, message: str):
+        self.field = field  # обращение к атрибуту экземпляра
+        self.message = message  # обращение к атрибуту экземпляра
+        super().__init__(f"{field}: {message}")  # вызов родительского метода
+
+raise ValidationError("email", "Неверный формат")  # выброс исключения</code></pre>
+
+<h3>Иерархия исключений</h3>
+<pre><code>BaseException
+├── SystemExit
+├── KeyboardInterrupt
+├── GeneratorExit
+└── Exception
+    ├── StopIteration
+    ├── ArithmeticError
+    │   ├── ZeroDivisionError
+    │   └── OverflowError
+    ├── LookupError
+    │   ├── IndexError
+    │   └── KeyError
+    ├── ValueError
+    ├── TypeError
+    ├── OSError
+    │   └── FileNotFoundError
+    ├── AttributeError
+    └── ...</code></pre>
+
+<h3>Exception Groups (Python 3.11+)</h3>
+<pre><code>def validate(data):
+    errors = []  # инициализация списка
+    if not data.get("name"):  # условие
+        errors.append(ValueError("name required"))  # добавление в конец
+    if not data.get("age"):  # условие
+        errors.append(ValueError("age required"))  # добавление в конец
+    if errors:  # условие
+        raise ExceptionGroup("Validation failed", errors)  # выброс исключения
+
+try:  # начало блока с обработкой исключений
+    validate({"name": ""})
+except* ValueError as eg:  # перехват группы исключений
+    for e in eg.exceptions:  # цикл по элементам
+        print(e)  # вывод в консоль</code></pre>
+
+<h3>Контекстный менеджер try/except/finally</h3>
+<pre><code># try — опасный код
+# except — обработка ошибки
+# else — если ошибки не было
+# finally — в любом случае
+
+try:  # начало блока с обработкой исключений
+    file = open("data.txt")  # открытие файла
+    data = file.read()  # присваивание
+except FileNotFoundError:  # обработка исключения
+    print("Файл не найден")  # вывод в консоль
+else:  # иначе
+    print(f"Прочитано {len(data)} символов")  # вывод в консоль
+finally:  # выполняется в любом случае
+    file.close()</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

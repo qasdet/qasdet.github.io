@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Числа и математика — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html" class="active">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Числа и математика</h2>
+<h3>Целые числа (int)</h3>
+<p>Python поддерживает целые числа произвольной точности — не ограничены 32 или 64 битами.</p>
+<pre><code>a = 42  # числовое значение
+b = -7  # числовое значение
+big = 10**100
+
+# Системы счисления
+0b1010
+0o12
+0xFF
+
+# Разделитель разрядов
+million = 1_000_000  # числовое значение</code></pre>
+
+<h3>Числа с плавающей точкой (float)</h3>
+<pre><code>pi = 3.14159  # числовое значение
+small = 1.5e-10
+inf = float('inf')  # преобразование в дробное
+nan = float('nan')  # преобразование в дробное
+
+# Осторожно: погрешность вычислений
+0.1 + 0.2  # 0.30000000000000004 (не 0.3!)</code></pre>
+
+<div class="warn">Из-за двоичного представления float не могут точно хранить десятичные дроби. Для денег используйте <code>Decimal</code>.</div>
+
+<h3>Математические операции</h3>
+<pre><code>10 + 3   # 13
+10 - 3   # 7
+10 * 3   # 30
+10 / 3   # 3.3333333333333335
+10 // 3  # 3 (целочисленное деление)
+10 % 3   # 1 (остаток)
+10 ** 3  # 1000 (степень)
+
+# Функции с округлением
+round(3.14159, 2)   # 3.14
+round(3.5)         # 4 (банковское округление!)
+round(4.5)         # 4 (к чётному!)
+int(3.9)           # 3 (отбрасывание дробной части)</code></pre>
+
+<h3>Модуль math</h3>
+<pre><code>import math  # импорт математического модуля
+
+math.sqrt(16)       # 4.0
+math.pow(2, 3)      # 8.0
+math.pi             # 3.141592653589793
+math.e              # 2.718281828459045
+math.sin(math.pi/2) # 1.0
+math.cos(0)         # 1.0
+math.log(100, 10)   # 2.0
+math.log(math.e)    # 1.0
+math.ceil(3.2)      # 4
+math.floor(3.8)     # 3
+math.trunc(3.8)     # 3
+math.factorial(5)   # 120
+math.gcd(12, 8)     # 4
+math.isfinite(x)  # математическая функция
+math.isnan(x)  # математическая функция</code></pre>
+
+<h3>Модуль random</h3>
+<pre><code>import random  # импорт модуля случайных чисел
+
+random.random()         # 0.0–1.0
+random.randint(1, 6)    # 1–6 (кубик)
+random.choice(['a','b','c'])  # случайный элемент
+random.choices(pop, k=3)  # выборка с возвращением
+random.sample(pop, k=3)  # выборка без возвращения
+random.shuffle(lst)  # перемешивание
+random.seed(42)  # фиксация генератора случайных</code></pre>
+
+<h3>Decimal — точные десятичные числа</h3>
+<pre><code>from decimal import Decimal  # импорт модуля
+
+Decimal('0.1') + Decimal('0.2')  # Decimal('0.3')
+Decimal('10.00').quantize(Decimal('0.1'))  # точное десятичное число</code></pre>
+
+<h3>Fraction — дроби</h3>
+<pre><code>from fractions import Fraction  # импорт модуля
+
+Fraction(1, 3) + Fraction(1, 6)  # Fraction(1, 2)</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

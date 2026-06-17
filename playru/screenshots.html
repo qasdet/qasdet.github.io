@@ -2,91 +2,36 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Playwright Python — Скриншоты</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Скриншоты — Playwright Python</title>
 <link rel="stylesheet" href="playru-style.css">
 </head>
 <body>
-<div class="header">
-<div class="header-inner">
-<a href="index.html">Playwright Python — справочник</a>
-<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
-</div>
-</div>
-<div class="wrapper">
 <nav class="sidebar">
-<div class="sidebar-section">
-<div class="sidebar-title">Основы</div>
-<a class="sidebar-link" href="intro.html">Введение</a>
-<a class="sidebar-link" href="install.html">Установка</a>
-<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
-<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
-<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
-<a class="sidebar-link" href="library.html">Автономная библиотека</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Взаимодействие</div>
-<a class="sidebar-link" href="actions.html">Действия</a>
-<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
-<a class="sidebar-link" href="locators.html">Локаторы</a>
-<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
-<a class="sidebar-link" href="assertions.html">Утверждения</a>
-<a class="sidebar-link" href="navigations.html">Навигации</a>
-<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
-<a class="sidebar-link" href="events.html">События</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Контекст и страницы</div>
-<a class="sidebar-link" href="browsers.html">Браузеры</a>
-<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
-<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
-<a class="sidebar-link" href="frames.html">Фреймы</a>
-<a class="sidebar-link" href="handles.html">ElementHandle</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">API и данные</div>
-<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
-<a class="sidebar-link" href="mock.html">Мокирование</a>
-<a class="sidebar-link" href="network.html">Сеть</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Тестирование</div>
-<a class="sidebar-link" href="debug.html">Отладка</a>
-<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
-<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
-<a class="sidebar-link active" href="screenshots.html">Скриншоты</a>
-<a class="sidebar-link" href="videos.html">Видео</a>
-<a class="sidebar-link" href="aria-snapshots.html">ARIA-снимки</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Эмуляция</div>
-<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
-<a class="sidebar-link" href="authentication.html">Аутентификация</a>
-<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
-<a class="sidebar-link" href="webview2.html">WebView2</a>
-<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
-<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
-<a class="sidebar-link" href="dialogs.html">Диалоги</a>
-<a class="sidebar-link" href="downloads.html">Загрузки</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Архитектура</div>
-<a class="sidebar-link" href="pom.html">Page Object Model</a>
-<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
-<a class="sidebar-link" href="ci.html">CI</a>
-<a class="sidebar-link" href="docker.html">Docker</a>
-<a class="sidebar-link" href="languages.html">Языки</a>
-<a class="sidebar-link" href="release-notes.html">Релизы</a>
-</div>
+  <h2>Документация</h2>
+  <ul>
+    <li><a href="osnovy.html">Основы</a></li>
+    <li><a href="vzaimodeistvie.html">Взаимодействие</a></li>
+    <li><a href="kontekst-i-stranitsy.html">Контекст и страницы</a></li>
+    <li><a href="api-i-dannye.html">API и данные</a></li>
+    <li><a href="testirovanie.html">Тестирование</a></li>
+    <li><a href="emulyatsiya.html">Эмуляция</a></li>
+    <li><a href="arkhitektura.html">Архитектура</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="screenshots.html" class="active">Скриншоты</a></li>
+    <li><a href="videos.html">Видео</a></li>
+    <li><a href="aria-snapshots.html">ARIA-снимки</a></li>
+    <li><a href="events.html">События</a></li>
+  </ul>
 </nav>
-<main class="main">
-<div class="page-header">
+<main class="content">
 <h1>Скриншоты (Screenshots)</h1>
-<p>Скриншоты страниц и элементов для визуального тестирования, отладки и документации.</p>
-</div>
+<p>Playwright позволяет делать скриншоты страниц и отдельных элементов. Это полезно для визуального тестирования, отладки и документации.</p>
 
-<div class="card">
 <h2>Базовый скриншот страницы</h2>
+<p>Метод <span class="fn">page.screenshot</span> делает снимок всей страницы (видимой области).</p>
 <pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> sync_playwright
 
 <span class="kw">with</span> sync_playwright() <span class="kw">as</span> p:
@@ -97,55 +42,63 @@
     browser.close()</code></pre>
 
 <div class="box box-info">
-<strong>Примечание:</strong> Путь в path указывается относительно рабочей директории. Можно передать абсолютный путь.
+<strong>Примечание:</strong> Путь в <span class="nm">path</span> указывается относительно рабочей директории. Можно передать абсолютный путь.
 </div>
 
 <h2>Полностраничный скриншот</h2>
+<p>Флаг <span class="nm">full_page=True</span> делает скриншот всей страницы, включая область за пределами viewport.</p>
 <pre><code>page.screenshot(path=<span class="st">"full.png"</span>, full_page=<span class="kw">True</span>)</code></pre>
 
-<h2>Скриншот области (clip)</h2>
+<h2>Скриншот области</h2>
+<p>Параметр <span class="nm">clip</span> задаёт прямоугольную область для снимка.</p>
 <pre><code>page.screenshot(path=<span class="st">"clip.png"</span>,
-    clip={<span class="st">"x"</span>: <span class="nm">10</span>, <span class="st">"y"</span>: <span class="nm">20</span>,
-           <span class="st">"width"</span>: <span class="nm">200</span>, <span class="st">"height"</span>: <span class="nm">100</span>})</code></pre>
+    clip={<span class="st">"x"</span>: <span class="dv">10</span>, <span class="st">"y"</span>: <span class="dv">20</span>,
+           <span class="st">"width"</span>: <span class="dv">200</span>, <span class="st">"height"</span>: <span class="dv">100</span>})</code></pre>
 
 <h2>Скриншот элемента</h2>
-<pre><code>loc = page.locator(<span class="st">"h1"</span>)
+<p>Метод <span class="fn">locator.screenshot</span> делает снимок конкретного элемента.</p>
+<pre><code>page.goto(<span class="st">"https://example.com"</span>)
+loc = page.locator(<span class="st">"h1"</span>)
 loc.screenshot(path=<span class="st">"element.png"</span>)</code></pre>
 
-<h2>JPEG с качеством</h2>
+<h2>JPEG с настройкой качества</h2>
+<p>Формат JPEG поддерживает параметр <span class="nm">quality</span> (0–100). PNG используется по умолчанию.</p>
 <pre><code>page.screenshot(path=<span class="st">"photo.jpg"</span>,
-    type=<span class="st">"jpeg"</span>, quality=<span class="nm">80</span>)</code></pre>
+    type=<span class="st">"jpeg"</span>, quality=<span class="dv">80</span>)</code></pre>
 
 <h2>Прозрачный фон</h2>
+<p>Параметр <span class="nm">omit_background=True</span> делает фон прозрачным (только PNG).</p>
 <pre><code>page.screenshot(path=<span class="st">"nobg.png"</span>,
     omit_background=<span class="kw">True</span>)</code></pre>
 
 <h2>Скриншот в буфер (bytes)</h2>
-<pre><code>screenshot_bytes = page.screenshot()</code></pre>
+<p>Если не указывать <span class="nm">path</span>, метод возвращает бинарные данные. Удобно для сравнения пикселей.</p>
+<pre><code>screenshot_bytes = page.screenshot()
+<span class="cm"># screenshot_bytes — объект bytes</span>
+<span class="cm"># можно передать в библиотеку pixel-diff</span></code></pre>
 
-<div class="box box-tip">
-<strong>Совет:</strong> Если не указывать path, page.screenshot() возвращает bytes. Удобно для сравнения пикселей.
-</div>
-</div>
-
-<div class="card">
-<h2>Сравнение с эталоном</h2>
-
-<h3>to_have_screenshot</h3>
+<h2>Сравнение с эталоном (to_have_screenshot)</h2>
+<p>Матчер <span class="fn">to_have_screenshot</span> сравнивает текущий скриншот с сохранённым эталоном.</p>
 <pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> expect
 
-expect(page).to_have_screenshot(<span class="st">"etalon.png"</span>)</code></pre>
+expect(page).to_have_screenshot(
+    <span class="st">"etalon.png"</span>)</code></pre>
 
-<p>При первом запуске эталон создаётся автоматически. При последующих — происходит сравнение.</p>
+<div class="box box-tip">
+<strong>Совет:</strong> При первом запуске эталон создаётся автоматически. При последующих — происходит сравнение.
+</div>
 
-<h3>Сравнение скриншота элемента</h3>
-<pre><code>expect(locator).to_have_screenshot(<span class="st">"element-etalon.png"</span>)</code></pre>
+<h2>Сравнение скриншота элемента</h2>
+<pre><code>expect(locator).to_have_screenshot(
+    <span class="st">"element-etalon.png"</span>)</code></pre>
 
-<h3>Отключение анимаций</h3>
+<h2>Отключение анимаций</h2>
+<p>Параметр <span class="nm">animations="disabled"</span> останавливает CSS-анимации и переходы перед снимком.</p>
 <pre><code>page.screenshot(path=<span class="st">"no-anim.png"</span>,
     animations=<span class="st">"disabled"</span>)</code></pre>
 
-<h3>Маскирование элементов</h3>
+<h2>Маскирование элементов</h2>
+<p>Маски скрывают указанные локаторы (заливают цветом).</p>
 <pre><code>page.screenshot(path=<span class="st">"masked.png"</span>,
     mask=[page.locator(<span class="st">".ads"</span>)],
     mask_color=<span class="st">"red"</span>)</code></pre>
@@ -153,12 +106,7 @@ expect(page).to_have_screenshot(<span class="st">"etalon.png"</span>)</code></pr
 <div class="box box-warning">
 <strong>Важно:</strong> Маскирование изменяет только скриншот, не затрагивая реальную DOM-страницу.
 </div>
-</div>
 
-<div class="footer">
-Playwright Python — полный справочник на русском языке
-</div>
 </main>
-</div>
 </body>
 </html>

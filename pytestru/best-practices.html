@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Советы и лучшие практики — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html" class="active">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Советы и лучшие практики</h2>
+<h3>PEP 8 — стиль кода</h3>
+<ul>
+  <li>Отступы: 4 пробела (не табуляция)</li>
+  <li>Максимум 79 символов в строке</li>
+  <li>Пустые строки между функциями (2) и внутри класса (1)</li>
+  <li>Пробелы вокруг операторов: <code>a = b + c</code>, не <code>a=b+c</code></li>
+  <li>Импорты: стандартные → сторонние → локальные</li>
+</ul>
+
+<h3>Pythonic-идиомы</h3>
+<pre><code># Swap
+a, b = b, a
+
+# Проверка на None
+if value is None: ...  # условие
+
+# Пустая коллекция → False
+if not items: ...  # условие
+
+# Тернарник
+status = "чёт" if n % 2 == 0 else "нечёт"
+
+# Распаковка
+first, *rest = [1, 2, 3, 4]  # first=1, rest=[2,3,4]
+
+# enumerate с индексом
+for i, val in enumerate(lst): ...  # цикл по элементам
+
+# zip для параллельной итерации
+for name, age in zip(names, ages): ...  # цикл по элементам
+
+# any / all
+if any(x > 0 for x in lst): ...  # условие
+
+# Вхождение в диапазон
+if 0 <= score <= 100: ...  # условие
+
+# Словарь с get
+value = d.get("key", default)  # безопасный доступ со значением по умолчанию
+
+# Множественные сравнения
+if a == b == c: ...  # условие</code></pre>
+
+<h3>Частые ошибки</h3>
+<pre><code># 1. Изменяемый аргумент по умолчанию
+def add(item, lst=[]):
+    lst.append(item)  # добавление в конец
+    return lst  # возврат значения
+
+def add(item, lst=None):
+    if lst is None:  # условие
+        lst = []  # инициализация списка
+    lst.append(item)  # добавление в конец
+    return lst  # возврат значения
+
+# 2. Использование is с числами/строками
+# is — для None и True/False. == — для всего остального
+
+# 3. Выход за границы списка
+items = [1, 2, 3]  # инициализация списка
+try:  # начало блока с обработкой исключений
+    items[10]
+except IndexError:  # обработка исключения
+    ...
+
+# 4. Изменение списка во время итерации
+# ПЛОХО: for item in lst: lst.remove(item)
+# ХОРОШО: [x for x in lst if condition]
+
+# 5. Исключение в except без указания типа
+# ПЛОХО: except:
+# ХОРОШО: except ValueError:
+
+# 6. global — обычно не нужно
+# ПЛОХО: def f(): global x; x += 1
+
+# 7. range(len(lst)) — используйте enumerate</code></pre>
+
+<h3>Производительность</h3>
+<pre><code># Генераторы быстрее списков, если не нужен весь результат
+sum(x**2 for x in range(1000000))  # сумма
+sum([x**2 for x in range(1000000)])  # сумма
+
+# local variables быстрее global
+def func():
+    local_math = math.sqrt  # математическая функция
+    for i in range(1000):  # цикл по элементам
+        local_math(i)
+
+# join быстрее + для строк
+# ПЛОХО: s = ""; for p in parts: s += p
+# ХОРОШО: s = "".join(parts)
+
+# set быстрее list для in
+# in set: O(1), in list: O(n)
+lookup = set(items)  # преобразование в множество
+if value in lookup: ...  # условие
+
+# collections.deque быстрее list для pop(0) / insert(0, x)
+from collections import deque  # импорт специализированных коллекций
+dq = deque([1, 2, 3])  # двусторонняя очередь
+dq.popleft()  # O(1)</code></pre>
+
+<h3>Полезные однострочники</h3>
+<pre><code># Уникальные элементы
+unique = list(set(items))  # преобразование в список
+
+# Разворот строки/списка
+reversed_s = s[::-1]  # присваивание
+
+# Палиндром
+is_palindrome = s == s[::-1]
+
+# Плоский список из вложенного
+flat = [x for sub in nested for x in sub]  # списковое включение
+
+# Транспонирование матрицы
+transposed = list(zip(*matrix))  # преобразование в список
+
+# Самое частое значение
+from statistics import mode  # импорт модуля
+most_common = mode(data)  # присваивание
+
+# Чтение файла в список строк
+lines = open("file.txt").read().splitlines()  # открытие файла</code></pre>
+
+<h3>Инструменты</h3>
+<ul>
+  <li><strong>black</strong> — автоформатирование кода</li>
+  <li><strong>ruff</strong> — быстрый линтер (замена flake8, isort)</li>
+  <li><strong>mypy</strong> — проверка типов</li>
+  <li><strong>pre-commit</strong> — хуки перед коммитом</li>
+  <li><strong>pytest</strong> — тестирование</li>
+  <li><strong>poetry</strong> / <strong>uv</strong> — управление зависимостями</li>
+  <li><strong>ipdb</strong> — отладка (import ipdb; ipdb.set_trace())</li>
+</ul>
+
+<h3>Ресурсы</h3>
+<ul>
+  <li><a href="https://docs.python.org">docs.python.org</a> — официальная документация</li>
+  <li><a href="https://pypi.org">PyPI</a> — репозиторий пакетов</li>
+  <li><a href="https://realpython.com">Real Python</a> — учебные материалы</li>
+  <li><a href="https://peps.python.org/pep-0008">PEP 8</a> — руководство по стилю</li>
+</ul>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

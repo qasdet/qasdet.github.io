@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Основы синтаксиса — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html" class="active">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Основы синтаксиса</h2>
+<h3>Отступы и блоки кода</h3>
+<p>Python использует отступы (пробелы или табуляцию) для обозначения блоков кода. Стандарт — 4 пробела.</p>
+<pre><code>if age >= 18:  # условие
+    print("Совершеннолетний")  # вывод в консоль
+    can_vote = True  # логическое значение
+else:  # иначе
+    print("Несовершеннолетний")  # вывод в консоль
+    can_vote = False  # логическое значение</code></pre>
+
+<h3>Комментарии</h3>
+<pre><code># Однострочный комментарий
+
+# Многострочный комментарий
+# Каждая строка начинается с #
+
+"""
+Docstring — многострочный комментарий,
+используется для документации функций и классов
+"""</code></pre>
+
+<h3>Операторы</h3>
+<table>
+  <tr><th>Тип</th><th>Операторы</th></tr>
+  <tr><td>Арифметические</td><td><code>+ - * / // % **</code></td></tr>
+  <tr><td>Сравнения</td><td><code>== != &lt; &gt; &lt;= &gt;=</code></td></tr>
+  <tr><td>Логические</td><td><code>and or not</code></td></tr>
+  <tr><td>Присваивания</td><td><code>= += -= *= /= //= %= **=</code></td></tr>
+  <tr><td>Побитовые</td><td><code>& | ^ ~ &lt;&lt; &gt;&gt;</code></td></tr>
+  <tr><td>Принадлежности</td><td><code>in not in</code></td></tr>
+  <tr><td>Тождества</td><td><code>is is not</code></td></tr>
+</table>
+
+<h3>Соглашения об именовании (PEP 8)</h3>
+<table>
+  <tr><th>Элемент</th><th>Стиль</th><th>Пример</th></tr>
+  <tr><td>Переменные</td><td>snake_case</td><td><code>user_name</code></td></tr>
+  <tr><td>Функции</td><td>snake_case</td><td><code>get_user()</code></td></tr>
+  <tr><td>Классы</td><td>PascalCase</td><td><code>UserProfile</code></td></tr>
+  <tr><td>Константы</td><td>UPPER_CASE</td><td><code>MAX_SIZE</code></td></tr>
+  <tr><td>Приватные</td><td>_префикс</td><td><code>_internal()</code></td></tr>
+  <tr><td>Магические</td><td>__dunder__</td><td><code>__init__</code></td></tr>
+</table>
+
+<h3>Ввод и вывод</h3>
+<pre><code>name = input("Введите имя: ")  # ввод данных
+print(f"Привет, {name}!")  # вывод в консоль
+
+# Форматированный вывод
+print(f"Число: {value:.2f}")  # вывод в консоль
+print(f"Шестнадцатеричное: {value:#x}")
+print(f"Проценты: {percent:.1%}")  # вывод в консоль</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

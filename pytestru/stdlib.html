@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Стандартная библиотека — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html" class="active">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Стандартная библиотека</h2>
+<h3>os — операционная система</h3>
+<pre><code>import os  # импорт модуля
+
+os.getcwd()  # работа с ОС
+os.chdir("..")  # работа с ОС
+os.listdir(".")  # работа с ОС
+os.mkdir("new_dir")  # работа с ОС
+os.remove("file")  # удаление первого вхождения
+os.rename("old", "new")  # работа с ОС
+os.environ.get("PATH")  # безопасный доступ со значением по умолчанию
+os.path.join("dir", "file")  # объединение через разделитель
+os.path.exists("path")  # работа с ОС
+os.path.isfile("path")  # работа с ОС
+os.path.isdir("path")  # работа с ОС
+os.path.splitext("file.txt")  # ('file', '.txt')</code></pre>
+
+<h3>sys — системные параметры</h3>
+<pre><code>import sys  # импорт системного модуля
+
+sys.version  # системные параметры
+sys.platform  # системные параметры
+sys.argv  # системные параметры
+sys.path  # системные параметры
+sys.exit(0)  # системные параметры
+sys.modules  # системные параметры
+sys.getsizeof(obj)  # системные параметры</code></pre>
+
+<h3>collections — дополнительные коллекции</h3>
+<pre><code>from collections import defaultdict, Counter, deque, OrderedDict  # импорт специализированных коллекций
+
+# defaultdict — значение по умолчанию
+dd = defaultdict(list)  # словарь со значением по умолчанию
+dd["key"].append(1)  # добавление в конец
+
+# Counter — подсчёт
+cnt = Counter("abracadabra")  # подсчёт элементов
+cnt.most_common(2)  # [('a', 5), ('b', 2)]
+
+# deque — двусторонняя очередь
+dq = deque([1, 2, 3])  # двусторонняя очередь
+dq.append(4); dq.appendleft(0)  # добавление в конец
+dq.pop(); dq.popleft()  # удаление и возврат последнего элемента
+
+# namedtuple — кортеж с именами
+from collections import namedtuple  # импорт специализированных коллекций
+Point = namedtuple("Point", ["x", "y"])  # именованный кортеж</code></pre>
+
+<h3>itertools — работа с итераторами</h3>
+<pre><code>import itertools  # импорт модуля итераторов
+
+# Бесконечные
+itertools.count(10, 2)    # 10, 12, 14, ...
+itertools.cycle("ABC")    # A, B, C, A, ...
+
+# Комбинаторика
+itertools.product("AB", "12")  # итераторные функции
+itertools.permutations("ABC", 2)  # итераторные функции
+itertools.combinations("ABC", 2)  # итераторные функции
+
+# Группировка
+itertools.groupby(sorted(data), key=func)  # итераторные функции</code></pre>
+
+<h3>logging — логирование</h3>
+<pre><code>import logging  # импорт модуля логирования
+
+logging.basicConfig(  # логирование
+    level=logging.INFO,  # логирование
+    format="%(asctime)s [%(levelname)s] %(message)s"  # строковое значение
+)
+
+logging.debug("Отладка")  # логирование
+logging.info("Информация")  # логирование
+logging.warning("Предупреждение")  # логирование
+logging.error("Ошибка")  # логирование
+logging.critical("Критическая ошибка")  # логирование
+
+# Логирование в файл
+file_handler = logging.FileHandler("app.log")  # логирование
+logger = logging.getLogger("my_app")  # логирование
+logger.addHandler(file_handler)</code></pre>
+
+<h3>argparse — аргументы командной строки</h3>
+<pre><code>import argparse  # импорт модуля для аргументов командной строки
+
+parser = argparse.ArgumentParser(description="Описание")  # аргументы командной строки
+parser.add_argument("-v", "--verbose", action="store_true")
+parser.add_argument("-o", "--output", default="out.txt")
+parser.add_argument("files", nargs="+")
+
+args = parser.parse_args()  # присваивание
+print(args.verbose, args.output, args.files)  # вывод в консоль
+
+# Запуск: python script.py -v -o result.txt file1.txt file2.txt</code></pre>
+
+<h3>copy — копирование объектов</h3>
+<pre><code>import copy  # импорт модуля копирования
+
+original = [1, [2, 3], 4]  # инициализация списка
+shallow = copy.copy(original)  # поверхностная копия
+deep = copy.deepcopy(original)  # глубокая копия
+
+# Поверхностная: вложенные объекты разделяются
+# Глубокая: полная независимая копия</code></pre>
+
+<h3>hashlib — хеширование</h3>
+<pre><code>import hashlib  # импорт модуля хеширования
+
+hashlib.md5(b"data").hexdigest()  # получение хеша в hex
+hashlib.sha256(b"data").hexdigest()  # получение хеша в hex
+hashlib.sha256("пароль".encode()).hexdigest()  # получение хеша в hex</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

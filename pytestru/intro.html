@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Введение в Python — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html" class="active">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Введение в Python</h2>
+<p>Python — это высокоуровневый, интерпретируемый язык программирования, созданный Гвидо ван Россумом в 1991 году. Название языка происходит от британского комедийного шоу «Monty Python's Flying Circus».</p>
+
+<h3>Ключевые особенности</h3>
+<ul>
+  <li><strong>Простота и читаемость</strong> — синтаксис Python интуитивно понятен, код выглядит как псевдокод</li>
+  <li><strong>Интерпретируемость</strong> — код выполняется построчно, не требует компиляции</li>
+  <li><strong>Динамическая типизация</strong> — тип переменной определяется автоматически во время выполнения</li>
+  <li><strong>Автоматическое управление памятью</strong> — сборщик мусора освобождает неиспользуемую память</li>
+  <li><strong>Мультипарадигмальность</strong> — поддерживает процедурное, ООП и функциональное программирование</li>
+  <li><strong>Обширная стандартная библиотека</strong> — батарейки входят в комплект (batteries included)</li>
+</ul>
+
+<h3>Области применения</h3>
+<ul>
+  <li><strong>Веб-разработка</strong> — Django, Flask, FastAPI</li>
+  <li><strong>Тестирование</strong> — pytest, Selenium, Playwright</li>
+  <li><strong>Data Science</strong> — NumPy, Pandas, Matplotlib</li>
+  <li><strong>Машинное обучение</strong> — TensorFlow, PyTorch, scikit-learn</li>
+  <li><strong>Автоматизация</strong> — скрипты, парсинг, CI/CD</li>
+  <li><strong>DevOps</strong> — Ansible, Terraform (провайдеры)</li>
+</ul>
+
+<h3>Версии Python</h3>
+<table>
+  <tr><th>Версия</th><th>Год</th><th>Особенности</th></tr>
+  <tr><td>2.x</td><td>2000</td><td>Классическая версия (завершена в 2020)</td></tr>
+  <tr><td>3.6</td><td>2016</td><td>f-строки, type hints</td></tr>
+  <tr><td>3.7</td><td>2018</td><td>dataclasses, asyncio improvements</td></tr>
+  <tr><td>3.8</td><td>2019</td><td>walrus operator :=, positional-only params</td></tr>
+  <tr><td>3.9</td><td>2020</td><td>dict union, type hint generics</td></tr>
+  <tr><td>3.10</td><td>2021</td><td>match/case, union types X | Y</td></tr>
+  <tr><td>3.11</td><td>2022</td><td>exception groups, улучшение скорости</td></tr>
+  <tr><td>3.12</td><td>2023</td><td>f-строки с неограниченной вложенностью</td></tr>
+  <tr><td>3.13</td><td>2024</td><td>JIT-компиляция, улучшенный интерактивный режим</td></tr>
+</table>
+
+<div class="info">Python 2.x официально завершил поддержку 1 января 2020. Все новые проекты следует писать на Python 3.x.</div>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

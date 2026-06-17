@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON и сериализация — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html" class="active">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>JSON и сериализация</h2>
+<h3>JSON — основы</h3>
+<pre><code>import json  # импорт модуля для работы с JSON
+
+data = {  # инициализация множества
+    "name": "Анна",
+    "age": 30,
+    "is_student": False,
+    "hobbies": ["чтение", "бег"],
+    "address": None
+}
+
+# Парсинг строки
+json_str = '{"name": "Анна", "age": 30}'  # строковое значение
+parsed = json.loads(json_str)  # десериализация из JSON-строки
+
+# В строку
+json_str = json.dumps(data, ensure_ascii=False, indent=2)  # сериализация в JSON-строку
+
+# Чтение из файла
+with open("data.json", encoding="utf-8") as f:  # контекстный менеджер
+    data = json.load(f)  # чтение JSON из файла
+
+# Запись в файл
+with open("data.json", "w", encoding="utf-8") as f:  # контекстный менеджер
+    json.dump(data, f, ensure_ascii=False, indent=2)  # запись JSON в файл</code></pre>
+
+<h3>Маппинг типов JSON ↔ Python</h3>
+<table>
+  <tr><th>JSON</th><th>Python</th></tr>
+  <tr><td>object</td><td>dict</td></tr>
+  <tr><td>array</td><td>list</td></tr>
+  <tr><td>string</td><td>str</td></tr>
+  <tr><td>number (int)</td><td>int</td></tr>
+  <tr><td>number (real)</td><td>float</td></tr>
+  <tr><td>true/false</td><td>True/False</td></tr>
+  <tr><td>null</td><td>None</td></tr>
+</table>
+
+<h3>Сериализация объектов</h3>
+<pre><code>from dataclasses import dataclass, asdict  # импорт модуля
+import json  # импорт модуля для работы с JSON
+
+@dataclass  # декоратор класса данных
+class User:
+    name: str
+    age: int
+
+user = User("Анна", 30)  # присваивание
+json.dumps(asdict(user), ensure_ascii=False)  # сериализация в JSON-строку
+
+# Кастомный сериализатор
+class UserEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, User):  # условие
+            return {"name": obj.name, "age": obj.age}  # возврат значения
+        return super().default(obj)  # возврат значения
+
+json.dumps(user, cls=UserEncoder, ensure_ascii=False)  # сериализация в JSON-строку</code></pre>
+
+<h3>pickle — бинарная сериализация</h3>
+<pre><code>import pickle  # импорт модуля бинарной сериализации
+
+data = {"key": [1, 2, 3], "nested": {"a": 1}}  # инициализация словаря
+
+# Сохранение в файл
+with open("data.pkl", "wb") as f:  # контекстный менеджер
+    pickle.dump(data, f)  # сериализация в файл
+
+# Загрузка из файла
+with open("data.pkl", "rb") as f:  # контекстный менеджер
+    loaded = pickle.load(f)  # десериализация из файла
+
+# Внимание: pickle небезопасен! Не загружайте данные из ненадёжных источников.</code></pre>
+
+<h3>Другие форматы</h3>
+<pre><code># YAML — нужен PyYAML
+import yaml  # импорт YAML
+with open("config.yaml") as f:  # контекстный менеджер
+    config = yaml.safe_load(f)  # присваивание
+
+# TOML — нужен tomllib (3.11+) или tomli
+import tomllib  # импорт TOML
+with open("config.toml", "rb") as f:  # контекстный менеджер
+    config = tomllib.load(f)  # присваивание
+
+# CSV
+import csv  # импорт модуля для работы с CSV
+with open("data.csv", newline="") as f:  # контекстный менеджер
+    reader = csv.DictReader(f)  # чтение CSV в словари
+    for row in reader:  # цикл по элементам
+        print(row)  # вывод в консоль</code></pre>
+
+<h3>Полезные приёмы</h3>
+<pre><code># Сортировка ключей
+json.dumps(data, sort_keys=True)  # сериализация в JSON-строку
+
+# Компактный вывод
+json.dumps(data, separators=(",", ":"))  # сериализация в JSON-строку
+
+# Пропуск None
+json.dumps(data, ignore_nan=True)  # сериализация в JSON-строку
+
+# Красивый вывод для отладки
+import pprint  # импорт модуля
+pprint.pprint(data)  # вывод в консоль
+pprint.pp(data)  # Python 3.8+</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

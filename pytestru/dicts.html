@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Словари — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html" class="active">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Словари</h2>
+<h3>Создание словарей</h3>
+<pre><code>empty = {}  # инициализация множества
+user = {"name": "Анна", "age": 30}  # инициализация словаря
+user = dict(name="Анна", age=30)  # создание словаря
+pairs = dict([("a", 1), ("b", 2)])  # создание словаря
+
+# Динамическое создание
+keys = ["name", "age"]  # инициализация списка
+values = ["Анна", 30]  # инициализация списка
+user = dict(zip(keys, values))  # создание словаря</code></pre>
+
+<h3>Доступ к элементам</h3>
+<pre><code>user = {"name": "Анна", "age": 30}  # инициализация словаря
+
+# Прямой доступ
+user["name"]       # 'Анна'
+user["city"]       # KeyError!
+
+# Безопасный доступ с умолчанием
+user.get("city")          # None
+user.get("city", "Москва") # 'Москва'
+user.get("name")          # 'Анна'
+
+# setdefault — получить или создать
+user.setdefault("city", "Москва")  # 'Москва' (добавлено в словарь)
+
+# Проверка наличия
+"name" in user    # True
+"city" in user</code></pre>
+
+<h3>Методы словарей</h3>
+<pre><code>user = {"name": "Анна", "age": 30}  # инициализация словаря
+
+# Изменение
+user["age"] = 31
+user["city"] = "Москва"
+
+# Обновление из другого словаря
+user.update({"age": 32, "job": "QA"})  # обновление из другого словаря
+
+# Удаление
+del user["city"]  # удаление
+user.pop("age")        # 30 (возвращает значение)
+user.pop("city", None) # None (без ошибки)
+user.clear()           # {}
+
+# Ключи, значения, пары
+user.keys()     # dict_keys(['name', 'age'])
+user.values()   # dict_values(['Анна', 30])
+user.items()    # dict_items([('name', 'Анна'), ('age', 30)])
+
+# Итерация
+for key, value in user.items():  # цикл по элементам
+    print(f"{key}: {value}")  # вывод в консоль</code></pre>
+
+<h3>Dict Comprehension</h3>
+<pre><code># Квадраты чисел
+squares = {x: x**2 for x in range(5)}  # последовательность чисел
+# {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+
+# Фильтрация
+even_squares = {x: x**2 for x in range(10) if x % 2 == 0}  # последовательность чисел
+
+# Инверсия
+original = {"a": 1, "b": 2}  # инициализация словаря
+inverted = {v: k for k, v in original.items()}  # получение пар ключ-значение
+
+# Трансформация
+users = {"alice": 30, "bob": 25}  # инициализация словаря
+adults = {name.title(): age for name, age in users.items() if age >= 18}  # получение пар ключ-значение</code></pre>
+
+<h3>Слияние словарей (3.9+)</h3>
+<pre><code>d1 = {"a": 1, "b": 2}  # инициализация словаря
+d2 = {"b": 3, "c": 4}  # инициализация словаря
+
+merged = d1 | d2       # {'a': 1, 'b': 3, 'c': 4}
+d1 |= d2</code></pre>
+
+<h3>OrderedDict и defaultdict</h3>
+<pre><code>from collections import OrderedDict, defaultdict  # импорт специализированных коллекций
+
+# OrderedDict — запоминает порядок вставки (с 3.7 dict тоже)
+od = OrderedDict()  # присваивание
+od["a"] = 1; od["b"] = 2
+
+# defaultdict — значение по умолчанию для отсутствующих ключей
+dd = defaultdict(int)  # словарь со значением по умолчанию
+dd["a"] += 1  # {'a': 1} — автоматически создаётся 0
+
+dd = defaultdict(list)  # словарь со значением по умолчанию
+dd["items"].append(1)  # {'items': [1]}
+
+# Counter — подсчёт элементов
+from collections import Counter  # импорт специализированных коллекций
+cnt = Counter("abracadabra")  # подсчёт элементов
+cnt  # Counter({'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1})</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

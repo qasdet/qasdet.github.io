@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Установка и настройка — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html" class="active">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Установка и настройка</h2>
+<h3>Установка Python</h3>
+
+<h4>Windows</h4>
+<ol>
+  <li>Скачайте установщик с <a href="https://python.org">python.org</a></li>
+  <li>Запустите .exe, обязательно отметьте «Add Python to PATH»</li>
+  <li>Проверьте: <code>python --version</code></li>
+</ol>
+
+<h4>macOS / Linux</h4>
+<pre><code># macOS (Homebrew)
+brew install python
+
+# Ubuntu/Debian
+sudo apt install python3 python3-pip
+
+# Проверка
+python3 --version</code></pre>
+
+<h3>Виртуальное окружение (venv)</h3>
+<p>Виртуальное окружение изолирует зависимости проекта.</p>
+<pre><code># Создание
+python -m venv .venv
+
+# Активация (Windows)
+.venv\Scripts\activate
+
+# Активация (macOS/Linux)
+source .venv/bin/activate
+
+# Выход
+deactivate</code></pre>
+
+<h3>pip — менеджер пакетов</h3>
+<pre><code># Установка пакета
+pip install requests
+
+# Установка версии
+pip install pytest==7.4.0
+
+# Установка из requirements.txt
+pip install -r requirements.txt
+
+# Создание requirements.txt
+pip freeze > requirements.txt
+
+# Список установленных
+pip list</code></pre>
+
+<h3>Интерактивный режим</h3>
+<p>Запустите <code>python</code> без аргументов — откроется REPL (Read-Eval-Print Loop).</p>
+<pre><code>Python 3.11.9 (main, ...)
+Type "help", "copyright", "credits" or "license" for more information.
+>>> print("Hello, World!")
+Hello, World!
+>>> 2 + 2
+4</code></pre>
+
+<h3>IDE и редакторы</h3>
+<ul>
+  <li><strong>VS Code</strong> — лёгкий редактор с расширениями Python, Pylance, Jupyter</li>
+  <li><strong>PyCharm</strong> — мощная IDE от JetBrains (Community — бесплатно)</li>
+  <li><strong>IDLE</strong> — базовый редактор в составе Python</li>
+  <li><strong>Jupyter Notebook</strong> — интерактивные блокноты для data science</li>
+</ul>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

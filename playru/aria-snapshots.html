@@ -2,96 +2,41 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Playwright Python — ARIA-снимки</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARIA-снимки — Playwright Python</title>
 <link rel="stylesheet" href="playru-style.css">
 </head>
 <body>
-<div class="header">
-<div class="header-inner">
-<a href="index.html">Playwright Python — справочник</a>
-<a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
-</div>
-</div>
-<div class="wrapper">
 <nav class="sidebar">
-<div class="sidebar-section">
-<div class="sidebar-title">Основы</div>
-<a class="sidebar-link" href="intro.html">Введение</a>
-<a class="sidebar-link" href="install.html">Установка</a>
-<a class="sidebar-link" href="writing-tests.html">Написание тестов</a>
-<a class="sidebar-link" href="running-tests.html">Запуск тестов</a>
-<a class="sidebar-link" href="test-runners.html">Тестовые раннеры</a>
-<a class="sidebar-link" href="library.html">Автономная библиотека</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Взаимодействие</div>
-<a class="sidebar-link" href="actions.html">Действия</a>
-<a class="sidebar-link" href="auto-waiting.html">Автоматическое ожидание</a>
-<a class="sidebar-link" href="locators.html">Локаторы</a>
-<a class="sidebar-link" href="other-locators.html">Другие локаторы</a>
-<a class="sidebar-link" href="assertions.html">Утверждения</a>
-<a class="sidebar-link" href="navigations.html">Навигации</a>
-<a class="sidebar-link" href="evaluating-js.html">Выполнение JS</a>
-<a class="sidebar-link" href="events.html">События</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Контекст и страницы</div>
-<a class="sidebar-link" href="browsers.html">Браузеры</a>
-<a class="sidebar-link" href="browser-contexts.html">Браузерные контексты</a>
-<a class="sidebar-link" href="pages.html">Страницы (Page)</a>
-<a class="sidebar-link" href="frames.html">Фреймы</a>
-<a class="sidebar-link" href="handles.html">ElementHandle</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">API и данные</div>
-<a class="sidebar-link" href="api-testing.html">Тестирование API</a>
-<a class="sidebar-link" href="mock.html">Мокирование</a>
-<a class="sidebar-link" href="network.html">Сеть</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Тестирование</div>
-<a class="sidebar-link" href="debug.html">Отладка</a>
-<a class="sidebar-link" href="trace-viewer.html">Просмотрщик трассировок</a>
-<a class="sidebar-link" href="codegen.html">Генератор тестов</a>
-<a class="sidebar-link" href="screenshots.html">Скриншоты</a>
-<a class="sidebar-link" href="videos.html">Видео</a>
-<a class="sidebar-link active" href="aria-snapshots.html">ARIA-снимки</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Эмуляция</div>
-<a class="sidebar-link" href="emulation.html">Эмуляция устройств</a>
-<a class="sidebar-link" href="authentication.html">Аутентификация</a>
-<a class="sidebar-link" href="chrome-extensions.html">Расширения Chrome</a>
-<a class="sidebar-link" href="webview2.html">WebView2</a>
-<a class="sidebar-link" href="touch-events.html">Сенсорные события</a>
-<a class="sidebar-link" href="clock.html">Clock API (Часы)</a>
-<a class="sidebar-link" href="dialogs.html">Диалоги</a>
-<a class="sidebar-link" href="downloads.html">Загрузки</a>
-</div>
-<div class="sidebar-section">
-<div class="sidebar-title">Архитектура</div>
-<a class="sidebar-link" href="pom.html">Page Object Model</a>
-<a class="sidebar-link" href="extensibility.html">Расширяемость</a>
-<a class="sidebar-link" href="ci.html">CI</a>
-<a class="sidebar-link" href="docker.html">Docker</a>
-<a class="sidebar-link" href="languages.html">Языки</a>
-<a class="sidebar-link" href="release-notes.html">Релизы</a>
-</div>
+  <h2>Документация</h2>
+  <ul>
+    <li><a href="osnovy.html">Основы</a></li>
+    <li><a href="vzaimodeistvie.html">Взаимодействие</a></li>
+    <li><a href="kontekst-i-stranitsy.html">Контекст и страницы</a></li>
+    <li><a href="api-i-dannye.html">API и данные</a></li>
+    <li><a href="testirovanie.html">Тестирование</a></li>
+    <li><a href="emulyatsiya.html">Эмуляция</a></li>
+    <li><a href="arkhitektura.html">Архитектура</a></li>
+  </ul>
+  <hr>
+  <ul>
+    <li><a href="screenshots.html">Скриншоты</a></li>
+    <li><a href="videos.html">Видео</a></li>
+    <li><a href="aria-snapshots.html" class="active">ARIA-снимки</a></li>
+    <li><a href="events.html">События</a></li>
+  </ul>
 </nav>
-<main class="main">
-<div class="page-header">
+<main class="content">
 <h1>ARIA-снимки (Aria Snapshots)</h1>
-<p>Текстовое представление accessibility-дерева страницы для проверки семантической структуры.</p>
-</div>
+<p>ARIA-снимки — это текстовое представление accessibility-дерева страницы. Они позволяют проверять семантическую структуру и доступность без визуального рендеринга.</p>
 
-<div class="card">
 <h2>Что такое ARIA-снимок?</h2>
 <p>Снимок строится на основе ARIA-ролей и доступных имён элементов. Формат напоминает YAML — иерархическое дерево узлов.</p>
 <pre><code>- text <span class="st">"Example Domain"</span>
 - link <span class="st">"More information"</span></code></pre>
 
-<h2>to_match_aria_snapshot</h2>
+<h2>Сравнение с помощью to_match_aria_snapshot</h2>
+<p>Матчер <span class="fn">to_match_aria_snapshot</span> сравнивает текущее accessibility-дерево с эталонным снимком.</p>
 <pre><code><span class="kw">from</span> playwright.sync_api <span class="kw">import</span> expect
 
 expect(page).to_match_aria_snapshot(<span class="st">"""
@@ -101,6 +46,7 @@ expect(page).to_match_aria_snapshot(<span class="st">"""
 """</span>)</code></pre>
 
 <h2>Сравнение элемента</h2>
+<p>Можно сравнить снимок только для конкретного локатора.</p>
 <pre><code>expect(
     page.locator(<span class="st">"nav"</span>)
 ).to_match_aria_snapshot(<span class="st">"""
@@ -110,20 +56,17 @@ expect(page).to_match_aria_snapshot(<span class="st">"""
   - listitem
     - link "About"
 """</span>)</code></pre>
-</div>
 
-<div class="card">
 <h2>Формат снимка</h2>
-<p>Узел: <code>роль "имя" [атрибуты]</code></p>
-<p>Роли: button, heading, link, textbox, list, listitem, img, paragraph, text, checkbox, radio, combobox, slider, progressbar, tab, tabpanel, dialog, alert, tooltip и другие.</p>
+<p>Каждый узел имеет вид: <span class="nm">роль "имя" [атрибуты]</span>.</p>
+<p>Поддерживаемые роли: <span class="nm">button, heading, link, textbox, list, listitem, img, paragraph, text, checkbox, radio, combobox, slider, progressbar, tab, tabpanel, dialog, alert, tooltip</span> и другие стандартные ARIA-роли.</p>
 <pre><code>- button <span class="st">"Отправить"</span>
-- heading <span class="st">"Заголовок"</span> [level=<span class="nm">2</span>]
+- heading <span class="st">"Заголовок"</span> [level=<span class="dv">2</span>]
 - link <span class="st">"Читать далее"</span>
 - textbox <span class="st">"Имя"</span> [disabled]
 - img <span class="st">"Логотип"</span></code></pre>
 
-<h3>Атрибуты узлов</h3>
-<div class="table-wrap">
+<h2>Атрибуты узлов</h2>
 <table>
 <tr><th>Атрибут</th><th>Описание</th></tr>
 <tr><td>[checked]</td><td>Флажок отмечен</td></tr>
@@ -132,25 +75,23 @@ expect(page).to_match_aria_snapshot(<span class="st">"""
 <tr><td>[expanded]</td><td>Раскрытый элемент</td></tr>
 <tr><td>[pressed]</td><td>Нажатая кнопка</td></tr>
 </table>
-</div>
 
 <div class="box box-tip">
 <strong>Совет:</strong> Можно опускать атрибуты и дочерние узлы — снимок проверит только указанные. Это даёт частичное совпадение.
 </div>
-</div>
 
-<div class="card">
-<h2>Частичное и строгое совпадение</h2>
-
-<h3>Частичное совпадение (по умолчанию)</h3>
-<pre><code><span class="cm"># Проверяет только наличие link "Home" среди прочих</span>
+<h2>Частичное совпадение</h2>
+<p>Если в снимке указан только поднабор узлов, совпадение всё равно засчитывается:</p>
+<pre><code><span class="cm"># Фактическое дерево содержит ещё пункты,</span>
+<span class="cm"># но проверка пройдёт — важен только Home</span>
 expect(page.locator(<span class="st">"nav"</span>)).to_match_aria_snapshot(<span class="st">"""
 - list
   - listitem
     - link "Home"
 """</span>)</code></pre>
 
-<h3>Строгое совпадение (children: equal)</h3>
+<h2>Строгое совпадение (children: equal)</h2>
+<p>Ключ <span class="nm">children: equal</span> требует точного соответствия дочерних узлов.</p>
 <pre><code>expect(page).to_match_aria_snapshot(<span class="st">"""
 - list [children: equal]
   - listitem
@@ -159,42 +100,47 @@ expect(page.locator(<span class="st">"nav"</span>)).to_match_aria_snapshot(<span
     - link "About"
 """</span>)</code></pre>
 
-<h3>Глубокое равенство (deep-equal)</h3>
+<h2>Глубокое равенство (deep-equal)</h2>
+<p>Ключ <span class="nm">deep-equal</span> рекурсивно сравнивает весь подграф узла.</p>
 <pre><code>expect(page).to_match_aria_snapshot(<span class="st">"""
 - list [deep-equal]
   - listitem
     - link "Home"
 """</span>)</code></pre>
 
-<h3>Regex в имени</h3>
+<h2>Regex в имени</h2>
+<p>Имя узла может быть регулярным выражением (внутри <span class="nm">/pattern/</span>).</p>
 <pre><code>expect(page).to_match_aria_snapshot(<span class="st">"""
 - heading /Добро пожаловать|Welcome/
 - link "/page/\\d+/"
 """</span>)</code></pre>
 
 <div class="box box-info">
-<strong>Примечание:</strong> Обратную косую черту в regex нужно экранировать внутри формата снимка.
-</div>
+<strong>Примечание:</strong> Обратную косую черту в regex нужно экранировать внутри YAML-подобного формата.
 </div>
 
-<div class="card">
-<h2>Получение снимка</h2>
+<h2>Получение снимка (aria_snapshot)</h2>
+<p>Метод <span class="fn">page.aria_snapshot()</span> возвращает строку с текущим accessibility-деревом. Удобно для генерации эталонов.</p>
 <pre><code>snapshot_str = page.aria_snapshot()
 <span class="kw">print</span>(snapshot_str)
+<span class="cm"># - button "Нажми меня"</span>
+<span class="cm"># - heading "Главная" [level=1]</span></code></pre>
 
-snapshot = page.locator(<span class="st">"main"</span>).aria_snapshot()
+<h2>Снимок локатора</h2>
+<pre><code>snapshot = page.locator(<span class="st">"main"</span>).aria_snapshot()
 <span class="kw">print</span>(snapshot)</code></pre>
 
+<h2>Генерация снимков через Codegen</h2>
+<p>В Playwright Inspector (codegen) есть кнопка <strong>Assert snapshot</strong> → <strong>Aria snapshot</strong>. При нажатии генерируется код с <span class="fn">to_match_aria_snapshot</span> и текущим деревом.</p>
+
 <h2>Assertion vs Snapshot-тестирование</h2>
-<div class="table-wrap">
 <table>
-<tr><th>to_match_aria_snapshot</th><th>Snapshot-файлы</th></tr>
-<tr><td>Снимок встроен в код</td><td>Снимок в отдельном файле (.snap)</td></tr>
+<tr><th>Матчер to_match_aria_snapshot</th><th>Snapshot-файлы</th></tr>
+<tr><td>Снимок встроен в код</td><td>Снимок в отдельном файле (_.snap_)</td></tr>
 <tr><td>Подходит для небольших фрагментов</td><td>Удобен для больших деревьев</td></tr>
 <tr><td>Частичное совпадение включено</td><td>Строгое совпадение по умолчанию</td></tr>
 <tr><td>Обновляется вручную</td><td>Обновляется флагом --update-snapshots</td></tr>
 </table>
-</div>
 
 <pre><code><span class="cm"># Snapshot-файл: __snapshots__/menu.aria</span>
 <span class="cm"># - list</span>
@@ -204,12 +150,7 @@ snapshot = page.locator(<span class="st">"main"</span>).aria_snapshot()
 <div class="box box-warning">
 <strong>Важно:</strong> ARIA-снимки зависят от реализации accessibility браузером. Разные браузеры могут возвращать разное дерево для одной и той же страницы.
 </div>
-</div>
 
-<div class="footer">
-Playwright Python — полный справочник на русском языке
-</div>
 </main>
-</div>
 </body>
 </html>

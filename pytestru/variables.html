@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Переменные и типы данных — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html" class="active">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Переменные и типы данных</h2>
+<h3>Переменные</h3>
+<p>Python — язык с динамической типизацией. Тип переменной определяется автоматически.</p>
+<pre><code>name = "Анна"        # str
+age = 30              # int
+height = 1.75         # float
+is_student = False    # bool
+hobbies = None        # NoneType
+
+# Множественное присваивание
+a, b, c = 1, 2, 3
+
+# Одно значение — нескольким переменным
+x = y = z = 0  # присваивание</code></pre>
+
+<h3>Базовые типы данных</h3>
+<table>
+  <tr><th>Тип</th><th>Название</th><th>Пример</th><th>Изменяемый</th></tr>
+  <tr><td><code>int</code></td><td>Целое число</td><td><code>42, -7, 0</code></td><td>Нет</td></tr>
+  <tr><td><code>float</code></td><td>Число с плавающей точкой</td><td><code>3.14, -2.5, 1e10</code></td><td>Нет</td></tr>
+  <tr><td><code>complex</code></td><td>Комплексное число</td><td><code>1+2j</code></td><td>Нет</td></tr>
+  <tr><td><code>str</code></td><td>Строка</td><td><code>"hello", 'привет'</code></td><td>Нет</td></tr>
+  <tr><td><code>bool</code></td><td>Логический</td><td><code>True, False</code></td><td>Нет</td></tr>
+  <tr><td><code>list</code></td><td>Список</td><td><code>[1, 2, 3]</code></td><td>Да</td></tr>
+  <tr><td><code>tuple</code></td><td>Кортеж</td><td><code>(1, 2, 3)</code></td><td>Нет</td></tr>
+  <tr><td><code>dict</code></td><td>Словарь</td><td><code>{"key": "value"}</code></td><td>Да</td></tr>
+  <tr><td><code>set</code></td><td>Множество</td><td><code>{1, 2, 3}</code></td><td>Да</td></tr>
+  <tr><td><code>bytes</code></td><td>Байты</td><td><code>b"hello"</code></td><td>Нет</td></tr>
+</table>
+
+<h3>Проверка и приведение типов</h3>
+<pre><code># Проверка типа
+type(42)           # <class 'int'>
+isinstance(42, int)  # True
+
+# Приведение (кастинг)
+int("123")         # 123
+str(42)            # "42"
+float("3.14")      # 3.14
+bool(1)            # True
+bool(0)            # False
+bool("")           # False
+bool([])           # False
+
+# Что считается False:
+# 0, 0.0, "", [], (), {}, set(), None, False</code></pre>
+
+<h3>Ничего (None)</h3>
+<pre><code>result = None  # пустое значение
+if result is None:  # условие
+    print("Результата нет")  # вывод в консоль</code></pre>
+
+<div class="warn">Python различает <code>is</code> (проверка тождества) и <code>==</code> (проверка равенства). Для сравнения с None всегда используйте <code>is None</code>.</div>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

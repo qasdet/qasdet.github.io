@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Декораторы и замыкания — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html" class="active">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Декораторы и замыкания</h2>
+<h3>Декораторы функций</h3>
+<pre><code>import functools  # импорт модуля
+import time  # импорт модуля времени
+
+def timer(func):
+    @functools.wraps(func)  # сохранение метаданных декорируемой функции
+    def wrapper(*args, **kwargs):
+        start = time.time()  # метка времени в секундах
+        result = func(*args, **kwargs)  # присваивание
+        elapsed = time.time() - start  # метка времени в секундах
+        print(f"{func.__name__} заняла {elapsed:.3f}s")  # вывод в консоль
+        return result  # возврат значения
+    return wrapper  # возврат значения
+
+@timer
+def slow_add(a, b):
+    """Складывает два числа."""
+    time.sleep(0.5)  # пауза
+    return a + b  # возврат значения
+
+slow_add(1, 2)  # slow_add заняла 0.501s
+print(slow_add.__name__)  # slow_add (без wraps было бы 'wrapper')</code></pre>
+
+<h3>Декораторы с параметрами</h3>
+<pre><code>def repeat(n):
+    def decorator(func):
+        @functools.wraps(func)  # сохранение метаданных декорируемой функции
+        def wrapper(*args, **kwargs):
+            for _ in range(n):  # цикл по элементам
+                result = func(*args, **kwargs)  # присваивание
+            return result  # возврат значения
+        return wrapper  # возврат значения
+    return decorator  # возврат значения
+
+@repeat(3)
+def say(message):
+    print(message)  # вывод в консоль
+
+say("Привет!")</code></pre>
+
+<h3>Декораторы классов</h3>
+<pre><code>def add_repr(cls):
+    def __repr__(self):
+        items = ", ".join(f"{k}={v}" for k, v in self.__dict__.items())  # получение пар ключ-значение
+        return f"{cls.__name__}({items})"  # возврат значения
+    cls.__repr__ = __repr__
+    return cls  # возврат значения
+
+@add_repr
+class User:
+    def __init__(self, name, age):
+        self.name = name  # обращение к атрибуту экземпляра
+        self.age = age  # обращение к атрибуту экземпляра
+
+user = User("Анна", 30)  # присваивание
+print(user)  # User(name=Анна, age=30)</code></pre>
+
+<h3>Декоратор для методов класса</h3>
+<pre><code>def log_call(method):
+    @functools.wraps(method)  # сохранение метаданных декорируемой функции
+    def wrapper(self, *args, **kwargs):
+        print(f"Вызов {method.__name__}")  # вывод в консоль
+        return method(self, *args, **kwargs)  # возврат значения
+    return wrapper  # возврат значения
+
+class Service:
+    @log_call
+    def process(self, data):
+        return f"Обработка: {data}"  # возврат значения</code></pre>
+
+<h3>Замыкания (closures)</h3>
+<pre><code>def multiplier(factor):
+    def multiply(x):
+        return x * factor  # возврат значения
+    return multiply  # возврат значения
+
+double = multiplier(2)  # присваивание
+triple = multiplier(3)  # присваивание
+print(double(5))  # 10
+print(triple(5))  # 15</code></pre>
+
+<h3>functools.partial — частичное применение</h3>
+<pre><code>from functools import partial  # импорт модуля
+
+def power(base, exp):
+    return base ** exp  # возврат значения
+
+square = partial(power, exp=2)  # присваивание
+cube = partial(power, exp=3)  # присваивание
+
+print(square(5))  # 25
+print(cube(5))    # 125</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

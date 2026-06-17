@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регулярные выражения — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html" class="active">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Регулярные выражения</h2>
+<h3>Модуль re</h3>
+<pre><code>import re  # импорт модуля регулярных выражений
+
+text = "Мой email: user@example.com"  # строковое значение
+
+# Поиск первого совпадения
+match = re.search(r"\w+@\w+\.\w+", text)  # поиск первого совпадения
+if match:  # условие
+    print(match.group())  # user@example.com
+
+# Все совпадения
+emails = re.findall(r"\w+@\w+\.\w+", text)  # все совпадения
+
+# Замена
+result = re.sub(r"\d+", "NUMBER", "Цена: 100 рублей")  # замена по шаблону
+# 'Цена: NUMBER рублей'</code></pre>
+
+<h3>Специальные символы</h3>
+<table>
+  <tr><th>Символ</th><th>Значение</th></tr>
+  <tr><td><code>.</code></td><td>Любой символ, кроме новой строки</td></tr>
+  <tr><td><code>\d</code></td><td>Цифра (0–9)</td></tr>
+  <tr><td><code>\w</code></td><td>Буква, цифра, подчёркивание</td></tr>
+  <tr><td><code>\s</code></td><td>Пробельный символ</td></tr>
+  <tr><td><code>\D</code></td><td>Не цифра</td></tr>
+  <tr><td><code>\W</code></td><td>Не буква/цифра</td></tr>
+  <tr><td><code>\S</code></td><td>Не пробельный</td></tr>
+  <tr><td><code>^</code></td><td>Начало строки</td></tr>
+  <tr><td><code>$</code></td><td>Конец строки</td></tr>
+  <tr><td><code>\b</code></td><td>Граница слова</td></tr>
+</table>
+
+<h3>Квантификаторы</h3>
+<table>
+  <tr><th>Символ</th><th>Значение</th></tr>
+  <tr><td><code>*</code></td><td>0 и более</td></tr>
+  <tr><td><code>+</code></td><td>1 и более</td></tr>
+  <tr><td><code>?</code></td><td>0 или 1</td></tr>
+  <tr><td><code>{3}</code></td><td>Ровно 3</td></tr>
+  <tr><td><code>{2,5}</code></td><td>От 2 до 5</td></tr>
+  <tr><td><code>{2,}</code></td><td>2 и более</td></tr>
+</table>
+
+<h3>Группы</h3>
+<pre><code>text = "Иван: 30 лет"  # строковое значение
+match = re.search(r"(\w+): (\d+)", text)  # сопоставление с образцом
+if match:  # условие
+    print(match.group(0))   # 'Иван: 30' (всё совпадение)
+    print(match.group(1))   # 'Иван' (первая группа)
+    print(match.group(2))   # '30' (вторая группа)
+    print(match.groups())   # ('Иван', '30')
+
+# Именованные группы
+match = re.search(r"(?P<name>\w+): (?P<age>\d+)", text)  # сопоставление с образцом
+print(match.group("name"))  # 'Иван'</code></pre>
+
+<h3>Флаги</h3>
+<pre><code>re.IGNORECASE / re.I  — регистронезависимый
+re.MULTILINE  / re.M — ^ и $ работают по строкам
+re.DOTALL     / re.S — точка включает \n
+re.VERBOSE    / re.X — комментарии в паттерне
+
+re.search(r"python", text, re.IGNORECASE)  # поиск первого совпадения
+
+# VERBOSE — паттерн с комментариями
+pattern = re.compile(r"""  # компиляция регулярного выражения
+    \b
+    \d{3}
+    -\d{2}-
+    \d{2}
+    \b
+""", re.VERBOSE)</code></pre>
+
+<h3>Компиляция регулярных выражений</h3>
+<pre><code># Без компиляции (каждый раз компилируется заново)
+for text in texts:  # цикл по элементам
+    re.search(r"сложный\s+паттерн", text)  # поиск первого совпадения
+
+# С компиляцией (быстрее в цикле)
+pattern = re.compile(r"сложный\s+паттерн")  # компиляция регулярного выражения
+for text in texts:  # цикл по элементам
+    pattern.search(text)</code></pre>
+
+<h3>Примеры</h3>
+<pre><code># Email
+r"[\w.+-]+@[\w-]+\.[\w.]+"
+
+# URL
+r"https?://[\w./-]+"
+
+# Телефон (Россия)
+r"\+7\d{10}|8\d{10}"
+
+# IP-адрес
+r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+
+# Дата ДД.ММ.ГГГГ
+r"\d{2}\.\d{2}\.\d{4}"
+
+# HTML-тег
+r"<[^>]+>"
+
+# Все цифры в строке
+re.findall(r"\d+", text)  # все совпадения
+
+# Разделить строку по нескольким разделителям
+re.split(r"[,\;\s]+", text)  # разделение по шаблону</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Базы данных — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html" class="active">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Базы данных</h2>
+<h3>SQLite (встроенная БД)</h3>
+<pre><code>import sqlite3  # импорт модуля для SQLite
+
+# Подключение (создаст файл, если нет)
+conn = sqlite3.connect("database.db")  # подключение к базе данных
+cursor = conn.cursor()  # присваивание
+
+# Создание таблицы
+cursor.execute("""  # выполнение SQL-запроса
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER,
+        email TEXT UNIQUE
+    )
+""")
+
+# Вставка
+cursor.execute(  # выполнение SQL-запроса
+    "INSERT INTO users (name, age, email) VALUES (?, ?, ?)",
+    ("Анна", 30, "anna@example.com")
+)
+conn.commit()  # фиксация транзакции
+
+# Чтение
+cursor.execute("SELECT * FROM users WHERE age > ?", (18,))  # выполнение SQL-запроса
+rows = cursor.fetchall()  # все строки результата
+for row in rows:  # цикл по элементам
+    print(row)  # вывод в консоль
+
+# Одна строка
+row = cursor.fetchone()  # одна строка результата
+
+# Закрытие
+conn.close()  # закрытие соединения</code></pre>
+
+<h3>Контекстный менеджер</h3>
+<pre><code>with sqlite3.connect("database.db") as conn:  # контекстный менеджер
+    cursor = conn.cursor()  # присваивание
+    cursor.execute("SELECT * FROM users")  # выполнение SQL-запроса
+    rows = cursor.fetchall()  # все строки результата
+    # conn.commit() — авто commit при выходе из with
+
+# row_factory — доступ по имени колонки
+conn = sqlite3.connect("database.db")  # подключение к базе данных
+conn.row_factory = sqlite3.Row  # доступ к строке по имени колонки
+cursor = conn.cursor()  # присваивание
+cursor.execute("SELECT * FROM users")  # выполнение SQL-запроса
+row = cursor.fetchone()  # одна строка результата
+print(row["name"])  # вывод в консоль</code></pre>
+
+<h3>Транзакции</h3>
+<pre><code>try:  # начало блока с обработкой исключений
+    cursor.execute("BEGIN")  # выполнение SQL-запроса
+    cursor.execute("UPDATE accounts SET balance = balance - 100 WHERE id = 1")  # выполнение SQL-запроса
+    cursor.execute("UPDATE accounts SET balance = balance + 100 WHERE id = 2")  # выполнение SQL-запроса
+    conn.commit()  # фиксация транзакции
+except Exception:  # обработка исключения
+    conn.rollback()  # откат транзакции
+    print("Транзакция откачена")  # вывод в консоль</code></pre>
+
+<h3>Сырой SQL vs ORM</h3>
+<p>Для работы с БД в Python часто используют ORM:</p>
+<ul>
+  <li><strong>SQLAlchemy</strong> — мощный ORM с полным контролем</li>
+  <li><strong>Django ORM</strong> — встроен в Django, удобен для веб-приложений</li>
+  <li><strong>Peewee</strong> — лёгкий ORM для небольших проектов</li>
+</ul>
+
+<pre><code># SQLAlchemy (пример)
+from sqlalchemy import create_engine, Column, Integer, String  # импорт модуля
+from sqlalchemy.orm import declarative_base, Session  # импорт модуля
+
+Base = declarative_base()  # присваивание
+
+class User(Base):
+    __tablename__ = "users"  # строковое значение
+    id = Column(Integer, primary_key=True)  # присваивание
+    name = Column(String)  # присваивание
+    age = Column(Integer)  # присваивание
+
+engine = create_engine("sqlite:///database.db")  # присваивание
+Base.metadata.create_all(engine)
+
+with Session(engine) as session:  # контекстный менеджер
+    user = User(name="Анна", age=30)  # присваивание
+    session.add(user)
+    session.commit()</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Асинхронное программирование — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html" class="active">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Асинхронное программирование</h2>
+<h3>Основы async/await</h3>
+<pre><code>import asyncio  # импорт асинхронного модуля
+
+# Асинхронная функция (корутина)
+async def greet(name: str) -> str:  # асинхронная функция (корутина)
+    await asyncio.sleep(1)  # асинхронная пауза
+    return f"Привет, {name}!"  # возврат значения
+
+# Запуск корутины
+result = asyncio.run(greet("Мир"))  # запуск асинхронной программы
+print(result)  # вывод в консоль</code></pre>
+
+<h3>Параллельный запуск</h3>
+<pre><code>async def fetch_data(url: str) -> str:  # асинхронная функция (корутина)
+    print(f"Загрузка {url}")  # вывод в консоль
+    await asyncio.sleep(2)  # асинхронная пауза
+    return f"Данные {url}"  # возврат значения
+
+async def main():  # асинхронная функция (корутина)
+    # Последовательно
+    r1 = await fetch_data("url1")  # присваивание
+    r2 = await fetch_data("url2")  # присваивание
+
+    # Параллельно
+    results = await asyncio.gather(  # параллельный запуск корутин
+        fetch_data("url1"),
+        fetch_data("url2"),
+        fetch_data("url3"),
+    )
+    print(results)  # вывод в консоль
+
+asyncio.run(main())  # запуск асинхронной программы</code></pre>
+
+<h3>asyncio.create_task — фоновые задачи</h3>
+<pre><code>async def background_work():  # асинхронная функция (корутина)
+    while True:  # цикл с предусловием
+        print("Работаю...")  # вывод в консоль
+        await asyncio.sleep(5)  # асинхронная пауза
+
+async def main():  # асинхронная функция (корутина)
+    # Запуск в фоне
+    task = asyncio.create_task(background_work())  # создание фоновой задачи
+    await asyncio.sleep(12)  # асинхронная пауза
+    task.cancel()
+
+asyncio.run(main())  # запуск асинхронной программы</code></pre>
+
+<h3>Тайм-ауты</h3>
+<pre><code>async def slow_operation():  # асинхронная функция (корутина)
+    await asyncio.sleep(10)  # асинхронная пауза
+    return "Готово"  # возврат значения
+
+async def main():  # асинхронная функция (корутина)
+    try:  # начало блока с обработкой исключений
+        result = await asyncio.wait_for(slow_operation(), timeout=5)  # ожидание с таймаутом
+    except asyncio.TimeoutError:  # обработка исключения
+        print("Таймаут! Операция отменена")  # вывод в консоль
+
+asyncio.run(main())  # запуск асинхронной программы</code></pre>
+
+<h3>Асинхронные генераторы</h3>
+<pre><code>async def async_counter(n: int):  # асинхронная функция (корутина)
+    for i in range(n):  # цикл по элементам
+        await asyncio.sleep(0.5)  # асинхронная пауза
+        yield i  # генерация значения
+
+async def main():  # асинхронная функция (корутина)
+    async for value in async_counter(5):  # асинхронная итерация
+        print(value)  # 0, 1, 2, 3, 4 с интервалом 0.5с
+
+asyncio.run(main())  # запуск асинхронной программы</code></pre>
+
+<h3>Работа с сетью (aiohttp)</h3>
+<pre><code>import aiohttp  # импорт асинхронного HTTP-клиента
+import asyncio  # импорт асинхронного модуля
+
+async def fetch(session, url):  # асинхронная функция (корутина)
+    async with session.get(url) as response:  # асинхронный контекстный менеджер
+        return await response.json()  # возврат значения
+
+async def main():  # асинхронная функция (корутина)
+    urls = ["https://api.github.com"] * 5  # инициализация списка
+    async with aiohttp.ClientSession() as session:  # асинхронный контекстный менеджер
+        tasks = [fetch(session, url) for url in urls]  # списковое включение
+        results = await asyncio.gather(*tasks)  # параллельный запуск корутин
+
+asyncio.run(main())  # запуск асинхронной программы</code></pre>
+
+<h3>Синхронное vs асинхронное</h3>
+<table>
+  <tr><th>Синхронно</th><th>Асинхронно</th></tr>
+  <tr><td><code>def func()</code></td><td><code>async def func()</code></td></tr>
+  <tr><td><code>func()</code></td><td><code>await func()</code></td></tr>
+  <tr><td><code>result</code></td><td><code>await result</code></td></tr>
+  <tr><td><code>for</code></td><td><code>async for</code></td></tr>
+  <tr><td><code>with</code></td><td><code>async with</code></td></tr>
+  <tr><td><code>time.sleep()</code></td><td><code>await asyncio.sleep()</code></td></tr>
+</table>
+
+<h3>asyncio vs threading vs multiprocessing</h3>
+<pre><code># asyncio — для I/O-bound задач (сеть, файлы, БД)
+# threading — для I/O-bound, но с GIL
+# multiprocessing — для CPU-bound задач (реальные потоки ОС)
+
+import asyncio  # импорт асинхронного модуля
+import threading  # импорт модуля
+import multiprocessing  # импорт модуля
+
+# asyncio — одна корутина за раз, переключение по await
+# threading — переключение по прерыванию ОС
+# multiprocessing — параллельное выполнение на всех ядрах</code></pre>
+
+<h3>Синхронизация в asyncio</h3>
+<pre><code>import asyncio  # импорт асинхронного модуля
+
+async def worker(name, lock):  # асинхронная функция (корутина)
+    async with lock:  # асинхронный контекстный менеджер
+        print(f"{name} работает")  # вывод в консоль
+        await asyncio.sleep(1)  # асинхронная пауза
+
+async def main():  # асинхронная функция (корутина)
+    lock = asyncio.Lock()  # асинхронный мьютекс
+    tasks = [worker(f"W{i}", lock) for i in range(3)]  # последовательность чисел
+    await asyncio.gather(*tasks)  # параллельный запуск корутин
+
+asyncio.run(main())  # запуск асинхронной программы</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

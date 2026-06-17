@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тестирование — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html" class="active">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Тестирование</h2>
+<h3>pytest — современный тестовый фреймворк</h3>
+<p>Установка: <code>pip install pytest</code></p>
+
+<pre><code># test_calc.py
+def add(a, b):
+    return a + b  # возврат значения
+
+# Имя теста начинается с test_
+def test_add():
+    assert add(2, 3) == 5
+    assert add(-1, 1) == 0
+    assert add(0, 0) == 0</code></pre>
+
+<pre><code># Запуск
+pytest
+pytest test_calc.py
+pytest test_calc.py::test_add
+pytest -v
+pytest -k "add"
+pytest -x
+pytest --tb=short</code></pre>
+
+<h3>Фикстуры (fixtures)</h3>
+<pre><code>import pytest  # импорт тестового фреймворка
+
+@pytest.fixture  # фикстура pytest
+def user_data():
+    return {"name": "Анна", "age": 30}  # возврат значения
+
+@pytest.fixture  # фикстура pytest
+def database():
+    # Setup
+    db = create_test_database()  # присваивание
+    yield db  # генерация значения
+    # Teardown
+    db.drop()
+
+def test_user_name(user_data):
+    assert user_data["name"] == "Анна"
+
+def test_user_age(user_data):
+    assert user_data["age"] == 30</code></pre>
+
+<h3>Параметризация</h3>
+<pre><code>import pytest  # импорт тестового фреймворка
+
+@pytest.mark.parametrize("a, b, expected", [  # параметризация теста
+    (1, 2, 3),
+    (0, 0, 0),
+    (-1, 1, 0),
+    (100, -50, 50),
+])
+def test_add(a, b, expected):
+    assert a + b == expected
+
+# Несколько параметров
+@pytest.mark.parametrize("a", [1, 2])  # параметризация теста
+@pytest.mark.parametrize("b", [3, 4])  # параметризация теста
+def test_product(a, b):
+    pass  # 4 комбинации</code></pre>
+
+<h3>Моки (unittest.mock)</h3>
+<pre><code>from unittest.mock import Mock, patch  # импорт модуля
+import requests  # импорт модуля регулярных выражений
+
+# Mock объект
+mock_response = Mock()  # присваивание
+mock_response.json.return_value = {"id": 1, "name": "Анна"}
+mock_response.status_code = 200
+
+# patch — замена в контексте
+@patch("requests.get")  # подмена объекта на mock
+def test_fetch(mock_get):
+    mock_get.return_value = mock_response
+    result = fetch_user(1)  # присваивание
+    assert result["name"] == "Анна"
+
+# Проверка вызова
+mock_get.assert_called_once_with("https://api.example.com/users/1")  # проверка вызова с аргументами</code></pre>
+
+<h3>unittest — встроенный модуль</h3>
+<pre><code>import unittest  # импорт встроенного тестового модуля
+
+class TestMath(unittest.TestCase):
+    def setUp(self):  # подготовка перед каждым тестом
+        """Выполняется перед каждым тестом"""
+        self.data = [1, 2, 3]  # обращение к атрибуту экземпляра
+
+    def test_sum(self):
+        self.assertEqual(sum(self.data), 6)  # обращение к атрибуту экземпляра
+
+    def test_max(self):
+        self.assertEqual(max(self.data), 3)  # обращение к атрибуту экземпляра
+
+    def test_in(self):
+        self.assertIn(2, self.data)  # обращение к атрибуту экземпляра
+
+if __name__ == "__main__":  # условие
+    unittest.main()</code></pre>
+
+<h3>Проверки (assertions)</h3>
+<pre><code>assert result == expected
+assert result != wrong
+assert result is None
+assert result is not None
+assert value in collection
+assert len(items) > 0  # длина
+assert "error" not in response.text
+assert response.status_code == 200
+
+# pytest предоставляет
+pytest.approx(3.14159, 0.001)  # сравнение float с погрешностью
+pytest.raises(ValueError)  # проверка ожидаемого исключения
+pytest.warns(UserWarning)  # проверка ожидаемого предупреждения</code></pre>
+
+<h3>Проверка исключений</h3>
+<pre><code>import pytest  # импорт тестового фреймворка
+
+def test_raises():
+    with pytest.raises(ValueError, match="деление на ноль"):  # контекстный менеджер
+        divide(10, 0)
+
+def test_raises_no_match():
+    with pytest.raises(ZeroDivisionError):  # контекстный менеджер
+        1 / 0</code></pre>
+
+<h3>Покрытие кода (coverage)</h3>
+<pre><code># Установка
+pip install pytest-cov
+
+# Запуск с покрытием
+pytest --cov=my_module --cov-report=html
+pytest --cov=my_module --cov-report=term-missing
+
+# Минимальный порог
+pytest --cov=my_module --cov-fail-under=80</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

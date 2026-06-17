@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Строки — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html" class="active">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Строки</h2>
+<h3>Создание строк</h3>
+<pre><code>s1 = 'одинарные кавычки'  # строковое значение
+s2 = "двойные кавычки"  # строковое значение
+s3 = ''''многострочный  # строковое значение
+текст с одинарными''''
+s4 = '"""многострочный  # строковое значение
+текст с двойными"""'</code></pre>
+
+<h3>Экранирование и raw-строки</h3>
+<pre><code># Экранирование
+s = "Он сказал: \"Привет!\""  # строковое значение
+path = "C:\\Users\\name"  # строковое значение
+
+# Raw-строки (не обрабатывают \)
+path = r"C:\Users\name"  # присваивание
+regex = r"\d+\.\d+"  # присваивание</code></pre>
+
+<h3>Индексы и срезы</h3>
+<pre><code>s = "Python"  # строковое значение
+s[0]    # 'P'
+s[-1]   # 'n'
+s[0:3]  # 'Pyt' (0, 1, 2)
+s[3:]   # 'hon'
+s[:3]   # 'Pyt'
+s[::2]  # 'Pto' (шаг 2)
+s[::-1] # 'nohtyP' (разворот)
+
+# Строки неизменяемы — нельзя s[0] = 'J'</code></pre>
+
+<h3>Основные методы строк</h3>
+<pre><code>s = "  Hello, World!  "  # строковое значение
+
+s.lower()         # '  hello, world!  '
+s.upper()         # '  HELLO, WORLD!  '
+s.strip()         # 'Hello, World!' (удалить пробелы)
+s.lstrip()        # 'Hello, World!  '
+s.rstrip()        # '  Hello, World!'
+s.replace("World", "Python")  # '  Hello, Python!  '
+s.split(", ")     # ['  Hello', ' World!  ']
+s.split()         # ['Hello,', 'World!'] (по пробелам)
+", ".join(["a","b","c"])  # 'a, b, c'
+s.startswith("  He")   # True
+s.endswith("!")        # True
+s.find("World")        # 8 (индекс или -1)
+s.count("l")           # 3
+"42".zfill(5)          # '00042'
+"hello".capitalize()   # 'Hello'
+"hello world".title()  # 'Hello World'
+"ABC".isupper()        # True
+"abc".islower()        # True
+"123".isdigit()        # True
+"abc123".isalnum()     # True</code></pre>
+
+<h3>Форматирование строк</h3>
+<h4>f-строки (Python 3.6+)</h4>
+<pre><code>name = "Анна"  # строковое значение
+age = 30  # числовое значение
+print(f"Меня зовут {name}, мне {age} лет")  # вывод в консоль
+
+# Выражения внутри
+print(f"Через 5 лет мне будет {age + 5}")  # вывод в консоль
+
+# Форматирование чисел
+pi = 3.14159265  # числовое значение
+print(f"π = {pi:.2f}")        # π = 3.14
+print(f"π = {pi:.4f}")        # π = 3.1416
+print(f"{1000000:,}")         # 1,000,000
+print(f"{0.25:.1%}")          # 25.0%
+print(f"{42:05d}")            # 00042
+print(f"{255:#x}")            # 0xff
+print(f"{255:b}")             # 11111111
+
+# Выравнивание
+print(f"|{'left':<10}|")      # |left      |
+print(f"|{'right':>10}|")     # |     right|
+print(f"|{'center':^10}|")    # |  center  |</code></pre>
+
+<h4>Метод format</h4>
+<pre><code>"{} — {}".format("Ключ", "Значение")
+"{0} — {1}".format("Ключ", "Значение")
+"{name}: {age}".format(name="Анна", age=30)</code></pre>
+
+<h3>Полезные функции</h3>
+<pre><code>len("Python")      # 6
+ord('A')           # 65 (Unicode)
+chr(65)            # 'A'
+str([1, 2, 3])     # "[1, 2, 3]"
+repr("hello")      # "'hello'" (для отладки)
+ascii("привет")    # "'\u043f\u0440\u0438\u0432\u0435\u0442'"</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

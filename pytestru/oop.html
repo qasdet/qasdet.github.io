@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ООП (Объектно-ориентированное программирование) — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html" class="active">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>ООП (Объектно-ориентированное программирование)</h2>
+<h3>Классы и объекты</h3>
+<pre><code>class User:
+    def __init__(self, name, age):
+        self.name = name  # обращение к атрибуту экземпляра
+        self.age = age  # обращение к атрибуту экземпляра
+
+    def greet(self):
+        return f"Привет, я {self.name}"  # возврат значения
+
+user = User("Анна", 30)  # присваивание
+print(user.greet())  # вывод в консоль</code></pre>
+
+<h3>Методы класса</h3>
+<pre><code>class Counter:
+    count = 0  # числовое значение
+
+    @classmethod  # метод класса
+    def increment(cls):
+        cls.count += 1
+
+    @staticmethod  # статический метод
+    def info():
+        return "Счётчик"  # возврат значения
+
+    def instance_method(self):
+        return self.count  # возврат значения
+
+Counter.increment()
+Counter.info()</code></pre>
+
+<h3>Свойства (property)</h3>
+<pre><code>class Person:
+    def __init__(self, name):
+        self._name = name  # обращение к атрибуту экземпляра
+
+    @property  # свойство класса
+    def name(self):
+        return self._name.upper()  # возврат значения
+
+    @name.setter  # сеттер свойства
+    def name(self, value):
+        if not value:  # условие
+            raise ValueError("Имя не может быть пустым")  # выброс исключения
+        self._name = value  # обращение к атрибуту экземпляра
+
+    @name.deleter  # делитер свойства
+    def name(self):
+        print("Удаление имени")  # вывод в консоль
+        del self._name  # обращение к атрибуту экземпляра
+
+p = Person("Анна")  # присваивание
+print(p.name)  # вывод в консоль
+p.name = "Ольга"</code></pre>
+
+<h3>Наследование</h3>
+<pre><code>class Animal:
+    def __init__(self, name):
+        self.name = name  # обращение к атрибуту экземпляра
+
+    def speak(self):
+        raise NotImplementedError  # выброс исключения
+
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name}: Гав!"  # возврат значения
+
+class Cat(Animal):
+    def speak(self):
+        return f"{self.name}: Мяу!"  # возврат значения
+
+# super() — вызов родительского метода
+class Developer:
+    def __init__(self, name, lang):
+        self.name = name  # обращение к атрибуту экземпляра
+        self.lang = lang  # обращение к атрибуту экземпляра
+
+class SeniorDeveloper(Developer):
+    def __init__(self, name, lang, years):
+        super().__init__(name, lang)  # вызов родительского метода
+        self.years = years  # обращение к атрибуту экземпляра</code></pre>
+
+<h3>Магические методы (dunder)</h3>
+<pre><code>class Vector:
+    def __init__(self, x, y):
+        self.x = x  # обращение к атрибуту экземпляра
+        self.y = y  # обращение к атрибуту экземпляра
+
+    def __repr__(self):     # repr()
+        return f"Vector({self.x}, {self.y})"  # возврат значения
+
+    def __str__(self):      # str(), print()
+        return f"({self.x}, {self.y})"  # возврат значения
+
+    def __add__(self, other):  # +
+        return Vector(self.x + other.x, self.y + other.y)  # возврат значения
+
+    def __eq__(self, other):   # ==
+        return self.x == other.x and self.y == other.y  # возврат значения
+
+    def __lt__(self, other):   # < (для сортировки)
+        return (self.x**2 + self.y**2) < (other.x**2 + other.y**2)  # возврат значения
+
+    def __len__(self):         # len()
+        return int((self.x**2 + self.y**2) ** 0.5)  # возврат значения
+
+    def __getitem__(self, i):
+        return (self.x, self.y)[i]  # возврат значения
+
+v1 = Vector(2, 3)  # присваивание
+v2 = Vector(1, 4)  # присваивание
+print(v1 + v2)  # (3, 7)
+print(v1 == Vector(2, 3))  # True</code></pre>
+
+<h3>dataclasses (Python 3.7+)</h3>
+<pre><code>from dataclasses import dataclass, field  # импорт модуля
+
+@dataclass  # декоратор класса данных
+class User:
+    name: str
+    age: int = 0
+    emails: list = field(default_factory=list)
+    is_active: bool = True
+
+user = User("Анна", 30)  # присваивание
+print(user)            # User(name='Анна', age=30, emails=[], is_active=True)
+print(user == User("Анна", 30))  # True
+
+# Frozen (неизменяемый)
+from dataclasses import dataclass  # импорт модуля
+
+@dataclass(frozen=True)  # декоратор класса данных
+class Point:
+    x: int
+    y: int</code></pre>
+
+<h3>Абстрактные классы</h3>
+<pre><code>from abc import ABC, abstractmethod  # импорт модуля
+
+class Shape(ABC):
+    @abstractmethod  # абстрактный метод
+    def area(self) -> float:
+        pass  # пустая заглушка
+
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius  # обращение к атрибуту экземпляра
+
+    def area(self):
+        return 3.14159 * self.radius ** 2  # возврат значения</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

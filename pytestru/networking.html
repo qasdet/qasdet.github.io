@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Работа с сетью — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html" class="active">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Работа с сетью</h2>
+<h3>Модуль requests</h3>
+<p>Стандартный HTTP-клиент. Установка: <code>pip install requests</code></p>
+<pre><code>import requests  # импорт модуля регулярных выражений
+
+# GET-запрос
+response = requests.get("https://api.github.com")  # безопасный доступ со значением по умолчанию
+print(response.status_code)  # 200
+print(response.json())       # JSON-ответ
+print(response.text)  # вывод в консоль
+print(response.headers)  # вывод в консоль
+
+# Параметры
+params = {"q": "python", "page": 1}  # инициализация словаря
+response = requests.get("https://api.github.com/search", params=params)  # безопасный доступ со значением по умолчанию
+
+# POST с JSON
+response = requests.post(  # POST-запрос
+    "https://api.example.com/users",
+    json={"name": "Анна", "age": 30},  # инициализация словаря
+    headers={"Authorization": "Bearer token"}  # инициализация словаря
+)
+
+# POST с формой
+response = requests.post("https://httpbin.org/post", data={"key": "value"})  # POST-запрос</code></pre>
+
+<h3>Обработка ответов</h3>
+<pre><code>import requests  # импорт модуля регулярных выражений
+
+response = requests.get("https://httpbin.org/status/404")  # безопасный доступ со значением по умолчанию
+
+if response.ok:            # True для 2xx
+    data = response.json()  # десериализация JSON-ответа
+elif response.status_code == 404:  # иначе если
+    print("Не найдено")  # вывод в консоль
+elif response.status_code >= 500:  # иначе если
+    print("Ошибка сервера")  # вывод в консоль
+
+# Исключения
+try:  # начало блока с обработкой исключений
+    response = requests.get("https://example.com", timeout=5)  # безопасный доступ со значением по умолчанию
+    response.raise_for_status()  # проверка HTTP-статуса на ошибку
+except requests.Timeout:  # обработка исключения
+    print("Таймаут")  # вывод в консоль
+except requests.ConnectionError:  # обработка исключения
+    print("Ошибка соединения")  # вывод в консоль
+except requests.HTTPError:  # обработка исключения
+    print(f"HTTP {response.status_code}")  # вывод в консоль</code></pre>
+
+<h3>Сессии</h3>
+<pre><code>session = requests.Session()  # создание HTTP-сессии
+session.headers.update({"Authorization": "Bearer token"})  # обновление из другого словаря
+
+# Куки сохраняются между запросами
+session.get("https://httpbin.org/cookies/set/test/true")  # безопасный доступ со значением по умолчанию
+response = session.get("https://httpbin.org/cookies")  # безопасный доступ со значением по умолчанию
+
+# Закрытие сессии
+session.close()  # закрытие сессии
+
+# Контекстный менеджер
+with requests.Session() as session:  # контекстный менеджер
+    session.get("https://example.com")  # безопасный доступ со значением по умолчанию</code></pre>
+
+<h3>urllib — стандартная библиотека</h3>
+<pre><code>from urllib.request import urlopen  # импорт модуля
+from urllib.parse import urlencode, quote  # импорт модуля
+
+# Простой GET
+with urlopen("https://api.github.com") as f:  # контекстный менеджер
+    data = f.read().decode()  # декодирование из байтов
+    print(f.status)  # 200
+
+# Параметры
+params = urlencode({"q": "python", "page": 1})  # присваивание
+url = f"https://api.github.com/search?{params}"  # присваивание
+
+# Кодирование URL
+quote("привет мир")  # %D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82%20%D0%BC%D0%B8%D1%80</code></pre>
+
+<h3>Сокеты (низкий уровень)</h3>
+<pre><code>import socket  # импорт модуля сокетов
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # создание сокета
+sock.connect(("example.com", 80))
+sock.send(b"GET / HTTP/1.1\r\nHost: example.com\r\n\r\n")
+response = sock.recv(4096)  # присваивание
+sock.close()
+
+# TCP-сервер
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # создание сокета
+server.bind(("localhost", 8080))
+server.listen(1)
+
+conn, addr = server.accept()
+data = conn.recv(1024)  # присваивание
+conn.send(b"OK")
+conn.close()  # закрытие соединения</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

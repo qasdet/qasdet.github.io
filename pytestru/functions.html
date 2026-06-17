@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Функции — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html" class="active">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Функции</h2>
+<h3>Определение функций</h3>
+<pre><code>def greet(name):
+    """Документация функции."""
+    return f"Привет, {name}!"  # возврат значения
+
+# Вызов
+result = greet("Анна")  # присваивание
+
+# Функция без return возвращает None
+def log(msg):
+    print(f"[LOG] {msg}")  # вывод в консоль</code></pre>
+
+<h3>Параметры функций</h3>
+<pre><code># Позиционные
+def add(a, b):
+    return a + b  # возврат значения
+add(2, 3)
+
+# Именованные
+add(b=3, a=2)
+
+# Значения по умолчанию
+def greet(name, greeting="Привет"):
+    return f"{greeting}, {name}!"  # возврат значения
+
+# *args — произвольное число позиционных
+def sum_all(*args):
+    return sum(args)  # возврат значения
+sum_all(1, 2, 3)  # 6
+
+# **kwargs — произвольное число именованных
+def print_kwargs(**kwargs):
+    for k, v in kwargs.items():  # цикл по элементам
+        print(f"{k}: {v}")  # вывод в консоль
+print_kwargs(name="Анна", age=30)
+
+# Все вместе: def func(a, b, *args, c=1, **kwargs)</code></pre>
+
+<h3>Параметры только по имени (keyword-only)</h3>
+<pre><code># После * — только именованные
+def configure(*, host, port):
+    print(f"{host}:{port}")  # вывод в консоль
+configure(host="localhost", port=8080)
+# configure("localhost", 8080)  # TypeError!
+
+# С после *args
+def func(a, b, *args, verbose=False): ...</code></pre>
+
+<h3>Аннотации типов (type hints)</h3>
+<pre><code>def add(a: int, b: int) -> int:
+    return a + b  # возврат значения
+
+def get_user(name: str) -> dict | None:
+    ...
+
+from typing import List, Optional  # импорт модуля
+def process(items: List[int]) -> Optional[str]: ...  # тип может быть None</code></pre>
+
+<h3>Лямбда-функции</h3>
+<pre><code># Анонимные функции
+square = lambda x: x**2  # анонимная функция
+square(5)  # 25
+
+# Сортировка с ключом
+pairs = [(1, 'one'), (3, 'three'), (2, 'two')]  # инициализация списка
+pairs.sort(key=lambda x: x[1])  # анонимная функция
+
+# filter / map / sorted
+nums = [1, 2, 3, 4, 5]  # инициализация списка
+list(filter(lambda x: x > 3, nums))  # [4, 5]
+list(map(lambda x: x*2, nums))       # [2, 4, 6, 8, 10]</code></pre>
+
+<h3>Декораторы</h3>
+<pre><code>def timer(func):
+    import time  # импорт модуля времени
+    def wrapper(*args, **kwargs):
+        start = time.time()  # метка времени в секундах
+        result = func(*args, **kwargs)  # присваивание
+        print(f"{func.__name__}: {time.time()-start:.3f}s")  # вывод в консоль
+        return result  # возврат значения
+    return wrapper  # возврат значения
+
+@timer
+def slow_function():
+    import time  # импорт модуля времени
+    time.sleep(1)  # пауза
+
+slow_function()  # slow_function: 1.002s
+
+# Декоратор с параметрами
+def repeat(n):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(n):  # цикл по элементам
+                result = func(*args, **kwargs)  # присваивание
+            return result  # возврат значения
+        return wrapper  # возврат значения
+    return decorator  # возврат значения
+
+@repeat(3)
+def say_hello():
+    print("Hello!")  # вывод в консоль</code></pre>
+
+<h3>Замыкания (closures)</h3>
+<pre><code>def make_counter():
+    count = 0  # числовое значение
+    def counter():
+        nonlocal count  # доступ к переменной внешней функции
+        count += 1
+        return count  # возврат значения
+    return counter  # возврат значения
+
+c = make_counter()  # присваивание
+c()  # 1
+c()  # 2
+c()  # 3</code></pre>
+
+<h3>functools — полезные декораторы</h3>
+<pre><code>from functools import lru_cache, partial  # импорт модуля
+
+# Кэширование
+@lru_cache(maxsize=128)  # кэширование результатов
+def fib(n):
+    return n if n < 2 else fib(n-1) + fib(n-2)  # возврат значения
+
+# Частичное применение
+def power(base, exp):
+    return base ** exp  # возврат значения
+
+square = partial(power, exp=2)  # присваивание
+square(5)  # 25</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Типизация (type hints) — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html" class="active">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Типизация (type hints)</h2>
+<h3>Аннотации функций</h3>
+<pre><code>def greet(name: str) -> str:
+    return f"Привет, {name}"  # возврат значения
+
+def add(a: int, b: int) -> int:
+    return a + b  # возврат значения
+
+def process(data: list[int]) -> dict[str, int]:
+    return {str(x): x for x in data}  # возврат значения</code></pre>
+
+<h3>Аннотации переменных</h3>
+<pre><code>name: str = "Анна"
+age: int = 30
+items: list[int] = [1, 2, 3]
+user: dict[str, str | int] = {"name": "Анна", "age": 30}</code></pre>
+
+<h3>Базовые типы из typing</h3>
+<pre><code>from typing import (  # импорт аннотаций типов
+    List, Dict, Tuple, Set, Optional, Union, Any,
+    Callable, Iterable, Iterator, Sequence, Mapping,
+    TypeVar, Generic, Protocol  # структурный протокол
+)
+
+# До 3.9: List[int], Dict[str, int]
+# С 3.9: list[int], dict[str, int]
+
+# Optional — может быть None
+def find_user(id: int) -> Optional[dict]:  # тип может быть None
+    ...
+
+# Union — один из типов
+def format(value: Union[str, int, float]) -> str:  # объединение типов
+    ...
+
+# Union с |
+def format(value: str | int | float) -> str:  # 3.10+
+    ...
+
+# Any — любой тип
+def log(value: Any) -> None: ...</code></pre>
+
+<h3>Generic — обобщённые типы</h3>
+<pre><code>T = TypeVar("T")  # переменная типа
+
+def first(items: list[T]) -> T | None:
+    return items[0] if items else None  # возврат значения
+
+# Generic класс
+class Stack(T):
+    def __init__(self) -> None:
+        self._items: list[T] = []  # обращение к атрибуту экземпляра
+
+    def push(self, item: T) -> None:
+        self._items.append(item)  # добавление в конец
+
+    def pop(self) -> T:
+        return self._items.pop()  # возврат значения
+
+# Использование
+stack = Stack[int]()  # присваивание
+stack.push(1)
+value = stack.pop()  # type: int</code></pre>
+
+<h3>Protocol — структурная типизация (3.8+)</h3>
+<pre><code>from typing import Protocol  # импорт модуля
+
+class Flyable(Protocol):  # структурный протокол
+    def fly(self) -> str: ...
+
+class Bird:
+    def fly(self) -> str:
+        return "Птица летит"  # возврат значения
+
+class Plane:
+    def fly(self) -> str:
+        return "Самолёт летит"  # возврат значения
+
+def travel(obj: Flyable) -> None:
+    print(obj.fly())  # вывод в консоль
+
+travel(Bird())   # OK
+travel(Plane())  # OK (duck typing)</code></pre>
+
+<h3>Callable — тип функции</h3>
+<pre><code>from typing import Callable  # импорт модуля
+
+# Функция с int → str
+def apply(func: Callable[[int], str], value: int) -> str:  # тип функции
+    return func(value)  # возврат значения
+
+# Функция без параметров
+def run(callback: Callable[[], None]) -> None:  # тип функции
+    callback()</code></pre>
+
+<h3>Literal — конкретные значения</h3>
+<pre><code>from typing import Literal  # импорт модуля
+
+def set_mode(mode: Literal["read", "write", "append"]) -> None:  # литеральный тип (конкретные значения)
+    ...
+
+set_mode("read")   # OK
+set_mode("delete")</code></pre>
+
+<h3>TypedDict — типизированный словарь</h3>
+<pre><code>from typing import TypedDict  # импорт модуля
+
+class User(TypedDict):  # типизированный словарь
+    name: str
+    age: int
+    email: str | None
+
+user: User = {"name": "Анна", "age": 30, "email": None}</code></pre>
+
+<h3>Мой любимый инструмент: mypy</h3>
+<pre><code># Установка
+pip install mypy
+
+# Запуск
+mypy script.py
+
+# mypy находит ошибки типов без запуска кода
+</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

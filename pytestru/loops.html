@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Циклы — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html" class="active">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Циклы</h2>
+<h3>Цикл for</h3>
+<pre><code># По списку
+for item in [1, 2, 3]:  # цикл по элементам
+    print(item)  # вывод в консоль
+
+# По строке
+for char in "Python":  # цикл по элементам
+    print(char)  # вывод в консоль
+
+# По range
+for i in range(5):  # цикл по элементам
+    print(i)  # вывод в консоль
+
+# По словарю
+for key in user: ...  # цикл по элементам
+for val in user.values(): ...  # цикл по элементам
+for key, val in user.items(): ...  # цикл по элементам
+
+# По нескольким последовательностям
+for name, age in zip(names, ages):  # цикл по элементам
+    print(f"{name}: {age}")  # вывод в консоль
+
+# С индексом
+for i, val in enumerate(["a", "b", "c"]):  # цикл по элементам
+    print(i, val)  # вывод в консоль</code></pre>
+
+<h3>Цикл while</h3>
+<pre><code>i = 0  # числовое значение
+while i < 5:  # цикл с предусловием
+    print(i)  # вывод в консоль
+    i += 1
+
+# Бесконечный цикл с break
+while True:  # цикл с предусловием
+    cmd = input("> ")  # ввод данных
+    if cmd == "exit":  # условие
+        break  # досрочный выход из цикла
+    if cmd == "help":  # условие
+        continue  # переход к следующей итерации
+    print(f"Вы ввели: {cmd}")  # вывод в консоль</code></pre>
+
+<h3>break / continue / else</h3>
+<pre><code># break — выход из цикла
+for i in range(10):  # цикл по элементам
+    if i == 5:  # условие
+        break  # досрочный выход из цикла
+    print(i)  # 0 1 2 3 4
+
+# continue — переход к следующей итерации
+for i in range(5):  # цикл по элементам
+    if i == 2:  # условие
+        continue  # переход к следующей итерации
+    print(i)  # 0 1 3 4
+
+# else в цикле — выполняется, если break не сработал
+for n in range(2, 10):  # цикл по элементам
+    for x in range(2, n):  # цикл по элементам
+        if n % x == 0:  # условие
+            break  # досрочный выход из цикла
+    else:  # иначе
+        print(n, "простое число")  # вывод в консоль</code></pre>
+
+<h3>Генераторы списков (повторение)</h3>
+<pre><code># Базовая форма
+[expr for item in iterable]
+
+# С условием
+[expr for item in iterable if condition]
+
+# С if-else
+[expr_if_true if condition else expr_if_false for item in iterable]
+
+# Примеры
+squares = [x**2 for x in range(10)]  # последовательность чисел
+evens = [x for x in range(20) if x % 2 == 0]  # последовательность чисел
+labels = ["чёт" if x % 2 == 0 else "нечёт" for x in range(5)]  # последовательность чисел</code></pre>
+
+<h3>Функция range</h3>
+<pre><code>range(stop)       # 0, 1, ..., stop-1
+range(start, stop)  # start, ..., stop-1
+range(start, stop, step)  # последовательность чисел
+
+list(range(5))          # [0, 1, 2, 3, 4]
+list(range(2, 7))       # [2, 3, 4, 5, 6]
+list(range(0, 10, 2))   # [0, 2, 4, 6, 8]
+list(range(5, 0, -1))   # [5, 4, 3, 2, 1]</code></pre>
+
+<h3>Итерация по нескольким коллекциям</h3>
+<pre><code># zip — параллельная
+for a, b in zip(list1, list2):  # цикл по элементам
+    print(a, b)  # вывод в консоль
+
+# enumerate — с индексом
+for idx, val in enumerate(collection):  # цикл по элементам
+    print(idx, val)  # вывод в консоль
+
+# reversed — обратный порядок
+for item in reversed(lst):  # цикл по элементам
+    print(item)  # вывод в консоль
+
+# sorted — сортированный
+for item in sorted(lst):  # цикл по элементам
+    print(item)  # вывод в консоль</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Генераторы и итераторы — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html" class="active">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Генераторы и итераторы</h2>
+<h3>Генераторные функции</h3>
+<pre><code>def count_up_to(n):
+    i = 0  # числовое значение
+    while i < n:  # цикл с предусловием
+        yield i  # генерация значения
+        i += 1
+
+for num in count_up_to(5):  # цикл по элементам
+    print(num)  # 0, 1, 2, 3, 4
+
+# Генераторы — ленивые: значения создаются на лету</code></pre>
+
+<h3>Генераторные выражения</h3>
+<pre><code># Круглые скобки — генератор (ленивый)
+squares = (x**2 for x in range(10))  # последовательность чисел
+print(squares)  # <generator object ...>
+print(list(squares))  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+# Квадратные — список (все сразу в памяти)
+list_squares = [x**2 for x in range(10)]  # последовательность чисел
+
+# Эффективно для больших данных
+sum(x**2 for x in range(1000000))  # сумма</code></pre>
+
+<h3>Stateful-генераторы</h3>
+<pre><code>def fibonacci():
+    a, b = 0, 1
+    while True:  # цикл с предусловием
+        yield a  # генерация значения
+        a, b = b, a + b
+
+fib = fibonacci()  # присваивание
+[next(fib) for _ in range(10)]  # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]</code></pre>
+
+<h3>yield from — делегирование</h3>
+<pre><code>def chain(*iterables):
+    for it in iterables:  # цикл по элементам
+        yield from it  # делегирование генератору
+
+list(chain([1,2], [3,4]))  # [1, 2, 3, 4]</code></pre>
+
+<h3>Итераторы вручную</h3>
+<pre><code>class Squares:
+    def __init__(self, n):
+        self.n = n  # обращение к атрибуту экземпляра
+        self.i = 0  # обращение к атрибуту экземпляра
+
+    def __iter__(self):
+        return self  # возврат значения
+
+    def __next__(self):
+        if self.i >= self.n:  # условие
+            raise StopIteration  # выброс исключения
+        result = self.i ** 2  # обращение к атрибуту экземпляра
+        self.i += 1  # обращение к атрибуту экземпляра
+        return result  # возврат значения
+
+list(Squares(5))  # [0, 1, 4, 9, 16]</code></pre>
+
+<h3>itertools — инструменты для итераторов</h3>
+<pre><code>import itertools  # импорт модуля итераторов
+
+# Бесконечные
+itertools.count(10, 2)    # 10, 12, 14, ...
+itertools.cycle("ABC")    # A, B, C, A, B, C, ...
+itertools.repeat(42, 3)   # 42, 42, 42
+
+# Комбинаторика
+itertools.permutations("ABC", 2)  # AB, AC, BA, BC, CA, CB
+itertools.combinations("ABC", 2)  # AB, AC, BC
+itertools.product("AB", "12")     # A1, A2, B1, B2
+
+# Полезные
+itertools.chain([1,2], [3,4])     # 1, 2, 3, 4
+itertools.zip_longest([1,2], [3,4,5])  # (1,3), (2,4), (None,5)
+itertools.islice(range(100), 10)  # итераторные функции
+itertools.groupby(data, key_func)  # итераторные функции</code></pre>
+
+<h3>Генераторы vs списки: память</h3>
+<pre><code>import sys  # импорт системного модуля
+
+list_comp = [x for x in range(1000000)]  # последовательность чисел
+gen_expr = (x for x in range(1000000))  # последовательность чисел
+
+sys.getsizeof(list_comp)  # ~8 MB (все элементы в памяти)
+sys.getsizeof(gen_expr)   # ~200 bytes (ленивый)</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

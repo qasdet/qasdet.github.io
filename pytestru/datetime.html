@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дата и время — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html" class="active">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Дата и время</h2>
+<h3>datetime — основные типы</h3>
+<pre><code>from datetime import datetime, date, time, timedelta  # импорт модуля
+
+# Текущие дата/время
+now = datetime.now()          # 2026-06-17 14:30:00.123456
+today = date.today()          # 2026-06-17
+current_time = datetime.now().time()  # 14:30:00.123456
+
+# Создание вручную
+dt = datetime(2026, 6, 17, 14, 30, 0)  # присваивание
+d = date(2026, 6, 17)  # присваивание
+t = time(14, 30, 0)  # присваивание</code></pre>
+
+<h3>Форматирование и парсинг</h3>
+<pre><code># datetime → строка (strftime)
+now = datetime.now()  # присваивание
+now.strftime("%Y-%m-%d")              # 2026-06-17
+now.strftime("%d.%m.%Y %H:%M")        # 17.06.2026 14:30
+now.strftime("%A, %d %B %Y")          # Wednesday, 17 June 2026
+now.strftime("%Y-%m-%dT%H:%M:%S")     # 2026-06-17T14:30:00 (ISO)
+
+# Строка → datetime (strptime)
+dt = datetime.strptime("2026-06-17", "%Y-%m-%d")  # парсинг строки в дату
+dt = datetime.fromisoformat("2026-06-17T14:30:00")  # 3.7+</code></pre>
+
+<h3>Коды форматирования</h3>
+<table>
+  <tr><th>Код</th><th>Значение</th><th>Пример</th></tr>
+  <tr><td>%Y</td><td>Год (4 цифры)</td><td>2026</td></tr>
+  <tr><td>%m</td><td>Месяц (01–12)</td><td>06</td></tr>
+  <tr><td>%d</td><td>День (01–31)</td><td>17</td></tr>
+  <tr><td>%H</td><td>Часы (00–23)</td><td>14</td></tr>
+  <tr><td>%M</td><td>Минуты (00–59)</td><td>30</td></tr>
+  <tr><td>%S</td><td>Секунды (00–59)</td><td>00</td></tr>
+  <tr><td>%A</td><td>День недели (полный)</td><td>Wednesday</td></tr>
+  <tr><td>%B</td><td>Месяц (полный)</td><td>June</td></tr>
+</table>
+
+<h3>timedelta — разница во времени</h3>
+<pre><code>from datetime import timedelta  # импорт модуля времени
+
+delta = timedelta(days=7, hours=3)  # присваивание
+print(delta)  # 7 days, 3:00:00
+
+# Арифметика
+now = datetime.now()  # присваивание
+next_week = now + timedelta(weeks=1)  # присваивание
+yesterday = now - timedelta(days=1)  # присваивание
+deadline = now + timedelta(hours=24)  # присваивание
+
+# Между датами
+start = datetime(2026, 1, 1)  # присваивание
+end = datetime(2026, 12, 31)  # присваивание
+diff = end - start  # timedelta(days=363)
+
+diff.days            # 363
+diff.total_seconds() # 31363200.0</code></pre>
+
+<h3>timezone — часовые пояса</h3>
+<pre><code>from datetime import timezone, timedelta  # импорт модуля времени
+
+# UTC
+utc_now = datetime.now(timezone.utc)  # присваивание
+
+# Смещение
+msk = timezone(timedelta(hours=3))  # присваивание
+moscow_now = datetime.now(msk)  # присваивание
+
+# pip install pytz — для полной поддержки поясов
+import pytz  # импорт модуля
+tz = pytz.timezone("Europe/Moscow")  # присваивание
+moscow = datetime.now(tz)  # присваивание</code></pre>
+
+<h3>time — низкоуровневое время</h3>
+<pre><code>import time  # импорт модуля времени
+
+# Таймер
+start = time.time()  # метка времени в секундах
+# ... код ...
+elapsed = time.time() - start  # метка времени в секундах
+print(f"{elapsed:.3f}s")  # вывод в консоль
+
+# Ожидание
+time.sleep(2)   # 2 секунды
+
+# Структурированное время
+time.localtime()  # time.struct_time
+time.strftime("%Y-%m-%d", time.localtime())  # форматирование даты в строку</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

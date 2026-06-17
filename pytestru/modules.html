@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Модули и пакеты — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html" class="active">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Модули и пакеты</h2>
+<h3>Импорт модулей</h3>
+<pre><code># Полный импорт
+import math  # импорт математического модуля
+math.sqrt(16)  # математическая функция
+
+# Импорт с псевдонимом
+import numpy as np  # импорт модуля
+np.array([1, 2, 3])
+
+# Импорт конкретных функций
+from math import sqrt, pi  # импорт модуля
+sqrt(16)
+
+# Импорт всех (не рекомендуется)
+from math import *</code></pre>
+
+<h3>Создание модуля</h3>
+<p>Любой <code>.py</code> файл — это модуль.</p>
+<pre><code># utils.py
+def greet(name):
+    return f"Привет, {name}"  # возврат значения
+
+PI = 3.14159  # числовое значение
+
+# main.py
+import utils  # импорт модуля
+print(utils.greet("Анна"))  # вывод в консоль
+print(utils.PI)  # вывод в консоль</code></pre>
+
+<h3>__name__ и __main__</h3>
+<pre><code># utils.py
+def greet(name):
+    return f"Привет, {name}"  # возврат значения
+
+if __name__ == "__main__":  # условие
+    # Этот код выполнится только при запуске файла
+    print(greet("Мир"))  # вывод в консоль</code></pre>
+
+<h3>Пакеты</h3>
+<p>Пакет — это директория с файлом <code>__init__.py</code>.</p>
+<pre><code>my_package/
+├── __init__.py
+├── module_a.py
+└── module_b.py
+
+# __init__.py
+from .module_a import func_a  # импорт модуля
+from .module_b import func_b  # импорт модуля
+
+# Использование
+import my_package  # импорт модуля
+my_package.func_a()
+
+from my_package import func_b  # импорт модуля</code></pre>
+
+<h3>Стандартные модули (часто используемые)</h3>
+<table>
+  <tr><th>Модуль</th><th>Назначение</th></tr>
+  <tr><td>os</td><td>Работа с ОС, пути, переменные окружения</td></tr>
+  <tr><td>sys</td><td>Системные параметры, аргументы командной строки</td></tr>
+  <tr><td>json</td><td>Работа с JSON</td></tr>
+  <tr><td>re</td><td>Регулярные выражения</td></tr>
+  <tr><td>datetime</td><td>Дата и время</td></tr>
+  <tr><td>math</td><td>Математические функции</td></tr>
+  <tr><td>random</td><td>Случайные числа</td></tr>
+  <tr><td>pathlib</td><td>Работа с путями (объектно)</td></tr>
+  <tr><td>collections</td><td>Специализированные коллекции</td></tr>
+  <tr><td>itertools</td><td>Инструменты для итераторов</td></tr>
+  <tr><td>functools</td><td>Функциональное программирование</td></tr>
+  <tr><td>logging</td><td>Логирование</td></tr>
+  <tr><td>argparse</td><td>Парсинг аргументов командной строки</td></tr>
+</table>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>

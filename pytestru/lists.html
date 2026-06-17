@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Списки — Справочник Python</title>
+  <link rel="stylesheet" href="pytestru-style.css">
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1><a href="index.html">Справочник Python</a></h1>
+    <p class="subtitle">Полное руководство по языку на русском</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Разделы</h3>
+      <ul>
+      <li><a href="intro.html">Введение в Python</a></li>
+      <li><a href="setup.html">Установка и настройка</a></li>
+      <li><a href="syntax.html">Основы синтаксиса</a></li>
+      <li><a href="variables.html">Переменные и типы данных</a></li>
+      <li><a href="numbers.html">Числа и математика</a></li>
+      <li><a href="strings.html">Строки</a></li>
+      <li><a href="lists.html" class="active">Списки</a></li>
+      <li><a href="tuples.html">Кортежи</a></li>
+      <li><a href="dicts.html">Словари</a></li>
+      <li><a href="sets.html">Множества</a></li>
+      <li><a href="conditionals.html">Условные операторы</a></li>
+      <li><a href="loops.html">Циклы</a></li>
+      <li><a href="functions.html">Функции</a></li>
+      <li><a href="modules.html">Модули и пакеты</a></li>
+      <li><a href="exceptions.html">Обработка исключений</a></li>
+      <li><a href="files.html">Работа с файлами</a></li>
+      <li><a href="oop.html">ООП (Объектно-ориентированное программирование)</a></li>
+      <li><a href="decorators.html">Декораторы и замыкания</a></li>
+      <li><a href="generators.html">Генераторы и итераторы</a></li>
+      <li><a href="stdlib.html">Стандартная библиотека</a></li>
+      <li><a href="datetime.html">Дата и время</a></li>
+      <li><a href="regex.html">Регулярные выражения</a></li>
+      <li><a href="json.html">JSON и сериализация</a></li>
+      <li><a href="networking.html">Работа с сетью</a></li>
+      <li><a href="databases.html">Базы данных</a></li>
+      <li><a href="typing.html">Типизация (type hints)</a></li>
+      <li><a href="async.html">Асинхронное программирование</a></li>
+      <li><a href="testing.html">Тестирование</a></li>
+      <li><a href="best-practices.html">Советы и лучшие практики</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Списки</h2>
+<h3>Создание списков</h3>
+<pre><code>empty = []  # инициализация списка
+nums = [1, 2, 3, 4, 5]  # инициализация списка
+mixed = [1, "hello", 3.14, True]  # инициализация списка
+nested = [[1, 2], [3, 4]]  # инициализация списка
+
+# Из строки
+list("abc")        # ['a', 'b', 'c']
+
+# range — создание последовательности
+list(range(5))     # [0, 1, 2, 3, 4]
+list(range(2, 7))  # [2, 3, 4, 5, 6]
+list(range(0, 10, 2))  # [0, 2, 4, 6, 8]</code></pre>
+
+<h3>Доступ и срезы</h3>
+<pre><code>nums = [10, 20, 30, 40, 50]  # инициализация списка
+nums[0]     # 10
+nums[-1]    # 50
+nums[1:3]   # [20, 30]
+nums[:3]    # [10, 20, 30]
+nums[::2]   # [10, 30, 50]
+nums[::-1]  # [50, 40, 30, 20, 10]
+
+# Изменение по индексу
+nums[0] = 100</code></pre>
+
+<h3>Методы списков</h3>
+<pre><code>lst = [1, 2, 3]  # инициализация списка
+
+lst.append(4)         # [1, 2, 3, 4]
+lst.insert(0, 0)      # [0, 1, 2, 3, 4]
+lst.extend([5, 6])    # [0, 1, 2, 3, 4, 5, 6]
+lst.remove(3)  # удаление первого вхождения
+lst.pop()             # 6, lst → [0, 1, 2, 4, 5]
+lst.pop(0)            # 0, lst → [1, 2, 4, 5]
+lst.index(4)          # 2 (индекс элемента)
+lst.count(2)          # 1 (количество вхождений)
+lst.sort()  # сортировка на месте
+lst.sort(reverse=True)  # сортировка на месте
+sorted(lst)  # сортированная копия
+lst.reverse()  # разворот на месте
+len(lst)  # длина
+sum(lst)  # сумма
+min(lst), max(lst)  # минимум
+del lst[0]  # удаление
+lst.clear()  # очистка
+
+# Копирование
+copy = lst.copy()  # поверхностная копия
+copy = lst[:]  # присваивание
+deep = copy.deepcopy(lst)  # глубокая копия</code></pre>
+
+<h3>Списковые включения (List Comprehension)</h3>
+<pre><code># Квадраты чисел от 0 до 9
+squares = [x**2 for x in range(10)]  # последовательность чисел
+
+# Чётные числа
+evens = [x for x in range(20) if x % 2 == 0]  # последовательность чисел
+
+# Вложенный цикл
+pairs = [(x, y) for x in [1,2] for y in [3,4]]  # списковое включение
+# [(1,3), (1,4), (2,3), (2,4)]
+
+# С условием if-else
+labels = ["чёт" if x % 2 == 0 else "нечёт" for x in range(5)]  # последовательность чисел
+
+# Трансформация строк
+words = ["hello", "world"]  # инициализация списка
+uppers = [w.upper() for w in words]  # ['HELLO', 'WORLD']
+
+# Фильтрация с None
+values = [1, None, 3, None, 5]  # инициализация списка
+clean = [v for v in values if v is not None]  # [1, 3, 5]</code></pre>
+
+<h3>Функции для работы со списками</h3>
+<pre><code># all / any — все / хотя бы один
+all([True, True, True])   # True
+any([False, True, False]) # True
+all([x > 0 for x in nums])  # все элементы истинны?
+
+# enumerate — индексы с элементами
+for i, val in enumerate(["a", "b", "c"]):  # цикл по элементам
+    print(i, val)  # 0 a, 1 b, 2 c
+
+# zip — параллельная итерация
+names = ["Анна", "Борис"]  # инициализация списка
+ages  = [30, 25]  # инициализация списка
+for name, age in zip(names, ages):  # цикл по элементам
+    print(f"{name}: {age}")  # вывод в консоль</code></pre>
+    </main>
+  </div>
+  <footer>
+    <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
+  </footer>
+</div>
+</body>
+</html>
