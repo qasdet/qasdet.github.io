@@ -13,7 +13,7 @@
   <header>
     <h1>Плейбук по Docker</h1>
     <p class="subtitle">Полное руководство по Docker: установка, команды, Dockerfile, Compose, сети, volumes, CI/CD, безопасность и best practices</p>
-    <p class="meta">Версия 1.0 &bull; 2026</p>
+    <p class="meta">Версия 2.0 &bull; 2026</p>
   </header>
   <div class="layout">
     <nav class="sidebar">
@@ -34,8 +34,14 @@
         <li><a href="#optimization" class="toc-h2">13. Оптимизация образов</a></li>
         <li><a href="#orchestration" class="toc-h2">14. Оркестрация</a></li>
         <li><a href="#practices" class="toc-h2">15. Best Practices</a></li>
-        <li><a href="#glossary" class="toc-h2">16. Глоссарий</a></li>
-        <li><a href="#checklist" class="toc-h2">17. Чеклист</a></li>
+        <li><a href="#troubleshooting" class="toc-h2">16. Troubleshooting</a></li>
+        <li><a href="#resources" class="toc-h2">17. Resource limits</a></li>
+        <li><a href="#dev" class="toc-h2">18. Docker в разработке</a></li>
+        <li><a href="#monitoring" class="toc-h2">19. Мониторинг и логи</a></li>
+        <li><a href="#databases" class="toc-h2">20. Базы данных</a></li>
+        <li><a href="#rootless" class="toc-h2">21. Rootless mode</a></li>
+        <li><a href="#glossary" class="toc-h2">22. Глоссарий</a></li>
+        <li><a href="#checklist" class="toc-h2">23. Чеклист</a></li>
       </ul>
     </nav>
     <main>
@@ -244,6 +250,21 @@ networks:
         <li>Пример: сервисы <code>db</code> (всегда), <code>test-runner</code> (profile: test)</li>
       </ul>
 
+      <h3>Docker Compose Watch (горячая перезагрузка)</h3>
+      <p>Начиная с Compose 2.24, доступна <code>docker compose watch</code> — автоматическое обновление контейнера при изменении файлов на хосте без пересборки образа:</p>
+      <pre><code>services:
+  web:
+    build: .
+    develop:
+      watch:
+        - path: ./src
+          action: sync
+          target: /app/src
+        - path: ./package.json
+          action: rebuild</code></pre>
+      <pre><code>docker compose watch</code></pre>
+      <div class="info-box"><strong>Режимы action:</strong> <code>sync</code> — синхронизация файлов (bind mount без пересборки), <code>rebuild</code> — пересборка образа при изменении критичных файлов, <code>restart</code> — перезапуск сервиса.</div>
+
       <!-- ===== 7. СЕТИ ===== -->
       <h2 id="networks">7. Сети в Docker</h2>
 
@@ -254,8 +275,48 @@ networks:
         <tr><td><strong>host</strong></td><td>Контейнер использует сеть хоста</td><td>Максимальная производительность, без изоляции</td></tr>
         <tr><td><strong>overlay</strong></td><td>Сеть между несколькими хостами (Docker Swarm)</td><td>Кластер, Swarm mode</td></tr>
         <tr><td><strong>macvlan</strong></td><td>Контейнеру присваивается MAC-адрес</td><td>Legacy приложения, мониторинг сети</td></tr>
+        <tr><td><strong>ipvlan</strong></td><td>Контейнеру присваивается IP-адрес (без MAC)</td><td>Высокая плотность, L3 сегментация</td></tr>
         <tr><td><strong>none</strong></td><td>Без сети</td><td>Изолированные задачи, безопасность</td></tr>
       </table>
+
+      <h3>Детально о типах сетей</h3>
+
+      <h4>Host mode</h4>
+      <p>Контейнер использует сетевой стек хоста напрямую — нет изоляции, но максимальная производительность.</p>
+      <pre><code>docker run --network host nginx
+# Порт 80 контейнера доступен на localhost:80 хоста</code></pre>
+      <ul>
+        <li><strong>Плюсы:</strong> минимальная задержка, нет NAT, порты не нужно публиковать</li>
+        <li><strong>Минусы:</strong> конфликты портов, нет изоляции, не работает на Docker Desktop (macOS/Windows)</li>
+        <li><strong>Когда использовать:</strong> высоконагруженные сервисы (Nginx, HAProxy), мониторинг</li>
+      </ul>
+
+      <h4>Macvlan</h4>
+      <p>Контейнер выглядит как отдельное устройство в физической сети —有自己的 MAC и IP адрес.</p>
+      <pre><code>docker network create -d macvlan \
+  --subnet=192.168.1.0/24 \
+  --gateway=192.168.1.1 \
+  -o parent=eth0 \
+  my-macvlan
+
+docker run --network my-macvlan --ip=192.168.1.100 nginx</code></pre>
+      <ul>
+        <li><strong>Плюсы:</strong> контейнеры доступны напрямую из LAN, поддержка legacy-приложений</li>
+        <li><strong>Минусы:</strong> хост не может общаться со своими macvlan-контейнерами (нужен sub-interface), исчерпание MAC-адресов</li>
+      </ul>
+
+      <h4>Ipvlan</h4>
+      <p>Современная альтернатива macvlan — контейнеры получают IP, но используют MAC-адрес хоста.</p>
+      <pre><code>docker network create -d ipvlan \
+  --subnet=192.168.1.0/24 \
+  -o parent=eth0 \
+  -o ipvlan_mode=l3 \
+  my-ipvlan</code></pre>
+      <ul>
+        <li><strong>L2 mode:</strong> контейнеры в том же broadcast-домене</li>
+        <li><strong>L3 mode:</strong> маршрутизация между подсетями, нет broadcast-трафика</li>
+        <li><strong>Плюсы:</strong> выше плотность (один MAC на хост), хост может общаться с контейнерами</li>
+      </ul>
 
       <h3>Управление сетями</h3>
       <pre><code>docker network create --driver bridge mynet
@@ -270,6 +331,7 @@ docker network rm mynet</code></pre>
         <li>Контейнеры в одной сети видят друг друга по имени сервиса (Compose) или имени контейнера</li>
         <li>Встроенный DNS-сервер (127.0.0.11) разрешает имена контейнеров</li>
         <li>Пример: <code>http://db:5432</code> — доступ к PostgreSQL</li>
+        <li>Кастомные DNS: <code>--dns 8.8.8.8</code> или <code>dns: 8.8.8.8</code> в Compose</li>
       </ul>
 
       <!-- ===== 8. VOLUMES ===== -->
@@ -315,12 +377,50 @@ docker push localhost:5000/myapp:latest
 # Pull с локального registry
 docker pull localhost:5000/myapp:latest</code></pre>
 
+      <h3>Proxy Registry (Mirror)</h3>
+      <p>Кэширующий proxy для Docker Hub — ускоряет pull'ы и снижает лимиты:</p>
+      <pre><code># /etc/docker/daemon.json
+{
+  "registry-mirrors": ["https://mirror.example.com"]
+}
+
+sudo systemctl restart docker</code></pre>
+      <p>Популярные mirror'ы: Docker Hub mirror (Mirror) от провайдера, Nexus, Harbor, Sonatype Nexus.</p>
+
+      <h3>Harbor</h3>
+      <p>Enterprise-grade registry с открытым исходным кодом:</p>
+      <ul>
+        <li><strong>Security scanning:</strong> Trivy, Clair — автоматическое сканирование уязвимостей</li>
+        <li><strong>Replication:</strong> синхронизация образов между registry (push/pull)</li>
+        <li><strong>RBAC:</strong> управление доступом на уровне проектов и пользователей</li>
+        <li><strong>Garbage Collection:</strong> очистка неиспользуемых слоёв</li>
+        <li><strong>Web UI:</strong> управление образами через браузер</li>
+        <li><strong>Helm Charts:</strong> хранение Helm-чартов</li>
+      </ul>
+      <pre><code># Установка Harbor через Docker Compose
+wget https://github.com/goharbor/harbor/releases/download/v2.10.0/harbor-online-installer-v2.10.0.tgz
+tar xvf harbor-online-installer*.tgz
+cd harbor
+cp harbor.yml.tmpl harbor.yml
+./install.sh</code></pre>
+
+      <h3>Аутентификация</h3>
+      <pre><code># docker login
+docker login -u username
+docker login ghcr.io -u username --password-stdin < token.txt
+
+# Credential helpers (сохранение пароля безопасно)
+docker-credential-pass  # через pass
+docker-credential-secretservice  # через gnome-keyring
+docker-credential-osxkeychain  # macOS Keychain</code></pre>
+
       <h3>Альтернативные registry</h3>
       <ul>
         <li><strong>GitHub Container Registry (ghcr.io)</strong> — интеграция с GitHub</li>
         <li><strong>GitLab Container Registry</strong> — встроенный в GitLab</li>
         <li><strong>AWS ECR</strong> — Amazon Elastic Container Registry</li>
         <li><strong>Harbor</strong> — enterprise registry с security scanning</li>
+        <li><strong>Nexus</strong> — Sonatype Nexus Repository (multi-format)</li>
       </ul>
 
       <!-- ===== 10. CI/CD ===== -->
@@ -434,6 +534,33 @@ trivy image python:3.12-slim
 docker scout quickview python:3.12-slim
 docker scout recommendations python:3.12-slim</code></pre>
 
+      <h3>SBOM (Software Bill of Materials)</h3>
+      <p>Docker SBOM — детальный список всех пакетов внутри образа (с версиями и лицензиями):</p>
+      <pre><code># Создание SBOM
+docker sbom python:3.12-slim
+
+# Экспорт в разных форматах
+docker sbom python:3.12-slim --format json > sbom.json
+docker sbom python:3.12-slim --format spdx > sbom.spdx
+
+# Сравнение SBOM двух образов
+docker sbom python:3.12-slim > sbom1.json
+docker sbom python:3.12-slim --diff sbom1.json</code></pre>
+
+      <h3>Подпись образов и аттестация</h3>
+      <p>Цепочка поставки (supply chain) — проверка, что образ не был изменён:</p>
+      <pre><code># Docker Content Trust (DCT) — ручное включение
+export DOCKER_CONTENT_TRUST=1
+docker push user/app:latest  # образ автоматически подписывается
+
+# Cosign (внешний инструмент)
+cosign sign --key cosign.key user/app:latest
+cosign verify --key cosign.pub user/app:latest
+
+# SLSA attestation
+docker buildx build --attest type=provenance,mode=max -t user/app:latest .
+docker buildx imagetools inspect user/app:latest --format '{{ json .Provenance }}'</code></pre>
+
       <!-- ===== 13. ОПТИМИЗАЦИЯ ===== -->
       <h2 id="optimization">13. Оптимизация Docker-образов</h2>
 
@@ -444,7 +571,6 @@ docker scout recommendations python:3.12-slim</code></pre>
         <li><strong>Минимизация слоёв:</strong> объединение RUN команд (<code>&&</code>), чистка кэша</li>
         <li><strong>Порядок слоёв:</strong> часто меняющееся — в конце (кэширование)</li>
         <li><strong>.dockerignore:</strong> исключить node_modules, .git, __pycache__</li>
-        <li><strong>Сжатие:</strong> <code>--squash</code> (экспериментальный) для объединения слоёв</li>
       </ul>
 
       <h4>Сравнение размеров Python-образов</h4>
@@ -456,6 +582,39 @@ docker scout recommendations python:3.12-slim</code></pre>
         <tr><td><code>distroless/python3</code></td><td>52 MB</td><td>Distroless (только runtime)</td></tr>
         <tr><td>Multi-stage + distroless</td><td>~40 MB</td><td>Только артефакты</td></tr>
       </table>
+
+      <h3>Distroless-образы</h3>
+      <p>Google Distroless — минимальные образы, содержащие только приложение и его runtime-зависимости. Ни shell, ни менеджеров пакетов, ни лишних утилит.</p>
+      <pre><code># Пример distroless для Python (экспериментальный)
+FROM python:3.12-slim AS builder
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM gcr.io/distroless/python3
+WORKDIR /app
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY . .
+USER nonroot
+CMD ["main.py"]</code></pre>
+      <ul>
+        <li><strong>Плюсы:</strong> минимальная поверхность атаки, маленький размер</li>
+        <li><strong>Минусы:</strong> сложнее отладка (нет shell), не все языки хорошо поддерживают</li>
+      </ul>
+
+      <h3>Продвинутые техники</h3>
+      <pre><code># BuildKit — используйте DOCKER_BUILDKIT=1 или export
+# --squash (экспериментальный) — объединение всех слоёв в один
+docker build --squash -t app:latest .
+
+# --no-cache — игнорировать кэш слоёв (чистая сборка)
+docker build --no-cache -t app:latest .
+
+# Inline cache — кэширование слоёв в registry
+docker buildx build --cache-from=user/app:cache --cache-to=type=inline -t user/app:latest .
+
+# BuildKit cache mounts — кэш между сборками
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt</code></pre>
 
       <!-- ===== 14. ОРКЕСТРАЦИЯ ===== -->
       <h2 id="orchestration">14. Оркестрация: Docker Swarm и Kubernetes</h2>
@@ -517,11 +676,440 @@ docker service scale myapp_web=5</code></pre>
         <li>Кэшируйте слои между сборками</li>
         <li>Сканируйте образы на уязвимости</li>
         <li>Используйте семантическое тегирование: <code>v1.2.3</code>, <code>sha-abc123</code></li>
-        <li>Подписывайте образы (Docker Content Trust)</li>
+        <li>Подписывайте образы (Docker Content Trust / Cosign)</li>
       </ul>
 
-      <!-- ===== 16. ГЛОССАРИЙ ===== -->
-      <h2 id="glossary">16. Глоссарий Docker-терминов</h2>
+      <!-- ===== 16. TROUBLESHOOTING ===== -->
+      <h2 id="troubleshooting">16. Troubleshooting</h2>
+
+      <h3>Контейнер завершает работу сразу после запуска</h3>
+      <pre><code>docker logs &lt;container&gt;          # проверить вывод
+docker inspect &lt;container&gt;       # посмотреть ExitCode, ошибки
+docker run -it &lt;image&gt; sh        # проверить CMD/ENTRYPOINT вручную</code></pre>
+      <ul>
+        <li><strong>Exit 0:</strong> CMD/ENTRYPOINT — короткая команда (ls, echo). Нужен процесс, который не завершается</li>
+        <li><strong>Exit 127:</strong> команда не найдена — проверьте путь в CMD/ENTRYPOINT</li>
+        <li><strong>Exit 137 (SIGKILL):</strong> OOM kill — превышен лимит памяти</li>
+        <li><strong>Exit 139 (SIGSEGV):</strong> segmentation fault — проблема с приложением или архитектурой</li>
+      </ul>
+
+      <h3>Порт уже используется</h3>
+      <pre><code>sudo lsof -i :8080              # кто занял порт на хосте
+docker ps                       # не занял ли другой контейнер
+docker run -p 8081:80 nginx     # использовать другой порт хоста</code></pre>
+
+      <h3>Permission denied (доступ к volume)</h3>
+      <ul>
+        <li>Контейнер работает от root, файлы создаются с uid 0 — хост не может их читать</li>
+        <li>Решение: использовать <code>USER appuser</code> с совпадающим UID/GID хоста</li>
+        <li>Или: <code>docker run --user $(id -u):$(id -g)</code> — запуск от текущего пользователя</li>
+      </ul>
+      <pre><code>docker run --user 1000:1000 -v $(pwd)/data:/data alpine touch /data/test</code></pre>
+
+      <h3>Disk space / No space left on device</h3>
+      <pre><code>docker system df                 # сколько занимают образы, контейнеры, volumes
+docker system prune -a --volumes # глобальная очистка
+docker rm $(docker ps -aq)       # удалить все остановленные контейнеры
+docker rmi $(docker images -q)   # удалить все неиспользуемые образы</code></pre>
+      <div class="warn-box"><strong>Внимание:</strong> <code>docker system prune -a --volumes</code> удаляет все остановленные контейнеры, неиспользуемые образы и неиспользуемые volumes — безвозвратно.</div>
+
+      <h3>Docker daemon не отвечает</h3>
+      <pre><code>sudo systemctl status docker     # статус демона
+sudo systemctl restart docker    # перезапуск
+sudo journalctl -u docker -n 50 # логи демона
+docker info                      # проверить, что демон отвечает</code></pre>
+
+      <h3>DNS проблемы внутри контейнера</h3>
+      <pre><code>docker run alpine ping google.com            # проверить DNS
+docker run --dns 8.8.8.8 alpine ping google.com  # принудительный DNS
+# /etc/docker/daemon.json
+# { "dns": ["8.8.8.8", "1.1.1.1"] }</code></pre>
+
+      <h3>Debug-инструменты</h3>
+      <table>
+        <tr><th>Команда</th><th>Описание</th></tr>
+        <tr><td><code>docker logs -f &lt;container&gt;</code></td><td>Логи контейнера (follow)</td></tr>
+        <tr><td><code>docker exec -it &lt;container&gt; sh</code></td><td>Shell внутрь контейнера</td></tr>
+        <tr><td><code>docker inspect &lt;container&gt;</code></td><td>Подробная информация (JSON)</td></tr>
+        <tr><td><code>docker stats</code></td><td>CPU/RAM/IO всех контейнеров</td></tr>
+        <tr><td><code>docker top &lt;container&gt;</code></td><td>Процессы внутри контейнера</td></tr>
+        <tr><td><code>docker events</code></td><td>События демона в реальном времени</td></tr>
+        <tr><td><code>docker container diff</code></td><td>Изменения в файловой системе контейнера</td></tr>
+      </table>
+
+      <h3>Restart policies</h3>
+      <table>
+        <tr><th>Policy</th><th>Поведение</th></tr>
+        <tr><td><code>no</code></td><td>Не перезапускать (по умолчанию)</td></tr>
+        <tr><td><code>on-failure[:max-retries]</code></td><td>Перезапуск только при ненулевом exit code</td></tr>
+        <tr><td><code>always</code></td><td>Всегда перезапускать (даже после docker stop → docker start)</td></tr>
+        <tr><td><code>unless-stopped</code></td><td>Перезапускать, если контейнер не был явно остановлен</td></tr>
+      </table>
+
+      <!-- ===== 17. RESOURCE LIMITS ===== -->
+      <h2 id="resources">17. Resource Limits</h2>
+
+      <h3>Ограничение памяти</h3>
+      <pre><code># --memory: жёсткий лимит (контейнер будет убит при превышении)
+docker run --memory=512m nginx
+
+# --memory-swap: общий лимит память + swap (по умолч. = memory*2)
+docker run --memory=512m --memory-swap=768m nginx
+
+# --memory-reservation: мягкий лимит (не гарантируется)
+docker run --memory=512m --memory-reservation=256m nginx</code></pre>
+      <ul>
+        <li>При превышении <code>--memory</code> контейнер получает OOM kill (Exit 137)</li>
+        <li><code>--memory-swap=-1</code> — неограниченный swap (опасно для хоста)</li>
+        <li><code>--memory-swap</code> должен быть больше или равен <code>--memory</code></li>
+      </ul>
+
+      <h3>Ограничение CPU</h3>
+      <pre><code># --cpus: количество ядер CPU (дробное)
+docker run --cpus=1.5 nginx        # полтора ядра максимум
+
+# --cpuset-cpus: привязка к конкретным ядрам
+docker run --cpuset-cpus="0,2" nginx  # только ядра 0 и 2
+
+# --cpu-shares: относительный вес (по умолч. 1024)
+docker run --cpu-shares=512 nginx  # половина от "стандартного"</code></pre>
+      <ul>
+        <li><code>--cpus</code> — предпочтительный способ (работает через CFS scheduler)</li>
+        <li><code>--cpuset-cpus</code> — для latency-critical приложений</li>
+        <li><code>--cpu-shares</code> — только при конкуренции за CPU</li>
+      </ul>
+
+      <h3>Другие ограничения</h3>
+      <pre><code># --ulimit: лимиты ядра (nofile, nproc, nofile)
+docker run --ulimit nofile=1024:2048 nginx
+
+# --device-read-bps / --device-write-bps: I/O чтения/записи
+docker run --device-read-bps /dev/sda:1mb nginx
+
+# --device-read-iops / --device-write-iops: I/O operations
+docker run --device-write-iops /dev/sda:100 nginx</code></pre>
+
+      <h3>Resource limits в Compose</h3>
+      <pre><code>services:
+  web:
+    image: nginx
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.25"
+          memory: "128M"</code></pre>
+
+      <h3>Мониторинг ресурсов</h3>
+      <pre><code>docker stats              # live-статистика всех контейнеров
+docker stats --no-stream  # однократный срез
+docker inspect &lt;container&gt; | jq '.[].HostConfig.Memory' # лимит памяти</code></pre>
+
+      <!-- ===== 18. DOCKER В РАЗРАБОТКЕ ===== -->
+      <h2 id="dev">18. Docker в разработке</h2>
+
+      <h3>Bind mounts для hot-reload</h3>
+      <p>Монтируйте исходный код в контейнер — изменения на хосте сразу видны внутри контейнера, без пересборки образа:</p>
+      <pre><code># Python (FastAPI + uvicorn с --reload)
+docker run -v $(pwd):/app -p 8000:8000 \
+  -e PYTHONDONTWRITEBYTECODE=1 \
+  python:3.12-slim uvicorn main:app --reload --host 0.0.0.0
+
+# Node.js (nodemon)
+docker run -v $(pwd):/app -p 3000:3000 node:20 \
+  npx nodemon server.js</code></pre>
+
+      <h3>Docker Compose для разработки</h3>
+      <pre><code># compose.dev.yml — переопределение для разработки
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app          # bind mount для hot-reload
+    environment:
+      - DEBUG=true
+      - PYTHONDONTWRITEBYTECODE=1
+    command: uvicorn main:app --reload --host 0.0.0.0
+
+# Запуск: docker compose -f compose.yml -f compose.dev.yml up</code></pre>
+
+      <h3>docker compose watch (hot-reload)</h3>
+      <pre><code># compose.yml
+services:
+  web:
+    build: .
+    develop:
+      watch:
+        - path: ./src
+          action: sync
+          target: /app/src
+        - path: ./requirements.txt
+          action: rebuild
+
+# В терминале
+docker compose watch</code></pre>
+      <p>Docker автоматически синхронизирует изменённые файлы (<code>sync</code>) или пересобирает образ (<code>rebuild</code>).</p>
+
+      <h3>DevContainers</h3>
+      <p>DevContainers — запуск VS Code / JetBrains внутри контейнера. Весь инструментарий (расширения, компиляторы, БД) — в контейнере, не на хосте.</p>
+      <pre><code># .devcontainer/devcontainer.json
+{
+  "name": "Python Dev",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python"]
+    }
+  },
+  "postCreateCommand": "pip install -r requirements.txt"
+}</code></pre>
+
+      <h3>Практичные советы для разработки</h3>
+      <ul>
+        <li><strong>.dockerignore</strong> — исключите <code>.git</code>, <code>__pycache__</code>, <code>.env</code>, <code>.venv</code> для быстрой сборки</li>
+        <li><strong>.env файл</strong> — храните переменные окружения отдельно от Compose-файла</li>
+        <li><strong>docker compose config</strong> — проверка итоговой конфигурации (объединяет все compose-файлы)</li>
+        <li><strong>docker compose run --rm test</strong> — разовый запуск сервиса (например, тестов)</li>
+        <li><strong>docker compose up --scale web=3</strong> — масштабирование для локального тестирования</li>
+      </ul>
+
+      <!-- ===== 19. МОНИТОРИНГ И ЛОГИРОВАНИЕ ===== -->
+      <h2 id="monitoring">19. Мониторинг и логирование</h2>
+
+      <h3>Драйверы логирования</h3>
+      <p>Docker поддерживает несколько драйверов для вывода логов:</p>
+      <table>
+        <tr><th>Драйвер</th><th>Описание</th><th>Когда использовать</th></tr>
+        <tr><td><code>json-file</code></td><td>Логи в JSON-файлах (по умолчанию)</td><td>Локальная разработка</td></tr>
+        <tr><td><code>journald</code></td><td>Логи в systemd journal</td><td>Linux-серверы с systemd</td></tr>
+        <tr><td><code>syslog</code></td><td>Логи в syslog</td><td>Централизованный syslog-сервер</td></tr>
+        <tr><td><code>fluentd</code></td><td>Логи в Fluentd</td><td>Централизованный сбор логов</td></tr>
+        <tr><td><code>loki</code></td><td>Логи в Grafana Loki</td><td>Grafana стек, cloud-native</td></tr>
+        <tr><td><code>awslogs</code></td><td>Логи в AWS CloudWatch</td><td>AWS-инфраструктура</td></tr>
+        <tr><td><code>gelf</code></td><td>Graylog Extended Log Format</td><td>Graylog-сервер</td></tr>
+        <tr><td><code>splunk</code></td><td>Логи в Splunk</td><td>Enterprise Splunk</td></tr>
+      </table>
+      <pre><code># Глобальная настройка драйвера
+# /etc/docker/daemon.json
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  }
+}
+
+# Настройка для конкретного контейнера
+docker run --log-driver loki --log-opt loki-url=http://loki:3100 nginx</code></pre>
+
+      <h3>Мониторинг с cAdvisor</h3>
+      <p>cAdvisor (Container Advisor) — сбор и визуализация метрик контейнеров:</p>
+      <pre><code>docker run --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:rw \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --publish=8080:8080 \
+  --detach=true \
+  --name=cadvisor \
+  --device=/dev/kmsg \
+  gcr.io/cadvisor/cadvisor</code></pre>
+      <div class="info-box">cAdvisor предоставляет Web UI на порту 8080 — графики CPU, RAM, сети, файловой системы для каждого контейнера.</div>
+
+      <h3>Prometheus + Grafana</h3>
+      <pre><code># docker-compose.yml для мониторинг-стека
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus</code></pre>
+      <pre><code># prometheus.yml — сбор метрик cAdvisor
+scrape_configs:
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]</code></pre>
+
+      <h3>Healthcheck — глубокое погружение</h3>
+      <pre><code># Dockerfile
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
+
+# docker run
+docker run --health-cmd="curl -f http://localhost/health" \
+  --health-interval=10s \
+  --health-retries=3 \
+  nginx</code></pre>
+      <ul>
+        <li><strong>interval:</strong> как часто проверять (по умолч. 30s)</li>
+        <li><strong>timeout:</strong> таймаут выполнения проверки (по умолч. 30s)</li>
+        <li><strong>start-period:</strong> задержка перед первой проверкой (для инициализации)</li>
+        <li><strong>retries:</strong> количество провалов до статуса unhealthy (по умолч. 3)</li>
+        <li>Статус: <code>starting</code> → <code>healthy</code> / <code>unhealthy</code> — видно в <code>docker ps</code> и <code>docker inspect</code></li>
+      </ul>
+
+      <!-- ===== 20. БАЗЫ ДАННЫХ В DOCKER ===== -->
+      <h2 id="databases">20. Базы данных в Docker</h2>
+
+      <h3>PostgreSQL</h3>
+      <pre><code># Запуск PostgreSQL
+docker run -d --name pg \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=app \
+  -p 5432:5432 \
+  -v pgdata:/var/lib/postgresql/data \
+  postgres:16-alpine
+
+# Подключение
+docker exec -it pg psql -U postgres -d app
+
+# pg_isready (healthcheck)
+docker run --rm postgres:16-alpine pg_isready -h host.docker.internal</code></pre>
+
+      <h3>MySQL / MariaDB</h3>
+      <pre><code>docker run -d --name mysql \
+  -e MYSQL_ROOT_PASSWORD=secret \
+  -e MYSQL_DATABASE=app \
+  -p 3306:3306 \
+  -v mysqldata:/var/lib/mysql \
+  mysql:8.4
+
+# Подключение
+docker exec -it mysql mysql -u root -p</code></pre>
+
+      <div class="info-box"><strong>Персистентность:</strong> всегда используйте named volumes (<code>-v pgdata:/var/lib/...</code>), а не bind mounts. Docker управляет правами доступа к volume, а bind mount может вызвать ошибки прав.</div>
+
+      <h3>Backup и Restore</h3>
+      <pre><code># Backup PostgreSQL
+docker exec -t pg pg_dump -U postgres app > backup.sql
+
+# Restore PostgreSQL
+docker exec -i pg psql -U postgres -d app < backup.sql
+
+# Backup MySQL
+docker exec -t mysql mysqldump -u root -psecret app > backup.sql
+
+# Restore MySQL
+docker exec -i mysql mysql -u root -psecret app < backup.sql
+
+# Автоматический backup (cron + скрипт)
+docker exec -t pg pg_dump -U postgres app | gzip > backup_$(date +%Y%m%d).sql.gz</code></pre>
+
+      <h3>Multi-container DB setups</h3>
+      <pre><code># compose.yml — PostgreSQL + Redis + Adminer
+services:
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: secret
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 5s
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: redis-cli ping
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+  redisdata:</code></pre>
+
+      <h3>Миграции БД</h3>
+      <p>Запуск миграций как отдельного сервиса в Compose:</p>
+      <pre><code># compose.yml
+services:
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  migrate:
+    build: ./migrations
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:secret@db:5432/app
+    profiles: ["migrate"]
+    # Запуск: docker compose --profile migrate run --rm migrate
+
+volumes:
+  pgdata:</code></pre>
+
+      <!-- ===== 21. ROOTLESS MODE ===== -->
+      <h2 id="rootless">21. Rootless Mode</h2>
+
+      <h3>Что такое Rootless Docker</h3>
+      <p>Docker в rootless-режиме запускает демон и контейнеры от обычного пользователя (без root-привилегий). Все операции выполняются в user namespace — даже если атакующий получит доступ к контейнеру, он не сможет повысить привилегии до root на хосте.</p>
+
+      <h3>Установка rootless Docker</h3>
+      <pre><code># Установка (не требует sudo)
+curl -fsSL https://get.docker.com/rootless | sh
+
+# Настройка окружения (добавить в ~/.bashrc)
+export PATH=/home/user/bin:$PATH
+export DOCKER_HOST=unix:///run/user/$UID/docker.sock
+
+# Проверка
+dockerd-rootless-setuptool.sh install
+docker info --format '{{.SecurityOptions}}'  # должно быть "name=rootless"</code></pre>
+
+      <h3>Ограничения rootless mode</h3>
+      <table>
+        <tr><th>Фича</th><th>Статус</th></tr>
+        <tr><td>Запуск контейнеров</td><td>Да</td></tr>
+        <tr><td>docker build, pull, push</td><td>Да</td></tr>
+        <tr><td>Docker Compose</td><td>Да</td></tr>
+        <tr><td>Port mapping (<code>-p</code>)</td><td>Да (только порты > 1024 без root)</td></tr>
+        <tr><td>Bind mounts</td><td>Да</td></tr>
+        <tr><td>Volumes</td><td>Да</td></tr>
+        <tr><td>Overlay network</td><td>Частично (через slirp4netns)</td></tr>
+        <tr><td>--privileged</td><td>Нет</td></tr>
+        <tr><td>Host network</td><td>Нет</td></tr>
+        <tr><td>Ports < 1024</td><td>Нет (без доп. настроек)</td></tr>
+        <tr><td>cAdvisor / мониторинг</td><td>Ограничен</td></tr>
+      </table>
+
+      <h3>Когда использовать</h3>
+      <div class="info-box"><strong>Рекомендуется для:</strong> разработки на shared-серверах, CI-раннеры, multi-tenant окружения, любой сценарий, где у вас нет root-доступа к хосту.</div>
+      <div class="warn-box"><strong>Для продакшена:</strong> rootless mode всё ещё имеет ограничения по производительности сети (slirp4netns). Для production-нагрузок рекомендуется rootful Docker с дополнительными мерами безопасности (SELinux, AppArmor, seccomp).</div>
+
+      <h3>Безопасность rootless vs rootful</h3>
+      <table>
+        <tr><th>Аспект</th><th>Rootful</th><th>Rootless</th></tr>
+        <tr><td>User namespace</td><td>Отключён по умолчанию (--userns-remap для включения)</td><td>Включён всегда</td></tr>
+        <tr><td>Доступ к docker.sock</td><td>Полный root на хосте</td><td>Только от пользователя</td></tr>
+        <tr><td>Escape из контейнера</td><td>Возможен (CVE-2019-5736 и др.)</td><td>Сильно затруднён</td></tr>
+        <tr><td>Производительность сети</td><td>Нативная (iptables)</td><td>slirp4netns (5-10% overhead)</td></tr>
+        <tr><td>Простота настройки</td><td>Простая</td><td>Требует настройки окружения</td></tr>
+      </table>
+
+      <!-- ===== 22. ГЛОССАРИЙ ===== -->
+      <h2 id="glossary">22. Глоссарий Docker-терминов</h2>
       <table>
         <tr><th>Термин</th><th>Определение</th></tr>
         <tr><td><strong>Container</strong></td><td>Запущенный экземпляр образа, изолированный процесс</td></tr>
@@ -531,6 +1119,7 @@ docker service scale myapp_web=5</code></pre>
         <tr><td><strong>Registry</strong></td><td>Хранилище образов (Docker Hub, ghcr.io)</td></tr>
         <tr><td><strong>Volume</strong></td><td>Постоянное хранение данных, управляемое Docker</td></tr>
         <tr><td><strong>Bind mount</strong></td><td>Монтирование директории хоста в контейнер</td></tr>
+        <tr><td><strong>tmpfs</strong></td><td>Временное хранение в RAM (теряется при остановке)</td></tr>
         <tr><td><strong>Docker Compose</strong></td><td>Инструмент для запуска многоконтейнерных приложений</td></tr>
         <tr><td><strong>Swarm</strong></td><td>Режим кластеризации Docker'а</td></tr>
         <tr><td><strong>Service</strong></td><td>Описание приложения в Swarm (образ, порты, реплики)</td></tr>
@@ -540,15 +1129,22 @@ docker service scale myapp_web=5</code></pre>
         <tr><td><strong>Overlay network</strong></td><td>Сеть между хостами в Swarm</td></tr>
         <tr><td><strong>Multi-stage build</strong></td><td>Несколько стадий сборки для минимизации финального образа</td></tr>
         <tr><td><strong>Docker Scout</strong></td><td>Инструмент анализа уязвимостей образов</td></tr>
+        <tr><td><strong>Docker SBOM</strong></td><td>Software Bill of Materials — список всех пакетов в образе</td></tr>
         <tr><td><strong>Healthcheck</strong></td><td>Проверка здоровья контейнера (liveness probe)</td></tr>
         <tr><td><strong>Capability</strong></td><td>Привилегия Linux-процесса (CAP_NET_BIND_SERVICE)</td></tr>
         <tr><td><strong>Docker socket</strong></td><td>Unix-socket /var/run/docker.sock — API Docker daemon</td></tr>
         <tr><td><strong>Entrypoint</strong></td><td>Команда, запускаемая при старте контейнера (не переопределяется)</td></tr>
         <tr><td><strong>CMD</strong></td><td>Аргументы по умолчанию для ENTRYPOINT (переопределяется при run)</td></tr>
+        <tr><td><strong>BuildKit</strong></td><td>Современный движок сборки Docker (DOCKER_BUILDKIT=1)</td></tr>
+        <tr><td><strong>Rootless mode</strong></td><td>Запуск Docker демона без root-привилегий</td></tr>
+        <tr><td><strong>Distroless</strong></td><td>Минимальные образы без shell и пакетного менеджера</td></tr>
+        <tr><td><strong>Cosign</strong></td><td>Инструмент для подписи контейнерных образов</td></tr>
+        <tr><td><strong>SLSA</strong></td><td>Supply-chain Levels for Software Artifacts — фреймворк безопасности</td></tr>
+        <tr><td><strong>OOM Kill</strong></td><td>Завершение контейнера при превышении лимита памяти (Exit 137)</td></tr>
       </table>
 
-      <!-- ===== 17. ЧЕКЛИСТ ===== -->
-      <h2 id="checklist">17. Чеклист Docker</h2>
+      <!-- ===== 23. ЧЕКЛИСТ ===== -->
+      <h2 id="checklist">23. Чеклист Docker</h2>
 
       <h3>Dockerfile</h3>
       <ul>
@@ -559,6 +1155,8 @@ docker service scale myapp_web=5</code></pre>
         <li><input type="checkbox"> .dockerignore добавлен</li>
         <li><input type="checkbox"> HEALTHCHECK настроен</li>
         <li><input type="checkbox"> USER не root</li>
+        <li><input type="checkbox"> Используется BuildKit (DOCKER_BUILDKIT=1)</li>
+        <li><input type="checkbox"> Образ просканирован на уязвимости (Trivy / Scout)</li>
       </ul>
 
       <h3>Compose</h3>
@@ -569,6 +1167,8 @@ docker service scale myapp_web=5</code></pre>
         <li><input type="checkbox"> Profiles для тестовых/фоновых сервисов</li>
         <li><input type="checkbox"> .env файл для переменных</li>
         <li><input type="checkbox"> Используются named volumes (не bind mount в проде)</li>
+        <li><input type="checkbox"> Compose watch настроен для разработки</li>
+        <li><input type="checkbox"> docker compose config проверен</li>
       </ul>
 
       <h3>Безопасность</h3>
@@ -579,6 +1179,9 @@ docker service scale myapp_web=5</code></pre>
         <li><input type="checkbox"> Image scanning: Trivy / Docker Scout пройден</li>
         <li><input type="checkbox"> Read-only rootfs (—read-only)</li>
         <li><input type="checkbox"> Не открыт docker.sock</li>
+        <li><input type="checkbox"> SBOM создан для production-образов</li>
+        <li><input type="checkbox"> Образы подписаны (Cosign / Docker Content Trust)</li>
+        <li><input type="checkbox"> Rootless mode рассмотрен для multi-tenant окружений</li>
       </ul>
 
       <h3>CI/CD</h3>
@@ -588,6 +1191,7 @@ docker service scale myapp_web=5</code></pre>
         <li><input type="checkbox"> Образы сканируются перед push</li>
         <li><input type="checkbox"> Теги: версия + sha (не latest)</li>
         <li><input type="checkbox"> Registry аутентификация через secrets</li>
+        <li><input type="checkbox"> Аттестация (provenance) включена в сборку</li>
       </ul>
 
       <h3>QA и тестирование</h3>
@@ -597,6 +1201,15 @@ docker service scale myapp_web=5</code></pre>
         <li><input type="checkbox"> Тестовые данные изолированы (чистая БД)</li>
         <li><input type="checkbox"> Parallel test execution</li>
         <li><input type="checkbox"> Smoke-тесты после деплоя</li>
+      </ul>
+
+      <h3>Производительность и мониторинг</h3>
+      <ul>
+        <li><input type="checkbox"> Resource limits настроены для всех сервисов</li>
+        <li><input type="checkbox"> Драйвер логирования настроен (json-file с ротацией или внешний)</li>
+        <li><input type="checkbox"> cAdvisor / Prometheus развёрнуты для мониторинга</li>
+        <li><input type="checkbox"> БД имеют backup-стратегию</li>
+        <li><input type="checkbox"> Docker system prune запускается регулярно</li>
       </ul>
 
       <div class="success-box"><strong>Золотое правило Docker:</strong> Контейнер должен быть эфемерным (ephemeral) — его можно остановить, удалить и создать заново без потери данных и функциональности.</div>
