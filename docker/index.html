@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Плейбук по Docker — полное руководство</title>
+  <link rel="stylesheet" href="docker-style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+<canvas id="cursor-effect"></canvas>
+<div class="wrapper">
+  <header>
+    <h1>Плейбук по Docker</h1>
+    <p class="subtitle">Полное руководство по Docker: установка, команды, Dockerfile, Compose, сети, volumes, CI/CD, безопасность и best practices</p>
+    <p class="meta">Версия 1.0 &bull; 2026</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Содержание</h3>
+      <ul>
+        <li><a href="#intro" class="toc-h2">1. Введение</a></li>
+        <li><a href="#architecture" class="toc-h2">2. Архитектура Docker</a></li>
+        <li><a href="#install" class="toc-h2">3. Установка и настройка</a></li>
+        <li><a href="#commands" class="toc-h2">4. Основные команды</a></li>
+        <li><a href="#dockerfile" class="toc-h2">5. Dockerfile</a></li>
+        <li><a href="#compose" class="toc-h2">6. Docker Compose</a></li>
+        <li><a href="#networks" class="toc-h2">7. Сети</a></li>
+        <li><a href="#volumes" class="toc-h2">8. Volumes и данные</a></li>
+        <li><a href="#registry" class="toc-h2">9. Registry</a></li>
+        <li><a href="#cicd" class="toc-h2">10. CI/CD</a></li>
+        <li><a href="#testing" class="toc-h2">11. Тестирование</a></li>
+        <li><a href="#security" class="toc-h2">12. Безопасность</a></li>
+        <li><a href="#optimization" class="toc-h2">13. Оптимизация образов</a></li>
+        <li><a href="#orchestration" class="toc-h2">14. Оркестрация</a></li>
+        <li><a href="#practices" class="toc-h2">15. Best Practices</a></li>
+        <li><a href="#glossary" class="toc-h2">16. Глоссарий</a></li>
+        <li><a href="#checklist" class="toc-h2">17. Чеклист</a></li>
+      </ul>
+    </nav>
+    <main>
+      <!-- ===== 1. ВВЕДЕНИЕ ===== -->
+      <h2 id="intro">1. Введение в Docker</h2>
+      <p>Docker — платформа для разработки, доставки и запуска приложений в контейнерах. Контейнер — лёгкий, изолированный образ среды, содержащий всё необходимое для работы приложения: код, рантайм, библиотеки, настройки.</p>
+
+      <h3>Контейнеры vs Виртуальные машины</h3>
+      <table>
+        <tr><th>Характеристика</th><th>Контейнер (Docker)</th><th>Виртуальная машина</th></tr>
+        <tr><td>Ядро</td><td>Разделяет ядро хоста</td><td>Собственное ядро (гостевая ОС)</td></tr>
+        <tr><td>Изоляция</td><td>Process-level (namespaces)</td><td>Полная (гипервизор)</td></tr>
+        <tr><td>Размер</td><td>MB (десятки-сотни)</td><td>GB (единицы-десятки)</td></tr>
+        <tr><td>Запуск</td><td>Секунды</td><td>Минуты</td></tr>
+        <tr><td>Потребление RAM</td><td>Только процесс + overlay</td><td>Полная ОС (2-8 GB overhead)</td></tr>
+      </table>
+
+      <!-- ===== 2. АРХИТЕКТУРА ===== -->
+      <h2 id="architecture">2. Архитектура Docker</h2>
+      <p>Docker использует клиент-серверную архитектуру:</p>
+      <ul>
+        <li><strong>Docker Client</strong> (<code>docker</code>) — CLI, отправляет команды демону</li>
+        <li><strong>Docker Daemon</strong> (<code>dockerd</code>) — серверный компонент, управляет объектами: images, containers, networks, volumes</li>
+        <li><strong>Docker Registry</strong> — репозиторий образов (Docker Hub, private registry)</li>
+        <li><strong>Docker Objects</strong> — образы, контейнеры, сети, volumes, плагины</li>
+      </ul>
+
+      <h3>Ключевые технологии</h3>
+      <table>
+        <tr><th>Технология</th><th>Роль</th></tr>
+        <tr><td><strong>Namespaces</strong></td><td>Изоляция процессов: PID, Network, Mount, User, UTS, IPC</td></tr>
+        <tr><td><strong>Cgroups</strong></td><td>Ограничение ресурсов: CPU, RAM, Disk I/O, Network</td></tr>
+        <tr><td><strong>UnionFS (OverlayFS)</strong></td><td>Слоистая файловая система для образов (layers)</td></tr>
+        <tr><td><strong>Container Runtime</strong></td><td>Запуск и управление контейнерами (runc, containerd)</td></tr>
+        <tr><td><strong>libnetwork</strong></td><td>Управление сетями: bridge, overlay, host, macvlan</td></tr>
+      </table>
+
+      <!-- ===== 3. УСТАНОВКА ===== -->
+      <h2 id="install">3. Установка и настройка</h2>
+
+      <h3>Linux (Ubuntu/Debian)</h3>
+      <pre><code>sudo apt update
+sudo apt install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+| sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io
+sudo usermod -aG docker $USER  # перезайти в сессию</code></pre>
+
+      <h3>macOS / Windows</h3>
+      <ul>
+        <li><strong>Docker Desktop:</strong> скачать с <a href="https://docker.com">docker.com</a>, установить, запустить</li>
+        <li><strong>Проверка:</strong> <code>docker --version</code> && <code>docker compose version</code></li>
+      </ul>
+
+      <h3>Post-install шаги</h3>
+      <pre><code># Проверка установки
+docker run hello-world
+
+# Настройка автозапуска
+sudo systemctl enable docker
+
+# Без sudo (после usermod — перезайти)
+docker ps
+
+# Docker info
+docker info</code></pre>
+
+      <!-- ===== 4. ОСНОВНЫЕ КОМАНДЫ ===== -->
+      <h2 id="commands">4. Основные команды Docker</h2>
+
+      <h3>Работа с контейнерами</h3>
+      <table>
+        <tr><th>Команда</th><th>Описание</th><th>Пример</th></tr>
+        <tr><td><code>docker run</code></td><td>Создать и запустить контейнер</td><td><code>docker run -d --name nginx -p 8080:80 nginx</code></td></tr>
+        <tr><td><code>docker ps</code></td><td>Список запущенных контейнеров</td><td><code>docker ps -a</code> (все)</td></tr>
+        <tr><td><code>docker stop</code></td><td>Остановить контейнер</td><td><code>docker stop nginx</code></td></tr>
+        <tr><td><code>docker start</code></td><td>Запустить остановленный</td><td><code>docker start nginx</code></td></tr>
+        <tr><td><code>docker rm</code></td><td>Удалить контейнер</td><td><code>docker rm -f nginx</code> (force)</td></tr>
+        <tr><td><code>docker logs</code></td><td>Логи контейнера</td><td><code>docker logs -f nginx</code> (follow)</td></tr>
+        <tr><td><code>docker exec</code></td><td>Выполнить команду внутри контейнера</td><td><code>docker exec -it nginx bash</code></td></tr>
+        <tr><td><code>docker cp</code></td><td>Копировать файлы между хостом и контейнером</td><td><code>docker cp data.txt nginx:/tmp</code></td></tr>
+      </table>
+
+      <h3>Работа с образами</h3>
+      <table>
+        <tr><th>Команда</th><th>Описание</th></tr>
+        <tr><td><code>docker images</code></td><td>Список локальных образов</td></tr>
+        <tr><td><code>docker pull</code></td><td>Скачать образ из registry</td></tr>
+        <tr><td><code>docker build -t name .</code></td><td>Собрать образ из Dockerfile</td></tr>
+        <tr><td><code>docker push</code></td><td>Отправить образ в registry</td></tr>
+        <tr><td><code>docker rmi</code></td><td>Удалить образ</td></tr>
+        <tr><td><code>docker tag</code></td><td>Присвоить тег образу</td></tr>
+        <tr><td><code>docker history</code></td><td>Слои образа</td></tr>
+      </table>
+
+      <h3>Системные команды</h3>
+      <pre><code>docker system df           # Использование диска
+docker system prune        # Очистка неиспользуемых объектов
+docker container prune     # Удалить остановленные контейнеры
+docker image prune         # Удалить неиспользуемые образы
+docker volume prune        # Удалить неиспользуемые volumes
+docker network prune       # Удалить неиспользуемые сети</code></pre>
+
+      <!-- ===== 5. DOCKERFILE ===== -->
+      <h2 id="dockerfile">5. Dockerfile — создание образов</h2>
+      <p>Dockerfile — текстовый файл с инструкциями для сборки образа. Каждая инструкция создаёт слой (layer).</p>
+
+      <h3>Инструкции Dockerfile</h3>
+      <table>
+        <tr><th>Инструкция</th><th>Описание</th><th>Пример</th></tr>
+        <tr><td><code>FROM</code></td><td>Базовый образ</td><td><code>FROM python:3.12-slim</code></td></tr>
+        <tr><td><code>WORKDIR</code></td><td>Рабочая директория</td><td><code>WORKDIR /app</code></td></tr>
+        <tr><td><code>COPY</code></td><td>Копировать файлы в образ</td><td><code>COPY requirements.txt .</code></td></tr>
+        <tr><td><code>ADD</code></td><td>Копировать + авто-распаковка архивов, URL</td><td><code>ADD app.tar.gz /app</code></td></tr>
+        <tr><td><code>RUN</code></td><td>Выполнить команду в образе</td><td><code>RUN pip install -r requirements.txt</code></td></tr>
+        <tr><td><code>CMD</code></td><td>Команда по умолчанию (exec form)</td><td><code>CMD ["python", "app.py"]</code></td></tr>
+        <tr><td><code>ENTRYPOINT</code></td><td>Основная команда контейнера</td><td><code>ENTRYPOINT ["python"]</code></td></tr>
+        <tr><td><code>ENV</code></td><td>Переменные окружения</td><td><code>ENV MODE=production</code></td></tr>
+        <tr><td><code>ARG</code></td><td>Переменные сборки</td><td><code>ARG VERSION=1.0</code></td></tr>
+        <tr><td><code>EXPOSE</code></td><td>Документировать порт</td><td><code>EXPOSE 8000</code></td></tr>
+        <tr><td><code>VOLUME</code></td><td>Точка монтирования volume</td><td><code>VOLUME /data</code></td></tr>
+        <tr><td><code>USER</code></td><td>Пользователь для запуска</td><td><code>USER appuser</code></td></tr>
+        <tr><td><code>LABEL</code></td><td>Метаданные образа</td><td><code>LABEL version="1.0"</code></td></tr>
+        <tr><td><code>HEALTHCHECK</code></td><td>Проверка здоровья контейнера</td><td><code>HEALTHCHECK --interval=30s CMD curl -f http://localhost/</code></td></tr>
+      </table>
+
+      <h4>Пример: Python FastAPI</h4>
+      <pre><code>FROM python:3.12-slim AS builder
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM python:3.12-slim
+WORKDIR /app
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY . .
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
+EXPOSE 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre>
+
+      <h4>Multi-stage build</h4>
+      <ul>
+        <li><code>AS builder</code> — первый этап: установка зависимостей, компиляция</li>
+        <li><code>COPY --from=builder</code> — копирование только артефактов из builder</li>
+        <li>Результат: минимальный финальный образ (без исходников, компиляторов)</li>
+      </ul>
+
+      <!-- ===== 6. COMPOSE ===== -->
+      <h2 id="compose">6. Docker Compose</h2>
+      <p>Docker Compose — инструмент для определения и запуска многоконтейнерных приложений. Конфигурация в YAML-файле <code>compose.yml</code> (или <code>docker-compose.yml</code>).</p>
+
+      <h3>Структура compose.yml</h3>
+      <pre><code>services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DATABASE_URL=postgresql://postgres:pass@db:5432/app
+    volumes:
+      - .:/app
+      - static_data:/static
+
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: pass
+
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  pgdata:
+  static_data:
+
+networks:
+  default:
+    driver: bridge</code></pre>
+
+      <h3>Основные команды Compose</h3>
+      <table>
+        <tr><th>Команда</th><th>Описание</th></tr>
+        <tr><td><code>docker compose up -d</code></td><td>Запустить все сервисы в фоне</td></tr>
+        <tr><td><code>docker compose down</code></td><td>Остановить и удалить контейнеры, сети</td></tr>
+        <tr><td><code>docker compose logs -f</code></td><td>Логи всех сервисов (follow)</td></tr>
+        <tr><td><code>docker compose ps</code></td><td>Статус сервисов</td></tr>
+        <tr><td><code>docker compose exec web bash</code></td><td>Войти в контейнер сервиса web</td></tr>
+        <tr><td><code>docker compose build</code></td><td>Пересобрать образы</td></tr>
+        <tr><td><code>docker compose pull</code></td><td>Обновить образы из registry</td></tr>
+        <tr><td><code>docker compose restart</code></td><td>Перезапустить сервисы</td></tr>
+      </table>
+
+      <h3>Profiles (профили)</h3>
+      <ul>
+        <li>Позволяют запускать подмножество сервисов: <code>docker compose --profile test up</code></li>
+        <li>Пример: сервисы <code>db</code> (всегда), <code>test-runner</code> (profile: test)</li>
+      </ul>
+
+      <!-- ===== 7. СЕТИ ===== -->
+      <h2 id="networks">7. Сети в Docker</h2>
+
+      <h3>Типы сетей</h3>
+      <table>
+        <tr><th>Тип</th><th>Описание</th><th>Использование</th></tr>
+        <tr><td><strong>bridge</strong></td><td>Внутренняя сеть на хосте (по умолчанию)</td><td>Одиночные контейнеры, Compose</td></tr>
+        <tr><td><strong>host</strong></td><td>Контейнер использует сеть хоста</td><td>Максимальная производительность, без изоляции</td></tr>
+        <tr><td><strong>overlay</strong></td><td>Сеть между несколькими хостами (Docker Swarm)</td><td>Кластер, Swarm mode</td></tr>
+        <tr><td><strong>macvlan</strong></td><td>Контейнеру присваивается MAC-адрес</td><td>Legacy приложения, мониторинг сети</td></tr>
+        <tr><td><strong>none</strong></td><td>Без сети</td><td>Изолированные задачи, безопасность</td></tr>
+      </table>
+
+      <h3>Управление сетями</h3>
+      <pre><code>docker network create --driver bridge mynet
+docker network ls
+docker network inspect mynet
+docker network connect mynet container1
+docker network disconnect mynet container1
+docker network rm mynet</code></pre>
+
+      <h3>DNS и связь контейнеров</h3>
+      <ul>
+        <li>Контейнеры в одной сети видят друг друга по имени сервиса (Compose) или имени контейнера</li>
+        <li>Встроенный DNS-сервер (127.0.0.11) разрешает имена контейнеров</li>
+        <li>Пример: <code>http://db:5432</code> — доступ к PostgreSQL</li>
+      </ul>
+
+      <!-- ===== 8. VOLUMES ===== -->
+      <h2 id="volumes">8. Volumes и управление данными</h2>
+
+      <h3>Типы хранения данных</h3>
+      <table>
+        <tr><th>Тип</th><th>Описание</th><th>Когда использовать</th></tr>
+        <tr><td><strong>Volume</strong></td><td>Управляется Docker, хранится в /var/lib/docker/volumes</td><td>Базы данных, постоянные данные, бекапы</td></tr>
+        <tr><td><strong>Bind mount</strong></td><td>Монтирование директории хоста в контейнер</td><td>Разработка (hot-reload), конфиги</td></tr>
+        <tr><td><strong>tmpfs</strong></td><td>Временное хранение в RAM</td><td>Секреты, временные файлы</td></tr>
+      </table>
+
+      <h3>Команды для volumes</h3>
+      <pre><code>docker volume create mydata
+docker volume ls
+docker volume inspect mydata
+docker run -v mydata:/app/data nginx
+docker run --mount type=bind,source=$(pwd),target=/app nginx
+docker volume rm mydata
+docker volume prune</code></pre>
+
+      <div class="info-box"><strong>Bind mount для разработки:</strong> монтируйте исходный код в контейнер — изменения на хосте сразу видны в контейнере без пересборки.</div>
+
+      <!-- ===== 9. REGISTRY ===== -->
+      <h2 id="registry">9. Docker Registry</h2>
+
+      <h3>Docker Hub</h3>
+      <ul>
+        <li>Публичный реестр образов (по умолчанию)</li>
+        <li>Официальные образы: <code>python</code>, <code>node</code>, <code>nginx</code>, <code>postgres</code></li>
+        <li>Лимиты: 100 pull/6h (anonymous), 200 pull/6h (free account)</li>
+      </ul>
+
+      <h3>Private Registry</h3>
+      <pre><code># Запуск локального registry
+docker run -d -p 5000:5000 --name registry registry:2
+
+# Тегирование и push
+docker tag myapp:latest localhost:5000/myapp:latest
+docker push localhost:5000/myapp:latest
+
+# Pull с локального registry
+docker pull localhost:5000/myapp:latest</code></pre>
+
+      <h3>Альтернативные registry</h3>
+      <ul>
+        <li><strong>GitHub Container Registry (ghcr.io)</strong> — интеграция с GitHub</li>
+        <li><strong>GitLab Container Registry</strong> — встроенный в GitLab</li>
+        <li><strong>AWS ECR</strong> — Amazon Elastic Container Registry</li>
+        <li><strong>Harbor</strong> — enterprise registry с security scanning</li>
+      </ul>
+
+      <!-- ===== 10. CI/CD ===== -->
+      <h2 id="cicd">10. Docker в CI/CD</h2>
+
+      <h3>GitHub Actions — пример пайплайна</h3>
+      <pre><code>name: Docker Build and Push
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: user/app:latest,user/app:${{ github.sha }}</code></pre>
+
+      <h3>Docker слои и кэширование в CI</h3>
+      <ul>
+        <li><strong>Layer caching:</strong> порядок инструкций в Dockerfile важен — сначала COPY requirements.txt, потом RUN pip install (кэшируется)</li>
+        <li><strong>GitHub Actions cache:</strong> <code>docker/build-push-action</code> автоматически кэширует слои</li>
+        <li><strong>GitLab CI:</strong> <code>cache: key: $CI_JOB_NAME</code> + Docker-in-Docker</li>
+      </ul>
+
+      <!-- ===== 11. ТЕСТИРОВАНИЕ ===== -->
+      <h2 id="testing">11. Docker Compose для тестирования</h2>
+      <p>Docker идеально подходит для тестовых окружений: изолированно, повторяемо, быстро.</p>
+
+      <h3>Пример: тестовый стек с Testcontainers</h3>
+      <pre><code># tests/conftest.py
+import pytest
+import testcontainers.postgres
+import testcontainers.redis
+
+@pytest.fixture(scope="session")
+def postgres():
+    with testcontainers.postgres.PostgresContainer(
+        "postgres:16-alpine"
+    ) as pg:
+        yield pg
+
+@pytest.fixture(scope="session")
+def redis():
+    with testcontainers.redis.RedisContainer("redis:7-alpine") as r:
+        yield r</code></pre>
+
+      <h3>Docker Compose для E2E-тестов</h3>
+      <pre><code># compose.test.yml
+services:
+  app:
+    build: ..
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:16-alpine
+    healthcheck:
+      test: pg_isready -U test
+  test-runner:
+    build: ./tests
+    depends_on:
+      - app
+    environment:
+      - APP_URL=http://app:8000
+    profiles: ["test"]  # запуск: docker compose --profile test up --abort-on-container-exit</code></pre>
+
+      <h3>Преимущества Docker для QA</h3>
+      <ul>
+        <li>Идентичное окружение на всех машинах (dev, CI, staging)</li>
+        <li>Быстрое создание и удаление тестовых стендов</li>
+        <li>Изоляция тестовых данных (чистая БД в контейнере)</li>
+        <li>Параллельные тесты (несколько инстансов сервиса)</li>
+        <li>Тестирование разных версий зависимостей (matrix testing)</li>
+      </ul>
+
+      <!-- ===== 12. БЕЗОПАСНОСТЬ ===== -->
+      <h2 id="security">12. Безопасность Docker</h2>
+
+      <h3>Docker Bench Security</h3>
+      <pre><code>docker run --it --net host --pid host --userns host \
+  --cap-add audit_control -e DockerConfigFile=/etc/docker/daemon.json \
+  -v /var/lib:/var/lib:ro -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  --label docker_bench_security \
+  docker/docker-bench-security</code></pre>
+
+      <h3>Основные правила безопасности</h3>
+      <table>
+        <tr><th>Правило</th><th>Описание</th></tr>
+        <tr><td>Не запускать от root</td><td><code>USER appuser</code> в Dockerfile, <code>--user</code> при запуске</td></tr>
+        <tr><td>Read-only rootfs</td><td><code>docker run --read-only container</code></td></tr>
+        <tr><td>Ограничение capabilities</td><td><code>--cap-drop=ALL --cap-add=NET_BIND_SERVICE</code></td></tr>
+        <tr><td>Не использовать privileged</td><td><code>--privileged</code> даёт полный доступ к хосту</td></tr>
+        <tr><td>Security scanning</td><td><code>docker scout</code>, Trivy, Snyk, Grype</td></tr>
+        <tr><td>Secrets не в образах</td><td>Docker secrets, внешние vaults (HashiCorp Vault)</td></tr>
+        <tr><td>Resource limits</td><td><code>--memory=512m --cpus=0.5</code></td></tr>
+        <tr><td>Не открывать docker.sock</td><td>Доступ к сокету = полный контроль над хостом</td></tr>
+      </table>
+
+      <h3>Image Scanning</h3>
+      <pre><code># Trivy (open-source)
+trivy image python:3.12-slim
+
+# Docker Scout (встроенный)
+docker scout quickview python:3.12-slim
+docker scout recommendations python:3.12-slim</code></pre>
+
+      <!-- ===== 13. ОПТИМИЗАЦИЯ ===== -->
+      <h2 id="optimization">13. Оптимизация Docker-образов</h2>
+
+      <h3>Принципы оптимизации</h3>
+      <ul>
+        <li><strong>Минимальный базовый образ:</strong> alpine, slim, distroless</li>
+        <li><strong>Multi-stage builds:</strong> разделение build и runtime слоёв</li>
+        <li><strong>Минимизация слоёв:</strong> объединение RUN команд (<code>&&</code>), чистка кэша</li>
+        <li><strong>Порядок слоёв:</strong> часто меняющееся — в конце (кэширование)</li>
+        <li><strong>.dockerignore:</strong> исключить node_modules, .git, __pycache__</li>
+        <li><strong>Сжатие:</strong> <code>--squash</code> (экспериментальный) для объединения слоёв</li>
+      </ul>
+
+      <h4>Сравнение размеров Python-образов</h4>
+      <table>
+        <tr><th>Образ</th><th>Размер</th><th>Основа</th></tr>
+        <tr><td><code>python:3.12</code></td><td>945 MB</td><td>Debian Bookworm (полный)</td></tr>
+        <tr><td><code>python:3.12-slim</code></td><td>114 MB</td><td>Debian Slim (минимальный)</td></tr>
+        <tr><td><code>python:3.12-alpine</code></td><td>71 MB</td><td>Alpine Linux (musl)</td></tr>
+        <tr><td><code>distroless/python3</code></td><td>52 MB</td><td>Distroless (только runtime)</td></tr>
+        <tr><td>Multi-stage + distroless</td><td>~40 MB</td><td>Только артефакты</td></tr>
+      </table>
+
+      <!-- ===== 14. ОРКЕСТРАЦИЯ ===== -->
+      <h2 id="orchestration">14. Оркестрация: Docker Swarm и Kubernetes</h2>
+
+      <h3>Docker Swarm</h3>
+      <ul>
+        <li>Встроенная оркестрация в Docker</li>
+        <li>Кластер из manager + worker нод</li>
+        <li>Сервисы, стеки, секреты, сети overlay</li>
+      </ul>
+      <pre><code># Инициализация Swarm
+docker swarm init --advertise-addr 192.168.1.10
+
+# Деплой стека
+docker stack deploy -c compose.yml myapp
+
+# Просмотр сервисов
+docker service ls
+docker service ps myapp_web
+
+# Масштабирование
+docker service scale myapp_web=5</code></pre>
+
+      <h3>Kubernetes vs Docker Swarm</h3>
+      <table>
+        <tr><th>Характеристика</th><th>Docker Swarm</th><th>Kubernetes</th></tr>
+        <tr><td>Сложность</td><td>Низкая (простой)</td><td>Высокая (мощный, сложный)</td></tr>
+        <tr><td>Установка</td><td>Встроен в Docker</td><td>Отдельная (minikube, k3s, kind)</td></tr>
+        <tr><td>Auto-scaling</td><td>Ручное</td><td>Автоматическое (HPA)</td></tr>
+        <tr><td>Self-healing</td><td>Базовый</td><td>Продвинутый (liveness/readiness probes)</td></tr>
+        <tr><td>Community</td><td>Маленькая</td><td>Огромная</td></tr>
+        <tr><td>Когда выбрать</td><td>Небольшой кластер, простота</td><td>Enterprise, сложные приложения</td></tr>
+      </table>
+
+      <!-- ===== 15. BEST PRACTICES ===== -->
+      <h2 id="practices">15. Best Practices</h2>
+
+      <h3>Dockerfile</h3>
+      <ul>
+        <li>Используйте официальные образы (alpine/slim)</li>
+        <li>Объединяйте RUN команды: <code>apt-get update && apt-get install -y pkg && rm -rf /var/lib/apt/lists/*</code></li>
+        <li>Не устанавливайте лишние пакеты</li>
+        <li>Используйте <code>.dockerignore</code> — аналог .gitignore</li>
+        <li>Добавляйте HEALTHCHECK</li>
+        <li>Указывайте конкретные версии тегов (не <code>latest</code>)</li>
+      </ul>
+
+      <h3>Compose</h3>
+      <ul>
+        <li>Используйте profiles для тестовых/фоновых сервисов</li>
+        <li>Настраивайте healthcheck для сервисов</li>
+        <li>Используйте restart policies: <code>always</code>, <code>unless-stopped</code></li>
+        <li>Определяйте resource limits</li>
+        <li>Используйте .env файлы для переменных</li>
+      </ul>
+
+      <h3>CI/CD</h3>
+      <ul>
+        <li>Кэшируйте слои между сборками</li>
+        <li>Сканируйте образы на уязвимости</li>
+        <li>Используйте семантическое тегирование: <code>v1.2.3</code>, <code>sha-abc123</code></li>
+        <li>Подписывайте образы (Docker Content Trust)</li>
+      </ul>
+
+      <!-- ===== 16. ГЛОССАРИЙ ===== -->
+      <h2 id="glossary">16. Глоссарий Docker-терминов</h2>
+      <table>
+        <tr><th>Термин</th><th>Определение</th></tr>
+        <tr><td><strong>Container</strong></td><td>Запущенный экземпляр образа, изолированный процесс</td></tr>
+        <tr><td><strong>Image</strong></td><td>Неизменяемый шаблон для создания контейнеров (read-only)</td></tr>
+        <tr><td><strong>Layer</strong></td><td>Слой образа — результат выполнения одной инструкции Dockerfile</td></tr>
+        <tr><td><strong>Dockerfile</strong></td><td>Набор инструкций для сборки образа</td></tr>
+        <tr><td><strong>Registry</strong></td><td>Хранилище образов (Docker Hub, ghcr.io)</td></tr>
+        <tr><td><strong>Volume</strong></td><td>Постоянное хранение данных, управляемое Docker</td></tr>
+        <tr><td><strong>Bind mount</strong></td><td>Монтирование директории хоста в контейнер</td></tr>
+        <tr><td><strong>Docker Compose</strong></td><td>Инструмент для запуска многоконтейнерных приложений</td></tr>
+        <tr><td><strong>Swarm</strong></td><td>Режим кластеризации Docker'а</td></tr>
+        <tr><td><strong>Service</strong></td><td>Описание приложения в Swarm (образ, порты, реплики)</td></tr>
+        <tr><td><strong>Stack</strong></td><td>Группа сервисов в Swarm (из compose.yml)</td></tr>
+        <tr><td><strong>Namespace</strong></td><td>Изоляция процессов в Linux (PID, NET, MNT, USER)</td></tr>
+        <tr><td><strong>Cgroups</strong></td><td>Ограничение ресурсов (CPU, RAM, IO)</td></tr>
+        <tr><td><strong>Overlay network</strong></td><td>Сеть между хостами в Swarm</td></tr>
+        <tr><td><strong>Multi-stage build</strong></td><td>Несколько стадий сборки для минимизации финального образа</td></tr>
+        <tr><td><strong>Docker Scout</strong></td><td>Инструмент анализа уязвимостей образов</td></tr>
+        <tr><td><strong>Healthcheck</strong></td><td>Проверка здоровья контейнера (liveness probe)</td></tr>
+        <tr><td><strong>Capability</strong></td><td>Привилегия Linux-процесса (CAP_NET_BIND_SERVICE)</td></tr>
+        <tr><td><strong>Docker socket</strong></td><td>Unix-socket /var/run/docker.sock — API Docker daemon</td></tr>
+        <tr><td><strong>Entrypoint</strong></td><td>Команда, запускаемая при старте контейнера (не переопределяется)</td></tr>
+        <tr><td><strong>CMD</strong></td><td>Аргументы по умолчанию для ENTRYPOINT (переопределяется при run)</td></tr>
+      </table>
+
+      <!-- ===== 17. ЧЕКЛИСТ ===== -->
+      <h2 id="checklist">17. Чеклист Docker</h2>
+
+      <h3>Dockerfile</h3>
+      <ul>
+        <li><input type="checkbox"> Используется минимальный базовый образ (slim/alpine/distroless)</li>
+        <li><input type="checkbox"> Multi-stage build для отделения build от runtime</li>
+        <li><input type="checkbox"> Команды объединены (&&), кэш apt/pip очищен</li>
+        <li><input type="checkbox"> Порядок слоёв оптимизирован для кэширования</li>
+        <li><input type="checkbox"> .dockerignore добавлен</li>
+        <li><input type="checkbox"> HEALTHCHECK настроен</li>
+        <li><input type="checkbox"> USER не root</li>
+      </ul>
+
+      <h3>Compose</h3>
+      <ul>
+        <li><input type="checkbox"> Сервисы имеют resource limits</li>
+        <li><input type="checkbox"> restart policy настроена</li>
+        <li><input type="checkbox"> healthcheck для зависимых сервисов</li>
+        <li><input type="checkbox"> Profiles для тестовых/фоновых сервисов</li>
+        <li><input type="checkbox"> .env файл для переменных</li>
+        <li><input type="checkbox"> Используются named volumes (не bind mount в проде)</li>
+      </ul>
+
+      <h3>Безопасность</h3>
+      <ul>
+        <li><input type="checkbox"> Не используется —privileged</li>
+        <li><input type="checkbox"> Capabilities ограничены (—cap-drop=ALL)</li>
+        <li><input type="checkbox"> Secrets не встроены в образ</li>
+        <li><input type="checkbox"> Image scanning: Trivy / Docker Scout пройден</li>
+        <li><input type="checkbox"> Read-only rootfs (—read-only)</li>
+        <li><input type="checkbox"> Не открыт docker.sock</li>
+      </ul>
+
+      <h3>CI/CD</h3>
+      <ul>
+        <li><input type="checkbox"> Сборка образов автоматизирована</li>
+        <li><input type="checkbox"> Layer caching настроен</li>
+        <li><input type="checkbox"> Образы сканируются перед push</li>
+        <li><input type="checkbox"> Теги: версия + sha (не latest)</li>
+        <li><input type="checkbox"> Registry аутентификация через secrets</li>
+      </ul>
+
+      <h3>QA и тестирование</h3>
+      <ul>
+        <li><input type="checkbox"> compose.test.yml для тестового стека</li>
+        <li><input type="checkbox"> Testcontainers для unit/integration тестов</li>
+        <li><input type="checkbox"> Тестовые данные изолированы (чистая БД)</li>
+        <li><input type="checkbox"> Parallel test execution</li>
+        <li><input type="checkbox"> Smoke-тесты после деплоя</li>
+      </ul>
+
+      <div class="success-box"><strong>Золотое правило Docker:</strong> Контейнер должен быть эфемерным (ephemeral) — его можно остановить, удалить и создать заново без потери данных и функциональности.</div>
+      <p style="margin-top: 24px; text-align: center; opacity: 0.7;">Плейбук подготовлен для проекта qasdet.github.io &bull; 2026</p>
+    </main>
+  </div>
+  <footer>
+    <p>Полный плейбук по Docker — от установки до best practices</p>
+  </footer>
+</div>
+<script>
+(function(){
+  const canvas = document.getElementById('cursor-effect');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  let mouse = { x: -1000, y: -1000 };
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  document.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+  const particles = [];
+  const MAX = 50;
+  function spawn(){
+    particles.push({ x: mouse.x + (Math.random() - 0.5) * 6, y: mouse.y + (Math.random() - 0.5) * 6, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8 - 0.3, life: 1, size: Math.random() * 3 + 1.5 });
+    if(particles.length > MAX) particles.shift();
+  }
+  let frame = 0;
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    frame++;
+    if(frame % 2 === 0 && mouse.x > 0) spawn();
+    for(let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.life -= 0.015;
+      if(p.life <= 0){ particles.splice(i, 1); continue; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(14,165,233,${p.life * 0.7})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
