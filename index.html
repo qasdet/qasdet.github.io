@@ -693,7 +693,6 @@
     </style>
 </head>
 <body x-data="{
-  <canvas id="cursor-effect"></canvas>
     expandedId: null,
     loading: true,
     stage: '',
@@ -703,6 +702,7 @@
         this.certModalOpen = true;
     },
 }">
+    <canvas id="cursor-effect"></canvas>
     <script>
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {

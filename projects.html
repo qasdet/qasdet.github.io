@@ -223,7 +223,6 @@
     </style>
 </head>
 <body x-data="{
-  <canvas id="cursor-effect"></canvas>
     loading: true,
     stage: '',
     projectsReady: false,
@@ -233,6 +232,7 @@
         setTimeout(() => { this.loading = false; this.projectsReady = true; }, 2400);
     }
 }">
+    <canvas id="cursor-effect"></canvas>
     <script>
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
