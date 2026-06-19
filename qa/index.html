@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Плейбук тестировщика — виды, типы, техники, расчёт тест-кейсов</title>
+  <link rel="stylesheet" href="qa-style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+<canvas id="cursor-effect"></canvas>
+<div class="wrapper">
+  <header>
+    <h1>Плейбук тестировщика</h1>
+    <p class="subtitle">Полный справочник по видам и типам тестирования, техникам тест-дизайна и методам расчёта количества тест-кейсов</p>
+    <p class="meta">Версия 1.0 &bull; 2026</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Содержание</h3>
+      <ul>
+        <li><a href="#intro" class="toc-h2">1. Введение</a></li>
+        <li><a href="#classification" class="toc-h2">2. Классификация тестирования</a></li>
+        <li><a href="#by-level" class="toc-h3">2.1 По уровню</a></li>
+        <li><a href="#by-knowledge" class="toc-h3">2.2 По знанию системы</a></li>
+        <li><a href="#by-automation" class="toc-h3">2.3 По автоматизации</a></li>
+        <li><a href="#by-purpose" class="toc-h3">2.4 По целям</a></li>
+        <li><a href="#by-object" class="toc-h3">2.5 Функциональное</a></li>
+        <li><a href="#non-functional" class="toc-h3">2.6 Нефункциональное</a></li>
+        <li><a href="#by-execution" class="toc-h3">2.7 По времени выполнения</a></li>
+        <li><a href="#design-techniques" class="toc-h2">3. Техники тест-дизайна</a></li>
+        <li><a href="#ep" class="toc-h3">3.1 Эквивалентное разделение</a></li>
+        <li><a href="#bva" class="toc-h3">3.2 Анализ граничных значений</a></li>
+        <li><a href="#decision-table" class="toc-h3">3.3 Таблица принятия решений</a></li>
+        <li><a href="#state-transition" class="toc-h3">3.4 Состояния и переходы</a></li>
+        <li><a href="#pairwise" class="toc-h3">3.5 Попарное тестирование</a></li>
+        <li><a href="#orthogonal" class="toc-h3">3.6 Ортогональные массивы</a></li>
+        <li><a href="#use-case" class="toc-h3">3.7 Use Case</a></li>
+        <li><a href="#error-guessing" class="toc-h3">3.8 Error Guessing</a></li>
+        <li><a href="#exploratory" class="toc-h3">3.9 Исследовательское</a></li>
+        <li><a href="#classification-tree" class="toc-h3">3.10 Classification Tree</a></li>
+        <li><a href="#domain" class="toc-h3">3.11 Доменный анализ</a></li>
+        <li><a href="#calculating" class="toc-h2">4. Расчёт тест-кейсов</a></li>
+        <li><a href="#general-formulas" class="toc-h3">4.1 Общие формулы</a></li>
+        <li><a href="#ep-calc" class="toc-h3">4.2 Расчёт для EP</a></li>
+        <li><a href="#bva-calc" class="toc-h3">4.3 Расчёт для BVA</a></li>
+        <li><a href="#decision-calc" class="toc-h3">4.4 Расчёт для Decision Table</a></li>
+        <li><a href="#state-calc" class="toc-h3">4.5 Расчёт для State Transition</a></li>
+        <li><a href="#pairwise-calc" class="toc-h3">4.6 Расчёт для Pairwise</a></li>
+        <li><a href="#practical-calc" class="toc-h3">4.7 Практические советы</a></li>
+        <li><a href="#examples" class="toc-h2">5. Примеры расчётов</a></li>
+        <li><a href="#api" class="toc-h2">6. API тестирование</a></li>
+        <li><a href="#bugreport" class="toc-h2">7. Баг-репорты</a></li>
+        <li><a href="#test-docs" class="toc-h2">8. Тестовая документация</a></li>
+        <li><a href="#metrics" class="toc-h2">9. Метрики тестирования</a></li>
+        <li><a href="#requirements" class="toc-h2">10. Работа с требованиями</a></li>
+        <li><a href="#mobile" class="toc-h2">11. Mobile тестирование</a></li>
+        <li><a href="#database" class="toc-h2">12. Database тестирование</a></li>
+        <li><a href="#security" class="toc-h2">13. Security тестирование</a></li>
+        <li><a href="#glossary" class="toc-h2">14. Глоссарий</a></li>
+        <li><a href="#checklist" class="toc-h2">15. Чеклист</a></li>
+        <li><a href="#conclusion" class="toc-h2">16. Заключение</a></li>
+      </ul>
+    </nav>
+    <main>
+      <!-- ===== 1. ВВЕДЕНИЕ ===== -->
+      <h2 id="intro">1. Введение в плейбук тестировщика</h2>
+      <p>Этот плейбук — полный справочник по теории и практике тестирования программного обеспечения. Он охватывает все виды и типы тестирования, техники тест-дизайна и методы расчёта количества тест-кейсов. Материал структурирован для быстрого поиска и практического применения.</p>
+      <p>Плейбук будет полезен как начинающим тестировщикам, так и опытным инженерам, желающим систематизировать знания или использовать материал как шпаргалку на проекте.</p>
+
+      <!-- ===== 2. КЛАССИФИКАЦИЯ ===== -->
+      <h2 id="classification">2. Классификация видов и типов тестирования</h2>
+      <p>Тестирование ПО классифицируется по множеству признаков. Ниже приведены основные классификации с подробными таблицами.</p>
+
+      <!-- 2.1 По уровню -->
+      <h3 id="by-level">2.1 По уровню тестирования (Test Levels)</h3>
+      <table>
+        <tr><th>Уровень</th><th>Объект</th><th>Кто выполняет</th><th>Основная цель</th><th>Инструменты</th></tr>
+        <tr><td><strong>Модульное (Unit)</strong></td><td>Отдельные функции, методы, классы</td><td>Разработчики</td><td>Проверка корректности изолированных компонентов</td><td>Pytest, JUnit, NUnit, Jest, Mocha</td></tr>
+        <tr><td><strong>Интеграционное (Integration)</strong></td><td>Взаимодействие между модулями</td><td>Разработчики, QA</td><td>Проверка API-контрактов, протоколов обмена</td><td>Postman, REST Assured, WireMock</td></tr>
+        <tr><td><strong>Системное (System)</strong></td><td>Система в целом</td><td>QA-инженеры</td><td>Проверка функциональных и нефункциональных требований</td><td>Selenium, Cypress, Playwright</td></tr>
+        <tr><td><strong>Приемочное (Acceptance)</strong></td><td>Готовый продукт</td><td>Заказчик, UAT-команда</td><td>Подтверждение готовности к релизу</td><td>Cucumber, FitNesse, ручное</td></tr>
+      </table>
+
+      <div class="info-box"><strong>Пирамида тестирования (Test Pyramid):</strong> Unit-тесты — основа (70%), Integration — средний слой (20%), E2E — вершина (10%). Для мобильных и сложных систем используется <strong>«призма тестирования»</strong> с акцентом на интеграционные тесты.</div>
+
+      <h4>Подвиды по уровню:</h4>
+      <ul>
+        <li><strong>Component testing:</strong> тестирование больших компонентов (модулей), состоящих из множества классов</li>
+        <li><strong>Integration testing:</strong> может быть Big Bang (все сразу) или Incremental (постепенно: Top-Down, Bottom-Up)</li>
+        <li><strong>System Integration:</strong> взаимодействие с внешними системами (Third-party API, DB, legacy)</li>
+        <li><strong>Alpha / Beta testing:</strong> подвид приемочного — на стороне разработчика / у ограниченного круга пользователей</li>
+      </ul>
+
+      <!-- 2.2 По знанию системы -->
+      <h3 id="by-knowledge">2.2 По знанию внутреннего устройства (Test Approaches)</h3>
+      <table>
+        <tr><th>Подход</th><th>Знание внутреннего кода</th><th>Доступ к архитектуре</th><th>Когда применяется</th></tr>
+        <tr><td><strong>Black Box (Чёрный ящик)</strong></td><td>Нет</td><td>Нет</td><td>Функциональное тестирование, UI, API, приёмочные тесты</td></tr>
+        <tr><td><strong>White Box (Белый ящик)</strong></td><td>Полное</td><td>Да</td><td>Unit-тесты, покрытие кода, оптимизация, security</td></tr>
+        <tr><td><strong>Grey Box (Серый ящик)</strong></td><td>Частичное</td><td>Частичный (API, DB)</td><td>Интеграционные тесты, API-тесты, пентест</td></tr>
+      </table>
+
+      <h4>White Box техники:</h4>
+      <ul>
+        <li><strong>Statement Coverage:</strong> каждая строка кода выполнена хотя бы раз</li>
+        <li><strong>Branch Coverage:</strong> каждое условие (if/else) было true и false</li>
+        <li><strong>Path Coverage:</strong> каждый возможный путь в коде пройден</li>
+        <li><strong>Condition Coverage:</strong> каждый атомарный булевый подвыражение — true и false</li>
+        <li><strong>MC/DC (Modified Condition/Decision Coverage):</strong> каждое условие независимо влияет на решение — стандарт для DO-178C (авиация)</li>
+      </ul>
+
+      <!-- 2.3 По автоматизации -->
+      <h3 id="by-automation">2.3 По степени автоматизации</h3>
+      <table>
+        <tr><th>Тип</th><th>Описание</th><th>Плюсы</th><th>Минусы</th></tr>
+        <tr><td><strong>Ручное (Manual)</strong></td><td>Тестировщик вручную выполняет тест-кейсы</td><td>Гибкость, исследовательский подход, UX-оценка</td><td>Медленно, дорого на регрессии, human error</td></tr>
+        <tr><td><strong>Автоматизированное (Automated)</strong></td><td>Скрипты выполняют тесты автоматически</td><td>Быстро, регрессия за минуты, CI/CD</td><td>Разработка скриптов, поддержка, ложно-позитивные</td></tr>
+        <tr><td><strong>Полуавтоматическое</strong></td><td>Комбинация ручных и автоматических шагов</td><td>Баланс гибкости и скорости</td><td>Сложность в поддержке сценариев</td></tr>
+      </table>
+
+      <h4>Что стоит автоматизировать:</h4>
+      <ul>
+        <li>Регрессионные тесты (Core functionality)</li>
+        <li>Smoke-тесты при каждом деплое</li>
+        <li>API-тесты (быстрые, стабильные)</li>
+        <li>Тесты производительности (нагрузка)</li>
+        <li>Data-driven тесты (много данных)</li>
+      </ul>
+
+      <!-- 2.4 По целям -->
+      <h3 id="by-purpose">2.4 По целям и задачам</h3>
+      <table>
+        <tr><th>Тип</th><th>Цель</th><th>Когда выполняется</th><th>Продолжительность</th></tr>
+        <tr><td><strong>Smoke</strong></td><td>Проверить критическую функциональность (дымовое)</td><td>После каждого билда</td><td>5-15 мин</td></tr>
+        <tr><td><strong>Sanity</strong></td><td>Проверить конкретные исправления</td><td>После фикса бага</td><td>10-30 мин</td></tr>
+        <tr><td><strong>Regression</strong></td><td>Проверить, что изменения не сломали existing functionality</td><td>Перед релизом, в CI/CD</td><td>От 1 часа до дней</td></tr>
+        <tr><td><strong>Re-testing</strong></td><td>Проверить, что конкретный баг исправлен</td><td>После фикса бага</td><td>5-20 мин</td></tr>
+        <tr><td><strong>Confirmation</strong></td><td>Подтвердить, что исправление работает корректно</td><td>После деплоя фикса</td><td>10-30 мин</td></tr>
+        <tr><td><strong>End-to-End (E2E)</strong></td><td>Проверить полный пользовательский сценарий</td><td>Перед релизом</td><td>От 30 мин</td></tr>
+        <tr><td><strong>Exploratory</strong></td><td>Исследовать продукт без сценариев, найти неочевидные проблемы</td><td>На любом этапе</td><td>От 1 часа</td></tr>
+        <tr><td><strong>Ad-hoc</strong></td><td>Спонтанное тестирование без документации</td><td>При необходимости</td><td>От 10 мин</td></tr>
+        <tr><td><strong>GUI / UI</strong></td><td>Проверка пользовательского интерфейса</td><td>На всех этапах</td><td>Зависит от объёма</td></tr>
+        <tr><td><strong>Usability (Юзабилити)</strong></td><td>Проверка удобства использования</td><td>Перед релизом UI</td><td>1-3 дня</td></tr>
+        <tr><td><strong>Accessibility (Доступность)</strong></td><td>Проверка доступа для людей с ограничениями</td><td>Перед релизом</td><td>1-2 дня</td></tr>
+      </table>
+
+      <!-- 2.5 Функциональное -->
+      <h3 id="by-object">2.5 Функциональное тестирование (Functional Testing)</h3>
+      <p>Проверка, что система выполняет заявленные функции в соответствии с требованиями.</p>
+      <table>
+        <tr><th>Подвид</th><th>Что проверяет</th><th>Пример</th></tr>
+        <tr><td><strong>Functional</strong></td><td>Базовые функции: авторизация, CRUD, расчёты</td><td>Проверка входа в систему с правильным паролем</td></tr>
+        <tr><td><strong>Security</strong></td><td>Безопасность: аутентификация, авторизация, шифрование</td><td>Проверка SQL-инъекций, XSS</td></tr>
+        <tr><td><strong>Interoperability</strong></td><td>Взаимодействие с другими системами</td><td>Проверка экспорта в PDF, интеграция с CRM</td></tr>
+        <tr><td><strong>Data Integrity</strong></td><td>Целостность данных</td><td>Проверка, что после ошибки данные не повреждены</td></tr>
+        <tr><td><strong>Installation</strong></td><td>Установка, обновление, удаление</td><td>Проверка чистой установки, обновления с предыдущей версии</td></tr>
+        <tr><td><strong>Compliance</strong></td><td>Соответствие стандартам и регуляциям</td><td>GDPR, PCI DSS, HIPAA, SOX</td></tr>
+        <tr><td><strong>Localization</strong></td><td>Перевод и адаптация для региона</td><td>Проверка языков, валют, форматов дат</td></tr>
+      </table>
+
+      <!-- 2.6 Нефункциональное -->
+      <h3 id="non-functional">2.6 Нефункциональное тестирование (Non-Functional Testing)</h3>
+      <table>
+        <tr><th>Тип</th><th>Что проверяет</th><th>Метрики</th><th>Инструменты</th></tr>
+        <tr><td><strong>Performance</strong></td><td>Скорость работы системы</td><td>Latency, Throughput, Response Time</td><td>JMeter, k6, Locust, Gatling</td></tr>
+        <tr><td><strong>Load</strong></td><td>Поведение под ожидаемой нагрузкой</td><td>RPS, Concurrent Users, CPU/RAM usage</td><td>JMeter, Yandex.Tank</td></tr>
+        <tr><td><strong>Stress</strong></td><td>Поведение при превышении нагрузки</td><td>Точка отказа, восстановление</td><td>JMeter, Chaos Monkey</td></tr>
+        <tr><td><strong>Soak (Endurance)</strong></td><td>Стабильность в течение длительного времени</td><td>Memory leak, degradation over time</td><td>JMeter, Locust</td></tr>
+        <tr><td><strong>Scalability</strong></td><td>Способность масштабироваться</td><td>Cost per RPS, speed of scale-up</td><td>k6, custom scripts</td></tr>
+        <tr><td><strong>Reliability</strong></td><td>Вероятность безотказной работы</td><td>MTBF, MTTR, Availability %</td><td>Prometheus, Grafana</td></tr>
+        <tr><td><strong>Usability</strong></td><td>Удобство использования</td><td>Task success rate, Time on task, SUS score</td><td>UserTesting, Hotjar, Maze</td></tr>
+        <tr><td><strong>Security</strong></td><td>Защищённость от атак</td><td>Количество уязвимостей, CVSS score</td><td>OWASP ZAP, Burp Suite, Nessus</td></tr>
+        <tr><td><strong>Portability</strong></td><td>Переносимость между средами</td><td>Количество совместимых платформ</td><td>Cross-browser testing, Docker</td></tr>
+        <tr><td><strong>Maintainability</strong></td><td>Лёгкость поддержки кода</td><td>Cyclomatic complexity, Code churn</td><td>SonarQube, CodeClimate</td></tr>
+        <tr><td><strong>Recoverability</strong></td><td>Способность восстанавливаться после сбоев</td><td>RTO, RPO</td><td>Chaos Engineering, Disaster Recovery drills</td></tr>
+      </table>
+
+      <h4>Подвиды Performance тестирования:</h4>
+      <ul>
+        <li><strong>Spike testing:</strong> резкий скачок нагрузки (например, Black Friday)</li>
+        <li><strong>Volume testing:</strong> обработка большого объёма данных</li>
+        <li><strong>Capacity testing:</strong> определение максимальной ёмкости системы</li>
+        <li><strong>Latency testing:</strong> задержка при передаче данных</li>
+        <li><strong>Throughput testing:</strong> пропускная способность (транзакций/сек)</li>
+      </ul>
+
+      <!-- 2.7 По времени выполнения -->
+      <h3 id="by-execution">2.7 По времени выполнения тестов</h3>
+      <table>
+        <tr><th>Тип</th><th>Описание</th><th>Пример</th></tr>
+        <tr><td><strong>Static (Статическое)</strong></td><td>Без запуска кода. Анализ кода, документации, требований</td><td>Code review, статический анализ (SonarQube), linting, review спецификации</td></tr>
+        <tr><td><strong>Dynamic (Динамическое)</strong></td><td>С запуском кода. Выполнение тестов в runtime</td><td>Любой запуск программы с тестовыми данными</td></tr>
+      </table>
+
+      <h4>Методы статического тестирования:</h4>
+      <ul>
+        <li><strong>Informal review:</strong> неформальное обсуждение кода/документации</li>
+        <li><strong>Walkthrough:</strong> автор ведёт участников по материалу</li>
+        <li><strong>Technical review:</strong> техническая экспертиза коллегами</li>
+        <li><strong>Inspection:</strong> формальная проверка с ролями (автор, чтец, секретарь)</li>
+        <li><strong>Static analysis:</strong> автоматическая проверка кода без запуска</li>
+      </ul>
+
+      <!-- ===== 3. ТЕХНИКИ ТЕСТ-ДИЗАЙНА ===== -->
+      <h2 id="design-techniques">3. Техники тест-дизайна (Test Design Techniques)</h2>
+      <p>Техники тест-дизайна — это методы создания тестов, обеспечивающие максимальное покрытие при минимальном количестве тест-кейсов. Каждая техника имеет свою формулу расчёта количества тестов.</p>
+
+      <!-- 3.1 EP -->
+      <h3 id="ep">3.1 Эквивалентное разделение (Equivalence Partitioning / EP)</h3>
+      <p><strong>Суть:</strong> Разбиение входных данных на классы эквивалентности, внутри которых система ведёт себя одинаково. Из каждого класса выбирается один представитель.</p>
+
+      <div class="formula">N = количество классов эквивалентности</div>
+
+      <h4>Правила выделения классов:</h4>
+      <ul>
+        <li><strong>Корректные (валидные) классы:</strong> данные, которые система должна успешно обработать</li>
+        <li><strong>Некорректные (невалидные) классы:</strong> данные, которые система должна отклонить</li>
+        <li>Каждый класс содержит бесконечное количество значений, эквивалентных в поведении</li>
+        <li>Если один представитель класса проходит — весь класс считается пройденным</li>
+        <li>Один дефект может покрывать целый класс (bug masking)</li>
+      </ul>
+
+      <h4>Пример:</h4>
+      <p>Поле «Возраст» принимает значения от 18 до 60:</p>
+      <table>
+        <tr><th>Класс</th><th>Тип</th><th>Представитель</th></tr>
+        <tr><td>&lt; 18</td><td>Невалидный</td><td>15</td></tr>
+        <tr><td>18 - 60</td><td>Валидный</td><td>30</td></tr>
+        <tr><td>&gt; 60</td><td>Невалидный</td><td>70</td></tr>
+      </table>
+      <p><strong>Количество тестов:</strong> 3 (по одному на каждый класс)</p>
+
+      <!-- 3.2 BVA -->
+      <h3 id="bva">3.2 Анализ граничных значений (Boundary Value Analysis / BVA)</h3>
+      <p><strong>Суть:</strong> На границах классов эквивалентности система наиболее склонна к ошибкам. Проверяются значения на границе, чуть выше и чуть ниже.</p>
+
+      <div class="formula">N = Количество границ × 2 + 1 (при использовании 2-value)<br>N = Количество границ × 3 (при использовании 3-value)</div>
+
+      <h4>Варианты:</h4>
+      <ul>
+        <li><strong>2-value BVA:</strong> граничное значение и следующее за границей (min, min+1), (max-1, max)</li>
+        <li><strong>3-value BVA:</strong> граничное значение, предыдущее и следующее (min-1, min, min+1)</li>
+        <li><strong>Robust BVA:</strong> учитывает выход за пределы допустимого диапазона</li>
+        <li><strong>Worst-case BVA:</strong> все комбинации границ всех параметров</li>
+      </ul>
+
+      <h4>Пример для поля «Возраст» (18-60) — 2-value BVA:</h4>
+      <table>
+        <tr><th>Граница</th><th>Значения</th></tr>
+        <tr><td>Нижняя (18)</td><td>18 (OK), 19 (OK), 17 (невалид)</td></tr>
+        <tr><td>Верхняя (60)</td><td>60 (OK), 59 (OK), 61 (невалид)</td></tr>
+      </table>
+      <p><strong>Количество тестов:</strong> 2-value = 5 тестов; 3-value = 7 тестов (17,18,19,59,60,61 + 1 граничный)</p>
+
+      <div class="info-box"><strong>Комбинация EP + BVA:</strong> На практике EP и BVA всегда используются вместе. Для каждого валидного класса — 2-3 граничных значения (min, min+1, ..., max-1, max). Для невалидных — 1 значение за каждой границей.</div>
+
+      <!-- 3.3 Decision Table -->
+      <h3 id="decision-table">3.3 Таблица принятия решений (Decision Table Testing)</h3>
+      <p><strong>Суть:</strong> Систематизация комбинаций условий (Causes) и соответствующих действий (Effects). Каждая комбинация — отдельный тест.</p>
+
+      <div class="formula">N = 2<sup>n</sup> (для n булевых условий)</div>
+
+      <h4>Структура таблицы:</h4>
+      <ul>
+        <li><strong>Conditions (Условия):</strong> бинарные входные данные (True/False)</li>
+        <li><strong>Actions (Действия):</strong> ожидаемый результат</li>
+        <li><strong>Rules (Правила):</strong> каждая колонка — одна комбинация</li>
+        <li><strong>Culling:</strong> удаление невозможных комбинаций</li>
+      </ul>
+
+      <h4>Пример: логин в систему</h4>
+      <table>
+        <tr><th>Условие \ Правило</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+        <tr><td>Логин верный</td><td>Да</td><td>Да</td><td>Нет</td><td>Нет</td></tr>
+        <tr><td>Пароль верный</td><td>Да</td><td>Нет</td><td>Да</td><td>Нет</td></tr>
+        <tr><td><strong>Результат</strong></td><td>Успех</td><td>Ошибка пароля</td><td>Ошибка логина</td><td>Ошибка логина</td></tr>
+      </table>
+      <p><strong>Количество тестов:</strong> 2² = 4 (полный перебор) → после culling: 3 (правила 3 и 4 могут быть объединены)</p>
+
+      <!-- 3.4 State Transition -->
+      <h3 id="state-transition">3.4 Тестирование состояний и переходов (State Transition Testing)</h3>
+      <p><strong>Суть:</strong> Система рассматривается как конечный автомат. Тесты покрывают переходы между состояниями и проверяют недопустимые переходы.</p>
+
+      <div class="formula">N = Количество состояний + Количество переходов + Количество недопустимых переходов</div>
+
+      <h4>Элементы:</h4>
+      <ul>
+        <li><strong>States (Состояния):</strong> режимы системы (LoggedOut, LoggedIn, Error, Locked)</li>
+        <li><strong>Transitions (Переходы):</strong> события, меняющие состояние (Login, Logout, Error)</li>
+        <li><strong>Events (События):</strong> триггеры переходов</li>
+        <li><strong>Invalid transitions:</strong> события, которые не должны срабатывать в данном состоянии</li>
+      </ul>
+
+      <h4>Пример: банковское приложение</h4>
+      <table>
+        <tr><th>Состояние</th><th>Событие</th><th>Новое состояние</th></tr>
+        <tr><td>Idle</td><td>Insert Card</td><td>CardInserted</td></tr>
+        <tr><td>CardInserted</td><td>Enter PIN</td><td>PINEntered</td></tr>
+        <tr><td>PINEntered</td><td>Select Amount</td><td>AmountSelected</td></tr>
+        <tr><td>AmountSelected</td><td>Dispense Cash</td><td>Idle</td></tr>
+        <tr><td>Idle</td><td>Enter PIN (invalid)</td><td>— (без карты — недопустимо)</td></tr>
+      </table>
+      <p><strong>Количество тестов = 4 (состояния) + 4 (валидных перехода) + 2 (недопустимых) = 10 тестов</strong></p>
+
+      <h4>Разновидности:</h4>
+      <ul>
+        <li><strong>0-switch (State Coverage):</strong> каждое состояние посещено хотя бы раз</li>
+        <li><strong>1-switch (Transition Coverage):</strong> каждый переход проверен</li>
+        <li><strong>N-switch:</strong> последовательности из N переходов — полное покрытие путей</li>
+      </ul>
+
+      <!-- 3.5 Pairwise -->
+      <h3 id="pairwise">3.5 Попарное тестирование (Pairwise / All-Pairs)</h3>
+      <p><strong>Суть:</strong> Комбинаторная техника, при которой проверяются все возможные пары значений параметров. Основана на том, что большинство дефектов вызывается комбинацией двух значений.</p>
+
+      <div class="formula">N ≈ (V₁ × V₂ + V₁ × V₃ + ... + Vₙ₋₁ × Vₙ) / (Nparams - 1) — эмпирическая оценка<br><br>Vᵢ — количество значений i-го параметра</div>
+
+      <h4>Алгоритм:</h4>
+      <ol>
+        <li>Определить параметры и их значения</li>
+        <li>Построить all-pairs таблицу</li>
+        <li>Проверить, что каждая пара значений встретилась хотя бы один раз</li>
+        <li>Добавить «подозрительные» комбинации (приоритетные)</li>
+      </ol>
+
+      <h4>Пример:</h4>
+      <table>
+        <tr><th>Параметр</th><th>Значения</th></tr>
+        <tr><td>ОС</td><td>Windows, macOS, Linux</td></tr>
+        <tr><td>Браузер</td><td>Chrome, Firefox, Safari</td></tr>
+        <tr><td>Разрешение</td><td>1920×1080, 1366×768</td></tr>
+      </table>
+      <p>Полный перебор: 3×3×2 = 18 тестов. Pairwise: 6-9 тестов (экономия 50-70%).</p>
+
+      <div class="info-box"><strong>Инструменты:</strong> PICT (Microsoft), AllPairs, ACTS, Pairwise Online, Hexawise. Для LLM: можно генерировать pairwise таблицы через model-запрос.</div>
+
+      <!-- 3.6 Orthogonal -->
+      <h3 id="orthogonal">3.6 Ортогональные массивы (Orthogonal Arrays / OATS)</h3>
+      <p><strong>Суть:</strong> Математический метод комбинаторного тестирования, использующий ортогональные массивы для минимизации количества тестов при сохранении равномерного покрытия.</p>
+
+      <div class="formula">N = Количество строк в ортогональном массиве L<sub>N</sub>(V<sup>k</sup>)<br><br>k — количество параметров, V — количество уровней значений</div>
+
+      <h4>Примеры массивов:</h4>
+      <table>
+        <tr><th>Обозначение</th><th>Параметры</th><th>Значений</th><th>Тестов</th></tr>
+        <tr><td>L₉(3⁴)</td><td>4</td><td>3</td><td>9</td></tr>
+        <tr><td>L₈(2⁷)</td><td>7</td><td>2</td><td>8</td></tr>
+        <tr><td>L₁₆(4⁵)</td><td>5</td><td>4</td><td>16</td></tr>
+      </table>
+      <p>Для 4 параметров по 3 значения: полный перебор = 3⁴ = 81; ортогональный массив L₉ = 9 тестов.</p>
+
+      <h4>Отличие от Pairwise:</h4>
+      <ul>
+        <li>Pairwise покрывает все пары — OATS покрывает равномерно</li>
+        <li>OATS жёстче математически, но иногда даёт больше тестов</li>
+        <li>OATS требует таблицы массивов, Pairwise — алгоритм</li>
+      </ul>
+
+      <!-- 3.7 Use Case -->
+      <h3 id="use-case">3.7 Тестирование на основе сценариев использования (Use Case Testing)</h3>
+      <p><strong>Суть:</strong> Тесты создаются на основе реальных сценариев использования системы, описанных в Use Case или User Story.</p>
+
+      <div class="formula">N = Количество Use Case × Вариантов на каждый Use Case + Исключительные ситуации</div>
+
+      <h4>Структура Use Case теста:</h4>
+      <table>
+        <tr><th>Элемент</th><th>Описание</th></tr>
+        <tr><td>Use Case ID</td><td>Уникальный идентификатор</td></tr>
+        <tr><td>Название</td><td>Краткое описание сценария</td></tr>
+        <tr><td>Предусловия</td><td>Что должно быть выполнено перед тестом</td></tr>
+        <tr><td>Основной поток</td><td>Шаги успешного сценария (Happy Path)</td></tr>
+        <tr><td>Альтернативные потоки</td><td>Вариации успешного сценария</td></tr>
+        <tr><td>Исключительные потоки</td><td>Ошибочные ситуации</td></tr>
+        <tr><td>Постусловия</td><td>Ожидаемое состояние системы после теста</td></tr>
+      </table>
+
+      <h4>Пример расчёта:</h4>
+      <p>Use Case «Оформление заказа»:</p>
+      <ul>
+        <li>Основной поток: 1 тест (успешный заказ)</li>
+        <li>Альтернативные: 3 (разные способы оплаты)</li>
+        <li>Исключительные: 4 (недостаточно средств, товар закончился, ошибка платёжного шлюза, превышение лимита)</li>
+      </ul>
+      <p><strong>Итого: 1 + 3 + 4 = 8 тест-кейсов</strong></p>
+
+      <!-- 3.8 Error Guessing -->
+      <h3 id="error-guessing">3.8 Error Guessing (Угадывание ошибок)</h3>
+      <p><strong>Суть:</strong> Основана на интуиции и опыте тестировщика. Тесты создаются на основе типовых ошибок, ранее найденных дефектов и известных «болевых точек».</p>
+
+      <div class="formula">N — не формализуется. Определяется опытом тестировщика и историей багов.</div>
+
+      <h4>Типовые сценарии Error Guessing:</h4>
+      <ul>
+        <li><strong>Пустые значения:</strong> submit пустой формы</li>
+        <li><strong>Нулевые значения:</strong> деление на 0, скидка 0%</li>
+        <li><strong>Отрицательные значения:</strong> количество товара -1</li>
+        <li><strong>Граничные значения имён:</strong> 1 символ, 256 символов, пробелы, спецсимволы</li>
+        <li><strong>Одновременный доступ:</strong> два пользователя редактируют одну запись</li>
+        <li><strong>Прерывания:</strong> обрыв соединения, потеря питания</li>
+        <li><strong>Кэш:</strong> устаревшие данные в кэше</li>
+        <li><strong>Race conditions:</strong> одновременный вызов API несколько раз</li>
+        <li><strong>SQL-инъекции:</strong> «' OR 1=1; --»</li>
+        <li><strong>XSS:</strong> «&lt;script&gt;alert('XSS')&lt;/script&gt;»</li>
+      </ul>
+
+      <!-- 3.9 Exploratory -->
+      <h3 id="exploratory">3.9 Исследовательское тестирование (Exploratory Testing)</h3>
+      <p><strong>Суть:</strong> Одновременное изучение, проектирование и выполнение тестов. Тестировщик самостоятельно исследует продукт, принимая решения на основе полученных результатов.</p>
+
+      <h4>Подходы:</h4>
+      <ul>
+        <li><strong>Freestyle:</strong> без ограничений, полная свобода</li>
+        <li><strong>Session-based:</strong> тайм-бокс (45-90 мин), чартер (цель сессии), отчёт</li>
+        <li><strong>Scenario-based:</strong> сценарии от реальных пользователей</li>
+        <li><strong>Tour-based:</strong> «экскурсии» — тестирование по определённому маршруту (Подвал, Квартал красных фонарей, Аллея супермена)</li>
+      </ul>
+
+      <h4>Структура сессии (Session-Based Test Management — SBTM):</h4>
+      <table>
+        <tr><th>Элемент</th><th>Описание</th></tr>
+        <tr><td>Чартер (Charter)</td><td>Цель сессии: «Исследовать регистрацию нового пользователя»</td></tr>
+        <tr><td>Timebox</td><td>45-90 минут (не больше)</td></tr>
+        <tr><td>Notes</td><td>Заметки о найденных дефектах, вопросах, наблюдениях</td></tr>
+        <tr><td>Debrief</td><td>Краткий отчёт после сессии: что хорошего, что плохого, что нужно изменить</td></tr>
+      </table>
+
+      <!-- 3.10 Classification Tree -->
+      <h3 id="classification-tree">3.10 Classification Tree Method (CTM) / Метод классификационных деревьев</h3>
+      <p><strong>Суть:</strong> Графическая техника для систематического разбиения входных данных на классификационные классы. Каждый класс разбивается на подклассы, формируя иерархическое дерево.</p>
+
+      <div class="formula">N = Произведение количества классов на каждом уровне дерева (базовая оценка)<br><br>После сокращения: N = количество комбинаций классов (по одному из каждой ветви)</div>
+
+      <h4>Пример: тестирование банковского перевода</h4>
+      <pre><code>Банковский перевод
+├── Валюта
+│   ├── RUB
+│   ├── USD
+│   └── EUR
+├── Сумма
+│   ├── Меньше лимита (&lt;100k)
+│   ├── На лимите (100k)
+│   └── Больше лимита (&gt;100k)
+├── Получатель
+│   ├── Свой счёт
+│   └── Чужой счёт
+└── Комиссия
+    ├── Включена в сумму
+    └── Добавлена сверху</code></pre>
+      <p>Полный перебор: 3×3×2×2 = 36 комбинаций. После pairwise-сокращения: ~8-12 тестов.</p>
+
+      <!-- 3.11 Domain -->
+      <h3 id="domain">3.11 Доменный анализ (Domain Testing / Domain Analysis)</h3>
+      <p><strong>Суть:</strong> Расширение EP + BVA на многомерные домены. Каждый параметр рассматривается как измерение, а набор параметров — как многомерное пространство.</p>
+
+      <div class="formula">N = Сумма по каждому домену: Количество тестов = ON-points + OFF-points + IN-points + OUT-points</div>
+
+      <h4>Термины:</h4>
+      <ul>
+        <li><strong>Domain (Домен):</strong> множество возможных значений параметра</li>
+        <li><strong>ON-point:</strong> значение, принадлежащее классу, на границе</li>
+        <li><strong>OFF-point:</strong> значение, не принадлежащее классу, ближайшее к границе</li>
+        <li><strong>IN-point:</strong> значение внутри класса (произвольное)</li>
+        <li><strong>OUT-point:</strong> значение вне класса (произвольное)</li>
+      </ul>
+
+      <h4>Пример для функции расчета доставки:</h4>
+      <p>Параметры: Вес (W: 0-30 кг) и Расстояние (D: 0-500 км). Каждый — по 3 класса.</p>
+      <ul>
+        <li>ON-points: W=0, W=30, D=0, D=500</li>
+        <li>OFF-points: W=-0.01 (или отрицательный), W=30.01, D=-0.01, D=500.01</li>
+        <li>IN-points: W=15, D=250</li>
+        <li>Всего: (4 ON + 4 OFF + 2 IN) × 2 (для W и D) = 20 тестов</li>
+      </ul>
+
+      <!-- ===== 4. РАСЧЁТ КОЛИЧЕСТВА ТЕСТ-КЕЙСОВ ===== -->
+      <h2 id="calculating">4. Методы расчёта количества тест-кейсов</h2>
+      <p>Правильная оценка количества тест-кейсов критически важна для планирования ресурсов, времени и бюджета тестирования.</p>
+
+      <!-- 4.1 Общие формулы -->
+      <h3 id="general-formulas">4.1 Общие формулы оценки</h3>
+
+      <h4>Метрики на основе размера:</h4>
+      <table>
+        <tr><th>Метрика</th><th>Формула</th><th>Описание</th></tr>
+        <tr><td>Test Case Density</td><td>TC / FP</td><td>Количество тестов на функциональную точку (обычно 3-10)</td></tr>
+        <tr><td>Test Case per Story</td><td>TC / User Story</td><td>В среднем 5-15 тестов на User Story</td></tr>
+        <tr><td>Test Case per KLOC</td><td>TC / тысяч строк кода</td><td>10-30 тестов на 1000 LOC</td></tr>
+        <tr><td>Test Case per Hour</td><td>TC / чел-час</td><td>1-2 тест-кейса в час (создание + выполнение)</td></tr>
+      </table>
+
+      <h4>Estimation техники:</h4>
+      <table>
+        <tr><th>Техника</th><th>Суть</th><th>Формула</th></tr>
+        <tr><td><strong>PERT (Three-point)</strong></td><td>Оптимистичная, пессимистичная и наиболее вероятная оценки</td><td>(O + 4M + P) / 6</td></tr>
+        <tr><td><strong>Wideband Delphi</strong></td><td>Эксперты независимо оценивают, затем обсуждают</td><td>Итеративное усреднение</td></tr>
+        <tr><td><strong>Analogy (По аналогу)</strong></td><td>Сравнение с аналогичными проектами/модулями</td><td>N = N<sub>аналог</sub> × CorrectionFactor</td></tr>
+        <tr><td><strong>Work Breakdown</strong></td><td>Декомпозиция до атомарных задач</td><td>N = Σ n<sub>з</sub> для каждой подзадачи</td></tr>
+      </table>
+
+      <div class="formula">PERT: E = (O + 4M + P) / 6<br>SD = (P - O) / 6<br>где O — оптимистичная, M — наиболее вероятная, P — пессимистичная оценка</div>
+
+      <!-- 4.2 EP -->
+      <h3 id="ep-calc">4.2 Расчёт количества тестов для Equivalence Partitioning</h3>
+
+      <div class="formula">N<sub>EP</sub> = Σ (валидные классы) + Σ (невалидные классы) = V + I<br><br>Для каждого параметра: N<sub>EP param</sub> = количество классов эквивалентности</div>
+
+      <h4>Пошаговый расчёт:</h4>
+      <ol>
+        <li>Определить все входные параметры</li>
+        <li>Для каждого параметра выделить валидные и невалидные классы</li>
+        <li>Суммировать общее количество классов</li>
+      </ol>
+
+      <h4>Пример: форма регистрации</h4>
+      <table>
+        <tr><th>Поле</th><th>Валидные классы</th><th>Невалидные классы</th></tr>
+        <tr><td>Имя</td><td>1 (2-50 символов, буквы)</td><td>3 (пустое, &lt;2 символов, &gt;50 символов, цифры)</td></tr>
+        <tr><td>Email</td><td>1 (корректный формат)</td><td>4 (без @, без домена, пустой, со спецсимволами)</td></tr>
+        <tr><td>Пароль</td><td>1 (8+ символов, буквы+цифры)</td><td>3 (пустой, &lt;8 символов, без цифр)</td></tr>
+        <tr><td>Возраст</td><td>1 (18-120)</td><td>3 (&lt;18, &gt;120, не число)</td></tr>
+        <tr><td><strong>Итого</strong></td><td><strong>4</strong></td><td><strong>13</strong></td></tr>
+      </table>
+      <p><strong>N = 4 + 13 = 17 тест-кейсов</strong></p>
+
+      <!-- 4.3 BVA -->
+      <h3 id="bva-calc">4.3 Расчёт для Boundary Value Analysis</h3>
+
+      <div class="formula">N<sub>BVA</sub> = Σ (количество границ × 2) + 1 (для 2-value)<br>N<sub>BVA</sub> = Σ (количество границ × 3) (для 3-value)</div>
+
+      <h4>Пример для полей с разными диапазонами:</h4>
+      <table>
+        <tr><th>Поле</th><th>Диапазон</th><th>Границ</th><th>2-value BVA</th><th>3-value BVA</th></tr>
+        <tr><td>Возраст</td><td>18-120</td><td>2</td><td>5</td><td>7</td></tr>
+        <tr><td>Cумма заказа</td><td>0.01-999999.99</td><td>2</td><td>5</td><td>7</td></tr>
+        <tr><td>Количество товаров</td><td>1-99</td><td>2</td><td>5</td><td>7</td></tr>
+        <tr><td>Дата рождения</td><td>01.01.1900 — 31.12.2026</td><td>2</td><td>5</td><td>7</td></tr>
+        <tr><td><strong>Итого</strong></td><td></td><td><strong>8</strong></td><td><strong>20</strong></td><td><strong>28</strong></td></tr>
+      </table>
+
+      <h4>Robust BVA (с выходом за границы):</h4>
+      <div class="formula">N<sub>Robust</sub> = Σ (границ × 3) + 1 = 2×3 + 1 = 7 на один диапазон</div>
+      <p>Для возраста (18-120): -1, 0, 17, 18, 19, 119, 120, 121, 150 = 9 тестов</p>
+
+      <!-- 4.4 Decision Table -->
+      <h3 id="decision-calc">4.4 Расчёт для Decision Table</h3>
+
+      <div class="formula">N<sub>DT</sub> = 2<sup>n</sup> — k + a<br><br>n — количество условий, k — невозможные комбинации, a — добавленные приоритетные</div>
+
+      <h4>Примеры:</h4>
+      <table>
+        <tr><th>Условий</th><th>Полный перебор (2<sup>n</sup>)</th><th>После culling</th><th>Экономия</th></tr>
+        <tr><td>3</td><td>8</td><td>4-6</td><td>25-50%</td></tr>
+        <tr><td>4</td><td>16</td><td>6-10</td><td>37-62%</td></tr>
+        <tr><td>5</td><td>32</td><td>10-16</td><td>50-69%</td></tr>
+        <tr><td>6</td><td>64</td><td>14-24</td><td>62-78%</td></tr>
+        <tr><td>7</td><td>128</td><td>20-35</td><td>72-84%</td></tr>
+      </table>
+
+      <div class="info-box"><strong>Совет:</strong> Для >6 условий используйте Pairwise вместо полной Decision Table — комбинаторный взрыв делает полный перебор дорогим при минимальной пользе.</div>
+
+      <!-- 4.5 State Transition -->
+      <h3 id="state-calc">4.5 Расчёт для State Transition</h3>
+
+      <div class="formula">N<sub>ST</sub> = S + T + I<br><br>S — количество состояний, T — количество валидных переходов, I — количество недопустимых переходов</div>
+
+      <h4>По уровням покрытия:</h4>
+      <table>
+        <tr><th>Уровень покрытия</th><th>Формула</th><th>Описание</th></tr>
+        <tr><td>State coverage (0-switch)</td><td>S</td><td>Каждое состояние посещено</td></tr>
+        <tr><td>Transition coverage (1-switch)</td><td>T</td><td>Каждый переход выполнен</td></tr>
+        <tr><td>N-switch coverage</td><td>S × E<sup>N</sup></td><td>Все последовательности из N переходов</td></tr>
+        <tr><td>Invalid transition</td><td>+ I</td><td>Каждый недопустимый переход проверен</td></tr>
+        <tr><td>Round-trip (cycle)</td><td>+ C</td><td>Возвраты в исходное состояние</td></tr>
+      </table>
+
+      <h4>Пример: система с 5 состояниями, 8 переходами, 3 недопустимыми:</h4>
+      <p>N = 5 + 8 + 3 = <strong>16 тестов</strong> (transition coverage)</p>
+
+      <!-- 4.6 Pairwise -->
+      <h3 id="pairwise-calc">4.6 Расчёт для Pairwise / All-Pairs</h3>
+
+      <div class="formula">N<sub>Pw</sub> ≈ V<sub>max</sub> × V<sub>2nd</sub><br><br>Где V<sub>max</sub> — максимальное количество значений, V<sub>2nd</sub> — второе по величине</div>
+
+      <h4>Эмпирические правила оценки:</h4>
+      <table>
+        <tr><th>Параметров</th><th>Значений</th><th>Полный перебор</th><th>Pairwise (оценка)</th><th>Экономия</th></tr>
+        <tr><td>3</td><td>3, 3, 3</td><td>27</td><td>9-12</td><td>56-67%</td></tr>
+        <tr><td>4</td><td>3, 3, 3, 3</td><td>81</td><td>12-18</td><td>78-85%</td></tr>
+        <tr><td>5</td><td>3, 3, 3, 3, 3</td><td>243</td><td>15-24</td><td>90-94%</td></tr>
+        <tr><td>6</td><td>2, 2, 3, 3, 4, 4</td><td>576</td><td>16-24</td><td>96-97%</td></tr>
+        <tr><td>7</td><td>2, 2, 2, 3, 3, 4, 5</td><td>1440</td><td>20-30</td><td>98%</td></tr>
+        <tr><td>10</td><td>3 каждого</td><td>59049</td><td>30-50</td><td>~99.9%</td></tr>
+      </table>
+
+      <div class="warn-box"><strong>Ограничение:</strong> Pairwise гарантирует покрытие только пар, но не тройных и выше комбинаций. Для high-risk систем используйте triple-wise или n-wise.</div>
+
+      <!-- 4.7 Практические советы -->
+      <h3 id="practical-calc">4.7 Практические советы по расчёту общего количества тестов</h3>
+
+      <h4>Итоговая формула для одного модуля/функции:</h4>
+      <div class="formula">N<sub>total</sub> = (N<sub>EP</sub> + N<sub>BVA</sub> + N<sub>DT</sub> + N<sub>ST</sub> + N<sub>Pw</sub>) × complexity_factor<br><br>complexity_factor = 1.0 (Simple), 1.5 (Medium), 2.0 (Complex)</div>
+
+      <h4>Коэффициенты сложности:</h4>
+      <table>
+        <tr><th>Уровень сложности</th><th>Критерии</th><th>Factor</th></tr>
+        <tr><td>Simple</td><td>CRUD, 1-3 параметра, нет логики</td><td>1.0</td></tr>
+        <tr><td>Medium</td><td>Бизнес-логика, 3-7 параметров, состояния</td><td>1.5</td></tr>
+        <tr><td>Complex</td><td>Распределённые системы, интеграции, RAG, ML</td><td>2.0-3.0</td></tr>
+      </table>
+
+      <h4>Коэффициенты на этапы тестирования:</h4>
+      <table>
+        <tr><th>Этап</th><th>Коэффициент к базовому набору</th><th>Пояснение</th></tr>
+        <tr><td>Smoke</td><td>5-10%</td><td>Только критический путь</td></tr>
+        <tr><td>Sanity</td><td>10-20%</td><td>Проверка конкретного изменения</td></tr>
+        <tr><td>Functional</td><td>100%</td><td>Весь набор тест-дизайна</td></tr>
+        <tr><td>Regression</td><td>80-100%</td><td>Весь набор + старые кейсы</td></tr>
+        <tr><td>E2E</td><td>30-50%</td><td>Сквозные сценарии</td></tr>
+      </table>
+
+      <!-- ===== 5. ПРИМЕРЫ ===== -->
+      <h2 id="examples">5. Примеры расчёта тест-кейсов</h2>
+
+      <h3>Пример 1: Форма авторизации</h3>
+      <p><strong>Параметры:</strong> Логин (строка, 3-50 символов), Пароль (строка, 6-128 символов), Запомнить меня (чекбокс), Captcha (да/нет)</p>
+
+      <table>
+        <tr><th>Техника</th><th>Расчёт</th><th>Кол-во</th></tr>
+        <tr><td>EP</td><td>Логин: 4 класса; Пароль: 4 класса; Captcha: 2 класса</td><td>10</td></tr>
+        <tr><td>BVA (2-value)</td><td>Логин: 2 границы × 2 = 5; Пароль: 2 границы × 2 = 5</td><td>10</td></tr>
+        <tr><td>Decision Table</td><td>3 условия (логин, пароль, captcha) = 8 правил → 6 после culling</td><td>6</td></tr>
+        <tr><td>Error Guessing</td><td>Пустая форма, спецсимволы, SQL-инъекция, XSS</td><td>5</td></tr>
+        <tr><td><strong>Итого (Simple)</strong></td><td>(10 + 10 + 6 + 5) × 1.0</td><td><strong>31</strong></td></tr>
+      </table>
+
+      <h3>Пример 2: Калькулятор доставки</h3>
+      <p><strong>Параметры:</strong> Вес (0-30 кг), Расстояние (0-500 км), Тип доставки (Стандарт/Экспресс/Международная), Страхование (да/нет), Подарочная упаковка (да/нет)</p>
+
+      <table>
+        <tr><th>Техника</th><th>Расчёт</th><th>Кол-во</th></tr>
+        <tr><td>EP</td><td>Вес: 3 класса; Расстояние: 3; Тип: 3; Страхование: 2; Упаковка: 2</td><td>13</td></tr>
+        <tr><td>BVA (3-value)</td><td>Вес: 2 границы × 3 = 7; Расстояние: 2×3 = 7</td><td>14</td></tr>
+        <tr><td>Decision Table</td><td>5 условий — 32 полных, ~12 после culling</td><td>12</td></tr>
+        <tr><td>Pairwise</td><td>5 параметров (3,3,3,2,2) → ~16 тестов</td><td>16</td></tr>
+        <tr><td>State Transition</td><td>4 состояния × 6 переходов = 10</td><td>10</td></tr>
+        <tr><td>Error Guessing</td><td>Отрицательный вес, расстояние 0, тип null</td><td>5</td></tr>
+        <tr><td><strong>Итого (Medium)</strong></td><td>(13 + 14 + 12 + 16 + 10 + 5) × 1.5</td><td><strong>105</strong></td></tr>
+      </table>
+
+      <h3>Пример 3: Обработка заказа (REST API)</h3>
+      <p><strong>Параметры:</strong> ID заказа (int, >0), Статус (New/Processing/Shipped/Delivered/Cancelled), Тип оплаты (Card/Cash/Transfer), Сумма (decimal, 0.01-1M), Промокод (string, опционально)</p>
+
+      <table>
+        <tr><th>Техника</th><th>Расчёт</th><th>Кол-во</th></tr>
+        <tr><td>EP</td><td>ID: 3; Статус: 5; Оплата: 3; Сумма: 4; Промокод: 3</td><td>18</td></tr>
+        <tr><td>BVA</td><td>ID: 3; Сумма: 4 границы</td><td>15</td></tr>
+        <tr><td>Decision Table</td><td>5 условий → ~16 после culling</td><td>16</td></tr>
+        <tr><td>State Transition</td><td>5 статусов, 8 переходов, 4 недопустимых</td><td>17</td></tr>
+        <tr><td>Pairwise</td><td>5 параметров (3,5,3,4,3) → ~25</td><td>25</td></tr>
+        <tr><td>Error Guessing</td><td>ID=0, ID=-1, несуществующий статус, SQL-инъекция</td><td>8</td></tr>
+        <tr><td><strong>Итого (Complex)</strong></td><td>(18 + 15 + 16 + 17 + 25 + 8) × 2.0</td><td><strong>198</strong></td></tr>
+      </table>
+
+      <div class="success-box"><strong>Итоговая рекомендация:</strong> Для реалистичной оценки используйте комбинацию техник. EP + BVA дают ~60% покрытия, Decision Table + State Transition — ещё ~20%, Pairwise — ~15%, Error Guessing — ~5%.</div>
+
+      <!-- ===== 6. API ===== -->
+      <h2 id="api">6. Тестирование API</h2>
+      <p>API-тестирование — проверка программных интерфейсов (REST, GraphQL, gRPC, SOAP). Это самый эффективный вид тестирования по соотношению скорость/покрытие: API-тесты стабильны, быстры и не зависят от UI.</p>
+
+      <h3>Уровни API-тестирования</h3>
+      <table>
+        <tr><th>Уровень</th><th>Что проверяем</th><th>Пример</th></tr>
+        <tr><td>Functional</td><td>Корректность ответов, статус-коды, заголовки</td><td>GET /users возвращает 200 и список</td></tr>
+        <tr><td>Contract / Schema</td><td>Соответствие OpenAPI/Swagger спецификации</td><td>Response body валидирован по JSON Schema</td></tr>
+        <tr><td>Negative / Error</td><td>Обработка ошибок, невалидные запросы</td><td>POST /users без тела → 400</td></tr>
+        <tr><td>Security</td><td>Аутентификация, авторизация, rate limiting</td><td>Доступ без токена → 401</td></tr>
+        <tr><td>Performance</td><td>Latency, throughput под нагрузкой</td><td>100 RPS с P99 &lt; 500ms</td></tr>
+        <tr><td>Idempotency</td><td>Повторный запрос даёт тот же результат</td><td>PUT /users/1 дважды → одинаковый ответ</td></tr>
+        <tr><td>Compatibility</td><td>Версионирование, обратная совместимость</td><td>v1 эндпоинт работает после обновления</td></tr>
+      </table>
+
+      <h3>Что проверять в REST API</h3>
+      <table>
+        <tr><th>Метод</th><th>Успех</th><th>Типичные ошибки</th></tr>
+        <tr><td>GET</td><td>200 OK + тело ответа</td><td>404 (не найден), 400 (неверный запрос)</td></tr>
+        <tr><td>POST</td><td>201 Created + Location header</td><td>400 (валидация), 409 (конфликт)</td></tr>
+        <tr><td>PUT</td><td>200 OK</td><td>404, 400, 409</td></tr>
+        <tr><td>PATCH</td><td>200 OK</td><td>404, 400, 422 (необрабатываемая сущность)</td></tr>
+        <tr><td>DELETE</td><td>204 No Content или 200 OK</td><td>404, 405 (не разрешено)</td></tr>
+      </table>
+
+      <h3>Техники API-тест-дизайна</h3>
+      <ul>
+        <li><strong>Parameter variation:</strong> query/path/header параметры — валидные, невалидные, отсутствующие</li>
+        <li><strong>Body mutation:</strong> изменение типов полей, пропуск обязательных, лишние поля, null, пустые строки</li>
+        <li><strong>Auth testing:</strong> без токена, с истёкшим, с невалидным, с правами readonly</li>
+        <li><strong>Pagination:</strong> page=1&size=0, page=-1, size=10000, cursor-based пагинация</li>
+        <li><strong>Filter/Sort:</strong> некорректные поля, SQL-инъекции через фильтры</li>
+        <li><strong>File upload:</strong> пустой файл, очень большой, неверный MIME type, вредоносный</li>
+        <li><strong>Rate limiting:</strong> превышение лимита, headers X-RateLimit-Remaining, Retry-After</li>
+      </ul>
+
+      <h3>Contract Testing (Consumer-Driven Contracts)</h3>
+      <ul>
+        <li><strong>Provider contract:</strong> сервис гарантирует определённый формат ответа</li>
+        <li><strong>Consumer contract:</strong> клиент ожидает определённый формат</li>
+        <li><strong>Инструменты:</strong> Pact, Spring Cloud Contract, Postman Collections</li>
+        <li><strong>Проверка:</strong> breaking changes — изменение поля, удаление эндпоинта, новый required field</li>
+      </ul>
+
+      <!-- ===== 7. БАГ-РЕПОРТЫ ===== -->
+      <h2 id="bugreport">7. Баг-репорты (Bug Reports)</h2>
+      <p>Баг-репорт — документ, описывающий дефект в программном обеспечении. Качественный баг-репорт — основа эффективной коммуникации между QA и разработкой.</p>
+
+      <h3>Структура идеального баг-репорта</h3>
+      <table>
+        <tr><th>Поле</th><th>Описание</th><th>Пример</th></tr>
+        <tr><td>ID</td><td>Уникальный номер</td><td>BUG-12345</td></tr>
+        <tr><td>Заголовок (Summary)</td><td>Краткое, чёткое описание проблемы</td><td>«Не работает кнопка «Войти» при пустом поле пароля»</td></tr>
+        <tr><td>Проект / Компонент</td><td>Какая часть системы</td><td>Web App / Auth Module</td></tr>
+        <tr><td>Версия / Окружение</td><td>Где воспроизводится</td><td>v2.4.1, Chrome 120, macOS 14</td></tr>
+        <tr><td>Severity (Серьёзность)</td><td>Влияние на систему</td><td>Critical / Major / Minor / Trivial</td></tr>
+        <tr><td>Priority (Приоритет)</td><td>Срочность исправления</td><td>P0 / P1 / P2 / P3</td></tr>
+        <tr><td>Шаги воспроизведения (Steps to Reproduce)</td><td>Последовательность действий</td><td>1. Открыть сайт 2. Нажать «Войти» 3. Оставить пароль пустым</td></tr>
+        <tr><td>Фактический результат (Actual Result)</td><td>Что произошло</td><td>Кнопка неактивна, нет сообщения об ошибке</td></tr>
+        <tr><td>Ожидаемый результат (Expected Result)</td><td>Что должно было произойти</td><td>Показать сообщение «Пароль обязателен для заполнения»</td></tr>
+        <tr><td>Приложения (Attachments)</td><td>Скриншот, видео, лог, HAR</td><td>screenshot.png, console.log</td></tr>
+        <tr><td>Дополнительно</td><td>Workaround, частота, заметки</td><td>Работает на Safari, не работает на Chrome</td></tr>
+      </table>
+
+      <h3>Severity vs Priority</h3>
+      <table>
+        <tr><th>Severity</th><th>Описание</th><th>Priority</th><th>Описание</th></tr>
+        <tr><td><strong>Critical</strong></td><td>Система недоступна, потеря данных, security breach</td><td><strong>P0 — Critical</strong></td><td>Исправить немедленно (блокирует релиз)</td></tr>
+        <tr><td><strong>Major</strong></td><td>Значительная функция не работает, нет workaround</td><td><strong>P1 — High</strong></td><td>Исправить в текущем спринте</td></tr>
+        <tr><td><strong>Minor</strong></td><td>Функция работает с ограничениями, есть workaround</td><td><strong>P2 — Medium</strong></td><td>Исправить в следующем спринте</td></tr>
+        <tr><td><strong>Trivial</strong></td><td>Косметическая проблема, опечатка, не влияет на использование</td><td><strong>P3 — Low</strong></td><td>Исправить при возможности</td></tr>
+      </table>
+
+      <h3>Жизненный цикл бага</h3>
+      <ol>
+        <li><strong>New (Открыт):</strong> баг заведён в трекере</li>
+        <li><strong>Assigned (Назначен):</strong> назначен разработчику</li>
+        <li><strong>In Progress (В работе):</strong> разработчик начал исправление</li>
+        <li><strong>Fixed (Исправлен):</strong> код изменён, ждёт тестирования</li>
+        <li><strong>Ready for Test (На тестировании):</strong> билд с фиксом готов</li>
+        <li><strong>Verified (Проверен):</strong> QA подтвердил исправление</li>
+        <li><strong>Closed (Закрыт):</strong> баг закрыт</li>
+        <li><strong>Reopened (Переоткрыт):</strong> баг воспроизвёлся снова после фикса</li>
+        <li><strong>Duplicate (Дубликат):</strong> такой баг уже существует</li>
+        <li><strong>Won't Fix (Не будет исправлен):</strong> решение не исправлять (де-факто фича)</li>
+      </ol>
+
+      <div class="warn-box"><strong>Золотое правило баг-репорта:</strong> Баг-репорт должен содержать достаточно информации, чтобы разработчик мог воспроизвести проблему за 1 попытку. Если разработчик пишет «не воспроизводится» — это проблема QA.</div>
+
+      <!-- ===== 8. ТЕСТОВАЯ ДОКУМЕНТАЦИЯ ===== -->
+      <h2 id="test-docs">8. Тестовая документация</h2>
+      <p>Тестовая документация — совокупность артефактов, описывающих стратегию, план, процесс и результаты тестирования.</p>
+
+      <h3>Основные документы</h3>
+      <table>
+        <tr><th>Документ</th><th>Содержание</th><th>Кто создаёт</th><th>Когда</th></tr>
+        <tr><td><strong>Test Plan (План тестирования)</strong></td><td>Стратегия, scope, ресурсы, расписание, риски</td><td>QA Lead / Test Manager</td><td>На старте проекта или спринта</td></tr>
+        <tr><td><strong>Test Strategy (Стратегия тестирования)</strong></td><td>Высокоуровневый подход: виды тестов, инструменты, метрики</td><td>QA Lead / Test Manager</td><td>Один раз на проект (обновляется)</td></tr>
+        <tr><td><strong>Test Suite (Тестовый набор)</strong></td><td>Группа тест-кейсов по модулю или функционалу</td><td>QA Engineer</td><td>Во время разработки</td></tr>
+        <tr><td><strong>Test Case (Тест-кейс)</strong></td><td>Шаги, предусловия, ожидаемый результат</td><td>QA Engineer</td><td>Во время разработки</td></tr>
+        <tr><td><strong>Checklist (Чек-лист)</strong></td><td>Список проверок без шагов (быстрее, чем ТС)</td><td>QA Engineer</td><td>Smoke/Sanity/Regression</td></tr>
+        <tr><td><strong>Bug Report (Отчёт о дефекте)</strong></td><td>Описание найденной ошибки</td><td>QA Engineer</td><td>Во время выполнения тестов</td></tr>
+        <tr><td><strong>Test Report (Отчёт о тестировании)</strong></td><td>Итоги: пройдено/упало/заблокировано, coverage, риски</td><td>QA Engineer / Lead</td><td>После завершения тестирования</td></tr>
+        <tr><td><strong>Release Notes (Релизные заметки)</strong></td><td>Что нового, что исправлено, известные проблемы</td><td>PM / Tech Writer</td><td>Перед релизом</td></tr>
+      </table>
+
+      <h3>Чек-лист vs Тест-кейс: когда что использовать</h3>
+      <table>
+        <tr><th>Критерий</th><th>Чек-лист</th><th>Тест-кейс</th></tr>
+        <tr><td>Детализация</td><td>Низкая (пункт = проверка)</td><td>Высокая (пошаговые инструкции)</td></tr>
+        <tr><td>Время создания</td><td>Быстро (5-15 мин)</td><td>Долго (15-60 мин)</td></tr>
+        <tr><td>Время выполнения</td><td>Быстро (опытный тестировщик)</td><td>Медленно (точное следование шагам)</td></tr>
+        <tr><td>Воспроизводимость</td><td>Зависит от тестировщика</td><td>Высокая (шаги детальны)</td></tr>
+        <tr><td>Автоматизация</td><td>Сложнее</td><td>Проще (шаги → код)</td></tr>
+        <tr><td>Когда использовать</td><td>Smoke, Sanity, Exploratory</td><td>Critical path, Regression, Compliance</td></tr>
+      </table>
+
+      <h3>Test Report — структура</h3>
+      <ul>
+        <li><strong>Executive Summary:</strong> одно предложение о состоянии качества</li>
+        <li><strong>Statistics:</strong> Passed/Failed/Blocked/Skipped, всего тестов, % прохождения</li>
+        <li><strong>Coverage:</strong> requirements coverage, code coverage, risk coverage</li>
+        <li><strong>Defects:</strong> открыто/закрыто, по severity, по компонентам</li>
+        <li><strong>Risks:</strong> что не протестировано, известные проблемы</li>
+        <li><strong>Metrics:</strong> DRE, defect density, testing velocity</li>
+        <li><strong>Recommendation:</strong> релиз разрешён / условно / запрещён</li>
+      </ul>
+
+      <!-- ===== 9. МЕТРИКИ ===== -->
+      <h2 id="metrics">9. Метрики тестирования (KPI)</h2>
+      <p>Метрики позволяют объективно оценить качество продукта и эффективность процесса тестирования.</p>
+
+      <h3>Основные метрики</h3>
+      <table>
+        <tr><th>Метрика</th><th>Формула</th><th>Целевое значение</th><th>Что показывает</th></tr>
+        <tr><td><strong>Defect Detection Rate (DDR)</strong></td><td>Баг<sub>в тесте</sub> / (Баг<sub>в тесте</sub> + Баг<sub>в проде</sub>)</td><td>&gt; 95%</td><td>Эффективность выявления багов на тестировании</td></tr>
+        <tr><td><strong>Defect Removal Efficiency (DRE)</strong></td><td>Баг<sub>исправлено</sub> / Баг<sub>всего</sub></td><td>&gt; 80%</td><td>Скорость закрытия багов</td></tr>
+        <tr><td><strong>Defect Density</strong></td><td>Баг / KLOC или Баг / FP</td><td>&lt; 5/KLOC</td><td>Плотность дефектов в модуле</td></tr>
+        <tr><td><strong>Test Case Pass Rate</strong></td><td>Passed / Total × 100%</td><td>&gt; 95%</td><td>Стабильность сборки</td></tr>
+        <tr><td><strong>Requirements Coverage</strong></td><td>Covered / Total × 100%</td><td>&gt; 95%</td><td>Покрытие требований тестами</td></tr>
+        <tr><td><strong>Test Execution Velocity</strong></td><td>TC<sub>exec</sub> / час</td><td>&gt; 10 TC/час</td><td>Скорость выполнения тестов</td></tr>
+        <tr><td><strong>Mean Time to Detect (MTTD)</strong></td><td>Время от деплоя до первого баг-репорта</td><td>&lt; 2 часа</td><td>Быстрота реакции QA</td></tr>
+        <tr><td><strong>Mean Time to Repair (MTTR)</strong></td><td>Время от баг-репорта до фикса</td><td>&lt; 24 часа (Crit)</td><td>Скорость фикса разработчиками</td></tr>
+        <tr><td><strong>Automation Coverage</strong></td><td>TC<sub>auto</sub> / TC<sub>total</sub> × 100%</td><td>&gt; 50%</td><td>Доля автоматизации</td></tr>
+        <tr><td><strong>False Positive Rate</strong></td><td>FP<sub>auto</sub> / TC<sub>auto</sub> × 100%</td><td>&lt; 5%</td><td>Стабильность автотестов</td></tr>
+        <tr><td><strong>Escape Defect Rate</strong></td><td>Баг<sub>в проде</sub> / Баг<sub>всего</sub> × 100%</td><td>&lt; 5%</td><td>Количество багов, ушедших в продакшен</td></tr>
+      </table>
+
+      <h3>Пример отчёта по метрикам</h3>
+      <table>
+        <tr><th>Метрика</th><th>Спринт 1</th><th>Спринт 2</th><th>Спринт 3</th><th>Тренд</th></tr>
+        <tr><td>DRE</td><td>72%</td><td>81%</td><td>88%</td><td>🟢 Рост</td></tr>
+        <tr><td>Test Pass Rate</td><td>88%</td><td>93%</td><td>96%</td><td>🟢 Рост</td></tr>
+        <tr><td>Escape Defect Rate</td><td>9%</td><td>6%</td><td>3%</td><td>🟢 Снижение</td></tr>
+        <tr><td>Automation Coverage</td><td>35%</td><td>42%</td><td>51%</td><td>🟢 Рост</td></tr>
+        <tr><td>Defect Density (per KLOC)</td><td>7.2</td><td>5.1</td><td>3.8</td><td>🟢 Снижение</td></tr>
+      </table>
+
+      <div class="info-box"><strong>Важно:</strong> Метрики должны интерпретироваться в контексте. Резкий рост defect density может означать как ухудшение качества, так и улучшение детекции. Смотрите на тренды, а не на абсолютные значения.</div>
+
+      <!-- ===== 10. ТРЕБОВАНИЯ ===== -->
+      <h2 id="requirements">10. Работа с требованиями (Requirements Testing)</h2>
+      <p>Качество тестирования напрямую зависит от качества требований. Плохие требования → плохие тесты → плохой продукт.</p>
+
+      <h3>Характеристики хорошего требования (SMART)</h3>
+      <table>
+        <tr><th>Критерий</th><th>Описание</th><th>Плохой пример</th><th>Хороший пример</th></tr>
+        <tr><td><strong>S</strong>pecific (Конкретное)</td><td>Однозначное, без двусмысленности</td><td>«Быстрый поиск»</td><td>«Поиск возвращает результаты &lt; 500 мс»</td></tr>
+        <tr><td><strong>M</strong>easurable (Измеримое)</td><td>Можно проверить метрикой</td><td>«Удобный интерфейс»</td><td>«Таргет достигается за 3 клика»</td></tr>
+        <tr><td><strong>A</strong>chievable (Достижимое)</td><td>Реалистично для реализации</td><td>«99.999% uptime» (на MVP)</td><td>«99.9% uptime на старте»</td></tr>
+        <tr><td><strong>R</strong>elevant (Релевантное)</td><td>Соответствует целям продукта</td><td>«Поддержка IE6» (в 2026)</td><td>«Поддержка последних 3 версий Chrome, Firefox, Safari»</td></tr>
+        <tr><td><strong>T</strong>ime-bound (Ограниченное по времени)</td><td>Срок выполнения</td><td>«Интеграция с PayPal»</td><td>«Интеграция с PayPal к Q2 2026»</td></tr>
+      </table>
+
+      <h3>BDD и Gherkin (Given / When / Then)</h3>
+      <p>Behavior-Driven Development — подход, при котором тесты пишутся на естественном языке по шаблону Gherkin:</p>
+      <pre><code>Функция: Авторизация пользователя
+  Как зарегистрированный пользователь
+  Я хочу войти в систему
+  Чтобы получить доступ к личному кабинету
+
+  Сценарий: Успешный вход
+    Дано я нахожусь на странице входа
+    И я ввожу "test@example.com" в поле email
+    И я ввожу "password123" в поле пароля
+    Когда я нажимаю кнопку "Войти"
+    Тогда я вижу сообщение "Добро пожаловать!"
+    И я перенаправлен на страницу профиля
+
+  Сценарий: Неверный пароль
+    Дано я нахожусь на странице входа
+    И я ввожу "test@example.com" в поле email
+    И я ввожу "wrong" в поле пароля
+    Когда я нажимаю кнопку "Войти"
+    Тогда я вижу сообщение "Неверный email или пароль"</code></pre>
+
+      <h3>Acceptance Criteria (Критерии приёмки)</h3>
+      <ul>
+        <li><strong>Functional:</strong> «API возвращает 200 с корректным телом»</li>
+        <li><strong>Non-functional:</strong> «Время ответа &lt; 300 мс при 50 RPS»</li>
+        <li><strong>UI:</strong> «Форма центрирована, кнопка синяя (#3B82F6)»</li>
+        <li><strong>Error:</strong> «При пустом поле показать красную рамку и текст ошибки»</li>
+      </ul>
+
+      <h3>Review требований: чеклист</h3>
+      <ul>
+        <li><input type="checkbox"> Требование однозначно (нет «как правило», «обычно», «удобный»)</li>
+        <li><input type="checkbox"> Требование тестируемо (можно написать тест)</li>
+        <li><input type="checkbox"> Требование непротиворечиво (не конфликтует с другими)</li>
+        <li><input type="checkbox"> Требование полное (не нужно додумывать)</li>
+        <li><input type="checkbox"> Требование атомарно (описывает одну вещь)</li>
+        <li><input type="checkbox"> Приоритет указан (Must / Should / Could / Won't)</li>
+      </ul>
+
+      <!-- ===== 11. MOBILE ===== -->
+      <h2 id="mobile">11. Mobile тестирование</h2>
+      <p>Мобильное тестирование имеет множество особенностей по сравнению с веб-тестированием: жесты, прерывания, сетевые условия, ограниченные ресурсы.</p>
+
+      <h3>Виды мобильного тестирования</h3>
+      <table>
+        <tr><th>Вид</th><th>Что проверяем</th></tr>
+        <tr><td><strong>Functional</strong></td><td>Работа функций приложения: навигация, ввод, отображение</td></tr>
+        <tr><td><strong>UI / UX</strong></td><td>Размеры элементов, отступы, адаптация под экраны, жесты</td></tr>
+        <tr><td><strong>Installation</strong></td><td>Установка, обновление, downgrade, удаление</td></tr>
+        <tr><td><strong>Interruption</strong></td><td>Звонок, SMS, уведомление, будильник, переключение приложений</td></tr>
+        <tr><td><strong>Network</strong></td><td>WiFi, 4G/5G, 3G, Edge, потеря сети, переключение, airplane mode</td></tr>
+        <tr><td><strong>Background / Foreground</strong></td><td>Свёртывание/развёртывание, сохранение состояния</td></tr>
+        <tr><td><strong>Battery / Performance</strong></td><td>Потребление энергии, CPU, RAM при длительном использовании</td></tr>
+        <tr><td><strong>Memory</strong></td><td>Утечки памяти, потребление RAM, OOM-ошибки</td></tr>
+        <tr><td><strong>Localization</strong></td><td>Языки, RTL, форматы дат/валют</td></tr>
+        <tr><td><strong>Accessibility</strong></td><td>TalkBack (Android), VoiceOver (iOS), контрастность, размер текста</td></tr>
+        <tr><td><strong>Security</strong></td><td>Хранение данных на устройстве, SSL pinning, root detection</td></tr>
+        <tr><td><strong>Compatibility</strong></td><td>Разные устройства, версии ОС, размеры и плотности экранов</td></tr>
+      </table>
+
+      <h3>Тестирование прерываний (Interruption Testing)</h3>
+      <ul>
+        <li><strong>Входящий звонок:</strong> приложение должно свёрнуться, после звонка — восстановиться</li>
+        <li><strong>SMS / Push:</strong> уведомление не должно сбрасывать состояние</li>
+        <li><strong>Будильник:</strong> системный алерт не должен ломать UI</li>
+        <li><strong>Переключение приложений:</strong> состояние сохраняется (app switcher)</li>
+        <li><strong>Screen rotation:</strong> портрет → лендскейп — данные не теряются</li>
+        <li><strong>Low battery:</strong> приложение не перегружает CPU при 5% заряда</li>
+        <li><strong>Charging:</strong> поведение при подключении/отключении зарядки</li>
+      </ul>
+
+      <h3>Эмуляторы vs Реальные устройства</h3>
+      <table>
+        <tr><th>Критерий</th><th>Эмулятор</th><th>Реальное устройство</th></tr>
+        <tr><td>Скорость</td><td>Быстро</td><td>Медленно (сборка, деплой)</td></tr>
+        <tr><td>Стоимость</td><td>Бесплатно</td><td>Дорого (лаборатория устройств)</td></tr>
+        <tr><td>Сеть</td><td>Симуляция</td><td>Реальные условия (4G, слабый сигнал)</td></tr>
+        <tr><td>Сенсоры</td><td>Симуляция</td><td>Реальные (GPS, акселерометр, камера)</td></tr>
+        <tr><td>Производительность</td><td>Не репрезентативна</td><td>Точные показатели</td></tr>
+        <tr><td>Батарея</td><td>Не тестируется</td><td>Только на реальном</td></tr>
+      </table>
+
+      <!-- ===== 12. DATABASE ===== -->
+      <h2 id="database">12. Database тестирование</h2>
+      <p>Тестирование базы данных — проверка целостности, производительности и корректности обработки данных.</p>
+
+      <h3>Что тестировать в БД</h3>
+      <table>
+        <tr><th>Аспект</th><th>Что проверяем</th><th>Пример</th></tr>
+        <tr><td>Data Integrity</td><td>Constraints (PK, FK, UNIQUE, CHECK), cascading, triggers</td><td>INSERT с дубликатом PK → error</td></tr>
+        <tr><td>CRUD Operations</td><td>SELECT, INSERT, UPDATE, DELETE — корректность данных</td><td>UPDATE баланса → корректное новое значение</td></tr>
+        <tr><td>Stored Procedures</td><td>Логика процедур, обработка ошибок</td><td>sp_transfer(100 от A к B) → балансы изменились</td></tr>
+        <tr><td>Transactions</td><td>ACID: атомарность, изоляция, durable</td><td>Откат транзакции → данные не изменились</td></tr>
+        <tr><td>Migrations</td><td>Up/down миграции, schema changes</td><td>Добавление колонки → старые данные корректны</td></tr>
+        <tr><td>Performance</td><td>Индексы, query plan, explain analyze</td><td>SELECT с индексом vs без — разница в скорости</td></tr>
+        <tr><td>Concurrency</td><td>Race conditions, deadlocks, row locking</td><td>Два UPDATE одновременно → deadlock?</td></tr>
+        <tr><td>Data Validation</td><td>Типы данных, длины, форматы, NULL vs NOT NULL</td><td>Вставка слишком длинной строки → truncate или error</td></tr>
+        <tr><td>ETL / Data Pipeline</td><td>Трансформация, качество данных, duplicate handling</td><td>Импорт CSV → записи в БД без потери</td></tr>
+      </table>
+
+      <h3>SQL-инъекции — тестирование</h3>
+      <ul>
+        <li>«' OR 1=1; --» — обход аутентификации</li>
+        <li>«admin' --» — логин без пароля</li>
+        <li>«; DROP TABLE users; --» — деструктивные операции</li>
+        <li>«' UNION SELECT * FROM passwords; --» — кража данных</li>
+        <li>«' OR '1'='1' — то же самое, другой синтаксис</li>
+      </ul>
+
+      <!-- ===== 13. SECURITY ===== -->
+      <h2 id="security">13. Security тестирование (детально)</h2>
+      <p>Тестирование безопасности — проверка системы на устойчивость к атакам и утечкам данных.</p>
+
+      <h3>OWASP Top 10 — 2021</h3>
+      <table>
+        <tr><th>#</th><th>Уязвимость</th><th>Метод тестирования</th></tr>
+        <tr><td>A01</td><td><strong>Broken Access Control</strong></td><td>Попытка доступа к ресурсам без прав (IDOR, privilege escalation)</td></tr>
+        <tr><td>A02</td><td><strong>Cryptographic Failures</strong></td><td>Проверка шифрования, HTTP vs HTTPS, слабые протоколы</td></tr>
+        <tr><td>A03</td><td><strong>Injection</strong></td><td>SQL, NoSQL, OS command, LDAP, XSS инъекции</td></tr>
+        <tr><td>A04</td><td><strong>Insecure Design</strong></td><td>Архитектурные проблемы: отсутствие rate limiting, слабая аутентификация</td></tr>
+        <tr><td>A05</td><td><strong>Security Misconfiguration</strong></td><td>Default credentials, открытые порты, verbose error messages</td></tr>
+        <tr><td>A06</td><td><strong>Vulnerable Components</strong></td><td>Устаревшие библиотеки, известные CVE</td></tr>
+        <tr><td>A07</td><td><strong>Auth Failures</strong></td><td>Слабые пароли, отсутствие MFA, session fixation</td></tr>
+        <tr><td>A08</td><td><strong>Data Integrity Failures</strong></td><td>Проверка подписей, CSP, небезопасные десериализации</td></tr>
+        <tr><td>A09</td><td><strong>Logging &amp; Monitoring</strong></td><td>Отсутствие логирования атак, слабый SIEM</td></tr>
+        <tr><td>A10</td><td><strong>SSRF</strong></td><td>Server-Side Request Forgery — запросы к внутренним ресурсам</td></tr>
+      </table>
+
+      <h3>Инструменты security-тестирования</h3>
+      <table>
+        <tr><th>Категория</th><th>Инструменты</th><th>Что делают</th></tr>
+        <tr><td><strong>SAST (Static Analysis)</strong></td><td>SonarQube, Semgrep, Checkmarx</td><td>Анализ исходного кода на уязвимости</td></tr>
+        <tr><td><strong>DAST (Dynamic Analysis)</strong></td><td>OWASP ZAP, Burp Suite, Acunetix</td><td>Сканирование запущенного приложения</td></tr>
+        <tr><td><strong>SCA (Software Composition)</strong></td><td>Dependabot, Snyk, Black Duck</td><td>Проверка зависимостей на CVE</td></tr>
+        <tr><td><strong>Pentest frameworks</strong></td><td>Metasploit, Kali Linux, Nmap</td><td>Ручной пентест специалистом</td></tr>
+        <tr><td><strong>Secrets scanning</strong></td><td>GitLeaks, TruffleHog, GitGuardian</td><td>Поиск ключей и токенов в репозиториях</td></tr>
+      </table>
+
+      <h3>Security чеклист для QA</h3>
+      <ul>
+        <li><input type="checkbox"> Все входные данные экранируются (XSS, SQL-инъекции)</li>
+        <li><input type="checkbox"> Аутентификация обязательна для защищённых ресурсов</li>
+        <li><input type="checkbox"> Сессии истекают, токены рефрешатся</li>
+        <li><input type="checkbox"> HTTPS включён, HSTS настроен</li>
+        <li><input type="checkbox"> Ошибки не содержат stack trace (production mode)</li>
+        <li><input type="checkbox"> Зависимости обновлены, нет известных CVE</li>
+        <li><input type="checkbox"> Rate limiting на login/register/API</li>
+        <li><input type="checkbox"> File upload — валидация типа, размера, антивирус</li>
+        <li><input type="checkbox"> CORS настроен (не '*')</li>
+        <li><input type="checkbox"> Security headers: CSP, X-Frame-Options, X-Content-Type-Options</li>
+      </ul>
+
+      <!-- ===== 14. ГЛОССАРИЙ ===== -->
+      <h2 id="glossary">14. Глоссарий терминов тестирования</h2>
+
+      <table>
+        <tr><th>Термин</th><th>Определение</th></tr>
+        <tr><td><strong>Acceptance Testing (Приёмочное тестирование)</strong></td><td>Тестирование, проводимое заказчиком для принятия решения о готовности продукта к эксплуатации</td></tr>
+        <tr><td><strong>Accessibility Testing</strong></td><td>Проверка доступности продукта для людей с ограниченными возможностями</td></tr>
+        <tr><td><strong>Ad-hoc Testing</strong></td><td>Спонтанное тестирование без документации и подготовки</td></tr>
+        <tr><td><strong>Automation Coverage</strong></td><td>Процент тест-кейсов, покрытых автотестами</td></tr>
+        <tr><td><strong>Backward Compatibility</strong></td><td>Способность новой версии работать с данными старой версии</td></tr>
+        <tr><td><strong>Black Box Testing</strong></td><td>Тестирование без знания внутреннего устройства системы</td></tr>
+        <tr><td><strong>Boundary Value Analysis (BVA)</strong></td><td>Техника тест-дизайна, фокусирующаяся на граничных значениях</td></tr>
+        <tr><td><strong>Bug / Defect</strong></td><td>Отклонение фактического результата от ожидаемого</td></tr>
+        <tr><td><strong>Bug Report</strong></td><td>Документ, описывающий дефект</td></tr>
+        <tr><td><strong>Checklist (Чек-лист)</strong></td><td>Список проверок для быстрого тестирования</td></tr>
+        <tr><td><strong>Code Coverage</strong></td><td>Процент кода, выполненного во время тестирования</td></tr>
+        <tr><td><strong>Compatibility Testing</strong></td><td>Проверка работы в разных средах (ОС, браузеры, устройства)</td></tr>
+        <tr><td><strong>Component Testing</strong></td><td>Тестирование крупного модуля системы</td></tr>
+        <tr><td><strong>CRUD</strong></td><td>Create, Read, Update, Delete — базовые операции с данными</td></tr>
+        <tr><td><strong>Data-Driven Testing</strong></td><td>Тестирование с параметризацией тестовыми данными</td></tr>
+        <tr><td><strong>Decision Table Testing</strong></td><td>Техника тест-дизайна на основе комбинаций условий</td></tr>
+        <tr><td><strong>Defect Density</strong></td><td>Количество дефектов на единицу размера (KLOC, FP)</td></tr>
+        <tr><td><strong>Dynamic Testing</strong></td><td>Тестирование с запуском кода</td></tr>
+        <tr><td><strong>E2E (End-to-End) Testing</strong></td><td>Сквозное тестирование полного пользовательского сценария</td></tr>
+        <tr><td><strong>EP (Equivalence Partitioning)</strong></td><td>Разбиение входных данных на классы эквивалентности</td></tr>
+        <tr><td><strong>Error Guessing</strong></td><td>Техника тест-дизайна на основе опыта и интуиции</td></tr>
+        <tr><td><strong>Exploratory Testing</strong></td><td>Исследовательское тестирование без заранее написанных сценариев</td></tr>
+        <tr><td><strong>Functional Testing</strong></td><td>Проверка функциональных требований</td></tr>
+        <tr><td><strong>Gherkin</strong></td><td>Язык описания сценариев в BDD (Given/When/Then)</td></tr>
+        <tr><td><strong>Grey Box Testing</strong></td><td>Тестирование с частичным знанием внутреннего устройства</td></tr>
+        <tr><td><strong>Integration Testing</strong></td><td>Тестирование взаимодействия между модулями</td></tr>
+        <tr><td><strong>Latency</strong></td><td>Время от запроса до получения ответа</td></tr>
+        <tr><td><strong>Load Testing</strong></td><td>Тестирование под ожидаемой нагрузкой</td></tr>
+        <tr><td><strong>Localization Testing</strong></td><td>Проверка перевода и адаптации для региона</td></tr>
+        <tr><td><strong>MTBF</strong></td><td>Mean Time Between Failures — среднее время между отказами</td></tr>
+        <tr><td><strong>MTTR</strong></td><td>Mean Time To Repair — среднее время восстановления</td></tr>
+        <tr><td><strong>Negative Testing</strong></td><td>Тестирование с невалидными данными</td></tr>
+        <tr><td><strong>Non-Functional Testing</strong></td><td>Проверка нефункциональных характеристик (производительность, безопасность)</td></tr>
+        <tr><td><strong>Pairwise Testing</strong></td><td>Комбинаторная техника, проверяющая все пары значений</td></tr>
+        <tr><td><strong>Performance Testing</strong></td><td>Тестирование скорости, отзывчивости, стабильности</td></tr>
+        <tr><td><strong>Regression Testing</strong></td><td>Проверка, что изменения не сломали существующую функциональность</td></tr>
+        <tr><td><strong>Reliability</strong></td><td>Способность системы работать без отказов в течение заданного времени</td></tr>
+        <tr><td><strong>Re-testing</strong></td><td>Проверка, что конкретный баг исправлен</td></tr>
+        <tr><td><strong>Sanity Testing</strong></td><td>Узкая проверка конкретных изменений/исправлений</td></tr>
+        <tr><td><strong>Scalability</strong></td><td>Способность системы обрабатывать растущую нагрузку</td></tr>
+        <tr><td><strong>Smoke Testing</strong></td><td>Быстрая проверка критической функциональности</td></tr>
+        <tr><td><strong>Soak Testing (Endurance)</strong></td><td>Длительное тестирование под нагрузкой для выявления утечек</td></tr>
+        <tr><td><strong>State Transition Testing</strong></td><td>Техника тест-дизайна на основе конечных автоматов</td></tr>
+        <tr><td><strong>Static Testing</strong></td><td>Анализ кода, документации, требований без запуска</td></tr>
+        <tr><td><strong>Stress Testing</strong></td><td>Тестирование при нагрузке, превышающей норму</td></tr>
+        <tr><td><strong>System Testing</strong></td><td>Тестирование системы в целом</td></tr>
+        <tr><td><strong>Test Case</strong></td><td>Набор шагов, условий и ожидаемых результатов для проверки</td></tr>
+        <tr><td><strong>Test Plan / Test Strategy</strong></td><td>Документы, описывающие подход к тестированию</td></tr>
+        <tr><td><strong>Throughput</strong></td><td>Количество запросов/транзакций в единицу времени</td></tr>
+        <tr><td><strong>Unit Testing</strong></td><td>Тестирование отдельных функций/методов/классов</td></tr>
+        <tr><td><strong>Usability Testing</strong></td><td>Проверка удобства использования</td></tr>
+        <tr><td><strong>UAT (User Acceptance Testing)</strong></td><td>Приёмочное тестирование пользователями</td></tr>
+        <tr><td><strong>White Box Testing</strong></td><td>Тестирование с полным знанием внутреннего устройства</td></tr>
+      </table>
+
+      <!-- ===== 15. ЧЕКЛИСТ ===== -->
+      <h2 id="checklist">15. Чеклист тестировщика</h2>
+
+      <h3>Планирование и анализ</h3>
+      <ul>
+        <li><input type="checkbox"> Определены виды тестирования для проекта</li>
+        <li><input type="checkbox"> Выбраны техники тест-дизайна</li>
+        <li><input type="checkbox"> Выделены классы эквивалентности</li>
+        <li><input type="checkbox"> Определены граничные значения</li>
+        <li><input type="checkbox"> Построены таблицы решений</li>
+        <li><input type="checkbox"> Проанализированы состояния и переходы</li>
+        <li><input type="checkbox"> Рассчитано примерное количество тест-кейсов</li>
+        <li><input type="checkbox"> Оценены временные и ресурсные затраты</li>
+      </ul>
+
+      <h3>Создание тест-кейсов</h3>
+      <ul>
+        <li><input type="checkbox"> Каждый тест-кейс имеет уникальный ID</li>
+        <li><input type="checkbox"> Тест-кейс содержит: предусловия, шаги, ожидаемый результат</li>
+        <li><input type="checkbox"> Тест-кейсы атомарны (один тест — одна проверка)</li>
+        <li><input type="checkbox"> Тест-кейсы независимы (порядок выполнения не важен)</li>
+        <li><input type="checkbox"> Покрыты валидные и невалидные классы</li>
+        <li><input type="checkbox"> Покрыты положительные и негативные сценарии</li>
+        <li><input type="checkbox"> Приоритеты расставлены (Critical / High / Medium / Low)</li>
+      </ul>
+
+      <h3>Coverage (покрытие)</h3>
+      <ul>
+        <li><input type="checkbox"> Requirements coverage &gt; 95%</li>
+        <li><input type="checkbox"> Code coverage &gt; 80%</li>
+        <li><input type="checkbox"> Branch coverage &gt; 75%</li>
+        <li><input type="checkbox"> State coverage (все состояния)</li>
+        <li><input type="checkbox"> Transition coverage (все переходы)</li>
+        <li><input type="checkbox"> Pairwise покрытие (все пары значений)</li>
+      </ul>
+
+      <h3>Регрессия</h3>
+      <ul>
+        <li><input type="checkbox"> Smoke-тесты выделены и автоматизированы</li>
+        <li><input type="checkbox"> Critical path тесты стабильны</li>
+        <li><input type="checkbox"> Тесты на граничные значения включены в регрессию</li>
+        <li><input type="checkbox"> Проверка старых багов (re-testing)</li>
+        <li><input type="checkbox"> Автоматизированные тесты интегрированы в CI/CD</li>
+        <li><input type="checkbox"> Время выполнения регрессии &lt; 30 минут</li>
+      </ul>
+
+      <h3>API тестирование</h3>
+      <ul>
+        <li><input type="checkbox"> Все эндпоинты покрыты тестами (200, 4xx, 5xx)</li>
+        <li><input type="checkbox"> Contract tests (OpenAPI schema validation)</li>
+        <li><input type="checkbox"> Аутентификация/авторизация на каждом эндпоинте</li>
+        <li><input type="checkbox"> Rate limiting работает корректно</li>
+        <li><input type="checkbox"> Пагинация, фильтры, сортировка</li>
+        <li><input type="checkbox"> Idempotency для PUT/DELETE</li>
+      </ul>
+
+      <h3>Баг-репорты</h3>
+      <ul>
+        <li><input type="checkbox"> Заголовок чётко описывает проблему</li>
+        <li><input type="checkbox"> Шаги воспроизведения полные и однозначные</li>
+        <li><input type="checkbox"> Указана среда (ОС, браузер, версия)</li>
+        <li><input type="checkbox"> Приложены скриншоты/видео/логи</li>
+        <li><input type="checkbox"> Severity и Priority проставлены</li>
+        <li><input type="checkbox"> Нет дубликатов (проверка перед созданием)</li>
+      </ul>
+
+      <h3>Тестовая документация</h3>
+      <ul>
+        <li><input type="checkbox"> Test Plan существует и актуален</li>
+        <li><input type="checkbox"> Test Suite структурирован по модулям</li>
+        <li><input type="checkbox"> Тест-кейсы атомарны и независимы</li>
+        <li><input type="checkbox"> Test Report формируется после каждого цикла</li>
+        <li><input type="checkbox"> Метрики собираются и отслеживаются в динамике</li>
+      </ul>
+
+      <h3>Mobile тестирование</h3>
+      <ul>
+        <li><input type="checkbox"> Прерывания (звонок, SMS, уведомления)</li>
+        <li><input type="checkbox"> Background/Foreground — сохранение состояния</li>
+        <li><input type="checkbox"> Сетевые условия: потеря, переключение, airplane mode</li>
+        <li><input type="checkbox"> Разные размеры и плотности экранов</li>
+        <li><input type="checkbox"> Батарея и потребление ресурсов</li>
+        <li><input type="checkbox"> Установка, обновление, downgrade</li>
+      </ul>
+
+      <h3>Database тестирование</h3>
+      <ul>
+        <li><input type="checkbox"> Constraints (PK, FK, UNIQUE) работают</li>
+        <li><input type="checkbox"> CRUD операции корректны</li>
+        <li><input type="checkbox"> Транзакции ACID-совместимы</li>
+        <li><input type="checkbox"> Миграции протестированы (up/down)</li>
+        <li><input type="checkbox"> Нет SQL-инъекций</li>
+        <li><input type="checkbox"> Индексы оптимизированы</li>
+      </ul>
+
+      <h3>Security тестирование</h3>
+      <ul>
+        <li><input type="checkbox"> OWASP Top 10 проверен</li>
+        <li><input type="checkbox"> SAST/DAST сканирование выполнено</li>
+        <li><input type="checkbox"> Зависимости проверены на CVE</li>
+        <li><input type="checkbox"> Secrets не хранятся в репозитории</li>
+        <li><input type="checkbox"> HTTPS, HSTS, security headers настроены</li>
+        <li><input type="checkbox"> Rate limiting на чувствительные эндпоинты</li>
+      </ul>
+
+      <h3>Нефункциональное тестирование</h3>
+      <ul>
+        <li><input type="checkbox"> Performance тесты для критических сценариев</li>
+        <li><input type="checkbox"> Load тесты с ожидаемой нагрузкой x2</li>
+        <li><input type="checkbox"> Stress тесты до точки отказа</li>
+        <li><input type="checkbox"> Security: OWASP Top 10 проверен</li>
+        <li><input type="checkbox"> Usability: основные сценарии протестированы</li>
+        <li><input type="checkbox"> Accessibility: WCAG 2.1 AA</li>
+      </ul>
+
+      <!-- ===== 16. ЗАКЛЮЧЕНИЕ ===== -->
+      <h2 id="conclusion">16. Заключение</h2>
+      <p>Этот плейбук охватывает ключевые аспекты тестирования ПО — от классификации видов и типов до конкретных техник тест-дизайна и методов расчёта количества тест-кейсов. Основные выводы:</p>
+      <ul>
+        <li><strong>Не существует универсальной техники</strong> — комбинируйте EP, BVA, Decision Table, State Transition и Pairwise</li>
+        <li><strong>Расчёт количества тестов</strong> — не точная наука, а оценка. Используйте формулы как базовую линию, корректируйте под проект</li>
+        <li><strong>Покрытие ≠ качество</strong> — 100% coverage не гарантирует отсутствие багов. Важна осмысленность тестов</li>
+        <li><strong>Автоматизация — серебряная пуля?</strong> Нет. Автоматизируйте то, что стабильно, часто выполняется и даёт ценность</li>
+        <li><strong>Контекст решает</strong> — нет «правильного» набора техник для всех проектов. Адаптируйте подrisks, бюджет и сроки</li>
+      </ul>
+      <div class="success-box"><strong>Золотое правило тестирования:</strong> Тестируй не для того, чтобы доказать, что программа работает, а для того, чтобы найти в ней ошибки.</div>
+      <p style="margin-top: 24px; text-align: center; opacity: 0.7;">Плейбук подготовлен для проекта qasdet.github.io &bull; 2026</p>
+    </main>
+  </div>
+  <footer>
+    <p>Полный плейбук тестировщика — виды, типы, техники тест-дизайна, расчёт тест-кейсов</p>
+  </footer>
+</div>
+<script>
+(function(){
+  const canvas = document.getElementById('cursor-effect');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  let mouse = { x: -1000, y: -1000 };
+  document.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+  document.addEventListener('mouseleave', () => {
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
+  const particles = [];
+  const MAX = 50;
+  function spawn(){
+    particles.push({
+      x: mouse.x + (Math.random() - 0.5) * 6,
+      y: mouse.y + (Math.random() - 0.5) * 6,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8 - 0.3,
+      life: 1,
+      size: Math.random() * 3 + 1.5,
+    });
+    if(particles.length > MAX) particles.shift();
+  }
+  let frame = 0;
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    frame++;
+    if(frame % 2 === 0 && mouse.x > 0) spawn();
+    for(let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= 0.015;
+      if(p.life <= 0){ particles.splice(i, 1); continue; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(225,29,72,${p.life * 0.7})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
