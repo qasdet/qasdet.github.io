@@ -58,8 +58,18 @@
         <li><a href="#database" class="toc-h2">12. Database тестирование</a></li>
         <li><a href="#security" class="toc-h2">13. Security тестирование</a></li>
         <li><a href="#glossary" class="toc-h2">14. Глоссарий</a></li>
-        <li><a href="#checklist" class="toc-h2">15. Чеклист</a></li>
-        <li><a href="#conclusion" class="toc-h2">16. Заключение</a></li>
+        <li><a href="#cicd" class="toc-h2">15. CI/CD и DevOps</a></li>
+        <li><a href="#web-ui" class="toc-h2">16. UI / Web тестирование</a></li>
+        <li><a href="#perf-deep" class="toc-h2">17. Performance (детально)</a></li>
+        <li><a href="#microservices" class="toc-h2">18. Микросервисы</a></li>
+        <li><a href="#agile" class="toc-h2">19. Agile/Scrum</a></li>
+        <li><a href="#mutation" class="toc-h2">20. Mutation testing</a></li>
+        <li><a href="#risk-based" class="toc-h2">21. Risk-based testing</a></li>
+        <li><a href="#rca" class="toc-h2">22. Root Cause Analysis</a></li>
+        <li><a href="#env-mgmt" class="toc-h2">23. Test Environment Management</a></li>
+        <li><a href="#integration" class="toc-h2">24. Интеграции / ETL / Kafka</a></li>
+        <li><a href="#checklist" class="toc-h2">25. Чеклист</a></li>
+        <li><a href="#conclusion" class="toc-h2">26. Заключение</a></li>
       </ul>
     </nav>
     <main>
@@ -1052,8 +1062,342 @@
         <tr><td><strong>White Box Testing</strong></td><td>Тестирование с полным знанием внутреннего устройства</td></tr>
       </table>
 
-      <!-- ===== 15. ЧЕКЛИСТ ===== -->
-      <h2 id="checklist">15. Чеклист тестировщика</h2>
+      <!-- ===== 15. CI/CD ===== -->
+      <h2 id="cicd">15. CI/CD и DevOps для QA</h2>
+      <p>CI/CD (Continuous Integration / Continuous Delivery) — практика автоматической сборки, тестирования и доставки кода. QA-инженер должен понимать pipeline, уметь читать логи и настраивать тесты в пайплайне.</p>
+
+      <h3>Pipeline тестирования</h3>
+      <table>
+        <tr><th>Stage</th><th>Что происходит</th><th>QA involvement</th></tr>
+        <tr><td>Commit / Push</td><td>Линтер, unit-тесты, security scan (SAST)</td><td>Написание unit-тестов, настройка линтеров</td></tr>
+        <tr><td>Build</td><td>Компиляция, сборка артефакта, проверка зависимостей (SCA)</td><td>Проверка CVE в зависимостях</td></tr>
+        <tr><td>Deploy to Staging</td><td>Деплой на тестовое окружение</td><td>Smoke-тесты, API-тесты, integration tests</td></tr>
+        <tr><td>E2E Tests</td><td>End-to-end тесты в staging</td><td>Playwright/Cypress/Selenium, visual regression</td></tr>
+        <tr><td>Security Scan</td><td>DAST, пентест, dependency check</td><td>OWASP ZAP, настройка правил</td></tr>
+        <tr><td>Quality Gate</td><td>Проверка метрик: coverage &gt; 80%, pass rate &gt; 95%</td><td>Настройка gate, анализ результатов</td></tr>
+        <tr><td>Deploy to Production</td><td>Canary / Blue-Green / Rolling</td><td>Мониторинг метрик в проде</td></tr>
+      </table>
+
+      <h3>Deploy стратегии</h3>
+      <table>
+        <tr><th>Стратегия</th><th>Описание</th><th>QA проверка</th></tr>
+        <tr><td><strong>Blue-Green</strong></td><td>Два идентичных окружения, переключение трафика</td><td>Проверить оба окружения, session drain</td></tr>
+        <tr><td><strong>Canary</strong></td><td>Постепенное перенаправление трафика на новую версию (5% → 50% → 100%)</td><td>Мониторинг ошибок и метрик на canary</td></tr>
+        <tr><td><strong>Rolling</strong></td><td>Поэтапная замена инстансов</td><td>Нет downtime, проверка health checks</td></tr>
+        <tr><td><strong>Feature Toggle</strong></td><td>Скрытие новой функциональности под флагом</td><td>Toggle on/off тесты, A/B тесты</td></tr>
+      </table>
+
+      <h3>Quality Gates в CI/CD</h3>
+      <ul>
+        <li><strong>Code Coverage:</strong> минимальный порог (80%+) — ниже gate не пропускает</li>
+        <li><strong>Test Pass Rate:</strong> 100% обязательных, &gt;95% всех тестов</li>
+        <li><strong>Security Vulnerabilities:</strong> 0 critical/high CVE</li>
+        <li><strong>Performance Regression:</strong> latency не выросла более чем на 5%</li>
+        <li><strong>Lint Errors:</strong> 0 errors</li>
+      </ul>
+
+      <!-- ===== 16. UI / WEB ===== -->
+      <h2 id="web-ui">16. UI / Web тестирование (детально)</h2>
+      <p>UI-тестирование — проверка пользовательского интерфейса и взаимодействия пользователя с приложением.</p>
+
+      <h3>Инструменты UI-тестирования</h3>
+      <table>
+        <tr><th>Инструмент</th><th>Язык</th><th>Ключевая особенность</th><th>Когда выбрать</th></tr>
+        <tr><td><strong>Playwright</strong></td><td>JS/TS, Python, Java, .NET</td><td>Auto-wait, multi-browser, network interceptor, trace viewer</td><td>Современные проекты, нужна скорость</td></tr>
+        <tr><td><strong>Cypress</strong></td><td>JS/TS</td><td>Time travel, real-time reload, network stubbing</td><td>Frontend-only, React/Vue/Angular</td></tr>
+        <tr><td><strong>Selenium WebDriver</strong></td><td>Все популярные</td><td>Стандарт индустрии, огромное комьюнити</td><td>Legacy проекты, кросс-браузерность</td></tr>
+        <tr><td><strong>Puppeteer</strong></td><td>JS/TS</td><td>Только Chrome, полный контроль над браузером</td><td>Скрапинг, PDF, Chrome-only тесты</td></tr>
+      </table>
+
+      <h3>Locators: стратегии</h3>
+      <table>
+        <tr><th>Стратегия</th><th>Playwright</th><th>Приоритет</th><th>Стабильность</th></tr>
+        <tr><td>Text content</td><td><code>page.getByText()</code></td><td>1</td><td>Высокая (не зависит от структуры)</td></tr>
+        <tr><td>ARIA role</td><td><code>page.getByRole()</code></td><td>2</td><td>Высокая (accessibility-first)</td></tr>
+        <tr><td>Label</td><td><code>page.getByLabel()</code></td><td>3</td><td>Высокая (для форм)</td></tr>
+        <tr><td>Test ID</td><td><code>page.getByTestId()</code></td><td>4</td><td>Максимальная (data-testid)</td></tr>
+        <tr><td>CSS / XPath</td><td><code>page.locator()</code></td><td>5</td><td>Низкая (хрупкие)</td></tr>
+      </table>
+
+      <h3>Visual Regression Testing</h3>
+      <ul>
+        <li><strong>Pixel-by-pixel:</strong> сравнение скриншотов попиксельно (Percy, Applitools, Playwright Screenshot)</li>
+        <li><strong>Snapshot testing:</strong> сохранение эталонного скриншота и сравнение с новым</li>
+        <li><strong>Layout comparison:</strong> проверка структуры, а не пикселей (Storybook test)</li>
+        <li><strong>Что проверять:</strong> все страницы, все viewport (mobile/tablet/desktop), все локали, тёмная/светлая тема</li>
+        <li><strong>Threshold:</strong> допуск на изменение (0.1% пикселей) — фильтрация шума (antialiasing)</li>
+      </ul>
+
+      <h3>Waits и стабильность UI-тестов</h3>
+      <ul>
+        <li><strong>Auto-wait:</strong> Playwright ждёт элемент перед действием (visible, enabled, stable)</li>
+        <li><strong>Explicit wait:</strong> <code>waitForSelector</code>, <code>waitForNavigation</code> для специфических случаев</li>
+        <li><strong>Network idle:</strong> <code>waitForLoadState('networkidle')</code> — ждать пока сеть успокоится</li>
+        <li><strong>Flaky tests:</strong> random timeouts → добавить retries, улучшить локаторы, убрать sleep()</li>
+      </ul>
+
+      <!-- ===== 17. PERFORMANCE ДЕТАЛЬНО ===== -->
+      <h2 id="perf-deep">17. Тестирование производительности (детально)</h2>
+      <p>Расширенное руководство по нагрузочному тестированию, выходящее за рамки базовой классификации.</p>
+
+      <h3>Виды performance-тестов</h3>
+      <table>
+        <tr><th>Вид</th><th>Цель</th><th>Профиль нагрузки</th><th>Длительность</th></tr>
+        <tr><td><strong>Baseline</strong></td><td>Установить базовые метрики</td><td>1-5 RPS, 1-10 concurrent</td><td>5-10 мин</td></tr>
+        <tr><td><strong>Load</strong></td><td>Проверить под ожидаемой нагрузкой</td><td>Средняя нагрузка + 20%</td><td>30-60 мин</td></tr>
+        <tr><td><strong>Stress</strong></td><td>Найти точку отказа</td><td>Плавный рост до 200-500% от нормы</td><td>15-30 мин</td></tr>
+        <tr><td><strong>Spike</strong></td><td>Реакция на резкий скачок</td><td>Резкий рост ×10 за 1 сек</td><td>5-10 мин</td></tr>
+        <tr><td><strong>Soak</strong></td><td>Стабильность во времени</td><td>Средняя нагрузка ×1</td><td>4-24 часа</td></tr>
+        <tr><td><strong>Volume</strong></td><td>Обработка большого объёма данных</td><td>Большие payloads, много записей в БД</td><td>30-60 мин</td></tr>
+        <tr><td><strong>Scalability</strong></td><td>Проверить масштабирование</td><td>Постепенное увеличение + добавление node</td><td>1-2 часа</td></tr>
+      </table>
+
+      <h3>Bottleneck Analysis</h3>
+      <ol>
+        <li><strong>CPU:</strong> 90%+ user time → алгоритмические проблемы, отсутствие кэширования</li>
+        <li><strong>Memory:</strong> рост потребления → утечки (memory leak), неоптимальные структуры</li>
+        <li><strong>Disk I/O:</strong> высокий await → медленная БД, неоптимальные запросы, отсутствие индексов</li>
+        <li><strong>Network:</strong> высокая latency → CDN, DNS, TLS handshake, большие payloads</li>
+        <li><strong>Database:</strong> slow queries → missing indexes, N+1, lock contention</li>
+        <li><strong>External APIs:</strong> медленные ответы → добавить timeout, circuit breaker, fallback</li>
+      </ol>
+
+      <h3>Инструменты performance-тестирования</h3>
+      <table>
+        <tr><th>Инструмент</th><th>Язык скриптов</th><th>Протоколы</th><th>Особенность</th></tr>
+        <tr><td><strong>k6</strong></td><td>JavaScript (ES6)</td><td>HTTP/1.1, HTTP/2, WebSocket, gRPC</td><td>Современный, Grafana dashboard, облачный</td></tr>
+        <tr><td><strong>JMeter</strong></td><td>GUI / XML / Groovy</td><td>HTTP, FTP, JDBC, JMS, SOAP, TCP</td><td>Стандарт, огромное комьюнити, плагины</td></tr>
+        <tr><td><strong>Locust</strong></td><td>Python</td><td>HTTP, WebSocket (кастомные)</td><td>Кодом, распределённый, events</td></tr>
+        <tr><td><strong>Gatling</strong></td><td>Scala / Java / Kotlin</td><td>HTTP, WebSocket, JMS, SSE</td><td>High performance, Akka-based</td></tr>
+        <tr><td><strong>Yandex.Tank</strong></td><td>YAML + Python</td><td>HTTP, HTTPS</td><td>Интеграция с JMeter, Pandora, готовые report</td></tr>
+      </table>
+
+      <!-- ===== 18. МИКРОСЕРВИСЫ ===== -->
+      <h2 id="microservices">18. Тестирование микросервисов</h2>
+      <p>Микросервисная архитектура требует особого подхода к тестированию из-за распределённой природы, сетевых задержек и независимости сервисов.</p>
+
+      <h3>Пирамида тестирования микросервисов</h3>
+      <table>
+        <tr><th>Уровень</th><th>Что тестируем</th><th>Инструменты</th></tr>
+        <tr><td>Unit</td><td>Отдельные функции внутри сервиса</td><td>Jest, Pytest, JUnit</td></tr>
+        <tr><td>Contract</td><td>Контракты между сервисами (CDC)</td><td>Pact, Spring Cloud Contract</td></tr>
+        <tr><td>Integration</td><td>Взаимодействие с БД, очередью, кэшем</td><td>Testcontainers, WireMock, LocalStack</td></tr>
+        <tr><td>Component</td><td>Сервис в изоляции (с моками)</td><td>WireMock, MockServer, Hoverfly</td></tr>
+        <tr><td>End-to-End</td><td>Цепочка из нескольких сервисов</td><td>Playwright + Docker Compose, Kubernetes (kind)</td></tr>
+        <tr><td>Chaos</td><td>Устойчивость к отказам</td><td>Chaos Monkey, Litmus, Gremlin</td></tr>
+      </table>
+
+      <h3>Contract Testing (Consumer-Driven Contracts)</h3>
+      <ul>
+        <li><strong>Provider:</strong> сервис А гарантирует API</li>
+        <li><strong>Consumer:</strong> сервис Б использует этот API</li>
+        <li><strong>Pact flow:</strong> Consumer пишет тест → генерирует Pact файл → Provider верифицирует</li>
+        <li><strong>Что проверять:</strong> статус-коды, тело ответа, заголовки, новые поля (breaking change)</li>
+      </ul>
+
+      <h3>Service Virtualization (WireMock)</h3>
+      <ul>
+        <li>Создание стабов для внешних сервисов</li>
+        <li>Симуляция ответов: success, error, timeout, slow response</li>
+        <li>Record/Playback: запись реальных ответов и воспроизведение в тестах</li>
+        <li>Stateful stubs: разные ответы в зависимости от состояния</li>
+      </ul>
+
+      <!-- ===== 19. AGILE ===== -->
+      <h2 id="agile">19. Тестирование в Agile/Scrum</h2>
+      <p>QA в Agile — не отдельная фаза, а непрерывный процесс на протяжении всего спринта.</p>
+
+      <h3>QA в Scrum-церемониях</h3>
+      <table>
+        <tr><th>Церемония</th><th>Что делает QA</th></tr>
+        <tr><td><strong>Planning</strong></td><td>Оценка тестовых усилий, уточнение acceptance criteria, выявление risks</td></tr>
+        <tr><td><strong>Daily Standup</strong></td><td>Статус тестирования, блокеры, найденные баги</td></tr>
+        <tr><td><strong>Grooming</strong></td><td>Review требований, написание тест-кейсов, уточнение сценариев</td></tr>
+        <tr><td><strong>Review</strong></td><td>Демо новой функциональности, фидбек по UX</td></tr>
+        <tr><td><strong>Retrospective</strong></td><td>Анализ багов, улучшение процессов, определение action items</td></tr>
+      </table>
+
+      <h3>Definition of Ready (DoR) — чеклист для QA</h3>
+      <ul>
+        <li><input type="checkbox"> User Story имеет acceptance criteria</li>
+        <li><input type="checkbox"> Acceptance criteria тестируемы и однозначны</li>
+        <li><input type="checkbox"> Дизайн-макеты есть (для UI)</li>
+        <li><input type="checkbox"> Тестовые данные определены</li>
+        <li><input type="checkbox"> Окружение доступно</li>
+        <li><input type="checkbox"> Зависимости от других команд/сервисов учтены</li>
+      </ul>
+
+      <h3>Definition of Done (DoD) — чеклист для QA</h3>
+      <ul>
+        <li><input type="checkbox"> Все acceptance criteria выполнены</li>
+        <li><input type="checkbox"> Тест-кейсы написаны и выполнены</li>
+        <li><input type="checkbox"> Критические баги отсутствуют</li>
+        <li><input type="checkbox"> Автотесты добавлены в регрессию</li>
+        <li><input type="checkbox"> Проверено на staging окружении</li>
+        <li><input type="checkbox"> Негативные сценарии покрыты</li>
+      </ul>
+
+      <h3>Оценка тестовых усилий (Estimation)</h3>
+      <ul>
+        <li><strong>Planning Poker:</strong> команда оценивает сложность в story points</li>
+        <li><strong>T-shirt sizes:</strong> S (1-2 часа), M (до 4 часов), L (до 8 часов), XL (до 2 дней)</li>
+        <li><strong>Test point analysis:</strong> количество тест-кейсов × сложность × длительность</li>
+        <li><strong>Affinity estimation:</strong> группировка и быстрая оценка похожих задач</li>
+      </ul>
+
+      <!-- ===== 20. MUTATION ===== -->
+      <h2 id="mutation">20. Mutation Testing (Мутационное тестирование)</h2>
+      <p>Мутационное тестирование — метод оценки качества самих тестов. В код вносятся намеренные ошибки (мутации), и проверяется, упадут ли на них тесты.</p>
+
+      <div class="formula">Mutation Score = (Убитые мутанты / Все мутанты) × 100%<br><br>Цель: &gt; 80% mutation score</div>
+
+      <h3>Типы мутаций (PITest / MutPy)</h3>
+      <table>
+        <tr><th>Тип мутации</th><th>Оригинал</th><th>Мутация</th></tr>
+        <tr><td>Change operator</td><td><code>a + b</code></td><td><code>a - b</code></td></tr>
+        <tr><td>Change condition</td><td><code>a &gt; b</code></td><td><code>a &gt;= b</code>, <code>a &lt; b</code></td></tr>
+        <tr><td>Remove call</td><td><code>validate()</code></td><td>Удаление вызова</td></tr>
+        <tr><td>Change return</td><td><code>return a</code></td><td><code>return null</code></td></tr>
+        <tr><td>Negate boolean</td><td><code>if(ok)</code></td><td><code>if(!ok)</code></td></tr>
+        <tr><td>Change constant</td><td><code>100</code></td><td><code>0</code>, <code>-1</code>, <code>101</code></td></tr>
+      </table>
+
+      <h4>Инструменты:</h4>
+      <ul>
+        <li><strong>PITest</strong> — Java (стандарт индустрии)</li>
+        <li><strong>MutPy</strong> — Python</li>
+        <li><strong>Stryker</strong> — JS/TS, C#, Scala</li>
+        <li><strong>Humbug</strong> — PHP</li>
+      </ul>
+
+      <h4>Когда применять:</h4>
+      <ul>
+        <li>Критические модули (авторизация, платежи, безопасность)</li>
+        <li>После увеличения coverage — проверить, что тесты реально работают</li>
+        <li>При code review — мутации подтверждают качество тестов</li>
+      </ul>
+
+      <!-- ===== 21. RISK-BASED ===== -->
+      <h2 id="risk-based">21. Risk-Based Testing (RBT)</h2>
+      <p>Тестирование, основанное на рисках. Тесты приоритезируются по вероятности и влиянию дефекта. Ресурсы направляются на наиболее рискованные области.</p>
+
+      <div class="formula">Risk = Probability × Impact<br><br>Risk Priority Number (RPN) = P × I × D (Detectability)</div>
+
+      <h3>Матрица рисков</h3>
+      <table>
+        <tr><th>Вероятность \\ Влияние</th><th>Низкое (1)</th><th>Среднее (2)</th><th>Высокое (3)</th></tr>
+        <tr><td>Высокая (3)</td><td>5 — Medium</td><td>7 — High</td><td>9 — Critical</td></tr>
+        <tr><td>Средняя (2)</td><td>3 — Low</td><td>5 — Medium</td><td>7 — High</td></tr>
+        <tr><td>Низкая (1)</td><td>1 — Low</td><td>3 — Low</td><td>5 — Medium</td></tr>
+      </table>
+
+      <h3>Приоритизация тестов по RPN</h3>
+      <table>
+        <tr><th>RPN</th><th>Действие</th><th>Пример</th></tr>
+        <tr><td>8-9 (Critical)</td><td>Обязательное тестирование, автоматизация, несколько раундов</td><td>Авторизация, платёжный шлюз</td></tr>
+        <tr><td>5-7 (High)</td><td>Полное тестирование, автоматизация критических сценариев</td><td>Корзина, оформление заказа</td></tr>
+        <tr><td>3-4 (Medium)</td><td>Основные сценарии + error guessing</td><td>Поиск, фильтры, профиль</td></tr>
+        <tr><td>1-2 (Low)</td><td>Smoke-тесты, exploratory по остатку времени</td><td>Промо-блоки, футер, about page</td></tr>
+      </table>
+
+      <h3>Пример RBT-анализа для интернет-магазина</h3>
+      <table>
+        <tr><th>Функция</th><th>Вероятность</th><th>Влияние</th><th>RPN</th><th>Приоритет тестирования</th></tr>
+        <tr><td>Оплата</td><td>3</td><td>3</td><td>9</td><td>Critical — полный набор тестов, chaos</td></tr>
+        <tr><td>Корзина</td><td>3</td><td>2</td><td>6</td><td>High — functional + regression</td></tr>
+        <tr><td>Регистрация</td><td>2</td><td>3</td><td>6</td><td>High — functional + security</td></tr>
+        <tr><td>Каталог</td><td>2</td><td>2</td><td>4</td><td>Medium — основные сценарии</td></tr>
+        <tr><td>Блог</td><td>1</td><td>1</td><td>1</td><td>Low — smoke только</td></tr>
+      </table>
+
+      <!-- ===== 22. RCA ===== -->
+      <h2 id="rca">22. Root Cause Analysis (RCA)</h2>
+      <p>Анализ корневых причин — метод поиска первопричины проблемы, а не её симптомов. Применяется после критических багов или инцидентов в проде.</p>
+
+      <h3>Методы RCA</h3>
+      <table>
+        <tr><th>Метод</th><th>Описание</th><th>Когда использовать</th></tr>
+        <tr><td><strong>5 Whys</strong></td><td>Последовательные вопросы «Почему?» до нахождения первопричины</td><td>Простые проблемы, когда причина неочевидна</td></tr>
+        <tr><td><strong>Fishbone (Ishikawa)</strong></td><td>Диаграмма «рыбья кость»: категории причин (People, Process, Technology, Data, Environment)</td><td>Сложные проблемы с множеством факторов</td></tr>
+        <tr><td><strong>Fault Tree Analysis (FTA)</strong></td><td>Дерево отказов — логическая схема причин</td><td>High-risk системы (атомная, авиация)</td></tr>
+        <tr><td><strong>Pareto Analysis</strong></td><td>80% проблем — от 20% причин</td><td>Приоритизация исправлений</td></tr>
+      </table>
+
+      <h4>Пример: 5 Whys</h4>
+      <p><strong>Проблема:</strong> Пользователи не могут оформить заказ</p>
+      <ol>
+        <li>Почему? → API возвращает 500 ошибку</li>
+        <li>Почему? → Запрос к БД падает с timeout</li>
+        <li>Почему? → Таблица заказов заблокирована долгой транзакцией</li>
+        <li>Почему? → Нет индекса на статусе заказа, полное сканирование таблицы</li>
+        <li><strong>Почему? → Отсутствует review миграций перед деплоем (корневая причина ⇐ процесс)</strong></li>
+      </ol>
+      <div class="warn-box"><strong>Важно:</strong> Корневая причина должна быть процессной, а не технической. «Нет индекса» — симптом. «Нет review миграций» — причина.</div>
+
+      <!-- ===== 23. TEST ENVIRONMENT ===== -->
+      <h2 id="env-mgmt">23. Test Environment Management</h2>
+      <p>Управление тестовыми окружениями — одна из самых недооценённых, но критически важных областей QA.</p>
+
+      <h3>Проблемы тестовых окружений</h3>
+      <table>
+        <tr><th>Проблема</th><th>Влияние</th><th>Решение</th></tr>
+        <tr><td>Грязные данные</td><td>Ложные баги, нестабильные тесты</td><td>Автоматический seeding / reset БД перед тестами</td></tr>
+        <tr><td>Конфликты параллельных тестов</td><td>Гонки данных, flaky тесты</td><td>Изоляция: отдельные схемы/контейнеры на каждый поток</td></tr>
+        <tr><td>Недоступность окружения</td><td>Блокировка тестирования</td><td>Health checks, SLA, уведомления при падении</td></tr>
+        <tr><td>Различие с продушеном</td><td>Баги, найденные только в проде</td><td>Синхронизация конфигов, версий, данных</td></tr>
+        <tr><td>Flaky тесты</td><td>Потеря доверия к тестам</td><td>Quarantine, анализ причин, исправление</td></tr>
+      </table>
+
+      <h3>Типы окружений</h3>
+      <ul>
+        <li><strong>Local / Dev:</strong> окружение разработчика, быстрые итерации</li>
+        <li><strong>Feature / PR:</strong> поднимается на каждый PR (Preview Environments, ephemeral)</li>
+        <li><strong>Integration / Staging:</strong> общее окружение команды, интеграционные тесты</li>
+        <li><strong>Pre-production / Staging:</strong> копия продакшена, регрессия, performance-тесты</li>
+        <li><strong>Production:</strong> smoke-тесты после деплоя, canary</li>
+      </ul>
+
+      <h4>Containerized тестовые окружения (Testcontainers / Docker Compose)</h4>
+      <ul>
+        <li><strong>Testcontainers:</strong> поднятие БД/брокеров/кэша в Docker контейнерах для тестов</li>
+        <li><strong>Docker Compose:</strong> полный стек сервисов для E2E тестов</li>
+        <li><strong>Ephemeral environments:</strong> автоматическое создание и удаление окружения на каждый PR</li>
+      </ul>
+
+      <!-- ===== 24. ИНТЕГРАЦИИ / KAFKA ===== -->
+      <h2 id="integration">24. Тестирование интеграций, ETL и Kafka</h2>
+      <p>Современные системы всё чаще используют event-driven архитектуру с message brokers (Kafka, RabbitMQ) и ETL-пайплайны. Тестирование таких систем требует особого подхода.</p>
+
+      <h3>Тестирование Kafka</h3>
+      <table>
+        <tr><th>Аспект</th><th>Что проверяем</th><th>Метод</th></tr>
+        <tr><td>Produce</td><td>Сообщение отправлено в правильный topic с корректным ключом и значением</td><td>Testcontainers + Kafka, verify message on consumer side</td></tr>
+        <tr><td>Consume</td><td>Сообщения корректно обрабатываются при получении</td><td>Mock producer, проверка логики обработки</td></tr>
+        <tr><td>Schema evolution</td><td>Avro/Protobuf schema совместимость при изменении</td><td>Schema Registry, compatibility check (BACKWARD, FORWARD)</td></tr>
+        <tr><td>Partitioning</td><td>Сообщения с одинаковым ключом попадают в один partition</td><td>Проверка порядка сообщений для ключа</td></tr>
+        <tr><td>Retry / DLQ</td><td>Ошибочные сообщения уходят в DLQ после N retries</td><td>Отправить невалидное сообщение, проверить DLQ</td></tr>
+        <tr><td>Consumer group</td><td>Rebalance при добавлении/удалении consumer</td><td>Kill consumer, проверить восстановление</td></tr>
+        <tr><td>Latency</td><td>Время от produce до consume</td><td>Мониторинг end-to-end latency</td></tr>
+      </table>
+
+      <h3>Тестирование ETL-пайплайнов</h3>
+      <table>
+        <tr><th>Этап ETL</th><th>Что тестировать</th><th>Техники</th></tr>
+        <tr><td><strong>Extract</strong></td><td>Извлечение данных из источника (API, DB, файл)</td><td>Source schema, фильтры, incremental load, null handling</td></tr>
+        <tr><td><strong>Transform</strong></td><td>Преобразование данных (маппинг, агрегация, очистка)</td><td>Data quality, duplicate removal, business logic correctness</td></tr>
+        <tr><td><strong>Load</strong></td><td>Загрузка в целевую систему</td><td>Target schema, type casting, constraints (PK, FK), idempotency</td></tr>
+      </table>
+
+      <h3>Dead Letter Queue (DLQ) тестирование</h3>
+      <ul>
+        <li><strong>Невалидные данные:</strong> отправка сообщения с неправильным форматом → проверка DLQ</li>
+        <li><strong>Ошибки обработки:</strong> бизнес-логика выбрасывает exception → сообщение в DLQ после N retries</li>
+        <li><strong>Мониторинг DLQ:</strong> алерты при появлении сообщений в DLQ</li>
+        <li><strong>Re-drive:</strong> исправление сообщения и повторная отправка из DLQ</li>
+      </ul>
+
+      <!-- ===== 25. ЧЕКЛИСТ ===== -->
+      <h2 id="checklist">25. Чеклист тестировщика</h2>
 
       <h3>Планирование и анализ</h3>
       <ul>
@@ -1167,8 +1511,8 @@
         <li><input type="checkbox"> Accessibility: WCAG 2.1 AA</li>
       </ul>
 
-      <!-- ===== 16. ЗАКЛЮЧЕНИЕ ===== -->
-      <h2 id="conclusion">16. Заключение</h2>
+      <!-- ===== 26. ЗАКЛЮЧЕНИЕ ===== -->
+      <h2 id="conclusion">26. Заключение</h2>
       <p>Этот плейбук охватывает ключевые аспекты тестирования ПО — от классификации видов и типов до конкретных техник тест-дизайна и методов расчёта количества тест-кейсов. Основные выводы:</p>
       <ul>
         <li><strong>Не существует универсальной техники</strong> — комбинируйте EP, BVA, Decision Table, State Transition и Pairwise</li>
