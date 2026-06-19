@@ -267,3 +267,15 @@ footer {
   main { padding: 16px; }
   main h2 { font-size: 22px; }
 }
+
+/* Cursor particle effect */
+#cursor-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+.wrapper { position: relative; z-index: 1; }
