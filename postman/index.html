@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Гайд по Postman — полное руководство</title>
+  <link rel="stylesheet" href="postman-style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+<canvas id="cursor-effect"></canvas>
+<div class="wrapper">
+  <header>
+    <h1>Гайд по Postman</h1>
+    <p class="subtitle">Полное руководство по Postman: от первого запроса до автоматизации, mock-серверов, мониторинга, AI, gRPC, безопасности и best practices</p>
+    <p class="meta">Версия 2.0 &bull; 2026</p>
+  </header>
+  <div class="layout">
+    <nav class="sidebar">
+      <h3>Содержание</h3>
+      <ul>
+        <li><a href="#intro" class="toc-h2">1. Введение</a></li>
+        <li><a href="#install" class="toc-h2">2. Установка и интерфейс</a></li>
+        <li><a href="#requests" class="toc-h2">3. HTTP-запросы</a></li>
+        <li><a href="#collections" class="toc-h2">4. Collections</a></li>
+        <li><a href="#variables" class="toc-h2">5. Variables</a></li>
+        <li><a href="#environments" class="toc-h2">6. Environments</a></li>
+        <li><a href="#scripts" class="toc-h2">7. Pre-request и Tests</a></li>
+        <li><a href="#runner" class="toc-h2">8. Collection Runner</a></li>
+        <li><a href="#newman" class="toc-h2">9. Newman CLI</a></li>
+        <li><a href="#mocks" class="toc-h2">10. Mock Servers</a></li>
+        <li><a href="#monitors" class="toc-h2">11. Monitors</a></li>
+        <li><a href="#workspaces" class="toc-h2">12. Workspaces</a></li>
+        <li><a href="#version" class="toc-h2">13. Version Control</a></li>
+        <li><a href="#postman-api" class="toc-h2">14. Postman API</a></li>
+        <li><a href="#flows" class="toc-h2">15. Flows</a></li>
+        <li><a href="#docs" class="toc-h2">16. API Documentation</a></li>
+        <li><a href="#advanced" class="toc-h2">17. Продвинутые возможности</a></li>
+        <li><a href="#postbot" class="toc-h2">18. Postbot (AI)</a></li>
+        <li><a href="#grpc" class="toc-h2">19. gRPC и WebSocket</a></li>
+        <li><a href="#security-api" class="toc-h2">20. Безопасность API</a></li>
+        <li><a href="#json-v21" class="toc-h2">21. JSON v2.1 структура</a></li>
+        <li><a href="#private-network" class="toc-h2">22. Private API Network</a></li>
+        <li><a href="#api-first" class="toc-h2">23. API-first подход</a></li>
+        <li><a href="#integrations" class="toc-h2">24. Интеграции</a></li>
+        <li><a href="#load" class="toc-h2">25. Нагрузочное тестирование</a></li>
+        <li><a href="#practices" class="toc-h2">26. Best Practices</a></li>
+        <li><a href="#glossary" class="toc-h2">27. Глоссарий</a></li>
+        <li><a href="#checklist" class="toc-h2">28. Чеклист</a></li>
+      </ul>
+    </nav>
+    <main>
+      <!-- ===== 1. ВВЕДЕНИЕ ===== -->
+      <h2 id="intro">1. Введение в Postman</h2>
+      <p>Postman — платформа для разработки, тестирования, документирования и мониторинга API. Начинался как расширение для Chrome, сегодня это полноценное десктопное приложение с облачной синхронизацией, CI/CD-интеграцией, AI-ассистентом и визуальным конструированием API-запросов.</p>
+
+      <h3>Зачем нужен Postman QA-инженеру</h3>
+      <ul>
+        <li><strong>Ручное тестирование API:</strong> быстрая отправка запросов, просмотр ответов, анализ заголовков и тела</li>
+        <li><strong>Автоматизация:</strong> Collection Runner + Newman для прогона тестов в CI</li>
+        <li><strong>Написание тестов:</strong> встроенный Chai.js для asserts, проверки статусов, схем JSON, времени ответа</li>
+        <li><strong>Переменные окружения:</strong> прогон одних и тех же тестов на dev/staging/prod</li>
+        <li><strong>Документация:</strong> авто-генерация документации API из коллекций</li>
+        <li><strong>Mock-серверы:</strong> имитация API, когда бэкенд ещё не готов</li>
+        <li><strong>Мониторинг:</strong> регулярная проверка, что API работает корректно</li>
+        <li><strong>AI-ассистент (Postbot):</strong> генерация тестов, отладка, документация через нейросеть</li>
+        <li><strong>gRPC и WebSocket:</strong> тестирование не только REST, но и современных протоколов</li>
+      </ul>
+
+      <!-- ===== 2. УСТАНОВКА И ИНТЕРФЕЙС ===== -->
+      <h2 id="install">2. Установка и интерфейс</h2>
+
+      <h3>Установка</h3>
+      <table>
+        <tr><th>Платформа</th><th>Способ</th></tr>
+        <tr><td>Windows / macOS / Linux</td><td>Скачать с <a href="https://www.postman.com/downloads/">postman.com/downloads</a></td></tr>
+        <tr><td>Веб-версия</td><td><a href="https://web.postman.co">web.postman.co</a> (ограниченный функционал)</td></tr>
+        <tr><td>CLI (Postman CLI)</td><td><code>curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh</code></td></tr>
+      </table>
+
+      <h3>Интерфейс Postman</h3>
+      <table>
+        <tr><th>Элемент</th><th>Описание</th></tr>
+        <tr><td><strong>Sidebar</strong></td><td>Навигация по коллекциям, запросам, окружениям, mock-серверам и monitors</td></tr>
+        <tr><td><strong>Request Builder</strong></td><td>Центральная область — ввод URL, метода, заголовков, тела запроса</td></tr>
+        <tr><td><strong>Response Viewer</strong></td><td>Тело, заголовки, статус ответа. Подсветка JSON/XML/HTML, форматирование</td></tr>
+        <tr><td><strong>Top Bar</strong></td><td>Выбор окружения, переменные, import/export, настройки</td></tr>
+        <tr><td><strong>Right Panel</strong></td><td>Вкладки: Params, Authorization, Headers, Body, Pre-request Script, Tests, Settings</td></tr>
+        <tr><td><strong>Status Bar</strong></td><td>Индикатор запроса, статус ответа, размер, время</td></tr>
+        <tr><td><strong>Footer</strong></td><td>Кнопки: Save, Send, Send & Download, Run (Collection Runner)</td></tr>
+      </table>
+
+      <div class="info-box"><strong>Совет:</strong> Используйте <code>Ctrl+\</code> (Win/Linux) или <code>Cmd+\</code> (macOS) для быстрого открытия/закрытия Sidebar.</div>
+
+      <div class="info-box"><strong>Скриншоты интерфейса:</strong> Официальные скриншоты Postman доступны на <a href="https://www.postman.com/product/">postman.com/product</a> и в <a href="https://learning.postman.com/docs/">Postman Learning Center</a>. Для собственных скриншотов используйте <code>Ctrl+Shift+S</code> (встроенный инструмент ОС). Рекомендуется сохранять скриншоты в <code>postman/img/</code> и подключать через <code>&lt;img src="img/screenshot.png" alt="..."&gt;</code>.</div>
+
+      <!-- ===== 3. HTTP-ЗАПРОСЫ ===== -->
+      <h2 id="requests">3. HTTP-запросы</h2>
+
+      <h3>Методы запросов</h3>
+      <table>
+        <tr><th>Метод</th><th>Назначение</th><th>Тело</th></tr>
+        <tr><td><code>GET</code></td><td>Получение данных</td><td>Нет</td></tr>
+        <tr><td><code>POST</code></td><td>Создание ресурса</td><td>Да</td></tr>
+        <tr><td><code>PUT</code></td><td>Полное обновление ресурса</td><td>Да</td></tr>
+        <tr><td><code>PATCH</code></td><td>Частичное обновление ресурса</td><td>Да</td></tr>
+        <tr><td><code>DELETE</code></td><td>Удаление ресурса</td><td>Обычно нет</td></tr>
+        <tr><td><code>HEAD</code></td><td>Получение заголовков без тела</td><td>Нет</td></tr>
+        <tr><td><code>OPTIONS</code></td><td>Информация о поддерживаемых методах</td><td>Нет</td></tr>
+      </table>
+
+      <h3>Body-форматы</h3>
+      <table>
+        <tr><th>Тип</th><th>Описание</th><th>Content-Type</th></tr>
+        <tr><td><code>none</code></td><td>Без тела</td><td>—</td></tr>
+        <tr><td><code>form-data</code></td><td>Multipart form (файлы + поля)</td><td><code>multipart/form-data</code></td></tr>
+        <tr><td><code>x-www-form-urlencoded</code></td><td>Кодированные поля формы</td><td><code>application/x-www-form-urlencoded</code></td></tr>
+        <tr><td><code>raw</code></td><td>Произвольный текст (JSON, XML, HTML, Text)</td><td>Зависит от выбранного типа</td></tr>
+        <tr><td><code>binary</code></td><td>Бинарный файл (изображение, архив)</td><td><code>application/octet-stream</code></td></tr>
+        <tr><td><code>GraphQL</code></td><td>GraphQL-запрос (query + variables)</td><td><code>application/json</code></td></tr>
+      </table>
+
+      <h3>Authorization</h3>
+      <p>Postman поддерживает все популярные типы аутентификации:</p>
+      <table>
+        <tr><th>Тип</th><th>Описание</th></tr>
+        <tr><td><strong>No Auth</strong></td><td>Без аутентификации</td></tr>
+        <tr><td><strong>API Key</strong></td><td>Ключ в заголовке/query/теле</td></tr>
+        <tr><td><strong>Bearer Token</strong></td><td><code>Authorization: Bearer &lt;token&gt;</code></td></tr>
+        <tr><td><strong>Basic Auth</strong></td><td>Username + Password (Base64)</td></tr>
+        <tr><td><strong>Digest Auth</strong></td><td>MD5-хэш (RFC 7616)</td></tr>
+        <tr><td><strong>OAuth 1.0 / 2.0</strong></td><td>Полный цикл получения токена</td></tr>
+        <tr><td><strong>Hawk Authentication</strong></td><td>MAC-based аутентификация</td></tr>
+        <tr><td><strong>NTLM Authentication</strong></td><td>Windows NTLM (только десктоп)</td></tr>
+      </table>
+
+      <h3>Просмотр ответа</h3>
+      <ul>
+        <li><strong>Body:</strong> форматированный JSON/XML/HTML, Pretty / Raw / Preview / Visualize</li>
+        <li><strong>Cookies:</strong> куки, отправленные сервером</li>
+        <li><strong>Headers:</strong> все заголовки ответа</li>
+        <li><strong>Test Results:</strong> результаты выполненных тестов (PASS / FAIL)</li>
+        <li><strong>Status:</strong> код статуса + текст (200 OK, 404 Not Found, ...)</li>
+        <li><strong>Time:</strong> общее время ответа в миллисекундах</li>
+        <li><strong>Size:</strong> размер ответа в байтах</li>
+      </ul>
+
+      <!-- ===== 4. COLLECTIONS ===== -->
+      <h2 id="collections">4. Collections</h2>
+      <p>Collection — группа связанных запросов. Основная единица организации работы в Postman.</p>
+
+      <h3>Структура коллекции</h3>
+      <ul>
+        <li><strong>Папки (Folders):</strong> группировка запросов для лучшей организации</li>
+        <li><strong>Запросы:</strong> каждый запрос со своим URL, методом, заголовками, телом</li>
+        <li><strong>Collection-level scripts:</strong> Pre-request и Tests, выполняемые для всех запросов в коллекции</li>
+        <li><strong>Variables:</strong> переменные уровня коллекции</li>
+        <li><strong>Authorization:</strong> настройки авторизации для всей коллекции</li>
+      </ul>
+
+      <h3>Работа с коллекциями</h3>
+      <pre><code># Импорт
+File → Import → File / Folder / Link / Raw text
+
+# Экспорт
+Кликнуть правой кнопкой на коллекции → Export → Collection v2.1 (рекомендуется)
+
+# Поддержка форматов
+- Postman Collection v2.1 (JSON)
+- OpenAPI 3.0 / Swagger 2.0
+- RAML 1.0
+- GraphQL Schema
+- cURL
+- HAR</code></pre>
+
+      <div class="info-box"><strong>Совет:</strong> Всегда экспортируйте коллекции в формате v2.1 — он читаемый, поддерживает все фичи и легко версионируется в Git.</div>
+
+      <!-- ===== 5. VARIABLES ===== -->
+      <h2 id="variables">5. Variables</h2>
+      <p>Variables — переменные, которые можно использовать во всех полях запроса: URL, заголовки, тело, скрипты. Синтаксис: <code>{{variable_name}}</code>.</p>
+
+      <h3>Scopes (уровни видимости)</h3>
+      <table>
+        <tr><th>Scope</th><th>Жизненный цикл</th><th>Приоритет</th></tr>
+        <tr><td><strong>Global</strong></td><td>Существуют, пока не удалены вручную</td><td>5 (самый низкий)</td></tr>
+        <tr><td><strong>Collection</strong></td><td>В рамках коллекции</td><td>4</td></tr>
+        <tr><td><strong>Environment</strong></td><td>В рамках выбранного окружения</td><td>3</td></tr>
+        <tr><td><strong>Data</strong></td><td>Только во время прогона (из CSV/JSON)</td><td>2</td></tr>
+        <tr><td><strong>Local</strong></td><td>Только внутри одного запроса или скрипта</td><td>1 (самый высокий)</td></tr>
+      </table>
+
+      <h3>Работа с переменными в скриптах</h3>
+      <pre><code>// Установка значений
+pm.globals.set("key", "value");
+pm.collectionVariables.set("key", "value");
+pm.environment.set("key", "value");
+pm.variables.set("key", "value");  // local
+
+// Получение значений
+const val = pm.globals.get("key");
+const envVal = pm.environment.get("key");
+
+// Удаление
+pm.globals.unset("key");
+pm.environment.unset("key");
+
+// Очистка всех переменных окружения
+pm.environment.clear();</code></pre>
+
+      <div class="info-box"><strong>Dynamic Variables:</strong> Postman имеет встроенные динамические переменные: <code>{{$guid}}</code> (UUID), <code>{{$timestamp}}</code>, <code>{{$randomEmail}}</code>, <code>{{$randomInt}}</code>, <code>{{$randomCity}}</code> и другие.</div>
+
+      <!-- ===== 6. ENVIRONMENTS ===== -->
+      <h2 id="environments">6. Environments</h2>
+      <p>Environment — набор переменных для конкретного окружения (dev, staging, prod). Позволяет прогонять одни и те же запросы на разных серверах без изменения запросов.</p>
+
+      <h3>Создание окружения</h3>
+      <pre><code>1. Нажать "Environments" в Sidebar → "+" (New Environment)
+2. Задать имя: "Development" / "Staging" / "Production"
+3. Добавить переменные:
+   - Variable: base_url
+   - Initial Value: http://localhost:8000
+   - Current Value: http://localhost:8000
+4. Нажать "Save"</code></pre>
+
+      <h3>Пример: переключение между окружениями</h3>
+      <pre><code>// Переменные в каждом окружении:
+// Dev:   base_url = http://localhost:8000
+// Stg:   base_url = https://staging.example.com
+// Prod:  base_url = https://api.example.com
+
+// В URL запроса:
+// {{base_url}}/api/v1/users
+
+// Тест проверяет, что ответ приходит с правильного окружения
+pm.test("Response from correct environment", () => {
+    const expectedUrl = pm.environment.get("base_url");
+    pm.expect(pm.request.url.toString()).to.include(expectedUrl);
+});</code></pre>
+
+      <div class="info-box"><strong>Initial vs Current Value:</strong> <code>Initial Value</code> — значение по умолчанию (синхронизируется, попадает в Git). <code>Current Value</code> — локальное, не синхронизируется (для секретов, токенов).</div>
+
+      <!-- ===== 7. PRE-REQUEST И TESTS ===== -->
+      <h2 id="scripts">7. Pre-request и Tests скрипты</h2>
+      <p>Postman использует JavaScript (Node.js-подобное окружение) для написания скриптов. Два типа скриптов выполняются в разные моменты жизненного цикла запроса.</p>
+
+      <h3>Жизненный цикл запроса</h3>
+      <pre><code>1. Pre-request Script (коллекция)    — выполняется перед каждым запросом коллекции
+2. Pre-request Script (папка)         — выполняется перед каждым запросом папки
+3. Pre-request Script (запрос)        — выполняется перед запросом
+4. → Запрос отправляется на сервер ←
+5. Tests Script (запрос)             — выполняется после получения ответа
+6. Tests Script (папка)              — выполняется после каждого запроса папки
+7. Tests Script (коллекция)          — выполняется после каждого запроса коллекции</code></pre>
+
+      <h3>Pre-request Script — подготовка запроса</h3>
+      <pre><code>// Получение токена перед запросом
+const token = pm.environment.get("auth_token");
+
+if (!token || Date.now() > pm.environment.get("token_expires")) {
+    console.log("Token expired, requesting new one...");
+
+    const loginRequest = {
+        url: pm.environment.get("auth_url") + "/login",
+        method: "POST",
+        header: { "Content-Type": "application/json" },
+        body: {
+            mode: "raw",
+            raw: JSON.stringify({
+                username: pm.environment.get("api_username"),
+                password: pm.environment.get("api_password")
+            })
+        }
+    };
+
+    pm.sendRequest(loginRequest, (err, res) => {
+        if (!err && res.code === 200) {
+            const data = res.json();
+            pm.environment.set("auth_token", data.token);
+            pm.environment.set("token_expires", Date.now() + 3500000);
+        }
+    });
+}</code></pre>
+
+      <h3>Tests Script — проверка ответа</h3>
+      <p>Postman использует библиотеку Chai.js для утверждений (assertions):</p>
+      <pre><code>// 1. Проверка статус-кода
+pm.test("Status code is 200", () => {
+    pm.response.to.have.status(200);
+});
+
+// 2. Проверка тела ответа
+pm.test("Response contains users array", () => {
+    const jsonData = pm.response.json();
+    pm.expect(jsonData).to.be.an("array");
+    pm.expect(jsonData.length).to.be.greaterThan(0);
+});
+
+// 3. Проверка заголовков
+pm.test("Content-Type is JSON", () => {
+    pm.response.to.have.header("Content-Type");
+    pm.expect(pm.response.headers.get("Content-Type"))
+      .to.include("application/json");
+});
+
+// 4. Проверка времени ответа
+pm.test("Response time is acceptable", () => {
+    pm.expect(pm.response.responseTime).to.be.below(500);
+});
+
+// 5. Проверка JSON Schema
+const schema = {
+    type: "object",
+    required: ["id", "name", "email"],
+    properties: {
+        id: { type: "number" },
+        name: { type: "string" },
+        email: { type: "string", format: "email" }
+    }
+};
+
+pm.test("Response matches schema", () => {
+    pm.response.to.have.jsonSchema(schema);
+});
+
+// 6. Проверка с помощью tv4 (альтернативная валидация JSON Schema)
+const tv4 = require("tv4");
+pm.test("JSON Schema valid (tv4)", () => {
+    const valid = tv4.validate(pm.response.json(), schema);
+    pm.expect(valid).to.be.true;
+});</code></pre>
+
+      <h3>Утилиты Postman Sandbox</h3>
+      <table>
+        <tr><th>API</th><th>Описание</th></tr>
+        <tr><td><code>pm.response</code></td><td>Объект ответа (status, body, headers, responseTime, code)</td></tr>
+        <tr><td><code>pm.request</code></td><td>Объект запроса (url, method, headers, body)</td></tr>
+        <tr><td><code>pm.sendRequest()</code></td><td>Отправить дополнительный запрос из скрипта</td></tr>
+        <tr><td><code>pm.variables / pm.environment / pm.globals</code></td><td>Работа с переменными</td></tr>
+        <tr><td><code>pm.test()</code></td><td>Определение теста</td></tr>
+        <tr><td><code>pm.expect()</code></td><td>Chai expect-утверждения</td></tr>
+        <tr><td><code>pm.visualizer.set()</code></td><td>Кастомная визуализация ответа (HTML)</td></tr>
+        <tr><td><code>console.log()</code></td><td>Вывод в Postman Console (View → Show Postman Console)</td></tr>
+      </table>
+
+      <h3>Chaining запросов (передача данных между запросами)</h3>
+      <pre><code>// Запрос 1: POST /login → получаем токен
+pm.test("Save auth token", () => {
+    const data = pm.response.json();
+    pm.environment.set("auth_token", data.token);
+    pm.environment.set("user_id", data.user.id);
+});
+
+// Запрос 2: GET /users/{{user_id}} — использует {{auth_token}} в заголовке
+// Authorization: Bearer {{auth_token}}</code></pre>
+
+      <!-- ===== 8. COLLECTION RUNNER ===== -->
+      <h2 id="runner">8. Collection Runner</h2>
+      <p>Collection Runner — инструмент для запуска всех запросов коллекции с заданными параметрами. Позволяет выполнять функциональные тесты, нагрузочные тесты и интеграционные сценарии.</p>
+
+      <h3>Запуск через UI</h3>
+      <pre><code>1. Открыть коллекцию → кнопка "Run" (▶)
+2. Настроить:
+   - Runner: Postman / Newman (если установлен CLI)
+   - Iterations: количество прогонов
+   - Delay: задержка между запросами (мс)
+   - Data: CSV/JSON файл с тестовыми данными
+   - Environment: окружение
+3. Нажать "Run {collection_name}"</code></pre>
+
+      <h3>Data-driven тестирование (CSV/JSON)</h3>
+      <pre><code>// users.csv
+// id,expected_status
+// 1,200
+// 2,200
+// 999,404
+
+// В запросе: GET /api/users/{{id}}
+
+// В Tests:
+pm.test("Status is {{expected_status}}", () => {
+    pm.response.to.have.status(Number(pm.iterationData.get("expected_status")));
+});
+
+// Переменная {{id}} и {{expected_status}} автоматически подставляются на каждой итерации</code></pre>
+
+      <h3>Результаты прогона</h3>
+      <ul>
+        <li><strong>Pass / Fail / Skip:</strong> количество тестов</li>
+        <li><strong>Total iterations:</strong> сколько прогонов выполнено</li>
+        <li><strong>Failed tests:</strong> детали по упавшим тестам</li>
+        <li><strong>Response time:</strong> среднее / минимальное / максимальное время</li>
+        <li><strong>Export Results:</strong> скачать отчёт в JSON</li>
+      </ul>
+
+      <div class="warn-box"><strong>Внимание:</strong> Collection Runner <strong>не поддерживает</strong> параллельные запросы. Для параллельного выполнения используйте Newman.</div>
+
+      <!-- ===== 9. NEWMAN CLI ===== -->
+      <h2 id="newman">9. Newman CLI</h2>
+      <p>Newman — командная строка для запуска Postman-коллекций. Используется в CI/CD (GitHub Actions, GitLab CI, Jenkins).</p>
+
+      <h3>Установка</h3>
+      <pre><code># Глобально через npm
+npm install -g newman
+
+# Локально в проект
+npm install --save-dev newman
+
+# Проверка
+newman --version</code></pre>
+
+      <h3>Запуск коллекции</h3>
+      <pre><code># Базовый запуск
+newman run collection.json -e environment.json
+
+# С отчётом в CLI
+newman run collection.json -e env.json --reporters cli
+
+# С тестовыми данными
+newman run collection.json -d data.csv --iteration-count 3
+
+# С задержкой
+newman run collection.json --delay-request 500
+
+# Цветной вывод
+newman run collection.json --color on</code></pre>
+
+      <h3>Отчёты (reporters)</h3>
+      <table>
+        <tr><th>Репортёр</th><th>Описание</th></tr>
+        <tr><td><code>cli</code></td><td>Терминальный вывод (по умолчанию)</td></tr>
+        <tr><td><code>json</code></td><td>JSON-файл с результатами</td></tr>
+        <tr><td><code>junit</code></td><td>XML-отчёт для CI (Jenkins, GitLab)</td></tr>
+        <tr><td><code>html</code></td><td>HTML-отчёт (требуется <code>newman-reporter-html</code>)</td></tr>
+        <tr><td><code>htmlextra</code></td><td>Расширенный HTML-отчёт с графиками</td></tr>
+      </table>
+      <pre><code># Установка репортёров
+npm install -g newman-reporter-html newman-reporter-htmlextra
+
+# Запуск с HTML-отчётом
+newman run collection.json -e env.json \
+  --reporters cli,htmlextra \
+  --reporter-htmlextra-export ./reports/report.html</code></pre>
+
+      <h3>Newman в CI/CD</h3>
+      <p>Пример для GitHub Actions:</p>
+      <pre><code># .github/workflows/api-tests.yml
+name: API Tests
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Newman
+        run: npm install -g newman newman-reporter-htmlextra
+      - name: Run API tests
+        run: |
+          newman run api-tests/collection.json \
+            -e api-tests/staging.json \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export reports/api-report.html
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-report
+          path: reports/</code></pre>
+
+      <!-- ===== 10. MOCK SERVERS ===== -->
+      <h2 id="mocks">10. Mock Servers</h2>
+      <p>Mock Server — имитация API-сервера на основе существующей коллекции. Позволяет фронтенду и QA начинать работу до того, как бэкенд готов.</p>
+
+      <h3>Создание Mock Server</h3>
+      <pre><code>1. Открыть коллекцию → "... More" → "Mock Server"
+2. Настроить:
+   - Name: "Users API Mock"
+   - Environment (опционально)
+   - Delay: задержка ответа (мс) для симуляции latency
+3. Получить URL вида: https://xxxxx.mock.pstmn.io
+
+// Postman автоматически создаёт Mock и сопоставляет запросы
+// с примерами (Examples) из коллекции</code></pre>
+
+      <h3>Examples (примеры ответов)</h3>
+      <p>Для каждого запроса можно сохранить несколько примеров ответов. Mock-сервер возвращает соответствующий пример в зависимости от запроса:</p>
+      <pre><code>// 1. Сохранить ответ как Example
+Save Response → Save as Example
+
+// 2. Создать несколько примеров:
+// - Успешный ответ (200): { "users": [...] }
+// - Пустой ответ (200): { "users": [] }
+// - Ошибка (404): { "error": "Not found" }
+
+// Mock возвращает:
+// - 200 с телом примера, если запрос совпал
+// - 404, если пример не найден</code></pre>
+
+      <div class="info-box"><strong>Mock для QA:</strong> Используйте Mock Server для тестирования фронтенда, когда бэкенд ещё не готов, или для симуляции ошибок (500, timeout), которые сложно воспроизвести на реальном сервере.</div>
+
+      <h3>Ограничения Free-плана</h3>
+      <ul>
+        <li>До 1000 запросов в месяц (~30 в день)</li>
+        <li>До 5 mock-серверов</li>
+        <li>Базовая задержка (без настройки)</li>
+      </ul>
+
+      <!-- ===== 11. MONITORS ===== -->
+      <h2 id="monitors">11. Monitors</h2>
+      <p>Monitors — регулярная автоматическая проверка API. Postman запускает коллекцию по расписанию и уведомляет о падениях.</p>
+
+      <h3>Создание Monitor</h3>
+      <pre><code>1. Открыть коллекцию → "... More" → "Monitor"
+2. Настроить:
+   - Name: "Production Health Check"
+   - Environment: Production
+   - Schedule: Every 5 minutes / Hourly / Daily / Custom (cron)
+   - Region: выберите регион для запуска
+   - Notifications: Email / Slack / Webhook
+3. Сохранить</code></pre>
+
+      <h3>Настройка уведомлений</h3>
+      <table>
+        <tr><th>Канал</th><th>Настройка</th></tr>
+        <tr><td>Email</td><td>Автоматически привязан к аккаунту Postman</td></tr>
+        <tr><td>Slack</td><td>Интеграция через Postman Slack App</td></tr>
+        <tr><td>Webhook</td><td>Кастомный URL для интеграции с PagerDuty, OpsGenie, Microsoft Teams</td></tr>
+      </table>
+
+      <pre><code>// Пример: тест для здоровья API
+pm.test("API is healthy", () => {
+    pm.response.to.have.status(200);
+    pm.expect(pm.response.responseTime).to.be.below(2000);
+    const data = pm.response.json();
+    pm.expect(data.status).to.eql("ok");
+    pm.expect(data.uptime).to.be.greaterThan(0);
+});</code></pre>
+
+      <div class="success-box"><strong>Best Practice:</strong> Создайте отдельную коллекцию "Health Checks" с простыми тестами (статус + время ответа) и запускайте её каждые 5 минут. Для детальных функциональных тестов используйте отдельную коллекцию с ежечасным запуском.</div>
+
+      <!-- ===== 12. WORKSPACES ===== -->
+      <h2 id="workspaces">12. Workspaces</h2>
+      <p>Workspaces — организация совместной работы. Позволяют разделять коллекции, окружения и другие ресурсы между командами.</p>
+
+      <h3>Типы Workspaces</h3>
+      <table>
+        <tr><th>Тип</th><th>Доступ</th><th>Для кого</th></tr>
+        <tr><td><strong>Personal</strong></td><td>Только владелец</td><td>Личные проекты, эксперименты</td></tr>
+        <tr><td><strong>Team</strong></td><td>Все члены команды</td><td>Совместная разработка API</td></tr>
+        <tr><td><strong>Public</strong></td><td>Все пользователи</td><td>Публичные API, open-source, документация</td></tr>
+      </table>
+
+      <h3>Возможности совместной работы</h3>
+      <ul>
+        <li>Реальное время — изменения видны всем участникам сразу</li>
+        <li>Комментарии к запросам и коллекциям</li>
+        <li>Activity Log — история изменений</li>
+        <li>Роли: Admin, Editor, Viewer</li>
+        <li>Forking и Pull Requests (аналог Git)</li>
+      </ul>
+
+      <!-- ===== 13. VERSION CONTROL ===== -->
+      <h2 id="version">13. Version Control (Git)</h2>
+      <p>Postman поддерживает интеграцию с Git — коллекции можно версионировать и синхронизировать с GitHub, GitLab, Bitbucket.</p>
+
+      <h3>Git Sync (раньше — Postman to GitHub)</h3>
+      <pre><code>1. Открыть коллекцию → "... More" → "View Source Code"
+2. Настроить интеграцию:
+   - Repository: user/collection-repo
+   - Branch: main
+   - Directory: collections/
+3. Sync:
+   - Push: изменения из Postman → Git
+   - Pull: изменения из Git → Postman
+
+// Альтернатива: ручной экспорт/импорт
+// Экспорт коллекции → commit в Git → импорт у коллег</code></pre>
+
+      <h3>Fork and Merge</h3>
+      <pre><code>1. Fork коллекции — создание копии для экспериментов
+2. Внесение изменений в fork
+3. Создание Pull Request (внутри Postman)
+4. Review и Merge в основную коллекцию
+
+// Activity Log — кто и когда менял что</code></pre>
+
+      <div class="info-box"><strong>Совет:</strong> Для CI/CD используйте Newman с коллекцией, выгруженной из Git, а не из облака Postman. Так тесты будут воспроизводимы и независимы от Postman Cloud.</div>
+
+      <!-- ===== 14. POSTMAN API ===== -->
+      <h2 id="postman-api">14. Postman API</h2>
+      <p>Postman API — REST API для программного управления ресурсами Postman: коллекциями, окружениями, mock-серверами, monitors и результатами прогонов.</p>
+
+      <h3>Получение API Key</h3>
+      <pre><code>Postman → Settings → API Keys → Generate API Key
+
+// Использование:
+curl -H "X-Api-Key: YOUR_API_KEY" \
+  https://api.getpostman.com/collections</code></pre>
+
+      <h3>Основные endpoints</h3>
+      <table>
+        <tr><th>Endpoint</th><th>Описание</th></tr>
+        <tr><td><code>GET /collections</code></td><td>Список коллекций</td></tr>
+        <tr><td><code>GET /collections/:id</code></td><td>Детали коллекции (включая запросы)</td></tr>
+        <tr><td><code>POST /collections</code></td><td>Создать коллекцию</td></tr>
+        <tr><td><code>PUT /collections/:id</code></td><td>Обновить коллекцию</td></tr>
+        <tr><td><code>DELETE /collections/:id</code></td><td>Удалить коллекцию</td></tr>
+        <tr><td><code>GET /environments</code></td><td>Список окружений</td></tr>
+        <tr><td><code>GET /mocks</code></td><td>Список mock-серверов</td></tr>
+        <tr><td><code>GET /monitors</code></td><td>Список monitors</td></tr>
+        <tr><td><code>GET /runs/:id</code></td><td>Результаты прогона</td></tr>
+      </table>
+
+      <h3>Пример: загрузка коллекции через API</h3>
+      <pre><code>curl -X POST https://api.getpostman.com/collections \
+  -H "X-Api-Key: YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "collection": {
+      "info": {
+        "name": "My API Collection",
+        "description": "Collection created via API"
+      },
+      "item": [{
+        "name": "Get Users",
+        "request": {
+          "method": "GET",
+          "url": {
+            "raw": "https://api.example.com/users",
+            "protocol": "https",
+            "host": ["api", "example", "com"],
+            "path": ["users"]
+          }
+        }
+      }]
+    }
+  }'</code></pre>
+
+      <!-- ===== 15. FLOWS ===== -->
+      <h2 id="flows">15. Flows</h2>
+      <p>Flows — визуальный конструктор API-процессов в Postman. Позволяет соединять запросы, условия, циклы и обработку данных без написания кода (low-code).</p>
+
+      <h3>Базовые блоки Flows</h3>
+      <table>
+        <tr><th>Блок</th><th>Описание</th></tr>
+        <tr><td><strong>Send Request</strong></td><td>Выполнить HTTP-запрос из коллекции</td></tr>
+        <tr><td><strong>Condition (If/Else)</strong></td><td>Ветвление на основе условия</td></tr>
+        <tr><td><strong>Loop</strong></td><td>Повторение блока для каждого элемента массива</td></tr>
+        <tr><td><strong>Variable</strong></td><td>Установка/получение переменной</td></tr>
+        <tr><td><strong>Return</strong></td><td>Возврат результата из Flow</td></tr>
+        <tr><td><strong>Log</strong></td><td>Вывод сообщения в лог</td></tr>
+        <tr><td><strong>Delay</strong></td><td>Пауза на заданное время</td></tr>
+        <tr><td><strong>Try / Catch</strong></td><td>Обработка ошибок</td></tr>
+      </table>
+
+      <h3>Пример: проверка нескольких пользователей</h3>
+      <pre><code>// Flow:
+// 1. Start → список user_id: [1, 2, 3, 4, 5]
+// 2. Loop → для каждого id:
+//    a. Send Request: GET /users/{{id}}
+//    b. Condition: response.code === 200?
+//       - Yes: Log "User {{id}} OK"
+//       - No: Log "User {{id}} FAIL"
+// 3. Return: количество успешных / всего
+
+// Без единой строки кода — всё визуально</code></pre>
+
+      <div class="info-box"><strong>Flows vs Collection Runner:</strong> Flows подходят для сложных сценариев с ветвлениями и циклами. Collection Runner — для линейных прогонов с data-файлами.</div>
+
+      <!-- ===== 16. API DOCUMENTATION ===== -->
+      <h2 id="docs">16. API Documentation</h2>
+      <p>Postman автоматически генерирует документацию API из коллекций. Документация включает описание запросов, примеры ответов, заголовки, параметры.</p>
+
+      <h3>Публикация документации</h3>
+      <pre><code>1. Открыть коллекцию → "... More" → "View Documentation"
+2. Если нужно — добавить описание для каждого запроса (на вкладке Description)
+3. Нажать "Publish" → выбрать Visiblity:
+   - Private: только члены команды
+   - Public: доступна всем по ссылке
+4. Получить URL: https://documenter.getpostman.com/view/...
+
+// Формат документации:
+// - Left sidebar: навигация по запросам
+// - Center: описание, URL, метод, заголовки, тело, примеры
+// - Right panel: примеры кода на разных языках (curl, Python, JS, Go, ...)</code></pre>
+
+      <h3>Кастомизация документации</h3>
+      <ul>
+        <li><strong>Description:</strong> Markdown-описание для каждого запроса и коллекции</li>
+        <li><strong>Examples:</strong> несколько вариантов ответа (success, error, empty)</li>
+        <li><strong>Code Snippets:</strong> Postman автоматически генерирует примеры кода на 20+ языках</li>
+        <li><strong>Theme:</strong> светлая / тёмная тема</li>
+      </ul>
+
+      <pre><code>// Пример Markdown для описания запроса
+// # Get User by ID
+// Returns user profile for the given ID.
+//
+// ## Parameters
+// - `id` (required): User identifier
+//
+// ## Response
+// ```json
+// {
+//   "id": 1,
+//   "name": "John Doe",
+//   "email": "john@example.com"
+// }
+// ```
+//
+// ## Errors
+// - 404: User not found
+// - 500: Internal server error</code></pre>
+
+      <!-- ===== 17. ПРОДВИНУТЫЕ ВОЗМОЖНОСТИ ===== -->
+      <h2 id="advanced">17. Продвинутые возможности</h2>
+
+      <h3>Postman Visualizer</h3>
+      <p>Кастомная визуализация ответов с помощью HTML и CSS — полезно для сложных JSON-структур:</p>
+      <pre><code>// В Tests:
+const template = `&lt;style&gt;
+  .card { border: 1px solid #ddd; padding: 16px; margin: 8px 0; border-radius: 8px; }
+  .name { font-size: 18px; font-weight: bold; }
+  .email { color: #666; }
+&lt;/style&gt;
+&lt;h2&gt;Users ({{data.length}}) &lt;/h2&gt;
+{{#each data}}
+  &lt;div class="card"&gt;
+    &lt;div class="name"&gt;{{this.name}}&lt;/div&gt;
+    &lt;div class="email"&gt;{{this.email}}&lt;/div&gt;
+    &lt;div&gt;Role: {{this.role}}&lt;/div&gt;
+  &lt;/div&gt;
+{{/each}}`;
+
+pm.visualizer.set(template, {
+    data: pm.response.json()
+});</code></pre>
+
+      <h3>Postman Console</h3>
+      <pre><code>// Открыть: View → Show Postman Console (Ctrl+Shift+C / Cmd+Option+C)
+// Показывает:
+// - Все запросы и ответы (включая pm.sendRequest)
+// - console.log() вывод
+// - Сетевые ошибки
+// - Куки, заголовки</code></pre>
+
+      <h3>Интерцепторы</h3>
+      <table>
+        <tr><th>Инструмент</th><th>Описание</th></tr>
+        <tr><td><strong>Postman Interceptor</strong></td><td>Расширение для Chrome — захват кук и заголовков из браузера</td></tr>
+        <tr><td><strong>Postman Proxy</strong></td><td>Прокси-сервер для захвата трафика с любого устройства (требуется Postman Desktop)</td></tr>
+        <tr><td><strong>Interceptor for Android</strong></td><td>Захват трафика с Android-устройства через VPN</td></tr>
+      </table>
+
+      <h3>Куки (Cookies)</h3>
+      <p>Postman имеет встроенный Cookie Manager для управления куками:</p>
+      <pre><code>// Send → Cookies → Manage Cookies
+// Добавить / редактировать куки для домена
+
+// В тестах:
+const cookies = pm.cookies.jar();  // CookieJar API
+cookies.getAll("https://example.com", (err, cookies) => {
+    console.log(cookies);
+});</code></pre>
+
+      <h3>GraphQL в Postman</h3>
+      <pre><code>// Postman поддерживает GraphQL тремя способами:
+//
+// 1. Встроенный Body → GraphQL:
+//    - Query: { users { id name email } }
+//    - Variables: { "limit": 10 }
+//
+// 2. Raw JSON:
+//    {"query": "...", "variables": {...}}
+//
+// 3. Import GraphQL Schema:
+//    File → Import → GraphQL Schema → автозаполнение полей</code></pre>
+
+      <h3>Postman CLI (новая альтернатива Newman)</h3>
+      <pre><code># Postman CLI — официальный CLI от Postman (замена Newman)
+# Требует API Key
+
+# Установка
+curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+# Запуск
+postman login --with-api-key PMAK-xxxxx
+postman collection run <collection_id></code></pre>
+
+      <h3>Встроенные сниппеты (Snippets)</h3>
+      <p>Postman предоставляет готовые сниппеты кода для Pre-request и Tests (правая панель → Snippets):</p>
+      <ul>
+        <li>Status code: Code is 200</li>
+        <li>Response body: JSON value check</li>
+        <li>Response headers: Content-Type exists</li>
+        <li>Response time: less than 200ms</li>
+        <li>Schema validation: JSON schema validation</li>
+        <li>Set an environment variable</li>
+        <li>Clear an environment variable</li>
+        <li>Send a request</li>
+      </ul>
+
+      <!-- ===== 18. POSTBOT (AI) ===== -->
+      <h2 id="postbot">18. Postbot — AI-ассистент</h2>
+      <p>Postbot (также известный как Agent Mode) — встроенный AI-ассистент Postman. Понимает контекст вашей коллекции, окружений, ответов и истории запросов. Позволяет описывать задачи на естественном языке — Postbot выполняет их автоматически.</p>
+
+      <h3>Что умеет Postbot</h3>
+      <table>
+        <tr><th>Возможность</th><th>Описание</th></tr>
+        <tr><td>Генерация тестов</td><td>Опишите, что хотите проверить: "Add tests that check if response time is less than 200ms" — Postbot сгенерирует Chai-скрипты</td></tr>
+        <tr><td>Отладка ошибок</td><td>Перетащите упавший запрос в чат: "diagnose this authentication failure" — Postbot проверит токен, заголовки, переменные окружения</td></tr>
+        <tr><td>Документация</td><td>"Write documentation for this request" — Postbot добавит Markdown-описание с примером ответа</td></tr>
+        <tr><td>Визуализация данных</td><td>"Visualize response data as a chart" — Postbot создаст HTML-шаблон для Visualizer</td></tr>
+        <tr><td>Создание запросов</td><td>Опишите API словами — Postbot создаст запрос с URL, методом, заголовками и телом</td></tr>
+        <tr><td>Организация коллекций</td><td>"Organize this collection into folders by endpoint" — автоматическая группировка</td></tr>
+        <tr><td>Объяснение ошибок</td><td>"Why am I getting a 401?" — анализ причины и предложение исправления</td></tr>
+        <tr><td>Аудит безопасности</td><td>"Audit this collection for security vulnerabilities" — проверка на OWASP Top 10</td></tr>
+      </table>
+
+      <h3>Как использовать Postbot</h3>
+      <pre><code>// 1. Кнопка Postbot в правом нижнем углу (иконка робота)
+// 2. Ввод запроса на естественном языке
+// 3. Postbot анализирует контекст и предлагает действие
+
+// Примеры запросов:
+// "Add tests for this request"
+// "Fix the failing tests in this collection"
+// "Generate documentation for all requests in this folder"
+// "What's wrong with this response?"
+// "Create a flow that checks all users are active"
+
+// /commands — список всех AI-навыков
+// /debug — отладка запроса
+// /test — генерация тестов
+// /docs — документация
+// /visualize — визуализация</code></pre>
+
+      <h3>Agent Mode — продвинутый AI</h3>
+      <p>С 2025 года Postman внедрил Agent Mode — AI-агент, который работает внутри вашего workspace:</p>
+      <ul>
+        <li>Понимает всю коллекцию, а не один запрос</li>
+        <li>Может вносить изменения в коллекцию (с подтверждением)</li>
+        <li>Диагностирует цепочки запросов (chaining) и flow авторизации</li>
+        <li>Генерирует комплексные тесты: contract tests, error handling, performance checks</li>
+      </ul>
+
+      <pre><code>// Agent Mode:
+// 1. Open Agent Mode (Ctrl+Shift+Space)
+// 2. Drag & drop request/collection into chat
+// 3. Ask: "Review this collection and suggest tests
+//    for comprehensive coverage"
+// 4. Agent генерирует полный набор тестов:
+//    - Status code checks
+//    - Response schema validation
+//    - Error handling (404, 500)
+//    - Performance assertions
+//    - Data integrity between requests</code></pre>
+
+      <div class="info-box"><strong>Доступность:</strong> Postbot доступен на всех планах (Free, Basic, Professional, Enterprise). Agent Mode — на Enterprise-плане с ограничением по AI-credits.</div>
+
+      <div class="warn-box"><strong>Важно:</strong> AI-генерированные тесты всегда требуют ревью. Postbot может пропустить edge case'ы или бизнес-логику, специфичную для вашего API.</div>
+
+      <!-- ===== 19. gRPC И WEBSOCKET ===== -->
+      <h2 id="grpc">19. gRPC и WebSocket</h2>
+
+      <h3>gRPC в Postman</h3>
+      <p>Postman поддерживает gRPC — высокопроизводительный RPC-фреймворк от Google. Работает со всеми четырьмя типами gRPC-методов: Unary, Server Streaming, Client Streaming, Bidirectional Streaming.</p>
+
+      <pre><code>// 1. New → gRPC Request
+// 2. Server URL: grpc.postman-echo.com (тестовый сервер)
+//    или https://your-server.com
+// 3. Service Definition:
+//    - Server Reflection (авто): Postman загружает proto с сервера
+//    - Manual: импорт .proto файла
+// 4. Выбрать метод (например, SayHello)
+// 5. Заполнить message payload (JSON → Protobuf авто)
+// 6. Invoke
+
+// Загрузка .proto файла:
+// Просто перетащите .proto файл в Postman
+// Postman автоматически разберёт все сервисы и методы</code></pre>
+
+      <h3>Тестирование gRPC</h3>
+      <pre><code>// Скрипты работают так же, как для REST:
+// Pre-request → Выполняется до соединения
+// Tests → Выполняется после завершения
+
+pm.test("gRPC response successful", () => {
+    pm.response.to.have.status("OK");  // gRPC status codes
+});
+
+pm.test("Response message fields are valid", () => {
+    const data = pm.response.json();
+    pm.expect(data.message).to.be.a("string");
+    pm.expect(data.message).to.not.be.empty;
+});
+
+// Streaming: можно проверять каждое сообщение
+pm.test("Stream message received", () => {
+    // Для streaming-методов каждое сообщение
+    // вызывает Tests скрипт отдельно
+});</code></pre>
+
+      <h3>WebSocket в Postman</h3>
+      <p>Postman поддерживает WebSocket, Socket.IO и другие real-time протоколы:</p>
+      <pre><code>// 1. New → WebSocket Request
+// 2. URL: wss://echo.websocket.org (тестовый сервер)
+// 3. Подключиться → "Connect"
+// 4. Отправка сообщения:
+//    - Message → { "type": "ping" } → Send
+// 5. Просмотр лога сообщений в реальном времени
+// 6. Фильтрация, поиск по сообщениям
+
+// Socket.IO
+// 1. New → Socket.IO Request
+// 2. URL: https://your-socketio-server.com
+// 3. Events: подписка на события
+// 4. Отправка событий с payload'ом</code></pre>
+
+      <table>
+        <tr><th>Протокол</th><th>Тип запроса</th><th>Особенности</th></tr>
+        <tr><td>REST</td><td>HTTP Request</td><td>Запрос-ответ, синхронный</td></tr>
+        <tr><td>GraphQL</td><td>GraphQL Request</td><td>Один endpoint, гибкий query</td></tr>
+        <tr><td>gRPC</td><td>gRPC Request</td><td>Protobuf, streaming, бинарный</td></tr>
+        <tr><td>WebSocket</td><td>WebSocket Request</td><td>Постоянное соединение, real-time</td></tr>
+        <tr><td>Socket.IO</td><td>Socket.IO Request</td><td>WebSocket с fallback, комнаты</td></tr>
+      </table>
+
+      <div class="info-box"><strong>Тестовые серверы Postman:</strong> <code>grpc.postman-echo.com</code> — gRPC Echo, <code>wss://ws.postman-echo.com/raw</code> — WebSocket Echo. Подходят для экспериментов без бэкенда.</div>
+
+      <!-- ===== 20. БЕЗОПАСНОСТЬ API ===== -->
+      <h2 id="security-api">20. Безопасность API</h2>
+      <p>Postman — не только инструмент для функционального тестирования, но и мощное средство для аудита безопасности API. Postman Security Workspace содержит готовую коллекцию для проверки распространённых уязвимостей.</p>
+
+      <h3>OWASP API Security Top 10</h3>
+      <p>Postman помогает проверить каждый пункт OWASP API Security Top 10:</p>
+      <table>
+        <tr><th>#</th><th>Уязвимость</th><th>Как тестировать в Postman</th></tr>
+        <tr><td>API1</td><td>Broken Object Level Authorization</td><td>Подставить чужой ID: <code>GET /users/{{other_user_id}}</code> — проверить, что доступ запрещён</td></tr>
+        <tr><td>API2</td><td>Broken Authentication</td><td>Отправить запрос без токена, с истёкшим токеном, с неверным форматом</td></tr>
+        <tr><td>API3</td><td>Broken Object Property Level Authorization</td><td>Mass assignment: <code>{"role":"admin","is_admin":true}</code> в теле запроса</td></tr>
+        <tr><td>API4</td><td>Unrestricted Resource Consumption</td><td>Тест rate limiting: 100 запросов за 1 секунду, проверить 429</td></tr>
+        <tr><td>API5</td><td>Broken Function Level Authorization</td><td>Доступ к admin-эндпоинтам без прав администратора</td></tr>
+        <tr><td>API6</td><td>Unrestricted Access to Sensitive Flows</td><td>Массовый запрос восстановления пароля, регистрации</td></tr>
+        <tr><td>API7</td><td>Server Side Request Forgery</td><td><code>?url=http://internal-server/admin</code> — SSRF test</td></tr>
+        <tr><td>API8</td><td>Security Misconfiguration</td><td>CORS: проверить <code>Access-Control-Allow-Origin: *</code>, лишние методы</td></tr>
+        <tr><td>API9</td><td>Improper Inventory Management</td><td>Старые версии API: <code>/v1/</code>, <code>/api/old/</code>, swagger UI endpoint</td></tr>
+        <tr><td>API10</td><td>Unsafe Consumption of APIs</td><td>Проверка, что API не ходит по непроверенным URL из пользовательского ввода</td></tr>
+      </table>
+
+      <h3>Готовая коллекция для security-тестов</h3>
+      <pre><code>// Postman предоставляет готовую коллекцию:
+// "Check for Common API Vulnerabilities"
+// https://www.postman.com/postman/postman-security-workspace
+
+// Тестирует:
+// - CORS Misconfigurations
+// - Directory Traversal
+// - SQL Injection
+// - Security Headers (Content-Security-Policy, HSTS, X-Frame-Options)
+// - Rate Limiting
+// - Authentication Bypass
+
+// Требуется настроить переменные:
+// - base_url — URL тестируемого API
+// - malicious_origin — подозрительный origin для CORS
+// - valid_access_token_value — валидный токен
+// - expired_access_token_value — истёкший токен
+// - other_user_access_token_value — токен другого пользователя</code></pre>
+
+      <h3>SQL Injection тест</h3>
+      <pre><code>pm.sendRequest({
+    url: pm.environment.get("api_base_url") + "/users",
+    method: "POST",
+    body: {
+        mode: "raw",
+        raw: JSON.stringify({
+            username: "' OR '1'='1",
+            password: "' OR '1'='1"
+        })
+    }
+}, function (err, res) {
+    pm.test("No SQL injection vulnerability", () => {
+        pm.expect(res.code).not.to.eql(500);
+        pm.expect(res.code).not.to.eql(200);
+    });
+});</code></pre>
+
+      <h3>Rate Limiting тест</h3>
+      <pre><code>// В Pre-request: подготовить 100 запросов
+const iterations = pm.iterationData.get("iterations");
+
+// В Tests: проверить, что после N запросов приходит 429
+pm.test("Rate limiting enforced", () => {
+    if (pm.info.iteration > 10) {
+        pm.expect(pm.response.code).to.eql(429);
+        pm.response.to.have.header("Retry-After");
+    }
+});</code></pre>
+
+      <h3>Проверка Security Headers</h3>
+      <pre><code>pm.test("Security headers are present", () => {
+    pm.response.to.have.header("Strict-Transport-Security");
+    pm.response.to.have.header("X-Content-Type-Options");
+    pm.response.to.have.header("X-Frame-Options");
+    pm.response.to.have.header("Content-Security-Policy");
+});
+
+// Content-Security-Policy должен быть строгим
+pm.test("CSP is secure", () => {
+    const csp = pm.response.headers.get("Content-Security-Policy");
+    pm.expect(csp).to.include("default-src 'self'");
+});</code></pre>
+
+      <div class="info-box"><strong>Postman Security Workspace:</strong> В Postman есть публичный workspace "Postman Security Workspace" с готовыми коллекциями для тестирования безопасности — найдите его в Community → Public API Network.</div>
+
+      <!-- ===== 21. JSON V2.1 СТРУКТУРА ===== -->
+      <h2 id="json-v21">21. Структура Collection JSON v2.1</h2>
+      <p>Понимание структуры collection.json необходимо для работы с Git, CI/CD, и для программного создания коллекций через Postman API.</p>
+
+      <h3>Базовая структура</h3>
+      <pre><code>{
+  "info": {
+    "_postman_id": "uuid",
+    "name": "Collection Name",
+    "description": "Описание коллекции",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Get Users",
+      "request": { ... },
+      "response": [ ... ],
+      "event": [ ... ]
+    },
+    {
+      "name": "User Folder",
+      "item": [
+        { "name": "Create User", "request": { ... } },
+        { "name": "Delete User", "request": { ... } }
+      ]
+    }
+  ],
+  "variable": [ ... ],
+  "event": [ ... ],
+  "auth": { ... }
+}</code></pre>
+
+      <h3>Ключевые поля</h3>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+        <tr><td><code>info</code></td><td>Object</td><td>Мета-информация: имя, описание, версия, schema URL</td></tr>
+        <tr><td><code>item</code></td><td>Array</td><td>Запросы и папки. Папка — тот же item с вложенным <code>item</code></td></tr>
+        <tr><td><code>item[].request</code></td><td>Object</td><td>Метод, URL, заголовки, тело, аутентификация</td></tr>
+        <tr><td><code>item[].response</code></td><td>Array</td><td>Сохранённые примеры ответов (Examples)</td></tr>
+        <tr><td><code>item[].event</code></td><td>Array</td><td>Pre-request и Tests скрипты</td></tr>
+        <tr><td><code>variable</code></td><td>Array</td><td>Переменные коллекции (Collection Variables)</td></tr>
+        <tr><td><code>event</code></td><td>Array</td><td>Collection-level скрипты</td></tr>
+        <tr><td><code>auth</code></td><td>Object</td><td>Настройки авторизации по умолчанию</td></tr>
+        <tr><td><code>protocolProfileBehavior</code></td><td>Object</td><td>Настройки поведения: отключение SSL, follow redirects и т.д.</td></tr>
+      </table>
+
+      <h3>Структура request</h3>
+      <pre><code>{
+  "method": "GET",
+  "header": [
+    { "key": "Content-Type", "value": "application/json" },
+    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+  ],
+  "url": {
+    "raw": "https://api.example.com/users?page=1",
+    "protocol": "https",
+    "host": ["api", "example", "com"],
+    "path": ["users"],
+    "query": [
+      { "key": "page", "value": "1" }
+    ],
+    "variable": [
+      { "key": "id", "value": "{{user_id}}" }
+    ]
+  },
+  "body": {
+    "mode": "raw",
+    "raw": "{\"name\": \"John\"}",
+    "options": { "raw": { "language": "json" } }
+  },
+  "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "..." }] }
+}</code></pre>
+
+      <h3>Структура event (скрипты)</h3>
+      <pre><code>{
+  "listen": "test",  // "prerequest" или "test"
+  "script": {
+    "exec": [
+      "pm.test(\"Status code is 200\", function() {",
+      "    pm.response.to.have.status(200);",
+      "});"
+    ],
+    "type": "text/javascript",
+    "packages": {}  // внешние npm-пакеты
+  }
+}</code></pre>
+
+      <h3>Collection Schema v3.0 (новый формат)</h3>
+      <p>С Postman v12 появился формат 3.0 — коллекция хранится как директория с YAML-файлами:</p>
+      <pre><code>my-collection/
+├── definition.yaml        # мета-информация
+├── requests/
+│   ├── get-users.request.yaml
+│   └── create-user.request.yaml
+├── .resources/
+│   ├── get-users/
+│   │   ├── examples/
+│   │   └── scripts/
+│   └── create-user/
+│       ├── examples/
+│       └── scripts/
+└── environments/
+    └── dev.environment.yaml
+
+// Преимущества 3.0:
+// - Человеко-читаемый diff
+// - Нормальные merge в Git
+// - AI-агенты могут безопасно редактировать
+// - Newman не поддерживает (используйте Postman CLI)</code></pre>
+
+      <!-- ===== 22. PRIVATE API NETWORK ===== -->
+      <h2 id="private-network">22. Private API Network</h2>
+      <p>Private API Network — каталог внутренних API организации (доступен на Enterprise-плане). Это централизованное хранилище, где команды публикуют, находят и потребляют внутренние API.</p>
+
+      <h3>Что даёт Private API Network</h3>
+      <ul>
+        <li><strong>Discoverability:</strong> разработчики находят нужный API через поиск по организации</li>
+        <li><strong>Governance:</strong> API Network Manager утверждает, какие workspace попадают в каталог</li>
+        <li><strong>Trust:</strong> элементы из Private API Network помечаются бейджем "доверенный источник"</li>
+        <li><strong>Agent Mode:</strong> AI ищет по Private API Network и отвечает на вопросы об API</li>
+        <li><strong>Integration:</strong> синхронизация с API Catalog для метрик и health-check</li>
+      </ul>
+
+      <h3>Структура Private API Network</h3>
+      <pre><code>// Иерархия:
+// Organization
+// └── Private API Network
+//     ├── Team: Platform
+//     │   ├── Workspace: "Auth Service API"
+//     │   │   ├── Collection: "Auth API"
+//     │   │   └── Collection: "User Management"
+//     │   └── Workspace: "Payment Gateway"
+//     ├── Team: Mobile
+//     │   └── Workspace: "Mobile Backend API"
+//     └── Team: Data
+//         └── Workspace: "Data Pipeline API"</code></pre>
+
+      <h3>Роли</h3>
+      <table>
+        <tr><th>Роль</th><th>Права</th></tr>
+        <tr><td><strong>API Network Manager</strong></td><td>Управление всем каталогом: добавление/удаление workspace, утверждение запросов</td></tr>
+        <tr><td><strong>API Network Folder Manager</strong></td><td>Управление конкретными папками в каталоге</td></tr>
+        <tr><td><strong>Member</strong></td><td>Поиск, просмотр и использование API из каталога</td></tr>
+      </table>
+
+      <div class="info-box"><strong>API Catalog:</strong> В дополнение к Private API Network, Enterprise-план включает API Catalog — централизованную панель мониторинга всех API организации с метриками производительности, ошибок и health-check.</div>
+
+      <!-- ===== 23. API-FIRST ПОДХОД ===== -->
+      <h2 id="api-first">23. API-first подход</h2>
+      <p>API-first — стратегия разработки, при которой спецификация API создаётся до реализации бэкенда. Postman покрывает полный lifecycle API в этой стратегии.</p>
+
+      <h3>API Lifecycle в Postman</h3>
+      <table>
+        <tr><th>Этап</th><th>Инструмент Postman</th><th>Описание</th></tr>
+        <tr><td><strong>Design</strong></td><td>API Builder + OpenAPI</td><td>Создание спецификации API (OpenAPI 3.0) в Postman или импорт существующей</td></tr>
+        <tr><td><strong>Mock</strong></td><td>Mock Server</td><td>Автоматическая генерация mock-сервера из спецификации — фронтенд начинает работу сразу</td></tr>
+        <tr><td><strong>Develop</strong></td><td>Collections + Flows</td><td>Разработка бэкенда под утверждённую спецификацию, тестирование каждого эндпоинта</td></tr>
+        <tr><td><strong>Test</strong></td><td>Collection Runner + Newman</td><td>Автоматические тесты по спецификации: schema validation, contract testing, регресс</td></tr>
+        <tr><td><strong>Document</strong></td><td>API Documentation</td><td>Публикация документации из коллекции — всегда актуальна, всегда синхронизирована</td></tr>
+        <tr><td><strong>Monitor</strong></td><td>Monitors</td><td>Регулярная проверка, что API работает согласно спецификации</td></tr>
+        <tr><td><strong>Discover</strong></td><td>Private API Network</td><td>Публикация API в каталоге организации для внутренних потребителей</td></tr>
+      </table>
+
+      <h3>Workflow API-first с Postman</h3>
+      <pre><code>// 1. Design — создаём спецификацию
+// Postman → APIs → Import OpenAPI / New API
+// Спецификация: openapi.yml
+
+// 2. Mock — имитация бэкенда
+// Postman генерирует коллекцию из OpenAPI → Mock Server
+// Фронтенд: "https://mock-api.pstmn.io/v1/users"
+
+// 3. Develop — бэкенд под спецификацию
+// Postman коллекция = тесты = single source of truth
+
+// 4. Test — автоматизация
+// Newman в CI: newman run collection.json -e env.json
+
+// 5. Document — публикация
+// Postman → View Documentation → Publish
+
+// 6. Monitor — постоянная проверка
+// Monitor → Every 5 minutes → Slack notification
+
+// 7. Discover — в Private API Network
+// Добавить workspace в Private API Network</code></pre>
+
+      <div class="success-box"><strong>Ключевой принцип:</strong> Спецификация API — единственный источник правды. Все артефакты (коллекция, mock, тесты, документация) генерируются из неё автоматически.</div>
+
+      <!-- ===== 24. ИНТЕГРАЦИИ ===== -->
+      <h2 id="integrations">24. Интеграции Postman</h2>
+      <p>Postman интегрируется с десятками сервисов через встроенные интеграции и webhooks. Основные категории: CI/CD, трекинг задач, коммуникации, хранилища секретов.</p>
+
+      <h3>Jira</h3>
+      <p>Создавайте баги и задачи прямо из Postman при падении тестов:</p>
+      <pre><code>// Настройка:
+// 1. Integrations → Jira → Add Integration
+// 2. Авторизация Atlassian аккаунта
+// 3. Выбор проекта и типа задачи
+
+// Использование:
+// - Из Collection Runner: неудачный тест → Create Issue
+// - Из Monitor: падение → авто-создание бага
+// - Из Agent Mode: "Create a Jira issue for this failure"
+
+// Jira issue содержит:
+// - Ссылку на запрос/коллекцию/прогон
+// - Тело запроса и ответа
+// - Статус ошибки</code></pre>
+
+      <h3>Slack</h3>
+      <pre><code>// Установка: Postman App for Slack
+// https://slack.com/apps → Postman
+
+// Возможности:
+// - Rich links: ссылки на коллекции/запросы/workspace
+//   автоматически разворачиваются в карточки
+// - Уведомления о мониторинге:
+//   Monitor → Slack Channel → Автоматически
+// - Слэш-команды:
+//   /postman help — все команды
+//   /postman list collections
+//   /postman run collection-name
+
+// Пример webhook (мониторинг в Slack):
+// Integrations → Webhooks → Post monitoring results
+// URL: https://hooks.slack.com/services/...</code></pre>
+
+      <h3>GitHub / GitLab / Bitbucket</h3>
+      <pre><code>// GitHub:
+// - Git Sync: коллекция ↔ репозиторий
+// - Newman в GitHub Actions (пример в разделе 9)
+// - GitHub Container Registry: публикация SDK
+
+// GitLab:
+// - Newman в GitLab CI
+// - GitLab Container Registry
+// - API Catalog интеграция
+
+// Bitbucket:
+// - Git Sync с Bitbucket Cloud</code></pre>
+
+      <h3>Azure DevOps</h3>
+      <pre><code>// Azure DevOps интеграция:
+// - Newman в Azure Pipelines
+// - Создание Work Items из Postman
+// - Azure Key Vault: хранение секретов
+// - API Catalog: импорт API из Azure API Management</code></pre>
+
+      <h3>Webhooks (кастомные)</h3>
+      <pre><code>// Три типа webhook-интеграций:
+
+// 1. Backup a collection
+//    → При каждом изменении коллекции
+//    → POST на ваш URL
+//    → Используйте для backup в собственное хранилище
+
+// 2. Post monitoring results
+//    → После каждого запуска Monitor
+//    → POST с результатами тестов
+//    → Интеграция с PagerDuty, OpsGenie, Microsoft Teams
+
+// 3. Post team activity
+//    → При изменениях в workspace
+//    → POST с описанием изменений
+//    → Audit log в вашу SIEM-систему</code></pre>
+
+      <h3>Хранилища секретов</h3>
+      <table>
+        <tr><th>Сервис</th><th>Назначение</th></tr>
+        <tr><td>Azure Key Vault</td><td>Хранение API-ключей, паролей, сертификатов</td></tr>
+        <tr><td>AWS Secrets Manager</td><td>Интеграция с AWS-инфраструктурой</td></tr>
+        <tr><td>HashiCorp Vault</td><td>Enterprise vault с динамическими секретами</td></tr>
+      </table>
+
+      <h3>Другие интеграции</h3>
+      <table>
+        <tr><th>Сервис</th><th>Назначение</th></tr>
+        <tr><td>PagerDuty</td><td>Интеграция мониторинга с on-call</td></tr>
+        <tr><td>Microsoft Teams</td><td>Уведомления в Teams-каналы</td></tr>
+        <tr><td>Datadog</td><td>Метрики производительности API</td></tr>
+        <tr><td>New Relic</td><td>APM и мониторинг API</td></tr>
+        <tr><td>Cloudflare</td><td>Публикация API через Cloudflare Workers</td></tr>
+        <tr><td>OpenAPI / Swagger</td><td>Импорт/экспорт спецификаций</td></tr>
+        <tr><td>Kong</td><td>API Gateway интеграция</td></tr>
+      </table>
+
+      <!-- ===== 25. НАГРУЗОЧНОЕ ТЕСТИРОВАНИЕ ===== -->
+      <h2 id="load">25. Нагрузочное тестирование</h2>
+      <p>Postman не заменяет специализированные load-testing инструменты (JMeter, k6, Locust), но позволяет выполнять базовые нагрузочные тесты для проверки стабильности API под небольшой нагрузкой.</p>
+
+      <h3>Load test через Collection Runner</h3>
+      <pre><code>// 1. Создать коллекцию с ключевыми эндпоинтами
+// 2. Collection Runner → Iterations: 100 или 1000
+// 3. Delay: 0 (без задержки) или 100 (имитация реальной нагрузки)
+// 4. Data: CSV с разными данными на каждую итерацию
+// 5. Запустить и смотреть Time (среднее/макс время ответа)
+
+// В Tests — собираем статистику:
+pm.test("Response time under load", () => {
+    pm.expect(pm.response.responseTime).to.be.below(2000);
+});
+
+// Устанавливаем переменные со статистикой:
+pm.test("Collect timing stats", () => {
+    const time = pm.response.responseTime;
+    let maxTime = Number(pm.environment.get("max_time") || 0);
+    let totalTime = Number(pm.environment.get("total_time") || 0);
+    let count = Number(pm.environment.get("request_count") || 0);
+
+    if (time > maxTime) pm.environment.set("max_time", time);
+    pm.environment.set("total_time", totalTime + time);
+    pm.environment.set("request_count", count + 1);
+});</code></pre>
+
+      <h3>Параллельные запросы через Newman</h3>
+      <p>Newman с <code>newman-runner-parallel</code> позволяет запускать запросы параллельно для более реалистичной нагрузки:</p>
+      <pre><code># Установка
+npm install -g newman newman-runner-parallel
+
+# Параллельный запуск (4 worker)
+newman-parallel run collection.json \
+  -e env.json \
+  --num-workers 4 \
+  --iteration-count 100
+
+# С отчётом
+newman-parallel run collection.json \
+  -e env.json \
+  --num-workers 4 \
+  --iteration-count 100 \
+  --reporters cli,htmlextra \
+  --reporter-htmlextra-export ./reports/load-test.html</code></pre>
+
+      <h3>Пример: load test для health-эндпоинта</h3>
+      <pre><code>// Коллекция: "Load Test - Health Check"
+// Один запрос: GET {{base_url}}/health
+// Iterations: 500
+// Delay: 0
+
+// Tests:
+pm.test("Status is 200", () => pm.response.to.have.status(200));
+
+pm.test("Response time < 500ms", () => {
+    pm.expect(pm.response.responseTime).to.be.below(500);
+});
+
+// После прогона проверяем:
+// - Pass rate: 100%?
+// - Max response time: не превысил ли порог?
+// - Среднее время: стабильно или растёт?
+// - Ошибки: появились ли 429/503/500 под нагрузкой?</code></pre>
+
+      <div class="warn-box"><strong>Ограничения Postman для load testing:</strong> Collection Runner выполняет запросы последовательно (кроме parallel-runner). Для серьёзного нагрузочного тестирования используйте k6 (принадлежащий Postman) или специализированные инструменты.</div>
+
+      <h3>k6 — профессиональный load testing от Postman</h3>
+      <pre><code># k6 — open-source инструмент, куплен Postman в 2021
+# Интеграция: экспорт коллекции → скрипт k6
+
+# Установка k6
+sudo gpg -k && sudo gpg --no-default-keyring \
+  --keyring /usr/share/keyrings/k6-archive-keyring.gpg \
+  --keyserver hkp://keyserver.ubuntu.com:80 \
+  --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] \
+  https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+sudo apt update && sudo apt install k6
+
+# Пример k6-скрипта
+# import http from 'k6/http';
+# import { check } from 'k6';
+# export default function () {
+#   const res = http.get('https://api.example.com/health');
+#   check(res, { 'status is 200': (r) => r.status === 200 });
+# }
+
+# Запуск: k6 run --vus 10 --duration 30s script.js
+
+# Экспорт Postman → k6:
+# File → Export → k6 Script (.js)</code></pre>
+
+      <!-- ===== 26. BEST PRACTICES ===== -->
+      <h2 id="practices">26. Best Practices</h2>
+
+      <h3>Организация коллекций</h3>
+      <ul>
+        <li>Группируйте запросы по папкам: Users, Orders, Auth, Health</li>
+        <li>Используйте осмысленные названия: "Create User" вместо "POST to /users"</li>
+        <li>Добавляйте описание к каждому запросу (что делает, какие параметры)</li>
+        <li>Храните окружения отдельно от коллекций (не хардкодьте URL)</li>
+        <li>Используйте Schema v3.0 для коллекций, хранящихся в Git</li>
+      </ul>
+
+      <h3>Переменные и окружения</h3>
+      <ul>
+        <li>Используйте Collection Variables для общих настроек (base_url, api_version)</li>
+        <li>Используйте Environments для переключения dev/staging/prod</li>
+        <li>Секреты (токены, пароли) храните только в Current Value, не в Initial</li>
+        <li>Именуйте переменные в SCREAMING_SNAKE_CASE: <code>BASE_URL</code>, <code>AUTH_TOKEN</code></li>
+      </ul>
+
+      <h3>Тесты</h3>
+      <ul>
+        <li>Пишите тесты для каждого запроса — минимум проверку статуса</li>
+        <li>Используйте Chai.js asserts вместо if-условий</li>
+        <li>Проверяйте time, headers, body, schema — не только status</li>
+        <li>Создайте sanity-коллекцию для быстрой проверки здоровья API</li>
+        <li>Используйте data-файлы (CSV/JSON) для параметризации тестов</li>
+        <li>Используйте Postbot для генерации базовых тестов, но проверяйте edge case'ы</li>
+      </ul>
+
+      <h3>Pre-request скрипты</h3>
+      <ul>
+        <li>Выносите авторизацию в collection-level Pre-request Script</li>
+        <li>Обрабатывайте истечение токена — автоматически получайте новый</li>
+        <li>Используйте console.log для отладки скриптов</li>
+      </ul>
+
+      <h3>CI/CD</h3>
+      <ul>
+        <li>Храните коллекции в Git (JSON v2.1 или YAML v3.0), а не только в облаке Postman</li>
+        <li>Используйте Newman в CI — он не зависит от Postman Cloud</li>
+        <li>Генерируйте HTML-отчёты для визуализации результатов</li>
+        <li>Запускайте smoke-тесты на каждый push, полный регресс — nightly</li>
+        <li>Добавьте security-скрининг (OWASP Top 10) в пайплайн</li>
+      </ul>
+
+      <h3>Командная работа</h3>
+      <ul>
+        <li>Используйте Team Workspace для совместной работы</li>
+        <li>Комментируйте сложные запросы и тесты</li>
+        <li>Версионируйте коллекции через Git Sync или Fork & Merge</li>
+        <li>Документируйте API прямо в Postman — опубликуйте документацию</li>
+        <li>Настройте Private API Network для обнаружения внутренних API</li>
+      </ul>
+
+      <!-- ===== 27. ГЛОССАРИЙ ===== -->
+      <h2 id="glossary">27. Глоссарий Postman-терминов</h2>
+      <table>
+        <tr><th>Термин</th><th>Определение</th></tr>
+        <tr><td><strong>Collection</strong></td><td>Группа связанных HTTP-запросов с общей конфигурацией</td></tr>
+        <tr><td><strong>Environment</strong></td><td>Набор переменных для конкретного окружения (dev/staging/prod)</td></tr>
+        <tr><td><strong>Variable</strong></td><td>Именованное значение, используемое в запросах и скриптах</td></tr>
+        <tr><td><strong>Pre-request Script</strong></td><td>JavaScript, выполняемый перед отправкой запроса</td></tr>
+        <tr><td><strong>Tests Script</strong></td><td>JavaScript, выполняемый после получения ответа</td></tr>
+        <tr><td><strong>Collection Runner</strong></td><td>Инструмент для последовательного запуска запросов коллекции</td></tr>
+        <tr><td><strong>Newman</strong></td><td>CLI-инструмент для запуска Postman-коллекций</td></tr>
+        <tr><td><strong>Postman CLI</strong></td><td>Официальный CLI от Postman (современная альтернатива Newman)</td></tr>
+        <tr><td><strong>Mock Server</strong></td><td>Имитация API-сервера на основе коллекции</td></tr>
+        <tr><td><strong>Monitor</strong></td><td>Регулярная проверка API по расписанию</td></tr>
+        <tr><td><strong>Flows</strong></td><td>Визуальный low-code конструктор API-процессов</td></tr>
+        <tr><td><strong>Workspace</strong></td><td>Область для организации коллекций и совместной работы</td></tr>
+        <tr><td><strong>Chaining</strong></td><td>Передача данных между последовательными запросами</td></tr>
+        <tr><td><strong>Data-driven</strong></td><td>Тестирование с набором данных из CSV/JSON</td></tr>
+        <tr><td><strong>Example</strong></td><td>Сохранённый пример ответа для документации или mock</td></tr>
+        <tr><td><strong>Snippet</strong></td><td>Готовый шаблон кода для тестов и pre-request скриптов</td></tr>
+        <tr><td><strong>Interceptor</strong></td><td>Расширение для захвата кук и запросов из браузера</td></tr>
+        <tr><td><strong>Visualizer</strong></td><td>Кастомная HTML-визуализация ответа</td></tr>
+        <tr><td><strong>Postman Sandbox</strong></td><td>JavaScript-окружение для выполнения скриптов</td></tr>
+        <tr><td><strong>Postman API</strong></td><td>REST API для программного управления ресурсами Postman</td></tr>
+        <tr><td><strong>Postbot / Agent Mode</strong></td><td>AI-ассистент для генерации тестов, отладки и документации</td></tr>
+        <tr><td><strong>Private API Network</strong></td><td>Каталог внутренних API организации (Enterprise)</td></tr>
+        <tr><td><strong>API Catalog</strong></td><td>Панель мониторинга всех API с метриками (Enterprise)</td></tr>
+        <tr><td><strong>API-first</strong></td><td>Стратегия: спецификация API до реализации бэкенда</td></tr>
+        <tr><td><strong>gRPC</strong></td><td>High-performance RPC фреймворк от Google (Protobuf)</td></tr>
+        <tr><td><strong>WebSocket</strong></td><td>Протокол постоянного соединения для real-time коммуникации</td></tr>
+        <tr><td><strong>k6</strong></td><td>Open-source инструмент нагрузочного тестирования (принадлежит Postman)</td></tr>
+        <tr><td><strong>OpenAPI / Swagger</strong></td><td>Спецификация REST API (YAML/JSON)</td></tr>
+        <tr><td><strong>Collection Schema v2.1</strong></td><td>Формат коллекции JSON (для Newman, Git)</td></tr>
+        <tr><td><strong>Collection Schema v3.0</strong></td><td>Новый формат коллекции YAML (директория, для Postman CLI)</td></tr>
+        <tr><td><strong>OWASP API Top 10</strong></td><td>Десятка главных уязвимостей API по версии OWASP</td></tr>
+      </table>
+
+      <!-- ===== 28. ЧЕКЛИСТ ===== -->
+      <h2 id="checklist">28. Чеклист Postman</h2>
+
+      <h3>Структура и организация</h3>
+      <ul>
+        <li><input type="checkbox"> Коллекции grouped по функциональным областям (папки)</li>
+        <li><input type="checkbox"> Все URL используют переменные ({{base_url}}, не хардкод)</li>
+        <li><input type="checkbox"> Описание добавлено к каждому запросу</li>
+        <li><input type="checkbox"> Созданы примеры (Examples) для разных сценариев</li>
+        <li><input type="checkbox"> Окружения настроены: dev, staging, prod</li>
+        <li><input type="checkbox"> Коллекция хранится в Git (v2.1 JSON или v3.0 YAML)</li>
+      </ul>
+
+      <h3>Переменные и окружения</h3>
+      <ul>
+        <li><input type="checkbox"> Collection Variables для общих настроек</li>
+        <li><input type="checkbox"> Environment Variables для переключения окружений</li>
+        <li><input type="checkbox"> Секреты (токены, пароли) — только Current Value</li>
+        <li><input type="checkbox"> Initial Value не содержит реальных данных</li>
+        <li><input type="checkbox"> Имена переменных в едином стиле (SCREAMING_SNAKE_CASE)</li>
+      </ul>
+
+      <h3>Тесты и скрипты</h3>
+      <ul>
+        <li><input type="checkbox"> У каждого запроса есть минимум 1 тест (статус)</li>
+        <li><input type="checkbox"> Тесты проверяют: status, body, headers, time, schema</li>
+        <li><input type="checkbox"> Pre-request Script для автополучения токена</li>
+        <li><input type="checkbox"> Collection-level скрипты для общей логики</li>
+        <li><input type="checkbox"> console.log удалены из production-тестов</li>
+        <li><input type="checkbox"> Data-файлы (CSV/JSON) для параметризации</li>
+        <li><input type="checkbox"> Postbot использован для генерации базовых тестов</li>
+      </ul>
+
+      <h3>Mock Servers</h3>
+      <ul>
+        <li><input type="checkbox"> Mock сервер создан для незавершённых API</li>
+        <li><input type="checkbox"> Examples настроены для разных ответов (200, 404, 500)</li>
+        <li><input type="checkbox"> Mock URL используется в конфигурации фронтенда</li>
+      </ul>
+
+      <h3>Monitoring</h3>
+      <ul>
+        <li><input type="checkbox"> Health-check коллекция с базовыми тестами</li>
+        <li><input type="checkbox"> Монитор запускается каждые 5-15 минут</li>
+        <li><input type="checkbox"> Уведомления настроены (Slack / Email / Webhook)</li>
+        <li><input type="checkbox"> Пороговые значения по времени ответа</li>
+      </ul>
+
+      <h3>Безопасность</h3>
+      <ul>
+        <li><input type="checkbox"> Проверен OWASP Top 10 через Postman Security коллекцию</li>
+        <li><input type="checkbox"> Тести SQL injection на входных параметрах</li>
+        <li><input type="checkbox"> Rate limiting проверен (ожидаемый 429)</li>
+        <li><input type="checkbox"> Security Headers проверены (CSP, HSTS, X-Frame-Options)</li>
+        <li><input type="checkbox"> CORS настроен минимально необходимый</li>
+      </ul>
+
+      <h3>CI/CD</h3>
+      <ul>
+        <li><input type="checkbox"> Коллекция хранится в Git (JSON v2.1 или YAML v3.0)</li>
+        <li><input type="checkbox"> Newman запускается в CI (GitHub Actions / GitLab CI)</li>
+        <li><input type="checkbox"> HTML-отчёт генерируется и сохраняется как artifact</li>
+        <li><input type="checkbox"> Регрессионные тесты — nightly, smoke — на каждый push</li>
+        <li><input type="checkbox"> Security-тесты включены в пайплайн</li>
+        <li><input type="checkbox"> Load-тесты (k6 или Newman parallel) запускаются перед релизом</li>
+      </ul>
+
+      <h3>Командная работа</h3>
+      <ul>
+        <li><input type="checkbox"> Используется Team Workspace</li>
+        <li><input type="checkbox"> Коллекция задокументирована (Description + Examples)</li>
+        <li><input type="checkbox"> Настроен Git Sync или Fork & Merge</li>
+        <li><input type="checkbox"> Документация API опубликована</li>
+        <li><input type="checkbox"> Private API Network настроен для внутренних API</li>
+        <li><input type="checkbox"> Интеграция с Jira для создания багов из прогонов</li>
+      </ul>
+
+      <div class="success-box"><strong>Золотое правило Postman:</strong> Коллекция — единственный источник правды (Single Source of Truth) для API-тестов. Всё, что можно автоматизировать — автоматизируйте. Всё, что можно задокументировать — документируйте. Всё, что можно проверить на безопасность — проверьте.</div>
+      <p style="margin-top: 24px; text-align: center; opacity: 0.7;">Гайд подготовлен для проекта qasdet.github.io &bull; 2026</p>
+    </main>
+  </div>
+  <footer>
+    <p>Полный гайд по Postman — от первого запроса до AI, gRPC, безопасности и load testing</p>
+  </footer>
+</div>
+<script>
+(function(){
+  const canvas = document.getElementById('cursor-effect');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  let mouse = { x: -1000, y: -1000 };
+  document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  document.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+  const particles = [];
+  const MAX = 50;
+  function spawn(){
+    particles.push({ x: mouse.x + (Math.random() - 0.5) * 6, y: mouse.y + (Math.random() - 0.5) * 6, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8 - 0.3, life: 1, size: Math.random() * 3 + 1.5 });
+    if(particles.length > MAX) particles.shift();
+  }
+  let frame = 0;
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    frame++;
+    if(frame % 2 === 0 && mouse.x > 0) spawn();
+    for(let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.life -= 0.015;
+      if(p.life <= 0){ particles.splice(i, 1); continue; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,108,55,${p.life * 0.7})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
