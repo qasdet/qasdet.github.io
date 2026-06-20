@@ -11,12 +11,15 @@
 <canvas id="cursor-effect"></canvas>
 <div class="wrapper">
   <header>
+    <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню"><span></span></button>
     <h1>Корпоративные манипуляции</h1>
     <p class="subtitle">Как распознать манипуляции со стороны руководителей и HR, защитить себя и сохранить карьеру</p>
     <p class="meta">Версия 2.0 • 2026</p>
   </header>
   <div class="layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <nav class="sidebar" id="sidebar">
+      <button class="sidebar-close" id="sidebarClose" aria-label="Закрыть меню">&times;</button>
       <h3>Содержание</h3>
       <ul>
         <li><a href="#intro" class="toc-h2">1. Введение</a></li>
@@ -1000,6 +1003,28 @@
     requestAnimationFrame(draw);
   }
   draw();
+})();
+
+// === OFF-CANVAS SIDEBAR TOGGLE ===
+(function(){
+  var toggle = document.getElementById('menuToggle');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var close = document.getElementById('sidebarClose');
+
+  function open(){ sidebar.classList.add('active'); overlay.classList.add('active'); document.body.classList.add('sidebar-open'); }
+  function close_(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); document.body.classList.remove('sidebar-open'); }
+
+  toggle.addEventListener('click', open);
+  close.addEventListener('click', close_);
+  overlay.addEventListener('click', close_);
+
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close_(); });
+
+  var links = sidebar.querySelectorAll('a');
+  for(var i = 0; i < links.length; i++){
+    links[i].addEventListener('click', close_);
+  }
 })();
 </script>
 </body>

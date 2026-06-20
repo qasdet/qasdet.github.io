@@ -10,11 +10,14 @@
 <body>
 <div class="wrapper">
   <header>
+    <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню"><span></span></button>
     <h1>Справочник Python</h1>
     <p class="subtitle">Полное руководство по языку на русском</p>
   </header>
   <div class="layout">
-    <nav class="sidebar">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <nav class="sidebar" id="sidebar">
+      <button class="sidebar-close" id="sidebarClose" aria-label="Закрыть меню">&times;</button>
       <h3>Разделы</h3>
       <ul>
       <li><a href="intro.html">Введение в Python</a></li>
@@ -174,5 +177,21 @@
     <p>Справочник Python на русском — создан для тестировщиков и разработчиков</p>
   </footer>
 </div>
+<script>
+(function(){
+  var toggle = document.getElementById('menuToggle');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var close = document.getElementById('sidebarClose');
+  function open(){ sidebar.classList.add('active'); overlay.classList.add('active'); document.body.classList.add('sidebar-open'); }
+  function close_(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); document.body.classList.remove('sidebar-open'); }
+  toggle.addEventListener('click', open);
+  close.addEventListener('click', close_);
+  overlay.addEventListener('click', close_);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close_(); });
+  var links = sidebar.querySelectorAll('a');
+  for(var i = 0; i < links.length; i++){ links[i].addEventListener('click', close_); }
+})();
+</script>
 </body>
 </html>

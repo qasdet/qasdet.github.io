@@ -10,6 +10,7 @@
 <body>
 
 <div class="header">
+<button class="menu-toggle" id="menuToggle" aria-label="Открыть меню"><span></span></button>
 <div class="header-inner">
 <a href="index.html">Playwright Python — справочник</a>
 <a href="../index.html" style="font-size:13px;font-weight:400;">На главный сайт</a>
@@ -18,7 +19,9 @@
 
 <div class="wrapper">
 
-<nav class="sidebar">
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<nav class="sidebar" id="sidebar">
+<button class="sidebar-close" id="sidebarClose" aria-label="Закрыть меню">&times;</button>
 <div class="sidebar-section">
 <div class="sidebar-title">Основы</div>
 <a class="sidebar-link" href="intro.html">Введение</a>
@@ -323,5 +326,21 @@ Playwright Python — полный справочник на русском яз
 </main>
 </div>
 
+<script>
+(function(){
+  var toggle = document.getElementById('menuToggle');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var close = document.getElementById('sidebarClose');
+  function open(){ sidebar.classList.add('active'); overlay.classList.add('active'); document.body.classList.add('sidebar-open'); }
+  function close_(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); document.body.classList.remove('sidebar-open'); }
+  toggle.addEventListener('click', open);
+  close.addEventListener('click', close_);
+  overlay.addEventListener('click', close_);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close_(); });
+  var links = sidebar.querySelectorAll('a');
+  for(var i = 0; i < links.length; i++){ links[i].addEventListener('click', close_); }
+})();
+</script>
 </body>
 </html>
