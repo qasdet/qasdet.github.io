@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flask 3 — полное руководство</title>
+  <link rel="stylesheet" href="flask-style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+<canvas id="cursor-effect"></canvas>
+<div class="wrapper">
+  <header>
+    <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню"><span></span></button>
+    <h1>Flask 3 — полное руководство</h1>
+    <p class="subtitle">От установки до production: маршруты, шаблоны, базы данных, API, тестирование, деплой и best practices</p>
+    <p class="meta">Версия 1.0 • 2026</p>
+  </header>
+  <div class="layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <nav class="sidebar" id="sidebar">
+      <button class="sidebar-close" id="sidebarClose" aria-label="Закрыть меню">&times;</button>
+      <h3>Содержание</h3>
+      <ul>
+        <li><a href="#intro" class="toc-h2">1. Введение</a></li>
+        <li><a href="#install" class="toc-h2">2. Установка</a></li>
+        <li><a href="#quickstart" class="toc-h3">2.1 Быстрый старт</a></li>
+        <li><a href="#basics" class="toc-h2">3. Основы</a></li>
+        <li><a href="#routes" class="toc-h3">3.1 Маршруты</a></li>
+        <li><a href="#templates" class="toc-h3">3.2 Шаблоны (Jinja2)</a></li>
+        <li><a href="#context-processors" class="toc-h4">Контекст-провайдеры</a></li>
+        <li><a href="#g-object" class="toc-h4">Объект g</a></li>
+        <li><a href="#custom-filters" class="toc-h4">Кастомные фильтры</a></li>
+        <li><a href="#include-macro" class="toc-h4">include и макросы</a></li>
+        <li><a href="#static" class="toc-h3">3.3 Статика</a></li>
+        <li><a href="#requests" class="toc-h3">3.4 Запросы и ответы</a></li>
+        <li><a href="#flask3new" class="toc-h2">4. Новое в Flask 3</a></li>
+        <li><a href="#f3-async" class="toc-h3">4.1 Async-поддержка</a></li>
+        <li><a href="#f3-cli" class="toc-h3">4.2 CLI и команды</a></li>
+        <li><a href="#f3-config" class="toc-h3">4.3 Конфигурация</a></li>
+        <li><a href="#blueprints" class="toc-h2">5. Blueprints</a></li>
+        <li><a href="#bp-create" class="toc-h3">5.1 Создание</a></li>
+        <li><a href="#bp-context" class="toc-h3">5.2 Контекст и данные</a></li>
+        <li><a href="#bp-templates" class="toc-h3">5.3 Шаблоны и URL</a></li>
+        <li><a href="#bp-subdomain" class="toc-h3">5.4 Поддомены</a></li>
+        <li><a href="#bp-errors" class="toc-h3">5.5 Обработчики ошибок</a></li>
+        <li><a href="#database" class="toc-h2">6. Базы данных</a></li>
+        <li><a href="#db-sqlalchemy" class="toc-h3">6.1 Flask-SQLAlchemy</a></li>
+        <li><a href="#db-migrate" class="toc-h3">6.2 Миграции</a></li>
+        <li><a href="#forms" class="toc-h2">7. Формы</a></li>
+        <li><a href="#api" class="toc-h2">8. REST API</a></li>
+        <li><a href="#api-views" class="toc-h3">8.1 Class-based Views</a></li>
+        <li><a href="#api-validation" class="toc-h3">8.2 Валидация</a></li>
+        <li><a href="#auth" class="toc-h2">9. Аутентификация</a></li>
+        <li><a href="#testing" class="toc-h2">10. Тестирование</a></li>
+        <li><a href="#errors" class="toc-h2">11. Ошибки</a></li>
+        <li><a href="#middleware" class="toc-h2">12. Middleware</a></li>
+        <li><a href="#security" class="toc-h2">13. Безопасность</a></li>
+        <li><a href="#cache" class="toc-h2">14. Кеширование</a></li>
+        <li><a href="#async" class="toc-h2">15. Асинхронность</a></li>
+        <li><a href="#websocket" class="toc-h3">15.1 WebSockets</a></li>
+        <li><a href="#background" class="toc-h3">15.2 Фоновые задачи</a></li>
+        <li><a href="#upload" class="toc-h2">16. Файлы</a></li>
+        <li><a href="#i18n" class="toc-h2">17. Интернационализация</a></li>
+        <li><a href="#cli" class="toc-h2">18. CLI-команды</a></li>
+        <li><a href="#docker" class="toc-h2">19. Docker</a></li>
+        <li><a href="#deploy" class="toc-h2">20. Production</a></li>
+        <li><a href="#monitoring" class="toc-h3">20.1 Мониторинг</a></li>
+        <li><a href="#extensions" class="toc-h2">21. Расширения</a></li>
+        <li><a href="#checklist" class="toc-h2">22. Чеклист</a></li>
+        <li><a href="#examples" class="toc-h2">23. Практические примеры</a></li>
+        <li><a href="#ex-blog" class="toc-h3">23.1 Мини-блог</a></li>
+        <li><a href="#ex-api" class="toc-h3">23.2 REST API + JWT</a></li>
+        <li><a href="#ex-chat" class="toc-h3">23.3 Чат WebSocket</a></li>
+        <li><a href="#ex-celery" class="toc-h3">23.4 Celery фон</a></li>
+        <li><a href="#ex-webhook" class="toc-h3">23.5 Webhook</a></li>
+        <li><a href="#ex-deploy" class="toc-h3">23.6 Docker Compose</a></li>
+        <li><a href="#ex-async" class="toc-h3">23.7 Async данные</a></li>
+        <li><a href="#ex-pdf" class="toc-h3">23.8 PDF отчёты</a></li>
+      </ul>
+    </nav>
+    <main>
+
+      <!-- ===== 1. ВВЕДЕНИЕ ===== -->
+      <h2 id="intro"><span class="section-num">1.</span> Введение</h2>
+      <p>Flask — лёгкий WSGI-фреймворк для Python, созданный Армином Ронахером. Начиная с версии 3.0 (2023) Flask получил значительные улучшения: нативную async-поддержку, новый CLI, улучшенную типизацию и многое другое.</p>
+      <p>Это руководство охватывает Flask 3.x — от самых основ до production-ready решений. Материал построен так, чтобы быть полезным как новичкам, так и опытным разработчикам.</p>
+
+      <table>
+        <tr><th>Версия</th><th>Дата</th><th>Ключевые изменения</th></tr>
+        <tr><td>3.0</td><td>Сентябрь 2023</td><td>Async views, новый CLI, улучшенная типизация</td></tr>
+        <tr><td>3.1</td><td>Март 2024</td><td>Improvements, bugfixes</td></tr>
+        <tr><td>3.2</td><td>Ноябрь 2024</td><td>Улучшения производительности, security-фиксы</td></tr>
+      </table>
+
+      <!-- ===== 2. УСТАНОВКА ===== -->
+      <h2 id="install"><span class="section-num">2.</span> Установка и быстрый старт</h2>
+      <p>Flask устанавливается через pip. Рекомендуется использовать виртуальное окружение.</p>
+      <pre><code>python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# venv\Scripts\activate   # Windows
+pip install flask</code></pre>
+
+      <h3 id="quickstart">2.1 Быстрый старт</h3>
+      <p>Минимальное приложение на Flask 3 выглядит так:</p>
+      <pre><code>from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return 'Hello, Flask 3!'
+
+if __name__ == '__main__':
+    app.run()</code></pre>
+
+      <div class="info-box">
+        <strong>Запуск:</strong> <code>python app.py</code> — сервер стартует на <code>http://127.0.0.1:5000</code>.
+      </div>
+
+      <h4>Flask CLI (рекомендуемый способ)</h4>
+      <pre><code>flask --app app run --debug</code></pre>
+      <p>Флаг <code>--debug</code> включает hot-reload и детальные ошибки.</p>
+
+      <!-- ===== 3. ОСНОВЫ ===== -->
+      <h2 id="basics"><span class="section-num">3.</span> Основы Flask</h2>
+
+      <h3 id="routes">3.1 Маршруты (Routes)</h3>
+      <p>Маршруты определяются декоратором <code>@app.route()</code>. Flask 3 поддерживает типизированные параметры пути.</p>
+      <pre><code>@app.route('/user/&lt;int:user_id&gt;')
+def profile(user_id: int):
+    return f'User ID: {user_id}'
+
+@app.route('/post/&lt;slug&gt;')
+def post(slug: str):
+    return f'Post: {slug}'
+
+# HTTP methods
+@app.route('/data', methods=['GET', 'POST'])
+def data():
+    if request.method == 'POST':
+        return 'Created', 201
+    return 'Data'</code></pre>
+
+      <table>
+        <tr><th>Конвертер</th><th>Тип</th><th>Пример</th></tr>
+        <tr><td><code>string</code></td><td>Строка (по умолчанию)</td><td><code>/post/&lt;slug&gt;</code></td></tr>
+        <tr><td><code>int</code></td><td>Целое число</td><td><code>/user/&lt;int:id&gt;</code></td></tr>
+        <tr><td><code>float</code></td><td>Число с точкой</td><td><code>/price/&lt;float:val&gt;</code></td></tr>
+        <tr><td><code>path</code></td><td>Путь (со слешами)</td><td><code>/files/&lt;path:filepath&gt;</code></td></tr>
+        <tr><td><code>uuid</code></td><td>UUID</td><td><code>/item/&lt;uuid:uid&gt;</code></td></tr>
+      </table>
+
+      <h3 id="templates">3.2 Шаблоны (Jinja2)</h3>
+      <p>Flask использует Jinja2 — мощный шаблонизатор. Шаблоны хранятся в папке <code>templates/</code>.</p>
+      <pre><code>from flask import render_template
+
+@app.route('/hello/&lt;name&gt;')
+def hello(name: str):
+    return render_template('hello.html', name=name)</code></pre>
+      <p><strong>templates/hello.html:</strong></p>
+      <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Hello&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello, {{ name }}!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h4>Передача данных в шаблоны</h4>
+      <p>Данные передаются именованными аргументами в <code>render_template</code>. Можно передавать любые объекты: строки, числа, списки, словари, модели SQLAlchemy.</p>
+      <pre><code>@app.route('/user/&lt;int:id&gt;')
+def profile(id):
+    user = User.query.get_or_404(id)
+    posts = Post.query.filter_by(author=user).all()
+    stats = {'posts': len(posts), 'likes': sum(p.likes for p in posts)}
+    return render_template('profile.html', user=user, posts=posts, stats=stats)</code></pre>
+      <pre><code>{# profile.html #}
+&lt;h1&gt;{{ user.username }}&lt;/h1&gt;
+&lt;p&gt;Публикаций: {{ stats.posts }}, лайков: {{ stats.likes }}&lt;/p&gt;
+&lt;ul&gt;
+{% for post in posts %}
+  &lt;li&gt;{{ post.title }} ({{ post.created_at.strftime('%d.%m.%Y') }})&lt;/li&gt;
+{% else %}
+  &lt;li&gt;Нет публикаций&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;</code></pre>
+
+      <h4 id="context-processors">Контекст-провайдеры (глобальные переменные)</h4>
+      <p>Контекст-провайдеры внедряют переменные во все шаблоны без передачи их в каждый <code>render_template</code>. Используются для текущего пользователя, настроек сайта, меню.</p>
+      <pre><code>@app.context_processor
+def inject_globals():
+    return {
+        'site_name': 'MyApp',
+        'current_year': datetime.utcnow().year,
+        'menu': [{'title': 'Home', 'url': '/'}, {'title': 'About', 'url': '/about'}]
+    }
+
+@app.context_processor
+def inject_user():
+    from flask import g
+    return {'current_user': g.get('user')}
+
+# {{ site_name }} — доступен во всех шаблонах
+# {{ current_year }} — автоматически обновляется каждый год</code></pre>
+      <div class="info-box">
+        <strong>Blueprint-specific контекст:</strong> Для добавления переменных только в шаблоны конкретного blueprint используйте <code>@blueprint.context_processor</code> — работает как глобальный, но применяется только для маршрутов этого blueprint.
+      </div>
+
+      <h4 id="g-object">Объект g (request-bound storage)</h4>
+      <p><code>g</code> — контейнер для данных, живущих в рамках одного запроса. Идеален для подгрузки пользователя, БД-сессий, кешированных данных. Передаётся в шаблон через контекст-провайдер.</p>
+      <pre><code>from flask import g
+
+@app.before_request
+def load_user():
+    if 'user_id' in session:
+        g.user = User.query.get(session['user_id'])
+        g.cart_count = Cart.query.filter_by(user_id=g.user.id).count()
+    else:
+        g.user = None
+
+@app.context_processor
+def inject_g():
+    return {'g': g}
+
+template: {{ g.user.username if g.user else 'Гость' }}
+template: Корзина ({{ g.cart_count }})</code></pre>
+      <div class="warn-box">
+        <strong>Важно:</strong> <code>g</code> сбрасывается после каждого запроса. Не используйте его для хранения данных между запросами — для этого есть <code>session</code> или БД.
+      </div>
+
+      <h4 id="custom-filters">Кастомные фильтры и тесты</h4>
+      <p>Jinja2 позволяет добавлять собственные фильтры и тесты для форматирования данных в шаблонах.</p>
+      <pre><code>@app.template_filter('format_date')
+def format_date(date):
+    return date.strftime('%d %b %Y, %H:%M')
+
+@app.template_filter('truncate')
+def truncate(text, length=100):
+    return text[:length] + '...' if len(text) > length else text
+
+@app.template_filter('pluralize')
+def pluralize(count, singular='item', plural='items'):
+    return f'{count} {singular if count == 1 else plural}'
+
+# {{ post.created_at|format_date }}
+# {{ post.body|truncate(50) }}
+# {{ items|length|pluralize('post', 'posts') }}</code></pre>
+      <pre><code>@app.template_test('admin')
+def is_admin(user):
+    return user.role == 'admin'
+
+@jinja2 {% if user is admin %}Admin Panel{% endif %}</code></pre>
+      <div class="info-box">
+        <strong>Для Blueprint:</strong> <code>@bp.app_template_filter('filter_name')</code> — регистрирует фильтр для всего приложения из blueprint. <code>@bp.app_template_test('test_name')</code> — аналогично для тестов.
+      </div>
+
+      <h4 id="include-macro">include и макросы (macros)</h4>
+      <p><code>{% include %}</code> вставляет содержимое другого шаблона. Макросы — переиспользуемые фрагменты с параметрами, аналоги функций.</p>
+      <pre><code>{# templates/macros/forms.html #}
+{% macro input(name, label='', type='text', value='') %}
+  &lt;div class="field"&gt;
+    &lt;label for="{{ name }}"&gt;{{ label }}&lt;/label&gt;
+    &lt;input type="{{ type }}" name="{{ name }}" id="{{ name }}" value="{{ value }}"&gt;
+  &lt;/div&gt;
+{% endmacro %}
+
+{% macro render_pagination(pagination, endpoint) %}
+  &lt;nav class="pagination"&gt;
+    {% if pagination.has_prev %}
+      &lt;a href="{{ url_for(endpoint, page=pagination.prev_num) }}"&gt;&amp;laquo;&lt;/a&gt;
+    {% endif %}
+    &lt;span&gt;Стр. {{ pagination.page }} из {{ pagination.pages }}&lt;/span&gt;
+    {% if pagination.has_next %}
+      &lt;a href="{{ url_for(endpoint, page=pagination.next_num) }}"&gt;&amp;raquo;&lt;/a&gt;
+    {% endif %}
+  &lt;/nav&gt;
+{% endmacro %}</code></pre>
+      <pre><code>{# templates/post.html #}
+{% from "macros/forms.html" import input, render_pagination %}
+
+{% extends "base.html" %}
+{% block content %}
+  &lt;form method="POST"&gt;
+    {{ input('title', 'Заголовок') }}
+    {{ input('email', 'Email', type='email') }}
+    &lt;button&gt;Submit&lt;/button&gt;
+  &lt;/form&gt;
+
+  {% include "ads.html" ignore missing %}
+
+  {{ render_pagination(posts, 'blog.index') }}
+{% endblock %}</code></pre>
+      <div class="info-box">
+        <strong>Совет:</strong> Макросы храните в <code>templates/macros/</code>. Для переиспользования между приложениями используйте пакет <code>flask-jinja-extras</code> или пакет Python с кастомными расширениями Jinja.
+      </div>
+
+      <h3 id="static">3.3 Статические файлы</h3>
+      <p>Статика хранится в <code>static/</code> и доступна через <code>/static/...</code>.</p>
+      <pre><code>&lt;link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"&gt;
+&lt;script src="{{ url_for('static', filename='app.js') }}"&gt;&lt;/script&gt;
+&lt;img src="{{ url_for('static', filename='logo.png') }}" alt="Logo"&gt;</code></pre>
+
+      <h3 id="requests">3.4 Запросы и ответы</h3>
+      <pre><code>from flask import request, jsonify
+
+@app.route('/api', methods=['POST'])
+def api():
+    # GET параметры
+    page = request.args.get('page', 1, type=int)
+
+    # POST JSON
+    data = request.get_json()
+
+    # POST Form
+    name = request.form.get('name')
+
+    # Заголовки
+    auth = request.headers.get('Authorization')
+
+    # Куки
+    token = request.cookies.get('session')
+
+    # Ответ
+    return jsonify({'status': 'ok', 'data': data})</code></pre>
+
+      <!-- ===== 4. НОВОЕ В FLASK 3 ===== -->
+      <h2 id="flask3new"><span class="section-num">4.</span> Новое в Flask 3</h2>
+      <p>Flask 3.0 — первый major-релиз с 2018 года. Вот ключевые изменения:</p>
+
+      <h3 id="f3-async">4.1 Async views (нативная async-поддержка)</h3>
+      <p>Flask 3 позволяет использовать <code>async def</code> для view-функций без дополнительных расширений.</p>
+      <pre><code>@app.route('/async')
+async def async_view():
+    result = await some_async_function()
+    return {'result': result}</code></pre>
+
+      <div class="warn-box">
+        <strong>Важно:</strong> Async-views работают через ASGI-сервер (Uvicorn, Hypercorn) или WSGI с <code>asgiref.sync.async_to_sync</code>. Для production рекомендуется Uvicorn: <code>pip install uvicorn</code> и <code>uvicorn app:app</code>.
+      </div>
+
+      <h3 id="f3-cli">4.2 Новый CLI</h3>
+      <p>Flask 3 представил новый CLI на основе Click с улучшенным автокомплитом и группировкой команд.</p>
+      <pre><code>flask routes        # Показать все маршруты
+flask --app app shell  # Интерактивная оболочка
+flask db upgrade     # Миграции (с Flask-Migrate)</code></pre>
+
+      <h3 id="f3-config">4.3 Улучшенная конфигурация</h3>
+      <p>Flask 3 поддерживает строгую типизацию через dataclass-подобные объекты конфигурации.</p>
+      <pre><code>class Config:
+    SECRET_KEY: str
+    DATABASE_URL: str = 'sqlite:///app.db'
+    DEBUG: bool = False
+
+app.config.from_object(Config)
+app.config['DATABASE_URL'] = 'postgresql://localhost/app'</code></pre>
+
+      <!-- ===== 5. BLUEPRINTS ===== -->
+      <h2 id="blueprints"><span class="section-num">5.</span> Blueprints — модульность</h2>
+      <p>Blueprints позволяют организовать приложение в модули. Каждый blueprint — независимый компонент со своими маршрутами, шаблонами, статикой, контекстом и обработчиками ошибок.</p>
+
+      <h3 id="bp-create">5.1 Создание и регистрация</h3>
+      <p>Blueprint создаётся через <code>Blueprint()</code> и регистрируется в приложении через <code>app.register_blueprint()</code>.</p>
+      <pre><code># admin/__init__.py
+from flask import Blueprint
+
+admin = Blueprint(
+    'admin',                    # имя blueprint
+    __name__,
+    url_prefix='/admin',        # префикс всех маршрутов
+    template_folder='templates',# папка с шаблонами (относительно blueprint)
+    static_folder='static',     # папка со статикой
+    static_url_path='/admin/static',  # URL для статики
+    subdomain='admin'           # опционально: поддомен
+)
+
+from . import views
+
+# admin/views.py
+from flask import render_template
+from . import admin
+
+@admin.route('/')
+def dashboard():
+    return render_template('admin/dashboard.html')
+
+@admin.route('/users')
+@login_required
+def users():
+    return render_template('admin/users.html')
+
+# app.py
+from admin import admin
+app.register_blueprint(admin)
+
+# Множественная регистрация — один blueprint на разные префиксы:
+app.register_blueprint(admin, url_prefix='/dashboard')
+app.register_blueprint(admin, url_prefix='/admin', subdomain='api')</code></pre>
+
+      <h3 id="bp-context">5.2 Контекст и передача данных в шаблоны</h3>
+      <p>Каждый blueprint может иметь собственные контекст-провайдеры, обработчики запросов и переменные, доступные только в его шаблонах.</p>
+      <pre><code># admin/__init__.py
+from flask import Blueprint, g
+
+admin = Blueprint('admin', __name__, url_prefix='/admin')
+
+# before_request — выполняется перед каждым маршрутом blueprint
+@admin.before_request
+def before_admin():
+    if not g.get('user') or g.user.role != 'admin':
+        return redirect(url_for('auth.login'))
+    g.admin_section = 'dashboard'
+
+# context_processor — переменные только для шаблонов этого blueprint
+@admin.context_processor
+def inject_admin_data():
+    return {
+        'admin_title': 'Панель управления',
+        'admin_menu': [
+            {'name': 'Дашборд', 'url': url_for('admin.dashboard')},
+            {'name': 'Пользователи', 'url': url_for('admin.users')},
+            {'name': 'Настройки', 'url': url_for('admin.settings')}
+        ],
+        'stats': {
+            'users': User.query.count(),
+            'orders': Order.query.count()
+        }
+    }
+
+# after_request — выполняется после каждого ответа blueprint
+@admin.after_request
+def add_admin_header(response):
+    response.headers['X-Admin-Panel'] = 'true'
+    return response</code></pre>
+      <p>В шаблонах blueprint-а доступны все переменные из контекст-провайдера:</p>
+      <pre><code>{# templates/admin/base.html #}
+&lt;h1&gt;{{ admin_title }}&lt;/h1&gt;
+&lt;nav&gt;
+  {% for item in admin_menu %}
+    &lt;a href="{{ item.url }}"&gt;{{ item.name }}&lt;/a&gt;
+  {% endfor %}
+&lt;/nav&gt;
+&lt;p&gt;Пользователей: {{ stats.users }}, заказов: {{ stats.orders }}&lt;/p&gt;</code></pre>
+
+      <h3 id="bp-templates">5.3 Шаблоны и URL в Blueprints</h3>
+      <p>Для ссылок на маршруты внутри blueprint используйте <code>url_for('blueprint_name.endpoint')</code>. Наследование шаблонов работает между blueprints через абсолютные пути.</p>
+      <pre><code>{# admin/templates/admin/base.html — базовый шаблон для админки #}
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;{% block title %}Admin{% endblock %}&lt;/title&gt;
+  &lt;link rel="stylesheet" href="{{ url_for('admin.static', filename='style.css') }}"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;a href="{{ url_for('admin.dashboard') }}"&gt;Dashboard&lt;/a&gt;
+    &lt;a href="{{ url_for('admin.users') }}"&gt;Users&lt;/a&gt;
+    &lt;a href="{{ url_for('blog.index') }}"&gt;Blog (другой blueprint)&lt;/a&gt;
+  &lt;/header&gt;
+  &lt;main&gt;{% block content %}{% endblock %}&lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+{# admin/templates/admin/users.html — наследование внутри blueprint #}
+{% extends "admin/base.html" %}
+{% block title %}Users — Admin{% endblock %}
+{% block content %}
+  &lt;h1&gt;{{ admin_title }}: Пользователи&lt;/h1&gt;
+  &lt;table&gt;
+    {% for user in users %}
+      &lt;tr&gt;
+        &lt;td&gt;{{ user.username }}&lt;/td&gt;
+        &lt;td&gt;{{ user.email }}&lt;/td&gt;
+        &lt;td&gt;&lt;a href="{{ url_for('admin.edit_user', id=user.id) }}"&gt;Edit&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    {% endfor %}
+  &lt;/table&gt;
+{% endblock %}</code></pre>
+
+      <h4>Наследование между blueprints</h4>
+      <pre><code>{# blog/templates/blog/base.html — наследует от admin/base.html #}
+{% extends "admin/base.html" %}
+{% block title %}Blog{% endblock %}
+{% block content %}
+  &lt;h1&gt;{{ admin_title }}: Блог&lt;/h1&gt;
+  {% for post in posts %}
+    &lt;article&gt;
+      &lt;h2&gt;{{ post.title }}&lt;/h2&gt;
+      &lt;p&gt;{{ post.body|truncate(200) }}&lt;/p&gt;
+      &lt;a href="{{ url_for('blog.detail', slug=post.slug) }}"&gt;Читать&lt;/a&gt;
+    &lt;/article&gt;
+  {% endfor %}
+{% endblock %}</code></pre>
+
+      <h3 id="bp-subdomain">5.4 Поддомены и вложенные Blueprints</h3>
+      <p>Blueprints поддерживают привязку к поддоменам и вложенность (через регистрацию на разные префиксы).</p>
+      <pre><code># Поддомены — каждый blueprint на своём поддомене
+api = Blueprint('api', __name__, subdomain='api')
+admin = Blueprint('admin', __name__, subdomain='admin', url_prefix='/admin')
+
+app.register_blueprint(api)
+app.register_blueprint(admin)
+
+# app.config['SERVER_NAME'] = 'example.com'
+# api.example.com/ — API
+# admin.example.com/admin/ — Админка
+
+# Вложенные blueprints (через префиксы)
+blog = Blueprint('blog', __name__, url_prefix='/blog')
+posts = Blueprint('posts', __name__)
+
+# posts регистрируется ВНУТРИ blog
+@posts.route('/')
+def index():
+    return 'Posts index'
+
+@posts.route('/&lt;int:id&gt;')
+def detail(id):
+    return f'Post {id}'
+
+app.register_blueprint(blog)
+blog.register_blueprint(posts, url_prefix='/posts')
+# /blog/posts/ — Posts index
+# /blog/posts/42 — Post 42</code></pre>
+      <div class="info-box">
+        <strong>Совет:</strong> Вложенные blueprints удобны для иерархических разделов (блог → посты → комментарии). URL-построение: <code>url_for('blog.posts.detail', id=42)</code>.
+      </div>
+
+      <h3 id="bp-errors">5.5 Обработчики ошибок и middleware</h3>
+      <p>Blueprints могут иметь собственные обработчики ошибок, которые перекрывают глобальные только в рамках своих маршрутов.</p>
+      <pre><code>@admin.error_handler(403)
+def admin_forbidden(e):
+    return render_template('admin/403.html'), 403
+
+@admin.error_handler(404)
+def admin_not_found(e):
+    return render_template('admin/404.html'), 404
+
+# Глобальный обработчик 500 (если blueprint не переопределяет)
+@app.errorhandler(500)
+def internal_error(e):
+    db.session.rollback()
+    return render_template('errors/500.html'), 500
+
+# app_errorhandler — работает во всём приложении, даже для blueprint
+@admin.app_errorhandler(500)
+def admin_internal_error(e):
+    return render_template('admin/500.html'), 500</code></pre>
+      <p>Разница между <code>errorhandler</code> и <code>app_errorhandler</code> для blueprint:</p>
+      <table>
+        <tr><th>Метод</th><th>Область</th></tr>
+        <tr><td><code>@bp.errorhandler</code></td><td>Только маршруты этого blueprint</td></tr>
+        <tr><td><code>@bp.app_errorhandler</code></td><td>Всё приложение, НО определён в blueprint</td></tr>
+      </table>
+
+      <!-- ===== 6. БАЗЫ ДАННЫХ ===== -->
+      <h2 id="database"><span class="section-num">6.</span> Базы данных</h2>
+
+      <h3 id="db-sqlalchemy">6.1 Flask-SQLAlchemy</h3>
+      <p>Flask-SQLAlchemy — стандартное расширение для работы с БД. Поддерживает PostgreSQL, MySQL, SQLite и другие.</p>
+      <pre><code>pip install flask-sqlalchemy
+
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(unique=True)
+    email: Mapped[str]
+
+    def __repr__(self):
+        return f'&lt;User {self.username}&gt;'
+
+with app.app_context():
+    db.create_all()</code></pre>
+
+      <h4>CRUD операции</h4>
+      <pre><code># Create
+user = User(username='alice', email='alice@example.com')
+db.session.add(user)
+db.session.commit()
+
+# Read
+User.query.get(1)
+User.query.filter_by(username='alice').first()
+User.query.all()
+
+# Update
+user.email = 'new@example.com'
+db.session.commit()
+
+# Delete
+db.session.delete(user)
+db.session.commit()</code></pre>
+
+      <h3 id="db-migrate">6.2 Миграции (Flask-Migrate)</h3>
+      <pre><code>pip install flask-migrate
+
+from flask_migrate import Migrate
+migrate = Migrate(app, db)
+
+# CLI
+flask db init
+flask db migrate -m "Initial migration"
+flask db upgrade</code></pre>
+
+      <!-- ===== 7. ФОРМЫ ===== -->
+      <h2 id="forms"><span class="section-num">7.</span> Формы и валидация</h2>
+      <p>Flask-WTF — стандартное расширение для работы с формами, CSRF-защитой и валидацией.</p>
+      <pre><code>pip install flask-wtf
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, Length
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[
+        DataRequired(), Email()])
+    password = PasswordField('Пароль', validators=[
+        DataRequired(), Length(min=6)])
+    submit = SubmitField('Войти')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        return f'Logged in as {form.email.data}'
+    return render_template('login.html', form=form)</code></pre>
+
+      <!-- ===== 8. REST API ===== -->
+      <h2 id="api"><span class="section-num">8.</span> REST API</h2>
+      <p>Flask отлично подходит для создания REST API. Встроенные инструменты + Flask-RESTful или ручная реализация.</p>
+      <pre><code>@app.route('/api/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    return jsonify([{
+        'id': u.id,
+        'username': u.username,
+        'email': u.email
+    } for u in users])
+
+@app.route('/api/users', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    user = User(username=data['username'],
+                email=data['email'])
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'id': user.id}), 201</code></pre>
+
+      <h3 id="api-views">8.1 Class-based Views (MethodView)</h3>
+      <pre><code>from flask.views import MethodView
+
+class UserAPI(MethodView):
+    def get(self, user_id):
+        user = User.query.get_or_404(user_id)
+        return jsonify({'id': user.id, 'username': user.username})
+
+    def put(self, user_id):
+        user = User.query.get_or_404(user_id)
+        data = request.get_json()
+        user.username = data.get('username', user.username)
+        db.session.commit()
+        return jsonify({'status': 'updated'})
+
+    def delete(self, user_id):
+        user = User.query.get_or_404(user_id)
+        db.session.delete(user)
+        db.session.commit()
+        return '', 204
+
+app.add_url_rule('/api/users/&lt;int:user_id&gt;',
+                 view_func=UserAPI.as_view('user_api'))</code></pre>
+
+      <h3 id="api-validation">8.2 Валидация запросов</h3>
+      <p>Для валидации API-запросов используйте Marshmallow или Pydantic.</p>
+      <pre><code>pip install marshmallow
+
+from marshmallow import Schema, fields, validate
+
+class UserSchema(Schema):
+    username = fields.String(required=True,
+        validate=validate.Length(min=3, max=50))
+    email = fields.Email(required=True)
+
+schema = UserSchema()
+errors = schema.validate(request.get_json())
+if errors:
+    return jsonify(errors), 400</code></pre>
+
+      <!-- ===== 9. АУТЕНТИФИКАЦИЯ ===== -->
+      <h2 id="auth"><span class="section-num">9.</span> Аутентификация</h2>
+      <p>Flask-Login — стандартное решение для управления сессиями пользователей.</p>
+      <pre><code>pip install flask-login
+
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user, logout_user
+
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+class User(UserMixin, db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+@app.route('/login', methods=['POST'])
+def login():
+    user = User.query.filter_by(
+        username=request.form['username']).first()
+    if user and check_password(user.password, request.form['password']):
+        login_user(user)
+        return redirect('/profile')
+    return 'Invalid credentials', 401
+
+@app.route('/profile')
+@login_required
+def profile():
+    return f'Hello, {current_user.username}!'</code></pre>
+
+      <div class="info-box">
+        <strong>JWT-аутентификация:</strong> Для API используйте <code>flask-jwt-extended</code> — поддержка access/refresh токенов, JWT в куках или заголовках.
+      </div>
+
+      <!-- ===== 10. ТЕСТИРОВАНИЕ ===== -->
+      <h2 id="testing"><span class="section-num">10.</span> Тестирование</h2>
+      <p>Flask предоставляет встроенный test client для unit-тестов.</p>
+      <pre><code>pip install pytest
+
+# tests/test_app.py
+import pytest
+from app import app
+
+@pytest.fixture
+def client():
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        yield client
+
+def test_home(client):
+    resp = client.get('/')
+    assert resp.status_code == 200
+    assert b'Hello' in resp.data
+
+def test_api_create_user(client):
+    resp = client.post('/api/users', json={
+        'username': 'test',
+        'email': 'test@example.com'
+    })
+    assert resp.status_code == 201
+    assert resp.json['id'] == 1
+
+def test_protected_route(client):
+    resp = client.get('/profile')
+    assert resp.status_code == 302
+    assert '/login' in resp.location</code></pre>
+
+      <!-- ===== 11. ОБРАБОТКА ОШИБОК ===== -->
+      <h2 id="errors"><span class="section-num">11.</span> Обработка ошибок</h2>
+      <pre><code>@app.errorhandler(404)
+def not_found(e):
+    return jsonify({'error': 'Not found'}), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    app.logger.error(f'Server error: {e}')
+    return jsonify({'error': 'Internal server error'}), 500
+
+# Кастомные исключения
+class APIError(Exception):
+    def __init__(self, message, code=400):
+        self.message = message
+        self.code = code
+
+@app.errorhandler(APIError)
+def handle_api_error(e):
+    return jsonify({'error': e.message}), e.code</code></pre>
+
+      <!-- ===== 12. MIDDLEWARE ===== -->
+      <h2 id="middleware"><span class="section-num">12.</span> Middleware и Before/After Request</h2>
+      <pre><code>@app.before_request
+def before_request():
+    # Логирование, проверка заголовков, rate-limiting
+    if request.path.startswith('/api/'):
+        if not request.headers.get('X-API-Key'):
+            return jsonify({'error': 'API key required'}), 401
+
+@app.after_request
+def after_request(response):
+    # CORS, заголовки безопасности
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    return response
+
+@app.teardown_request
+def teardown(e):
+    # Очистка ресурсов
+    db.session.remove()</code></pre>
+
+      <!-- ===== 13. БЕЗОПАСНОСТЬ ===== -->
+      <h2 id="security"><span class="section-num">13.</span> Безопасность</h2>
+      <table>
+        <tr><th>Угроза</th><th>Защита</th><th>Расширение</th></tr>
+        <tr><td>CSRF</td><td>Flask-WTF (встроенная защита форм)</td><td><code>flask-wtf</code></td></tr>
+        <tr><td>XSS</td><td>Jinja2 autoescape (включён по умолчанию)</td><td>Встроено</td></tr>
+        <tr><td>SQL Injection</td><td>SQLAlchemy ORM (параметризация)</td><td><code>flask-sqlalchemy</code></td></tr>
+        <tr><td>Clickjacking</td><td><code>X-Frame-Options: DENY</code></td><td>Middleware</td></tr>
+        <tr><td>Session hijacking</td><td>Secure cookies, HTTPS, <code>SESSION_COOKIE_HTTPONLY=True</code></td><td>Конфигурация</td></tr>
+        <tr><td>Rate limiting</td><td>Flask-Limiter</td><td><code>flask-limiter</code></td></tr>
+        <tr><td>CORS</td><td>Flask-CORS</td><td><code>flask-cors</code></td></tr>
+      </table>
+
+      <div class="danger-box">
+        <strong>Критично:</strong> Никогда не храните <code>SECRET_KEY</code> в коде. Используйте переменные окружения: <code>app.config['SECRET_KEY'] = os.environ['SECRET_KEY']</code>. Для production — убедитесь, что <code>DEBUG=False</code>.
+      </div>
+
+      <!-- ===== 14. КЕШИРОВАНИЕ ===== -->
+      <h2 id="cache"><span class="section-num">14.</span> Кеширование</h2>
+      <pre><code>pip install flask-caching
+
+from flask_caching import Cache
+
+app.config['CACHE_TYPE'] = 'SimpleCache'
+app.config['CACHE_DEFAULT_TIMEOUT'] = 300
+cache = Cache(app)
+
+@app.route('/expensive')
+@cache.cached(timeout=60)
+def expensive_view():
+    return compute_heavy_result()
+
+@app.route('/user/&lt;int:user_id&gt;')
+@cache.cached(key_prefix=lambda: f'user_{request.view_args["user_id"]}')
+def user_detail(user_id):
+    user = User.query.get(user_id)
+    return render_template('user.html', user=user)</code></pre>
+
+      <!-- ===== 15. АСИНХРОННОСТЬ ===== -->
+      <h2 id="async"><span class="section-num">15.</span> Асинхронность и фоновые задачи</h2>
+
+      <h3 id="websocket">15.1 WebSockets (Flask-SocketIO)</h3>
+      <pre><code>pip install flask-socketio
+
+from flask_socketio import SocketIO, emit
+
+socketio = SocketIO(app, cors_allowed_origins='*')
+
+@socketio.on('connect')
+def handle_connect():
+    emit('message', {'data': 'Connected'})
+
+@socketio.on('chat')
+def handle_chat(data):
+    emit('message', data, broadcast=True)
+
+if __name__ == '__main__':
+    socketio.run(app)</code></pre>
+
+      <h3 id="background">15.2 Фоновые задачи (Celery)</h3>
+      <pre><code>pip install celery redis
+
+from celery import Celery
+
+celery = Celery(app.name,
+    broker='redis://localhost:6379/0',
+    backend='redis://localhost:6379/0')
+
+@celery.task
+def send_email_task(recipient, subject, body):
+    # Отправка email
+    return f'Email sent to {recipient}'
+
+@app.route('/send')
+def send():
+    send_email_task.delay('user@example.com',
+                          'Hello', 'Body text')
+    return 'Email queued'</code></pre>
+
+      <!-- ===== 16. ФАЙЛЫ ===== -->
+      <h2 id="upload"><span class="section-num">16.</span> Загрузка файлов</h2>
+      <pre><code>import os
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return 'No file', 400
+    file = request.files['file']
+    if file.filename == '' or not allowed_file(file.filename):
+        return 'Invalid file', 400
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return jsonify({'filename': filename})</code></pre>
+
+      <!-- ===== 17. ИНТЕРНАЦИОНАЛИЗАЦИЯ ===== -->
+      <h2 id="i18n"><span class="section-num">17.</span> Интернационализация (i18n)</h2>
+      <pre><code>pip install flask-babel
+
+from flask_babel import Babel, _
+
+babel = Babel(app)
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(['ru', 'en'])
+
+@app.route('/')
+def home():
+    return _('Hello, World!')  # Автоперевод</code></pre>
+
+      <!-- ===== 18. CLI ===== -->
+      <h2 id="cli"><span class="section-num">18.</span> CLI-команды</h2>
+      <p>Flask использует Click для создания кастомных команд.</p>
+      <pre><code>import click
+from flask.cli import with_appcontext
+
+@app.cli.command('create-user')
+@click.argument('username')
+@click.option('--email', default=None)
+@with_appcontext
+def create_user(username, email):
+    user = User(username=username, email=email or f'{username}@example.com')
+    db.session.add(user)
+    db.session.commit()
+    click.echo(f'Created user: {user}')</code></pre>
+      <p>Запуск: <code>flask create-user alice --email alice@example.com</code></p>
+
+      <!-- ===== 19. DOCKER ===== -->
+      <h2 id="docker"><span class="section-num">19.</span> Docker</h2>
+      <pre><code># Dockerfile
+FROM python:3.12-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+EXPOSE 5000
+
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]</code></pre>
+      <pre><code># docker-compose.yml
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=postgresql://user:pass@db/app
+    depends_on:
+      - db
+  db:
+    image: postgres:16
+    volumes:
+      - pgdata:/var/lib/postgresql/data</code></pre>
+
+      <!-- ===== 20. PRODUCTION ===== -->
+      <h2 id="deploy"><span class="section-num">20.</span> Production — деплой</h2>
+      <p>Для production используйте WSGI-сервер (Gunicorn, Waitress) или ASGI-сервер (Uvicorn) вместо встроенного сервера Flask.</p>
+      <pre><code>pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:8000 app:app
+
+# С Nginx
+# server {
+#     listen 80;
+#     location / {
+#         proxy_pass http://127.0.0.1:8000;
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#     }
+# }</code></pre>
+
+      <div class="warn-box">
+        <strong>Production checklist:</strong> 1) <code>DEBUG=False</code>, 2) Случайный <code>SECRET_KEY</code>, 3) HTTPS (Let's Encrypt), 4) Rate limiting, 5) Мониторинг, 6) Логирование, 7) Регулярные бэкапы БД, 8) Health check endpoint.
+      </div>
+
+      <h3 id="monitoring">20.1 Мониторинг и логирование</h3>
+      <pre><code>import logging
+from logging.handlers import RotatingFileHandler
+
+if not app.debug:
+    handler = RotatingFileHandler('app.log', maxBytes=10240, backupCount=10)
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s'))
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
+
+@app.route('/health')
+def health():
+    return jsonify({
+        'status': 'ok',
+        'version': '1.0.0'
+    })</code></pre>
+
+      <!-- ===== 21. РАСШИРЕНИЯ ===== -->
+      <h2 id="extensions"><span class="section-num">21.</span> Популярные расширения</h2>
+      <table>
+        <tr><th>Расширение</th><th>Назначение</th><th>Установка</th></tr>
+        <tr><td>Flask-SQLAlchemy</td><td>ORM для БД</td><td><code>flask-sqlalchemy</code></td></tr>
+        <tr><td>Flask-Migrate</td><td>Миграции БД</td><td><code>flask-migrate</code></td></tr>
+        <tr><td>Flask-WTF</td><td>Формы и CSRF</td><td><code>flask-wtf</code></td></tr>
+        <tr><td>Flask-Login</td><td>Аутентификация</td><td><code>flask-login</code></td></tr>
+        <tr><td>Flask-JWT-Extended</td><td>JWT-токены</td><td><code>flask-jwt-extended</code></td></tr>
+        <tr><td>Flask-RESTful</td><td>REST API</td><td><code>flask-restful</code></td></tr>
+        <tr><td>Flask-Caching</td><td>Кеширование</td><td><code>flask-caching</code></td></tr>
+        <tr><td>Flask-SocketIO</td><td>WebSockets</td><td><code>flask-socketio</code></td></tr>
+        <tr><td>Flask-CORS</td><td>CORS</td><td><code>flask-cors</code></td></tr>
+        <tr><td>Flask-Limiter</td><td>Rate limiting</td><td><code>flask-limiter</code></td></tr>
+        <tr><td>Flask-Babel</td><td>i18n</td><td><code>flask-babel</code></td></tr>
+        <tr><td>Flask-Mail</td><td>Email</td><td><code>flask-mail</code></td></tr>
+        <tr><td>Flask-Admin</td><td>Админ-панель</td><td><code>flask-admin</code></td></tr>
+        <tr><td>Flask-DebugToolbar</td><td>Отладка</td><td><code>flask-debugtoolbar</code></td></tr>
+      </table>
+
+      <!-- ===== 22. ЧЕКЛИСТ ===== -->
+      <h2 id="checklist"><span class="section-num">22.</span> Чеклист: от разработки до production</h2>
+
+      <h4>Разработка</h4>
+      <ul style="list-style: none; margin-left: 0;">
+        <li><label><input type="checkbox"> Виртуальное окружение (venv)</label></li>
+        <li><label><input type="checkbox"> Структура проекта (blueprints, models, templates, static)</label></li>
+        <li><label><input type="checkbox"> Конфигурация через переменные окружения</label></li>
+        <li><label><input type="checkbox"> Миграции БД (Flask-Migrate)</label></li>
+        <li><label><input type="checkbox"> Тесты (pytest + test client)</label></li>
+        <li><label><input type="checkbox"> Обработка ошибок (404, 500, кастомные)</label></li>
+      </ul>
+
+      <h4>Безопасность</h4>
+      <ul style="list-style: none; margin-left: 0;">
+        <li><label><input type="checkbox"> SECRET_KEY — случайная строка, не в коде</label></li>
+        <li><label><input type="checkbox"> CSRF-защита (Flask-WTF)</label></li>
+        <li><label><input type="checkbox"> CORS (Flask-CORS) — только нужные origins</label></li>
+        <li><label><input type="checkbox"> Rate limiting (Flask-Limiter)</label></li>
+        <li><label><input type="checkbox"> HTTPS (Let's Encrypt / reverse proxy)</label></li>
+        <li><label><input type="checkbox"> Заголовки безопасности (X-Frame-Options, CSP)</label></li>
+      </ul>
+
+      <h4>Production</h4>
+      <ul style="list-style: none; margin-left: 0;">
+        <li><label><input type="checkbox"> WSGI/ASGI сервер (Gunicorn / Uvicorn)</label></li>
+        <li><label><input type="checkbox"> DEBUG=False</label></li>
+        <li><label><input type="checkbox"> Логирование в файл (RotatingFileHandler)</label></li>
+        <li><label><input type="checkbox"> Health check endpoint (/health)</label></li>
+        <li><label><input type="checkbox"> Мониторинг (Prometheus + Grafana / Sentry)</label></li>
+        <li><label><input type="checkbox"> Docker-образ (многоступенчатая сборка)</label></li>
+        <li><label><input type="checkbox"> Регулярные бэкапы БД</label></li>
+        <li><label><input type="checkbox"> CI/CD (GitHub Actions / GitLab CI)</label></li>
+      </ul>
+
+      <div class="info-box">
+        <strong>Заключение:</strong> Flask 3 — современный, гибкий и зрелый фреймворк. Он подходит как для микросервисов и API, так и для полноценных веб-приложений. Главное преимущество Flask — минимальный порог входа при максимальной гибкости. Выбирайте расширения под задачи, не перегружайте проект лишними зависимостями, и Flask будет служить вам долго.
+      </div>
+
+      <!-- ===== 23. ПРАКТИЧЕСКИЕ ПРИМЕРЫ ===== -->
+      <h2 id="examples"><span class="section-num">23.</span> Практические примеры</h2>
+      <p>Готовые к запуску проекты. Копируйте, сохраняйте и запускайте.</p>
+
+      <h3 id="ex-blog">23.1 Мини-блог на Flask + SQLAlchemy</h3>
+      <p>Полный CRUD для постов блога с авторизацией.</p>
+      <pre><code>from flask import Flask, render_template, redirect, url_for, request, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your-secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200))
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    author = db.relationship('User', backref='posts')
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+@app.route('/')
+def index():
+    posts = Post.query.order_by(Post.created_at.desc()).all()
+    return render_template('index.html', posts=posts)
+
+@app.route('/post/&lt;int:id&gt;')
+def post_detail(id):
+    post = Post.query.get_or_404(id)
+    return render_template('post.html', post=post)
+
+@app.route('/post/new', methods=['GET', 'POST'])
+@login_required
+def create_post():
+    if request.method == 'POST':
+        post = Post(title=request.form['title'], body=request.form['body'], author=current_user)
+        db.session.add(post); db.session.commit()
+        return redirect(url_for('post_detail', id=post.id))
+    return render_template('create_post.html')
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)</code></pre>
+      <div class="info-box">
+        <strong>Как запустить:</strong> <code>pip install flask flask-sqlalchemy flask-login</code>, <code>python blog.py</code>. Добавьте шаблоны в <code>templates/</code>.
+      </div>
+
+      <h3 id="ex-api">23.2 REST API + JWT аутентификация</h3>
+      <p>API для задач (todo) с JWT-токенами, пагинацией и поиском.</p>
+      <pre><code>from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from datetime import timedelta
+from werkzeug.security import generate_password_hash, check_password_hash
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
+app.config['JWT_SECRET_KEY'] = 'jwt-secret'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)
+db = SQLAlchemy(app)
+jwt = JWTManager(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(200))
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    if User.query.filter_by(username=data['username']).first():
+        return jsonify({'error': 'User exists'}), 409
+    user = User(username=data['username'])
+    user.set_password(data['password'])
+    db.session.add(user); db.session.commit()
+    return jsonify({'token': create_access_token(identity=str(user.id))}), 201
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user = User.query.filter_by(username=data['username']).first()
+    if not user or not user.check_password(data['password']):
+        return jsonify({'error': 'Invalid credentials'}), 401
+    return jsonify({'token': create_access_token(identity=str(user.id))})
+
+@app.route('/api/todos', methods=['GET'])
+@jwt_required()
+def get_todos():
+    user_id = int(get_jwt_identity())
+    q = request.args.get('q', '')
+    page = request.args.get('page', 1, type=int)
+    query = Todo.query.filter(Todo.user_id == user_id, Todo.title.ilike(f'%{q}%'))
+    pagination = query.paginate(page=page, per_page=10, error_out=False)
+    return jsonify({
+        'todos': [{'id': t.id, 'title': t.title, 'completed': t.completed} for t in pagination.items],
+        'total': pagination.total, 'page': page, 'pages': pagination.pages
+    })
+
+@app.route('/api/todos', methods=['POST'])
+@jwt_required()
+def create_todo():
+    data = request.get_json()
+    todo = Todo(title=data['title'], user_id=int(get_jwt_identity()))
+    db.session.add(todo); db.session.commit()
+    return jsonify({'id': todo.id}), 201
+
+@app.route('/api/todos/&lt;int:todo_id&gt;', methods=['PUT'])
+@jwt_required()
+def update_todo(todo_id):
+    todo = Todo.query.filter_by(id=todo_id, user_id=int(get_jwt_identity())).first_or_404()
+    data = request.get_json()
+    todo.title = data.get('title', todo.title)
+    todo.completed = data.get('completed', todo.completed)
+    db.session.commit()
+    return jsonify({'status': 'updated'})
+
+@app.route('/api/todos/&lt;int:todo_id&gt;', methods=['DELETE'])
+@jwt_required()
+def delete_todo(todo_id):
+    todo = Todo.query.filter_by(id=todo_id, user_id=int(get_jwt_identity())).first_or_404()
+    db.session.delete(todo); db.session.commit()
+    return '', 204
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)</code></pre>
+      <div class="info-box">
+        <strong>Тест:</strong> <code>curl -X POST localhost:5000/api/auth/register -H 'Content-Type: application/json' -d '{"username":"test","password":"123"}'</code>. Используйте токен: <code>curl localhost:5000/api/todos -H 'Authorization: Bearer TOKEN'</code>.
+      </div>
+
+      <h3 id="ex-chat">23.3 Чат в реальном времени (WebSocket)</h3>
+      <pre><code>from flask import Flask, render_template
+from flask_socketio import SocketIO, emit, join_room, leave_room
+from datetime import datetime
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret'
+socketio = SocketIO(app, cors_allowed_origins='*')
+rooms = {}
+
+@app.route('/')
+def index():
+    return render_template('chat.html')
+
+@socketio.on('join')
+def on_join(data):
+    join_room(data['room'])
+    if data['room'] not in rooms:
+        rooms[data['room']] = []
+    emit('message', {'user': 'System', 'text': f"{data['username']} joined", 'time': datetime.now().strftime('%H:%M')}, room=data['room'])
+
+@socketio.on('message')
+def on_message(data):
+    msg = {'user': data['username'], 'text': data['text'], 'time': datetime.now().strftime('%H:%M')}
+    rooms[data['room']].append(msg)
+    emit('message', msg, room=data['room'])
+
+@socketio.on('history')
+def on_history(data):
+    emit('history', rooms.get(data['room'], []))
+
+@socketio.on('typing')
+def on_typing(data):
+    emit('typing', {'user': data['username']}, room=data['room'], include_self=False)
+
+if __name__ == '__main__':
+    socketio.run(app, debug=True)</code></pre>
+      <div class="info-box">
+        <strong>Клиент:</strong> <code>&lt;script src="https://cdn.socket.io/4.7.5/socket.io.min.js"&gt;&lt;/script&gt;</code>. JS: <code>const socket = io(); socket.emit('join', {room: 'general', username: 'alice'});</code>.
+      </div>
+
+      <h3 id="ex-celery">23.4 Фоновая обработка (Celery + Redis)</h3>
+      <pre><code># tasks.py
+from celery import Celery
+import time
+
+celery = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
+
+@celery.task(bind=True, max_retries=3)
+def process_file(self, filepath):
+    for i in range(10):
+        time.sleep(1)
+        self.update_state(state='PROGRESS', meta={'current': i, 'total': 10})
+    return {'status': 'done', 'file': filepath}
+
+@celery.task
+def send_email(recipient, subject):
+    time.sleep(2)
+    return f'Email sent to {recipient}: {subject}'
+
+@celery.task
+def cleanup_temp_files(days=7):
+    return f'Cleaned files older than {days} days'</code></pre>
+      <pre><code># app.py
+from flask import Flask, request, jsonify
+from tasks import process_file
+
+app = Flask(__name__)
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    task = process_file.delay(request.files['file'].filename)
+    return jsonify({'task_id': task.id}), 202
+
+@app.route('/status/&lt;task_id&gt;')
+def status(task_id):
+    task = process_file.AsyncResult(task_id)
+    if task.state == 'PENDING':
+        return jsonify({'state': 'PENDING'})
+    elif task.state == 'PROGRESS':
+        return jsonify({'state': 'PROGRESS', **task.info})
+    elif task.state == 'SUCCESS':
+        return jsonify({'state': 'SUCCESS', 'result': task.result})
+    return jsonify({'state': task.state, 'error': str(task.info)})</code></pre>
+      <div class="info-box">
+        <strong>Запуск:</strong> <code>docker run -d -p 6379:6379 redis</code>. <code>celery -A tasks worker -l info</code>. <code>python app.py</code>.
+      </div>
+
+      <h3 id="ex-webhook">23.5 Webhook-приёмник с верификацией</h3>
+      <pre><code>import hashlib, hmac, json, subprocess
+from flask import Flask, request, jsonify, abort
+
+app = Flask(__name__)
+app.config['WEBHOOK_SECRET'] = 'your-secret'
+
+def verify(payload, signature):
+    expected = hmac.new(app.config['WEBHOOK_SECRET'].encode(), payload, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(f'sha256={expected}', signature or '')
+
+@app.route('/webhook/github', methods=['POST'])
+def github_webhook():
+    if not verify(request.get_data(), request.headers.get('X-Hub-Signature-256')):
+        abort(401)
+    event = request.headers.get('X-GitHub-Event')
+    data = request.get_json()
+    print(f'GitHub {event}: {data.get("ref", "unknown")}')
+    return jsonify({'status': 'ok'})
+
+@app.route('/webhook/deploy', methods=['POST'])
+def deploy():
+    data = request.get_json()
+    if data.get('ref', '').endswith('/main'):
+        result = subprocess.run(['./deploy.sh'], capture_output=True, text=True)
+        return jsonify({'output': result.stdout, 'error': result.stderr})
+    return jsonify({'deploy': 'skipped'})</code></pre>
+      <div class="success-box">
+        <strong>Тест:</strong> <code>curl -X POST localhost:8000/webhook/github -H 'X-GitHub-Event: push' -H 'Content-Type: application/json' -d '{"ref":"refs/heads/main"}'</code>
+      </div>
+
+      <h3 id="ex-deploy">23.6 Docker Compose: Flask + PostgreSQL + Redis + Nginx</h3>
+      <pre><code># Dockerfile
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "app:app"]</code></pre>
+      <pre><code># docker-compose.yml
+version: '3.8'
+services:
+  app:
+    build: .
+    env_file: .env
+    depends_on: { db: { condition: service_healthy }, redis: { condition: service_started } }
+  db:
+    image: postgres:16-alpine
+    environment: { POSTGRES_DB: app, POSTGRES_USER: app, POSTGRES_PASSWORD: password }
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U app"], interval: 10s, retries: 5 }
+  redis:
+    image: redis:7-alpine
+  nginx:
+    image: nginx:alpine
+    ports: ["80:80"]
+    volumes: ["./nginx.conf:/etc/nginx/conf.d/default.conf"]
+    depends_on: [app]
+  worker:
+    build: .
+    command: celery -A tasks worker -l info
+    env_file: .env
+    depends_on: [redis, db]
+volumes: { pgdata: }</code></pre>
+      <div class="info-box">
+        <strong>Запуск:</strong> <code>docker compose up -d --build</code>
+      </div>
+
+      <h3 id="ex-async">23.7 Async-загрузка данных</h3>
+      <pre><code>import asyncio, aiohttp
+from flask import Flask, jsonify
+from asgiref.sync import async_to_sync
+
+app = Flask(__name__)
+
+async def fetch_rate(session, currency):
+    async with session.get(f'https://api.exchangerate-api.com/v4/latest/{currency}') as resp:
+        data = await resp.json()
+        return {'currency': currency, 'rate': data['rates']['RUB']}
+
+@app.route('/rates')
+def get_rates():
+    async def run():
+        async with aiohttp.ClientSession() as session:
+            tasks = [fetch_rate(session, c) for c in ['USD', 'EUR', 'GBP']]
+            return await asyncio.gather(*tasks)
+    return jsonify(async_to_sync(run)())</code></pre>
+
+      <h3 id="ex-pdf">23.8 Генерация PDF</h3>
+      <pre><code>from flask import Flask, send_file
+from weasyprint import HTML
+import tempfile
+
+app = Flask(__name__)
+
+@app.route('/report')
+def report():
+    html = '&lt;h1&gt;Report&lt;/h1&gt;&lt;p&gt;Generated at {{ now }}&lt;/p&gt;'
+    pdf = HTML(string=html).write_pdf()
+    with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as f:
+        f.write(pdf)
+        return send_file(f.name, mimetype='application/pdf')</code></pre>
+      <div class="info-box">
+        <strong>Установка:</strong> <code>pip install weasyprint</code>. Требуется система: <code>apt install libpango-1.0-0 libpangocairo-1.0-0</code>.
+      </div>
+
+      <p style="margin-top: 24px; text-align: center; opacity: 0.7;">Flask 3 — полное руководство • Версия 1.0 • 2026</p>
+    </main>
+  </div>
+  <footer>
+    <p>Flask 3 Guide • 2026 • Справочное руководство</p>
+  </footer>
+</div>
+<script>
+(function(){
+  const canvas = document.getElementById('cursor-effect');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  let mouse = { x: -1000, y: -1000 };
+  document.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+  document.addEventListener('mouseleave', () => {
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
+  const particles = [];
+  const MAX = 50;
+  function spawn(){
+    particles.push({
+      x: mouse.x + (Math.random() - 0.5) * 6,
+      y: mouse.y + (Math.random() - 0.5) * 6,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8 - 0.3,
+      life: 1,
+      size: Math.random() * 3 + 1.5,
+    });
+    if(particles.length > MAX) particles.shift();
+  }
+  let frame = 0;
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    frame++;
+    if(frame % 2 === 0 && mouse.x > 0) spawn();
+    for(let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= 0.015;
+      if(p.life <= 0){ particles.splice(i, 1); continue; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(43,140,190,${p.life * 0.7})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+<script>
+(function(){
+  var toggle = document.getElementById('menuToggle');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var close = document.getElementById('sidebarClose');
+  function open(){ sidebar.classList.add('active'); overlay.classList.add('active'); document.body.classList.add('sidebar-open'); }
+  function close_(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); document.body.classList.remove('sidebar-open'); }
+  toggle.addEventListener('click', open);
+  close.addEventListener('click', close_);
+  overlay.addEventListener('click', close_);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close_(); });
+  var links = sidebar.querySelectorAll('a');
+  for(var i = 0; i < links.length; i++){ links[i].addEventListener('click', close_); }
+})();
+</script>
+</body>
+</html>
