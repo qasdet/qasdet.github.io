@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Типы личностей и стили управления — гид по собеседованию</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%230e7490%22/><text x=%2232%22 y=%2240%22 font-family=%22Arial,sans-serif%22 font-size=%2224%22 font-weight=%22bold%22 fill=%22%23fff%22 text-anchor=%22middle%22>PS</text></svg>">
+  <style>
+    :root {
+      --bg: #f8f6f2;
+      --text: #1a1a2e;
+      --text-secondary: #6b7280;
+      --accent: #0e7490;
+      --accent-light: #cffafe;
+      --accent-deep: #155e75;
+      --card-bg: #ffffff;
+      --border: #e5e7eb;
+      --header-text: #ffffff;
+      --code-bg: #1e293b;
+      --code-text: #e2e8f0;
+      --hover: #f3f4f6;
+      --footer-bg: #1a1a2e;
+      --footer-text: #9ca3af;
+      --info-bg: #ecfeff;
+      --warn-bg: #fffbeb;
+      --success-bg: #f0fdf4;
+      --danger-bg: #fef2f2;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.07);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      min-height: 100vh;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(ellipse at 15% 25%,rgba(14,116,144,0.04) 0%,transparent 55%);
+      background-attachment: fixed;
+    }
+
+    ::selection { background: var(--accent); color: #fff; }
+
+    .wrapper {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 24px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg,#0e7490 0%,#0891b2 50%,#06b6d4 100%);
+      background-size: 150% 150%;
+      animation: headerShift 8s ease infinite;
+      color: var(--header-text);
+      padding: 40px 48px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(8,145,178,0.2);
+    }
+
+    @keyframes headerShift {
+      0%,100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 400px 250px at 10% 20%,rgba(255,255,255,0.1) 0%,transparent 70%);
+      pointer-events: none;
+    }
+
+    header h1 { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; position: relative; }
+    header .subtitle {
+      opacity: 0.92;
+      margin-top: 12px;
+      font-size: 17px;
+      max-width: 720px;
+      line-height: 1.6;
+      position: relative;
+    }
+    header .meta {
+      margin-top: 16px;
+      font-size: 13px;
+      opacity: 0.65;
+      position: relative;
+    }
+
+    .layout { display: flex; gap: 32px; flex: 1; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 270px;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(20px) saturate(1.3);
+      -webkit-backdrop-filter: blur(20px) saturate(1.3);
+      border-radius: var(--radius-md);
+      padding: 24px 0;
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: var(--shadow-md);
+      height: fit-content;
+      position: sticky;
+      top: 24px;
+      max-height: calc(100vh - 96px);
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .sidebar::-webkit-scrollbar { display: none; }
+
+    .sidebar h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      font-weight: 700;
+      padding: 0 24px 14px;
+      margin: 0 0 6px;
+    }
+    .sidebar ul { list-style: none; }
+    .sidebar li a {
+      display: block;
+      padding: 7px 24px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+      line-height: 1.45;
+    }
+    .sidebar li a:hover,
+    .sidebar li a.active {
+      background: rgba(14,116,144,0.06);
+      border-left-color: var(--accent);
+      color: var(--accent);
+    }
+    .sidebar .toc-h2 { font-weight: 600; padding-top: 10px; padding-bottom: 4px; color: var(--text); }
+    .sidebar .toc-h3 { padding-left: 40px; font-size: 12.5px; }
+
+    /* Main */
+    main {
+      flex: 1;
+      min-width: 0;
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: 48px 52px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    main h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent-deep);
+      margin: 52px 0 20px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid var(--accent-light);
+      scroll-margin-top: 24px;
+      letter-spacing: -0.02em;
+    }
+    main h2:first-child { margin-top: 0; }
+
+    main h3 {
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 34px 0 14px;
+      scroll-margin-top: 24px;
+    }
+    main h4 {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 26px 0 12px;
+    }
+    main p { margin: 16px 0; color: var(--text); }
+    main ul, main ol { margin: 14px 0 14px 30px; }
+    main li { margin: 7px 0; line-height: 1.65; }
+    main li > ul, main li > ol { margin: 5px 0 5px 26px; }
+
+    main a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+    main a:hover { border-bottom-color: var(--accent); }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 20px 0;
+      font-size: 14px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    th, td {
+      padding: 13px 18px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: linear-gradient(135deg,var(--accent-light),#e0f2fe);
+      font-weight: 600;
+      color: var(--accent-deep);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--accent);
+    }
+    tr:last-child td { border-bottom: none; }
+    tbody tr { transition: background 0.2s ease; }
+    tbody tr:hover { background: rgba(14,116,144,0.04); }
+
+    /* Info boxes */
+    .info-box, .warn-box, .success-box, .danger-box {
+      padding: 18px 22px;
+      border-radius: var(--radius-sm);
+      margin: 20px 0;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .info-box { background: var(--info-bg); border-left: 4px solid #06b6d4; }
+    .warn-box { background: var(--warn-bg); border-left: 4px solid #f59e0b; }
+    .success-box { background: var(--success-bg); border-left: 4px solid #22c55e; }
+    .danger-box { background: var(--danger-bg); border-left: 4px solid #ef4444; }
+
+    /* Tags */
+    .tag {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 2px 4px 2px 0;
+    }
+    .tag-d { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+    .tag-i { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+    .tag-s { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+    .tag-c { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+
+    footer {
+      margin-top: 32px;
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 22px 36px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    /* Menu toggle */
+    .menu-toggle {
+      display: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      cursor: pointer;
+      z-index: 101;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+    }
+    .menu-toggle:hover { background: rgba(255,255,255,0.25); }
+    .menu-toggle span,
+    .menu-toggle span::before,
+    .menu-toggle span::after {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      position: relative;
+      transition: 0.3s;
+    }
+    .menu-toggle span::before,
+    .menu-toggle span::after {
+      content: '';
+      position: absolute;
+      left: 0;
+    }
+    .menu-toggle span::before { top: -7px; }
+    .menu-toggle span::after { top: 7px; }
+
+    .sidebar-close {
+      display: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+      border-radius: 10px;
+      z-index: 102;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+    }
+    .sidebar-close:hover { background: var(--hover); color: var(--text); }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+      z-index: 98;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .sidebar-overlay.active { opacity: 1; }
+
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      .sidebar-close { display: flex; }
+      .sidebar-overlay { display: block; pointer-events: none; }
+      .sidebar-overlay.active { pointer-events: auto; }
+      header { position: relative; padding-right: 68px; }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 300px;
+        max-width: 80vw;
+        height: 100vh;
+        z-index: 99;
+        border-radius: 0 20px 20px 0;
+        border: none;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        transform: translateX(-100%);
+        transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+        overflow-y: auto;
+        scrollbar-width: none;
+        padding-top: 56px;
+        background: rgba(255,255,255,0.92);
+      }
+      .sidebar.active { transform: translateX(0); }
+      .sidebar ul { padding: 0 0 28px; }
+      .sidebar li a { padding: 8px 24px; }
+      .sidebar h3 { padding: 0 24px 14px; }
+
+      .layout { flex-direction: column; }
+      main { padding: 28px 22px; }
+      header { padding: 28px 22px; }
+      header h1 { font-size: 25px; }
+      header .subtitle { font-size: 14px; }
+      header .meta { font-size: 12px; }
+      table { font-size: 12.5px; }
+      th, td { padding: 9px 12px; }
+      .info-box, .warn-box, .success-box, .danger-box { padding: 14px 18px; font-size: 13px; }
+      main h2 { font-size: 24px; }
+      main h3 { font-size: 18px; }
+      main ul, main ol { margin-left: 22px; }
+    }
+
+    @media (max-width: 600px) {
+      .wrapper { padding: 14px; }
+      main { padding: 20px 16px; }
+      header { padding: 22px 16px; }
+      header h1 { font-size: 22px; }
+      main h2 { font-size: 22px; margin-top: 38px; }
+      main h3 { font-size: 17px; }
+      th, td { padding: 7px 9px; font-size: 11.5px; }
+    }
+
+    body.sidebar-open { overflow: hidden; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <button class="menu-toggle" id="menuToggle" aria-label="Меню"><span></span></button>
+    <h1>Типы личностей и стили управления</h1>
+    <p class="subtitle">Как на собеседовании определить, кто перед вами: психологические профили руководителей, методы диагностики и практические вопросы для интервью</p>
+    <p class="meta">Гид для соискателей и HR &bull; 2026</p>
+  </header>
+
+  <div class="layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <nav class="sidebar" id="sidebar">
+      <button class="sidebar-close" id="sidebarClose" aria-label="Закрыть">&times;</button>
+      <h3>Содержание</h3>
+      <ul>
+        <li><a href="#intro" class="toc-h2">1. Введение</a></li>
+        <li><a href="#disc" class="toc-h2">2. Модель DISC</a></li>
+        <li><a href="#disc-d" class="toc-h3">D — Доминирование</a></li>
+        <li><a href="#disc-i" class="toc-h3">I — Влияние</a></li>
+        <li><a href="#disc-s" class="toc-h3">S — Стабильность</a></li>
+        <li><a href="#disc-c" class="toc-h3">C — Соблюдение</a></li>
+        <li><a href="#styles" class="toc-h2">3. Стили управления</a></li>
+        <li><a href="#mbti" class="toc-h2">4. MBTI для руководителей</a></li>
+        <li><a href="#questions" class="toc-h2">5. Вопросы для собеседования</a></li>
+        <li><a href="#by-type" class="toc-h3">По типам DISC</a></li>
+        <li><a href="#situational" class="toc-h3">Ситуационные вопросы</a></li>
+        <li><a href="#advanced" class="toc-h2">6. Продвинутая диагностика</a></li>
+        <li><a href="#projective" class="toc-h3">Проективные вопросы</a></li>
+        <li><a href="#bodylang" class="toc-h3">Язык тела</a></li>
+        <li><a href="#stresstest" class="toc-h3">Stress-триггер</a></li>
+        <li><a href="#awareness" class="toc-h3">Шкала осознанности</a></li>
+        <li><a href="#contradictions" class="toc-h3">Трекинг противоречий</a></li>
+        <li><a href="#red-flags" class="toc-h2">7. Красные флаги</a></li>
+        <li><a href="#checklist" class="toc-h2">8. Чеклист</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <!-- 1. Введение -->
+      <h2 id="intro">1. Введение</h2>
+      <p>Собеседование — это улица с двусторонним движением. Компания оценивает вас, а вы — компанию. И ключевой фактор вашего будущего комфорта и роста — <strong>личность руководителя</strong>. Неподходящий стиль управления может превратить работу в ад даже при высокой зарплате.</p>
+      <p>Этот гид поможет вам:</p>
+      <ul>
+        <li>Понимать <strong>4 базовых типа поведения</strong> по модели DISC и их проявления в речи и действиях</li>
+        <li>Различать <strong>стили управления</strong> — от авторитарного до коучингового</li>
+        <li>Задавать <strong>правильные вопросы</strong>, которые раскроют истинный профиль собеседника</li>
+        <li>Замечать <strong>красные флаги</strong> токсичного руководства до выхода на работу</li>
+      </ul>
+      <div class="info-box">Основной принцип: <strong>наблюдайте не что говорят, а как говорят</strong>. Форма ответа, интонации, выбор слов и реакции на неудобные вопросы дают больше информации, чем содержание.</div>
+
+      <!-- 2. DISC -->
+      <h2 id="disc">2. Модель DISC — четыре типа поведения</h2>
+      <p>DISC — самая практичная модель для собеседования. Она описывает <strong>наблюдаемое поведение</strong>, а не глубинные черты личности. Разработана психологом Уильямом Марстоном в 1928 году.</p>
+      <p>Четыре оси: <strong>Активность vs Пассивность</strong> и <strong>Враждебная vs Дружественная среда</strong>. На пересечении — 4 типа:</p>
+
+      <table>
+        <tr><th>Тип</th><th>Среда</th><th>Поведение</th><th>Девиз</th></tr>
+        <tr><td><span class="tag tag-d">D</span> Доминирование</td><td>Враждебная</td><td>Активное</td><td>«Делай быстро»</td></tr>
+        <tr><td><span class="tag tag-i">I</span> Влияние</td><td>Дружественная</td><td>Активное</td><td>«Давай обсудим»</td></tr>
+        <tr><td><span class="tag tag-s">S</span> Стабильность</td><td>Дружественная</td><td>Пассивное</td><td>«Давай без резких движений»</td></tr>
+        <tr><td><span class="tag tag-c">C</span> Соблюдение</td><td>Враждебная</td><td>Пассивное</td><td>«По инструкции»</td></tr>
+      </table>
+
+      <h3 id="disc-d">D — Доминирование (Dominance)</h3>
+      <p><strong>Кто это:</strong> «Красный» тип — ориентирован на результат, скорость, конкуренцию. Решения принимает быстро, не любит долгих обсуждений.</p>
+      <p><strong>Как проявляется на собеседовании:</strong></p>
+      <ul>
+        <li>Говорит быстро, напористо, использует короткие предложения</li>
+        <li>Часто употребляет «я», «моя команда», «я решил», «я добился»</li>
+        <li>Перебивает, задаёт резкие вопросы, проверяет «на слабо»</li>
+        <li>Фокус на результате, цифрах, сроках, KPI</li>
+        <li>Может опоздать или постоянно смотреть на часы</li>
+        <li>Не тратит время на small talk</li>
+      </ul>
+      <p><strong>Сильные стороны:</strong> решительность, скорость, ответственность, пробивная способность.</p>
+      <p><strong>Слабые стороны:</strong> жёсткость, нетерпение к медленным сотрудникам, риск выгорания команды.</p>
+      <p><strong>Ключевой вопрос к себе:</strong> «Готов ли я к высокому темпу и прямолинейной обратной связи?»</p>
+
+      <h3 id="disc-i">I — Влияние (Influence)</h3>
+      <p><strong>Кто это:</strong> «Жёлтый» тип — харизматичный, общительный, энергичный. Вдохновляет команду, заряжает оптимизмом.</p>
+      <p><strong>Как проявляется на собеседовании:</strong></p>
+      <ul>
+        <li>Много улыбается, активно жестикулирует, говорит с энтузиазмом</li>
+        <li>Часто использует «мы», «команда», «вместе», «здорово получилось»</li>
+        <li>Рассказывает истории, уходит в детали, может перескакивать с темы на тему</li>
+        <li>Интересуется вашими увлечениями, пытается установить личный контакт</li>
+        <li>Создаёт ощущение «своего парня»</li>
+      </ul>
+      <p><strong>Сильные стороны:</strong> мотивация, создание атмосферы, умение продавать идеи, нетворкинг.</p>
+      <p><strong>Слабые стороны:</strong> нелюбовь к рутине и отчётам, может быть непоследовательным, избегает жёстких решений.</p>
+      <p><strong>Ключевой вопрос к себе:</strong> «Не утонут ли процессы в бесконечных обсуждениях?»</p>
+
+      <h3 id="disc-s">S — Стабильность (Steadiness)</h3>
+      <p><strong>Кто это:</strong> «Зелёный» тип — спокойный, поддерживающий, командный игрок. Ценит стабильность и гармонию.</p>
+      <p><strong>Как проявляется на собеседовании:</strong></p>
+      <ul>
+        <li>Говорит размеренно, доброжелательно, без резких интонаций</li>
+        <li>Внимательно слушает, кивает, задаёт уточняющие вопросы</li>
+        <li>Подчёркивает важность команды, атмосферы, взаимопомощи</li>
+        <li>Рассказывает о долгосрочных проектах, лояльности сотрудников</li>
+        <li>Может долго отвечать на вопрос, тщательно подбирая слова</li>
+      </ul>
+      <p><strong>Сильные стороны:</strong> надёжность, умение слушать, низкая текучка в команде, поддержка сотрудников.</p>
+      <p><strong>Слабые стороны:</strong> медлительность в кризисах, избегание конфликтов, сложности с жёсткими решениями.</p>
+      <p><strong>Ключевой вопрос к себе:</strong> «Хватит ли мне драйва и амбиций в таком ритме?»</p>
+
+      <h3 id="disc-c">C — Соблюдение (Compliance)</h3>
+      <p><strong>Кто это:</strong> «Синий» тип — аналитичный, системный, ориентированный на качество и правила. Требует точности и порядка.</p>
+      <p><strong>Как проявляется на собеседовании:</strong></p>
+      <ul>
+        <li>Говорит структурированно, логично, с паузами для обдумывания</li>
+        <li>Использует точные формулировки, цифры, даты, ссылки на процессы</li>
+        <li>Задаёт много детальных вопросов о вашем опыте и методологии</li>
+        <li>Может показаться холодным или отстранённым — это не враждебность, а стиль</li>
+        <li>Ценит регламенты, документацию, чёткие критерии оценки</li>
+      </ul>
+      <p><strong>Сильные стороны:</strong> качество, системность, предсказуемость, низкое число ошибок.</p>
+      <p><strong>Слабые стороны:</strong> медленная адаптация к изменениям, перфекционизм, может «закапываться» в деталях.</p>
+      <p><strong>Ключевой вопрос к себе:</strong> «Комфортно ли мне работать в жёстких рамках и под пристальным контролем?»</p>
+
+      <div class="info-box">Чистые типы встречаются редко. Наблюдайте <strong>комбинацию</strong>: D/I — напористый коммуникатор, S/C — надёжный аналитик. Ведущий тип определяет доминирующую стратегию поведения.</div>
+
+      <!-- 3. Стили управления -->
+      <h2 id="styles">3. Стили управления</h2>
+      <p>Классическая триада Курта Левина (1939) остаётся актуальной. Современные исследователи дополнили её более тонкими градациями.</p>
+
+      <table>
+        <tr><th>Стиль</th><th>Как принимает решения</th><th>Контроль</th><th>Коммуникация</th><th>Когда эффективен</th></tr>
+        <tr>
+          <td><strong>Авторитарный</strong></td>
+          <td>Единолично</td>
+          <td>Жёсткий, тотальный</td>
+          <td>Сверху вниз, приказы</td>
+          <td>Кризис, низкая квалификация команды, жёсткие дедлайны</td>
+        </tr>
+        <tr>
+          <td><strong>Демократический</strong></td>
+          <td>С учётом мнения команды</td>
+          <td>Умеренный</td>
+          <td>Диалог, обратная связь</td>
+          <td>Зрелая команда, творческие задачи</td>
+        </tr>
+        <tr>
+          <td><strong>Либеральный</strong></td>
+          <td>Делегирует команде</td>
+          <td>Минимальный</td>
+          <td>Обеспечение ресурсами</td>
+          <td>Высокоэкспертная команда, удалёнка</td>
+        </tr>
+        <tr>
+          <td><strong>Коучинговый</strong></td>
+          <td>Через развитие сотрудников</td>
+          <td>Поддерживающий</td>
+          <td>Вопросы, наставничество</td>
+          <td>Рост команды, долгосрочное развитие</td>
+        </tr>
+        <tr>
+          <td><strong>Визионерский</strong></td>
+          <td>Через смыслы и образ будущего</td>
+          <td>Вдохновляющий</td>
+          <td>Рассказ о миссии, ценностях</td>
+          <td>Стартапы, трансформация, кризис смыслов</td>
+        </tr>
+      </table>
+
+      <p><strong>Как определить стиль на собеседовании:</strong></p>
+      <ul>
+        <li><strong>Авторитарный:</strong> «Я ставлю задачи и контролирую результат», «Решения принимаю сам», нет интереса к вашему мнению</li>
+        <li><strong>Демократический:</strong> «Мы обсуждаем с командой», «Мне важно услышать разные точки зрения», задаёт открытые вопросы</li>
+        <li><strong>Либеральный:</strong> «Команда знает своё дело», «Я не вмешиваюсь в процессы», размытые ответы про контроль</li>
+        <li><strong>Коучинговый:</strong> «Я помогаю расти», «Каждому составляю ИПР», спрашивает о ваших целях развития</li>
+        <li><strong>Визионерский:</strong> много говорит про «миссию», «будущее», «изменение мира», может не вдаваться в операционку</li>
+      </ul>
+
+      <!-- 4. MBTI -->
+      <h2 id="mbti">4. MBTI для руководителей — ключевые профили</h2>
+      <p>MBTI (Майерс-Бриггс) описывает 16 типов личности по 4 дихотомиям. Не все 16 одинаково часто встречаются среди руководителей. Вот <strong>наиболее вероятные типы</strong> начальников и их признаки:</p>
+
+      <table>
+        <tr><th>Тип</th><th>Характеристика</th><th>На собеседовании</th></tr>
+        <tr>
+          <td><strong>ENTJ</strong> «Командир»</td>
+          <td>Стратег, лидер, напористый, видит картину целиком</td>
+          <td>Говорит о целях, стратегии, эффективности. Резок, прямолинеен. Задаёт сложные вопросы</td>
+        </tr>
+        <tr>
+          <td><strong>ESTJ</strong> «Управленец»</td>
+          <td>Системный, исполнительный, ценит порядок и иерархию</td>
+          <td>Структурирован, говорит регламентами, спрашивает про опыт и конкретные результаты</td>
+        </tr>
+        <tr>
+          <td><strong>INTJ</strong> «Архитектор»</td>
+          <td>Аналитик, стратег, независимый, высокие стандарты</td>
+          <td>Малоэмоционален, задаёт глубокие вопросы, ценит компетентность, не терпит поверхностности</td>
+        </tr>
+        <tr>
+          <td><strong>ENFJ</strong> «Вдохновитель»</td>
+          <td>Харизматичный, эмпатичный, развивает людей</td>
+          <td>Тёплый, заинтересованный, спрашивает о ценностях и развитии, создаёт доверительную атмосферу</td>
+        </tr>
+        <tr>
+          <td><strong>ISTJ</strong> «Хранитель»</td>
+          <td>Надёжный, ответственный, следует правилам</td>
+          <td>Сдержан, конкретен, спрашивает о процедурах, пунктуален, ценит стабильность</td>
+        </tr>
+      </table>
+
+      <div class="warn-box">MBTI сложнее определить «на глаз» без теста. Используйте эту таблицу как дополнительный ориентир, а не основной инструмент диагностики.</div>
+
+      <!-- 5. Вопросы -->
+      <h2 id="questions">5. Практические вопросы для собеседования</h2>
+
+      <h3 id="by-type">Вопросы для определения типа по DISC</h3>
+
+      <table>
+        <tr><th>Цель</th><th>Вопрос</th><th>Что слушать в ответе</th></tr>
+        <tr>
+          <td><span class="tag tag-d">D</span></td>
+          <td>«Расскажите о ситуации, когда вам пришлось взять управление в свои руки»</td>
+          <td>Решительность, фокус на результате, скорость — <strong>D</strong>. Упоминание команды и согласования — не D</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-d">D</span></td>
+          <td>«Как вы действуете, когда проект отстаёт от графика?»</td>
+          <td>D скажет «давлю», «ускоряю», «режу лишнее». S — «собираю команду, разбираюсь»</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-i">I</span></td>
+          <td>«Как вы мотивируете команду на сложные задачи?»</td>
+          <td>I — вдохновение, энергия, личный пример, истории. C — премии, KPI, чёткие цели</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-i">I</span></td>
+          <td>«Как вы строите отношения с коллегами?»</td>
+          <td>I — про доверие, общение, командный дух. D — про результат и эффективность взаимодействия</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-s">S</span></td>
+          <td>«Как вы справляетесь с изменениями в компании?»</td>
+          <td>S — осторожность, адаптация через поддержку команды. D — «быстро перестроился, поставил новые цели»</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-s">S</span></td>
+          <td>«Как вы решаете конфликты в команде?»</td>
+          <td>S — сглаживание, диалог, поиск компромисса. D — прямое жёсткое решение, «разговор по фактам»</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-c">C</span></td>
+          <td>«Как вы обеспечиваете качество работы?»</td>
+          <td>C — процессы, регламенты, чеклисты, аудит. I — «правильные люди в правильных местах»</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-c">C</span></td>
+          <td>«Как вы принимаете сложные решения?»</td>
+          <td>C — анализ данных, таблицы, сроки, риски. D — интуиция + опыт, «решил и пошёл»</td>
+        </tr>
+      </table>
+
+      <h3 id="situational">Ситуационные вопросы (поведенческое интервью)</h3>
+      <p>Эти вопросы провоцируют кандидата показать истинный стиль управления через конкретные кейсы:</p>
+
+      <table>
+        <tr><th>Вопрос</th><th>Что выявляет</th><th>На что обратить внимание</th></tr>
+        <tr>
+          <td>«Расскажите, как вы стали руководителем. Не что делали, а как пришли к этому решению»</td>
+          <td>Осознанность выбора</td>
+          <td>Осознанный путь vs «так сложилось». Первый — зрелый лидер, второй — случайный</td>
+        </tr>
+        <tr>
+          <td>«Что для вас самое сложное в управлении людьми?»</td>
+          <td>Болевые точки</td>
+          <td>Если «увольнять» — жёсткий D. Если «давать обратную связь» — S/C. Если «делегировать» — I</td>
+        </tr>
+        <tr>
+          <td>«Вспомните своего лучшего и худшего руководителя. Что вы взяли от каждого?»</td>
+          <td>Ценности и ориентиры</td>
+          <td>Какие качества он копирует — авторитарные или демократические. О чём говорит с болью</td>
+        </tr>
+        <tr>
+          <td>«Как вы оцениваете эффективность сотрудника?»</td>
+          <td>Система координат</td>
+          <td>Цифры, KPI, OKR → D/C. Качественная оценка, 360 градусов → I/S</td>
+        </tr>
+        <tr>
+          <td>«Опишите ситуацию, когда вы ошиблись в управленческом решении. Что произошло?»</td>
+          <td>Зрелость и рефлексия</td>
+          <td>Берёт ответственность на себя или обвиняет команду/обстоятельства</td>
+        </tr>
+        <tr>
+          <td>«Что важнее: выполнить задачу любой ценой или сохранить отношения в команде?»</td>
+          <td>Приоритеты</td>
+          <td>Любой ценой → D. Сохранить отношения → S/I. «И то, и другое» — сбалансированный</td>
+        </tr>
+      </table>
+
+      <div class="info-box">Ключевой приём: задайте один и тот же вопрос дважды — в начале и в конце разговора. Если ответы противоречивы, кандидат говорит не то, что думает, а то, что, по его мнению, вы хотите услышать.</div>
+
+      <!-- 6. Продвинутая диагностика -->
+      <h2 id="advanced">6. Продвинутые методы диагностики</h2>
+      <p>Стандартные вопросы дают информацию — но собеседуемый может давать социально желательные ответы. Следующие техники позволяют заглянуть глубже: в автоматические реакции, неосознанные паттерны и истинные приоритеты.</p>
+
+      <h3 id="projective">6.1 Проективные вопросы</h3>
+      <p>Человек не говорит о себе прямо, а проецирует свой опыт и ценности на абстрактную ситуацию. Это обходит «фильтр» социально желательных ответов.</p>
+
+      <table>
+        <tr><th>Вопрос</th><th>На что проецирует</th><th>Типичный ответ...</th><th>...и его значение</th></tr>
+        <tr>
+          <td>«Почему, на ваш взгляд, одни руководители собирают сильные команды, а другие — нет?»</td>
+          <td>Собственные критерии найма</td>
+          <td>«Потому что умеют разглядеть талант»</td>
+          <td>I-тип, ценит потенциал</td>
+        </tr>
+        <tr>
+          <td rowspan="2">«О чём, по-вашему, думают сотрудники, когда начальник ставит жёсткий дедлайн?»</td>
+          <td rowspan="2">Отношение к давлению и авторитетам</td>
+          <td>«Что нужно мобилизоваться и сделать»</td>
+          <td>D-тип, то же требует от других</td>
+        </tr>
+        <tr>
+          <td>«Что опять срочно, могли бы предупредить заранее»</td>
+          <td>S-тип, ценит планирование</td>
+        </tr>
+        <tr>
+          <td>«Представьте, что лучший сотрудник уходит. Какая будет первая мысль?»</td>
+          <td>Причины видит в себе или в других</td>
+          <td>«Надо повысить зарплату / дать новый вызов»</td>
+          <td>Признаёт свою роль</td>
+        </tr>
+        <tr>
+          <td rowspan="2">«За что обычно увольняют сотрудников в вашей сфере?»</td>
+          <td rowspan="2">Ценности и допустимые границы</td>
+          <td>«За нарушение сроков»</td>
+          <td>D/C, процесс — превыше всего</td>
+        </tr>
+        <tr>
+          <td>«За токсичность и подрыв атмосферы»</td>
+          <td>I/S, отношения важнее</td>
+        </tr>
+      </table>
+
+      <div class="info-box">Проективные вопросы не имеют «правильного» ответа. Ценность — в спонтанности. Дайте 3–5 секунд на ответ, не допуская долгих размышлений.</div>
+
+      <h3 id="bodylang">6.2 Язык тела и микроповедение</h3>
+      <p>Невербалика даёт информацию раньше, чем слова. Наблюдайте в первые 5 минут разговора и в моменты стресса.</p>
+
+      <table>
+        <tr><th>Сигнал</th><th><span class="tag tag-d">D</span></th><th><span class="tag tag-i">I</span></th><th><span class="tag tag-s">S</span></th><th><span class="tag tag-c">C</span></th></tr>
+        <tr>
+          <td>Контакт глаз</td>
+          <td>Прямой, жёсткий, почти не моргает</td>
+          <td>Живой, частые переключения</td>
+          <td>Мягкий, периодически отводит</td>
+          <td>Отводит при обдумывании, фиксирует при ответе</td>
+        </tr>
+        <tr>
+          <td>Рукопожатие</td>
+          <td>Крепкое, доминантное, ладонь сверху</td>
+          <td>Тёплое, может задержать</td>
+          <td>Мягкое, краткое</td>
+          <td>Сухое, формальное, краткое</td>
+        </tr>
+        <tr>
+          <td>Поза</td>
+          <td>Откинувшись «начальственная», руки за головой</td>
+          <td>Открытая, наклон вперёд</td>
+          <td>Симметричная, прямая</td>
+          <td>Слегка скованная, напряжённые плечи</td>
+        </tr>
+        <tr>
+          <td>Жесты</td>
+          <td>Резкие, указательные, ладонь вниз</td>
+          <td>Активные, раскрытые ладони</td>
+          <td>Медленные, плавные, минимум</td>
+          <td>Минимальные, точные, пальцы в замок</td>
+        </tr>
+        <tr>
+          <td>Зона комфорта (дистанция)</td>
+          <td>Нарушает границы, подходит близко</td>
+          <td>Средняя, дружеская</td>
+          <td>Сохраняет дистанцию</td>
+          <td>Предпочитает расстояние</td>
+        </tr>
+        <tr>
+          <td>Реакция на паузу в разговоре</td>
+          <td>Заполняет паузу требованием</td>
+          <td>Заполняет болтовнёй или шуткой</td>
+          <td>Ждёт, чувствует неловкость</td>
+          <td>Обдумывает, не спешит</td>
+        </tr>
+      </table>
+
+      <h3 id="stresstest">6.3 Stress-триггер — тест реакцией на микростресс</h3>
+      <p>Лучший способ увидеть истинный тип — создать небольшое давление и наблюдать спонтанную реакцию.</p>
+
+      <h4>Триггер 1: Неудобный вопрос</h4>
+      <p>Задайте вопрос о провале: <em>«Расскажите о самом большом управленческом провале. Что именно пошло не так?»</em> — и после ответа сделайте паузу на 5–7 секунд, не перебивая, сохраняя нейтральное выражение лица.</p>
+      <ul>
+        <li><strong>D:</strong> заполнит паузу, начиная оправдываться или атаковать: «Но вообще-то результат был…»</li>
+        <li><strong>I:</strong> начнёт рассказывать другую историю, уйдёт в сторону</li>
+        <li><strong>S:</strong> визуально сожмётся, потупит взгляд, может извиниться</li>
+        <li><strong>C:</strong> начнёт анализировать вслух: «Если разложить по факторам…»</li>
+      </ul>
+
+      <h4>Триггер 2: Мягкое несогласие</h4>
+      <p>После его ответа скажите: <em>«А я смотрю на это иначе»</em> или <em>«У меня другой опыт»</em>. И замолчите.</p>
+      <ul>
+        <li><strong>D:</strong> вступит в спор, будет доказывать свою правоту</li>
+        <li><strong>I:</strong> попытается перевести в шутку или найти общую точку</li>
+        <li><strong>S:</strong> согласится, даже если не согласен («Возможно, вы правы»)</li>
+        <li><strong>C:</strong> попросит аргументы: «На чём основан ваш вывод?»</li>
+      </ul>
+
+      <h4>Триггер 3: Нарушение протокола</h4>
+      <p>Нечаянно нарушьте неписаную норму: сядьте на его место или слегка опоздайте. Наблюдайте реакцию:</p>
+      <ul>
+        <li><strong>D:</strong> укажет на это прямо, может быть резок</li>
+        <li><strong>I:</strong> не заметит или обратит в шутку</li>
+        <li><strong>S:</strong> сделает вид, что ничего не произошло, но будет напряжён</li>
+        <li><strong>C:</strong> запомнит и, вероятно, сделает вывод о вашей некомпетентности</li>
+      </ul>
+
+      <div class="warn-box">Используйте stress-триггеры осторожно и только если чувствуете, что разговор это позволяет. Цель — не спровоцировать конфликт, а увидеть истинную реакцию. После теста можно мягко снять напряжение: «Я специально задал неудобный вопрос — важно было увидеть реакцию».</div>
+
+      <h3 id="awareness">6.4 Шкала осознанности (рефлексия)</h3>
+      <p>Один из самых точных предикторов зрелости руководителя — <strong>осознанность выбора</strong> управленческого пути. Вопрос «Как вы стали руководителем?» делит кандидатов на три уровня:</p>
+
+      <table>
+        <tr><th>Уровень</th><th>Формулировка ответа</th><th>Что означает</th><th>Прогноз</th></tr>
+        <tr>
+          <td><strong>1. Случайный</strong></td>
+          <td>«Меня назначили», «Так сложилось», «Начальник ушёл, предложили мне»</td>
+          <td>Не выбирал управление, попал по стечению обстоятельств</td>
+          <td>Высокий риск: не хочет управлять, будет тяготиться ролью</td>
+        </tr>
+        <tr>
+          <td><strong>2. Формальный</strong></td>
+          <td>«Я хорошо делал свою работу, и меня повысили», «Это был карьерный рост»</td>
+          <td>Пошёл за статусом и деньгами, не за ответственностью</td>
+          <td>Средний риск: справляется, но не развивает команду</td>
+        </tr>
+        <tr>
+          <td><strong>3. Осознанный</strong></td>
+          <td>«Я понял, что могу влиять на результат через людей», «Хочу развивать других»</td>
+          <td>Выбрал управление как профессию, прошёл обучение</td>
+          <td>Низкий риск: вовлечён, рефлексирует, растёт</td>
+        </tr>
+      </table>
+
+      <p>Дополнительные признаки осознанности:</p>
+      <ul>
+        <li>Читал книги по управлению — и может назвать конкретные (не «Как завоёвывать друзей», а что-то по менеджменту)</li>
+        <li>Имеет наставника или сам выступает ментором</li>
+        <li>Проходил оценку 360 градусов — и может рассказать, что изменил по её итогам</li>
+        <li>Говорит о росте сотрудников, а не только о результатах бизнеса</li>
+      </ul>
+
+      <h3 id="contradictions">6.5 Трекинг противоречий</h3>
+      <p>Если собеседуемый даёт социально желаемые ответы, его «слова» и «слова, но другими словами» разойдутся. Техника:</p>
+
+      <ol>
+        <li><strong>Задайте один и тот же вопрос дважды</strong>, в разных формулировках и в разных частях разговора. Например:
+          <ul>
+            <li>В начале: <em>«Что для вас важнее всего в управлении?»</em></li>
+            <li>В середине: <em>«Как вы расставляете приоритеты между задачей и отношениями?»</em></li>
+          </ul>
+        </li>
+        <li><strong>Сравните логику</strong>, а не слова. Если в начале говорит «развитие людей», а в кейсе про провал упоминает только цифры — истинный приоритет — результат, а не люди.</li>
+        <li><strong>Поймайте «смену маски»</strong> — когда на вопрос про слабости даёт «я слишком требовательный / много работаю» (социально желательная слабость), а на проективный вопрос про ошибки других проецирует реальные проблемы.</li>
+      </ol>
+
+      <table>
+        <tr><th>Сигнал расхождения</th><th>Что на самом деле</th></tr>
+        <tr><td>Говорит «команда — главное», но все местоимения — «я»</td><td>Реально ориентирован на себя, а не на команду</td></tr>
+        <tr><td>Говорит «ценю обратную связь», но раздражается при уточняющих вопросах</td><td>Не принимает критику, несмотря на декларации</td></tr>
+        <tr><td>Говорит «делегирую», но в каждом кейсе в итоге «сделал сам»</td><td>Микроменеджер или недоверие к команде</td></tr>
+        <tr><td>Говорит «люблю учиться», но не может назвать ни одной книги или курса за последний год</td><td>Декларация без реальной практики</td></tr>
+      </table>
+
+      <div class="success-box">Совпадение ответов в разных формулировках — признак конгруэнтности: человек говорит то, что действительно думает и делает. Расхождение — повод копать глубже.</div>
+
+      <!-- 7. Красные флаги -->
+      <h2 id="red-flags">7. Красные флаги — кого стоит избегать</h2>
+      <p>Некоторые паттерны поведения на собеседовании указывают на <strong>токсичный стиль управления</strong>. Если замечаете хотя бы 2–3 признака из списка — задумайтесь, стоит ли выходить в эту команду.</p>
+
+      <table>
+        <tr><th>Тип</th><th>Признаки на собеседовании</th><th>Риски в работе</th></tr>
+        <tr>
+          <td><strong>Деспот</strong></td>
+          <td>Резок, груб, перебивает, проверяет «на слабо», унижает секретаря или ассистента при вас</td>
+          <td>Страх, текучка, выгорание, публичные разносы</td>
+        </tr>
+        <tr>
+          <td><strong>Микроменеджер</strong></td>
+          <td>Спрашивает про мельчайшие детали прошлых задач, как отчитывались, требует чек-листы</td>
+          <td>Полное отсутствие самостоятельности, отчёты каждые 2 часа</td>
+        </tr>
+        <tr>
+          <td><strong>Нарцисс</strong></td>
+          <td>Говорит только о себе, приписывает успехи себе, неудачи — команде, обесценивает ваши достижения</td>
+          <td>Присвоение результатов, отсутствие признания</td>
+        </tr>
+        <tr>
+          <td><strong>Пустышка</strong></td>
+          <td>Не может внятно описать ваши обязанности, цели отдела, критерии успеха. «Будете делать то, что нужно»</td>
+          <td>Хаос, отсутствие опоры, задачи «с потолка»</td>
+        </tr>
+        <tr>
+          <td><strong>Меняла решения</strong></td>
+          <td>Противоречит сам себе в течение разговора, забывает, что сказал 5 минут назад</td>
+          <td>Бесконечные переделывания, отсутствие стабильности</td>
+        </tr>
+      </table>
+
+      <h3>Тревожные фразы и их истинное значение</h3>
+      <table>
+        <tr><th>Фраза</th><th>Реальность</th></tr>
+        <tr><td>«Мы одна большая семья»</td><td>Размытые границы, работа в нерабочее время, манипуляции лояльностью</td></tr>
+        <tr><td>«У нас нужно быть гибким»</td><td>Постоянные изменения приоритетов, хаос, нет чёткого функционала</td></tr>
+        <tr><td>«Инициатива приветствуется, но…»</td><td>Инициатива наказуема, любое предложение встретят в штыки</td></tr>
+        <tr><td>«Мы все выкладываемся на 200%»</td><td>Переработки без компенсации, культура героизма</td></tr>
+        <tr><td>«У нас нет текучки — люди годами работают»</td><td>Может означать застой, отсутствие роста, страх увольнения</td></tr>
+      </table>
+
+      <div class="danger-box"><strong>Правило самосохранения:</strong> если на собеседовании вы чувствуете дискомфорт, давление или обесценивание — не надейтесь, что «в работе будет по-другому». Не будет. Первая встреча — наилучший сценарий.</div>
+
+      <!-- 7. Чеклист -->
+      <h2 id="checklist">8. Чеклист для собеседования</h2>
+      <p>Распечатайте или держите перед глазами во время интервью с потенциальным руководителем.</p>
+
+      <h3>Наблюдение за поведением</h3>
+      <ul>
+        <li><input type="checkbox"> Пунктуален / опаздывает (характеризует отношение к людям)</li>
+        <li><input type="checkbox"> Слушает внимательно / перебивает (D-тип / неуважение)</li>
+        <li><input type="checkbox"> Задаёт открытые вопросы / закрытые (демократ / автократ)</li>
+        <li><input type="checkbox"> Интересуется вашим мнением / диктует своё</li>
+        <li><input type="checkbox"> Говорит «я» / «мы» (D-тип / S-тип)</li>
+        <li><input type="checkbox"> Эмоционален / сдержан (I-тип / C-тип)</li>
+      </ul>
+
+      <h3>Ключевые вопросы (задайте не менее 3)</h3>
+      <ul>
+        <li><input type="checkbox"> «Как вы стали руководителем?»</li>
+        <li><input type="checkbox"> «Как вы принимаете решения в сложных ситуациях?»</li>
+        <li><input type="checkbox"> «Как вы оцениваете работу сотрудников?»</li>
+        <li><input type="checkbox"> «Расскажите об управленческой ошибке и её последствиях»</li>
+        <li><input type="checkbox"> «Почему открыта эта вакансия?» (если часто увольняются — красный флаг)</li>
+      </ul>
+
+      <h3>Анализ ответов</h3>
+      <ul>
+        <li><input type="checkbox"> Ответы конкретные / размытые (опыт / его отсутствие)</li>
+        <li><input type="checkbox"> Берёт ответственность / перекладывает на других</li>
+        <li><input type="checkbox"> Говорит о развитии команды / только о задачах</li>
+        <li><input type="checkbox"> Реакция на неудобные вопросы: спокойная / агрессивная</li>
+      </ul>
+
+      <h3>Определение доминирующего типа</h3>
+      <table>
+        <tr><th>Признак</th><th><span class="tag tag-d">D</span></th><th><span class="tag tag-i">I</span></th><th><span class="tag tag-s">S</span></th><th><span class="tag tag-c">C</span></th></tr>
+        <tr><td>Темп речи</td><td>Быстрый, напористый</td><td>Быстрый, эмоциональный</td><td>Размеренный, спокойный</td><td>Медленный, с паузами</td></tr>
+        <tr><td>Фокус вопросов</td><td>Результат, сроки</td><td>Люди, команда</td><td>Стабильность, поддержка</td><td>Процессы, качество</td></tr>
+        <tr><td>Отношение к вам</td><td>Проверка на прочность</td><td>Поиск «своего»</td><td>Забота и поддержка</td><td>Оценка компетенций</td></tr>
+        <tr><td>Реакция на ошибку</td><td>«Как фиксили?»</td><td>«Что вынесли?»</td><td>«Кто поддержал?»</td><td>«Где сбой процесса?»</td></tr>
+        <tr><td>Решение конфликтов</td><td>Прямое давление</td><td>Сглаживание, харизма</td><td>Диалог, компромисс</td><td>Регламент, эскалация</td></tr>
+      </table>
+
+      <div class="success-box"><strong>Итог:</strong> идеальный руководитель для вас — тот, чей стиль совпадает с вашими ожиданиями. Не бывает «плохих» D, I, S или C. Бывает несовместимость ожиданий. Определите свой комфортный тип заранее — и выбирайте осознанно.</div>
+
+      <p style="margin-top: 32px; text-align: center; opacity: 0.6;">Гид подготовлен для проекта qasdet.github.io &bull; 2026</p>
+    </main>
+  </div>
+
+  <footer>
+    <p>Понимание типов личности — ключ к осознанному выбору работы и комфортной карьере</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var toggle = document.getElementById('menuToggle');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('sidebarOverlay');
+  var close = document.getElementById('sidebarClose');
+
+  function open(){ sidebar.classList.add('active'); overlay.classList.add('active'); document.body.classList.add('sidebar-open'); }
+  function close_(){ sidebar.classList.remove('active'); overlay.classList.remove('active'); document.body.classList.remove('sidebar-open'); }
+
+  toggle.addEventListener('click', open);
+  close.addEventListener('click', close_);
+  overlay.addEventListener('click', close_);
+
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close_(); });
+
+  var links = sidebar.querySelectorAll('a');
+  for(var i = 0; i < links.length; i++){
+    links[i].addEventListener('click', close_);
+  }
+})();
+</script>
+</body>
+</html>
