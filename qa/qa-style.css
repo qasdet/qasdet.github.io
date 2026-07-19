@@ -76,7 +76,9 @@ header .meta { margin-top: 12px; font-size: 13px; opacity: 0.75; }
   top: 20px;
   max-height: calc(100vh - 80px);
   overflow-y: auto;
+  scrollbar-width: none;
 }
+.sidebar::-webkit-scrollbar { display: none; }
 .sidebar h3 {
   font-size: 13px;
   text-transform: uppercase;
@@ -329,6 +331,7 @@ footer {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     overflow-y: auto;
+    scrollbar-width: none;
     padding-top: 48px;
   }
   .sidebar.active { transform: translateX(0); }
